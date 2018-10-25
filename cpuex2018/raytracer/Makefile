@@ -1,5 +1,6 @@
 OCOPT = -ccopt -O2
 OCAMLBASE=/usr/bin/
+# OCAMLC=../../min-caml/min-caml
 OCAMLC=$(OCAMLBASE)/ocamlc
 OCAMLOPT=$(OCAMLBASE)/ocamlopt
 
