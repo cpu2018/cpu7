@@ -238,10 +238,10 @@ let print_fundef depth {name = (name_l, name_type); args = arg_list; formal_fv =
 
 let print_prog depth (Prog (fundef_list, exp)) =
 	print_string "<PROG> "; print_newline ();
-	print_string "fundef list = "; print_newline ();
-	List.iter (print_fundef (depth + 1)) fundef_list;
-	print_string "Closure.t = "; print_newline ();
-	print_code (depth + 1) exp
+	print_indent (depth + 1); print_string "fundef list = "; print_newline ();
+	List.iter (print_fundef (depth + 2)) fundef_list;
+	print_indent (depth + 1); print_string "Closure.t = "; print_newline ();
+	print_code (depth + 2) exp
 
 let f print_flag print_cls_flag e =
 	toplevel := [];
