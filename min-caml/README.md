@@ -1,6 +1,7 @@
-# IS18er$B%3%s%Q%$%i<B83(B7$BHI$N(Bmin-caml$B%3!<%I(B
-[clone$B85(B(Esumi$B@h@8$N(Bmin-caml)](https://github.com/esumii/min-caml)
+# 2018年度CPU実験7班のコンパイラコード
+clone元は[こちら](https://github.com/esumii/min-caml)
 
-##$B<B9TJ}K!(B
+## 概要
 
-##
+## ふぁー、文字化けがやばいな...
+- 途中からutf-8に変えたので、文字化けがやばいです
