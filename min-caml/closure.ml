@@ -178,8 +178,8 @@ let rec print_kNormal depth expr =
 								print_code (depth + 1) e1;
 								print_indent depth; print_string "<ELSE> "; print_newline ();
 								print_code (depth + 1) e2
-	| Let ((x, y), e1, e2)	 -> print_string "<LET> "	 ;
-								Id.print_t x	 ; print_newline ();
+	| Let ((x, t), e1, e2)	 -> print_string "<LET> "	 ;
+								Id.print_t x	 ; print_string " ------ Type : "; Type.print_code t;
 								print_code (depth + 1) e1; 
 								print_indent depth; print_string "<IN>"; print_newline ();
 								(*
@@ -189,7 +189,7 @@ let rec print_kNormal depth expr =
 	| Var x 			 	 -> print_string "<VAR> "		 ; Id.print_t x
 	| MakeCls ((f, t), {entry = entry; actual_fv = fv_list}, exp)
 							 -> print_string "<MakeCls>";
-							 	Id.print_t f; print_newline ();
+							 	Id.print_t f; print_string " ------ Type : "; Type.print_code t;
 								print_indent (depth + 1); print_string "<CLOSURE> "; print_newline ();
 								print_indent (depth + 2); print_string "entry : "; 
 								Id.print_l entry; print_newline ();

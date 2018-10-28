@@ -18,9 +18,9 @@ let rec print_type = function
 	| Fun (t_list, t) -> 
 		print_string " Fun ( args = (";
 		List.iter print_type t_list;
-		print_string ") (";
+		print_string ") exp = (";
 		print_type t;
-		print_string ") "
+		print_string ") ) "
 	| Tuple t_list -> 
 		print_string " Tuple (";
 		List.iter print_type t_list;

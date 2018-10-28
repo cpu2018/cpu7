@@ -252,30 +252,32 @@ let rec print_kNormal depth expr =
 					print_t (depth + 1)  y
 	| IfEq (x, y, e1, e2)	 -> print_string "<IF> "; print_newline ();
 								print_indent (depth + 1); print_string "<EQ> "; print_newline ();
-								print_t (depth + 2)  x; print_newline ();
-								print_t (depth + 2)  y; print_newline ();
-								print_string "<THEN> "; print_newline ();
+								print_t (depth + 2) x; print_newline ();
+								print_t (depth + 2) y; print_newline ();
+								print_indent depth; print_string "<THEN> "; print_newline ();
 								print_code (depth + 1) e1;
-								print_string "<ELSE> "; print_newline ();
+								print_indent depth; print_string "<ELSE> "; print_newline ();
 								print_code (depth + 1) e2
 	| IfLE (x, y, e1, e2)	 -> print_string "<IF> "; print_newline ();
 								print_indent (depth + 1); print_string "<LE> "; print_newline ();
-								print_t (depth + 2)  x; print_newline ();
-								print_t (depth + 2)  y; print_newline ();
+								print_t (depth + 2) x; print_newline ();
+								print_t (depth + 2) y; print_newline ();
+								print_indent depth; print_string "<THEN> "; print_newline ();
 								print_code (depth + 1) e1;
+								print_indent depth; print_string "<ELSE> "; print_newline ();
 								print_code (depth + 1) e2
-	| Let ((x, y), e1, e2)	 -> print_string "<LET> "	 ;
-								Id.print_t x	 ; print_newline ();
+	| Let ((x, t), e1, e2)	 -> print_string "<LET> ";
+								Id.print_t x; print_string " ------ Type : "; Type.print_code t;
 								print_code (depth + 1) e1; 
 								print_indent depth; print_string "<IN>"; print_newline ();
 								(*
 								print_code (depth + 1) e2
 								*)
 								print_code depth e2
-	| Var x 			 	 -> print_string "<VAR> "		 ; Id.print_t x
+	| Var x 			 	 -> print_string "<VAR> "; Id.print_t x
 	| LetRec ({name = (x, t); args = yts; body = e1}, e2)
-						 	 -> print_string "<LETREC> "	 ; 
-								Id.print_t x    ; print_newline ();
+						 	 -> print_string "<LETREC> "; 
+								Id.print_t x; print_string " ------ Type : "; Type.print_code t;
 								print_indent (depth + 1); print_string "<ARGS> ";
 								List.iter print_t_tuple yts;
 								print_string "</ARGS>"; print_newline ();
@@ -283,28 +285,28 @@ let rec print_kNormal depth expr =
 								print_indent depth; print_string "<IN>"; print_newline ();
 								(*print_code (depth + 1) e2*)
 								print_code depth e2
-	| App (x, xs) 		 	 -> print_string "<APP> "	; print_newline ();
+	| App (x, xs) 		 	 -> print_string "<APP> "; print_newline ();
 								print_indent (depth + 1); print_string "<FUN> ";
 								Id.print_t x; print_newline ();
 								print_indent (depth + 1); print_string "<ARGS> ";
 								List.iter (fun x -> Id.print_t x; print_string ", ") xs;
 								print_string "</ARGS> ";
-	| Tuple xs  		 	 -> print_string "<TUPLE> "	 ; print_newline ();
+	| Tuple xs  		 	 -> print_string "<TUPLE> "; print_newline ();
 								List.iter (fun x -> Id.print_t x; print_string ", ") xs
-	| LetTuple (xts, y, e)	 -> print_string "<LETTUPLE> " ;
+	| LetTuple (xts, y, e)	 -> print_string "<LETTUPLE> ";
 								print_indent (depth + 1); print_string "<TUPLE> ";
 								List.iter print_t_tuple xts;
 								print_string "</TUPLE>"; print_newline ();
-								print_t (depth + 1)  y; print_newline ();
+								print_t (depth + 1) y; print_newline ();
 								print_code (depth + 1)  e
-	| Get (x, y)     		 -> print_string "<GET> " ; print_newline ();
-								print_t (depth + 1)  x; print_newline ();
-								print_t (depth + 1)  y
-	| Put (x, y, z) 		 -> print_string "<PUT> " ; print_newline ();
-								print_t (depth + 1)  x; print_newline ();
-								print_t (depth + 1)  y; print_newline ();
-								print_t (depth + 1)  z
-	| ExtArray x 			 -> print_string "<EXTARRAY> " ; 
+	| Get (x, y)     		 -> print_string "<GET> "; print_newline ();
+								print_t (depth + 1) x; print_newline ();
+								print_t (depth + 1) y
+	| Put (x, y, z) 		 -> print_string "<PUT> "; print_newline ();
+								print_t (depth + 1) x; print_newline ();
+								print_t (depth + 1) y; print_newline ();
+								print_t (depth + 1) z
+	| ExtArray x 			 -> print_string "<EXTARRAY> ";
 								Id.print_t x
 	| ExtFunApp (x, ys) 	 -> print_string "<EXTFUNAPP> "; print_newline ();
 								print_indent (depth + 1); print_string "<FUN> ";

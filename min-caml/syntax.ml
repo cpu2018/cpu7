@@ -94,8 +94,8 @@ let rec print_syntax depth expr =
 								print_code (depth + 1) e1;
 								print_indent depth; print_string "<ELSE>"; print_newline ();
 								print_code (depth + 1) e2
-	| Let ((x, y), e1, e2)	 -> print_string "<LET> "	 ;
-								Id.print_t x    		 ; print_newline ();
+	| Let ((x, t), e1, e2)	 -> print_string "<LET> "	 ;
+								Id.print_t x    		 ; print_string " ------ Type : "; Type.print_code t;
 								print_code (depth + 1) e1; 
 								print_indent depth; print_string "<IN>"; print_newline ();
 								(*print_code (depth + 1) e2*)
@@ -103,7 +103,7 @@ let rec print_syntax depth expr =
 	| Var x					 -> print_string "<VAR> "	 ; Id.print_t x;
 	| LetRec ({name = (x, t); args = yts; body = e1}, e2)
 							 -> print_string "<LETREC> " ; 
-								Id.print_t x    		 ; print_newline ();
+								Id.print_t x    		 ; print_string " ------ Type : "; Type.print_code t;
 								print_indent (depth + 1); print_string "<ARGS> ";
 								List.iter print_t_tuple yts;
 								print_string " </ARGS>"; print_newline ();
