@@ -52,8 +52,7 @@ let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcas
 (*
 let reg_sw = regs.(Array.length regs - 1) (* temporary for swap *)
 let reg_fsw = fregs.(Array.length fregs - 1) (* temporary for swap *)
-*)
-let reg_sp = "%ebp" (* stack pointer *)
+*) let reg_sp = "%ebp" (* stack pointer *)
 let reg_hp = "min_caml_hp" (* heap pointer (caml2html: sparcasm_reghp) *)
 (* let reg_ra = "%eax" (* return address *) *)
 let is_reg x = (x.[0] = '%' || x = reg_hp)
@@ -88,3 +87,87 @@ let rec concat e1 xt e2 =
   | Let(yt, exp, e1') -> Let(yt, exp, concat e1' xt e2)
 
 let align i = (if i mod 8 = 0 then i else i + 4)
+
+(* ここからデバッグ用print関数 *)
+(*
+let rec print_indent depth =
+	if depth = 0 then ()
+	else (print_string ".   "; print_indent (depth - 1))
+(*
+let print_indent_t depth x =
+	print_indent depth;
+	Id.print_t x
+*)
+let rec print_id_list fv_list =
+	List.iter (fun id -> Id.print_t id; print_string ", ") fv_list
+
+let print_t_tuple (x, t) = Id.print_t x; print_string ", "
+
+let print_closure {entry = label; actual_fv = fv_list} =
+	Id.print_l label;
+	print_id_list fv_list
+
+let newline_flag = ref 0
+
+let is_already_newline flag = 
+	if !flag = 0 then (print_newline (); flag := 1)
+	else ()
+
+let rec print_t depth ty =
+	is_already_newline newline_flag;
+	print_indent depth; newline_flag := 0;
+	match ty with
+	| Ans exp -> print_string "Ans "; print_exp (depth + 1) exp
+	| Let ((x, y), exp, t) ->
+		print_string "Let "	 ;
+		Id.print_t x; print_string " ------ Type : "; Type.print_code t;
+		print_exp (depth + 1) exp;
+		print_indent depth; print_string "in"; print_newline ();
+		print_t depth e2
+and print_exp depth expr =
+	is_already_newline newline_flag;
+	print_indent depth; newline_flag := 0;
+	match expr with
+	| Nop -> 
+	| Set i -> 
+	| SetL x
+	| Mov x
+	| Neg x
+	| Add (x, y)
+	| Sub (x, y)
+	| Mul (x, y)
+	| Div (x, y)
+	| Ld (x, y, )
+	| St 
+	| FMovD 
+	| FNegD 
+	| FAddD 
+	| FSubD 
+	| FMulD 
+	| FDivD 
+	| LdDF 
+	| StDF 
+	| IfEq 
+	| IfLE 
+	| IfFEq 
+	| IfFLE 
+	| CallCls 
+	| CallDir 
+	| Save 
+	| Restore 
+
+let print_fundef depth {name = (name_l, name_type); args = arg_list; formal_fv = fv_list; body = exp} =
+	print_indent depth; print_string "fundef = {"; print_newline ();
+	print_indent (depth + 1); print_string "name = "; Id.print_l name_l; print_newline ();
+	print_indent (depth + 1); print_string "args = "; List.iter (fun tuple -> print_t_tuple tuple) arg_list; print_newline ();
+	print_indent (depth + 1); print_string "formal_fv = "; List.iter (fun tuple -> print_t_tuple tuple) fv_list; print_newline ();
+	print_indent (depth + 1); print_string "body = "; print_newline (); print_code (depth + 2) exp;
+	print_indent depth; print_string "}"; print_newline ()
+
+let print_prog depth (Prog (fundef_list, exp)) =
+	print_string "<PROG> "; print_newline ();
+	print_indent (depth + 1); print_string "fundef list = "; print_newline ();
+	List.iter (print_fundef (depth + 2)) fundef_list;
+	print_indent (depth + 1); print_string "Closure.t = "; print_newline ();
+	print_code (depth + 2) exp
+*)

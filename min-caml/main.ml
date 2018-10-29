@@ -12,13 +12,13 @@ let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 	Format.eprintf "iteration %d@." n;
 	if n = 0 then e else
 	let e' = 
-			(Elim.f 
-				(ConstFold.f 
-					(Inline.f !inline_flag 
-						(Assoc.f 
-							(Beta.f !beta_flag 
-								(ComSubexpElim.f !cse_flag
-									e)))))) in
+		(Elim.f 
+			(ConstFold.f 
+				(Inline.f !inline_flag 
+					(Assoc.f 
+						(Beta.f !beta_flag 
+							(ComSubexpElim.f !cse_flag
+								e)))))) in
 	if e = e' then e else
 	iter (n - 1) e'
 

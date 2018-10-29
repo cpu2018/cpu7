@@ -130,7 +130,7 @@ let is_already_newline flag =
 	if !flag = 0 then (print_newline (); flag := 1)
 	else ()
 
-let rec print_kNormal depth expr =
+let rec print_closure depth expr =
 	print_indent depth; newline_flag := 0;
 	match expr with
 	| Unit 		 -> print_string "<UNIT> "
@@ -226,7 +226,7 @@ let rec print_kNormal depth expr =
 	| ExtArray x 			 -> print_string "<EXTARRAY> " ; 
 								Id.print_l x
 
-and print_code depth expr = print_kNormal depth expr; is_already_newline newline_flag
+and print_code depth expr = print_closure depth expr; is_already_newline newline_flag
 
 let print_fundef depth {name = (name_l, name_type); args = arg_list; formal_fv = fv_list; body = exp} =
 	print_indent depth; print_string "fundef = {"; print_newline ();
