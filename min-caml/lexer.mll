@@ -77,7 +77,7 @@ rule token = parse
     { COMMA }
 | '_'
     { IDENT(Id.gentmp Type.Unit) }
-| "Array.create" | "Array.make" (* [XX] ad hoc *)
+| "Array.create" | "Array.make" | "create_array"(* [XX] ad hoc *)
     { ARRAY_CREATE }
 | '.'
     { DOT }
@@ -101,6 +101,8 @@ and comment = parse
 | "(*"
     { comment lexbuf;
       comment lexbuf }
+| newline
+	{ Lexing.new_line lexbuf; comment lexbuf; () }
 | eof
     { Format.eprintf "warning: unterminated comment@." }
 | _

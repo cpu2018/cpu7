@@ -2,6 +2,11 @@
 (* parserが利用する変数、関数、型などの定義 *)
 open Syntax
 let addtyp x = (x, Type.gentyp ())
+let getpos () = {
+		   ls = (Parsing.symbol_start_pos ()).Lexing.pos_lnum;
+		   le = (Parsing.symbol_end_pos ()).Lexing.pos_lnum;
+           chs = (Parsing.symbol_start_pos ()).Lexing.pos_cnum - (Parsing.symbol_start_pos ()).Lexing.pos_bol;
+           che = (Parsing.symbol_end_pos ()).Lexing.pos_cnum - (Parsing.symbol_end_pos ()).Lexing.pos_bol}
 %}
 
 /* (* 字句を表すデータ型の定義 (caml2html: parser_token) *) */
@@ -49,7 +54,7 @@ let addtyp x = (x, Type.gentyp ())
 %left COMMA
 %left EQUAL LESS_GREATER LESS GREATER LESS_EQUAL GREATER_EQUAL
 %left PLUS MINUS PLUS_DOT MINUS_DOT
-%left AST_DOT SLASH_DOT
+%left AST_DOT SLASH_DOT AST SLASH
 %right prec_unary_minus
 %left prec_app
 %left DOT
@@ -64,28 +69,30 @@ simple_exp: /* (* 括弧をつけなくても関数の引数になれる式 (caml2html: parser_simp
 | LPAREN exp RPAREN
     { $2 }
 | LPAREN RPAREN
-    { Unit }
+    { Unit (getpos ()) }
 | BOOL
-    { Bool($1) }
+    { Bool($1, getpos ()) }
 | INT
-    { Int($1) }
+    { Int($1, getpos ()) }
 | FLOAT
-    { Float($1) }
+    { Float($1, getpos ()) }
 | IDENT
-    { Var($1) }
+    { Var($1, getpos ()) }
 | simple_exp DOT LPAREN exp RPAREN
     { Get($1, $4) }
 
 exp: /* (* 一般の式 (caml2html: parser_exp) *) */
 | simple_exp
     { $1 }
+| exp SEMICOLON
+	{ $1 }
 | NOT exp
     %prec prec_app
     { Not($2) }
 | MINUS exp
     %prec prec_unary_minus
     { match $2 with
-    | Float(f) -> Float(-.f) (* -1.23などは型エラーではないので別扱い *)
+    | Float(f, p) -> Float(-.f, p) (* -1.23などは型エラーではないので別扱い *)
     | e -> Neg(e) }
 | exp PLUS exp /* (* 足し算を構文解析するルール (caml2html: parser_add) *) */
     { Add($1, $3) }
@@ -139,19 +146,22 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
     { Put($1, $4, $7) }
 | exp SEMICOLON exp
     { Let((Id.gentmp Type.Unit, Type.Unit), $1, $3) }
+| exp SEMICOLON exp SEMICOLON
+    { Let((Id.gentmp Type.Unit, Type.Unit), $1, $3) }
 | ARRAY_CREATE simple_exp simple_exp
     %prec prec_app
     { Array($2, $3) }
 | error
     { failwith
-        (Printf.sprintf "parse error near line %d characters %d-%d"
+        (Printf.sprintf "parse error near line %d-%d characters %d-%d"
 		   ((Parsing.symbol_start_pos ()).Lexing.pos_lnum)
+		   ((Parsing.symbol_end_pos ()).Lexing.pos_lnum)
            ((Parsing.symbol_start_pos ()).Lexing.pos_cnum - (Parsing.symbol_start_pos ()).Lexing.pos_bol)
            ((Parsing.symbol_end_pos ()).Lexing.pos_cnum - (Parsing.symbol_end_pos ()).Lexing.pos_bol)) }
 
 fundef:
 | IDENT formal_args EQUAL exp
-    { { name = addtyp $1; args = $2; body = $4 } }
+    { { name = (addtyp $1, getpos ()); args = $2; body = $4 } }
 
 formal_args:
 | IDENT formal_args
