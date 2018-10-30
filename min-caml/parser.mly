@@ -147,7 +147,7 @@ exp: /* (* ∞Ï»Ã§Œº∞ (caml2html: parser_exp) *) */
         (Printf.sprintf "parse error near line %d characters %d-%d"
 		   ((Parsing.symbol_start_pos ()).Lexing.pos_lnum)
            ((Parsing.symbol_start_pos ()).Lexing.pos_cnum - (Parsing.symbol_start_pos ()).Lexing.pos_bol)
-           ((Parsing.symbol_end_pos ()).Lexing.pos_cnum - (Parsing.symbol_start_pos ()).Lexing.pos_bol)) }
+           ((Parsing.symbol_end_pos ()).Lexing.pos_cnum - (Parsing.symbol_end_pos ()).Lexing.pos_bol)) }
 
 fundef:
 | IDENT formal_args EQUAL exp
