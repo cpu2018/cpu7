@@ -1,0 +1,49 @@
+open Closure
+
+let tuple_list : ((Id.t * Type.t) * t) list ref = ref []
+
+(* Id.t -> ((Id.t * Type.t) * t) list -> (Type.t * Closure.t) *)
+let rec find_tuple x = function
+	| [] -> Type.WildCard, WildCard
+	| ((name, ty), tuple)::ys ->
+		if name = x then ty, tuple else find_tuple x ys
+
+(* M -> Closure.t -> Closure.t *)
+let rec g env expr =
+	match e with
+	| Let ((x, t), e1, e2) ->
+		let e1' = g env e1 in
+		(match e1' with
+		| Tuple xs -> (* 要素を追加 *)
+			tuple_list := (x, Tuple xs)::(!tuple_list)
+		| e -> e);
+		Let ((x, t), e1', g env e2)
+	| Tuple xs -> 
+		let = flatten_tuple env xs in
+		
+	| LetTuple (xst, y, e) -> 
+	| AppCls (x, ys) -> 
+	| AppDir (Id.L(x), ys) -> 
+	| exp -> exp
+
+(* M -> Id.t list -> (Id.t * Type.t) list *)
+(* 単純なtupleを平坦化する関数: まだ関数適用についてはは実装されていない *)
+and flatten_tuple env xs = function
+	| [] -> []
+	| id::ys ->
+		let id_type, id_content = find_tuple id x in
+		(match id_type, id_content with
+		| Type.WildCard, WildCard -> (id, M.find id)::(flatten_tuple env ys)
+		| Type.Tuple type_list, Tuple id_list -> 
+			
+			id_list::(flatten_tuple ys env))
+
+let rec f print_flag prog =
+	let (fundef_list, e) = prog in
+	let flatten_prog = (fundef_list, g env e) in
+	if print_flag = 1
+	then
+		(print_prog 0 flatten_prog;
+		 flatten_prog)
+	else
+		flatten_prog

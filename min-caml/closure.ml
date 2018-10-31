@@ -25,6 +25,7 @@ type t = (* クロージャ変換後の式 (caml2html: closure_t) *)
 	| Get of Id.t * Id.t
 	| Put of Id.t * Id.t * Id.t
 	| ExtArray of Id.l
+	| WildCard
 type fundef = { name : Id.l * Type.t;
 				args : (Id.t * Type.t) list;
 				formal_fv : (Id.t * Type.t) list;
@@ -227,6 +228,7 @@ let rec print_closure depth expr =
 								print_t (depth + 1)	z
 	| ExtArray x 			 -> print_string "<EXTARRAY> " ; 
 								Id.print_l x
+	| WildCard				 -> ()
 
 and print_code depth expr = print_closure depth expr; is_already_newline newline_flag
 

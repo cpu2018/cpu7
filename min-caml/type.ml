@@ -7,6 +7,7 @@ type t = (* MinCamlの型を表現するデータ型 (caml2html: type_t) *)
 	| Tuple of t list
 	| Array of t
 	| Var of t option ref
+	| WildCard
 
 let gentyp () = Var(ref None) (* 新しい型変数を作る *)
 
@@ -35,5 +36,6 @@ let rec print_type = function
 		print_string " Var (ref Some (";
 		print_type t;
 		print_string ")) "
+	| WildCard -> ()
 
 let print_code t = print_type t; print_newline ()
