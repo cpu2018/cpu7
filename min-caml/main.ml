@@ -10,7 +10,7 @@ let cls_flag = ref 0
 
 let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 	Format.eprintf "iteration %d@." n;
-	if n = 0 then e else
+	if n < 1 then e else
 	let e' = 
 		(Elim.f 
 			(ConstFold.f 

@@ -134,8 +134,10 @@ let rec print_syntax depth expr =
 								List.iter (print_code (depth + 1)) xs
 	| Tuple xs  		 	 -> print_string "<TUPLE> "	 ; print_newline ();
 								List.iter (print_code (depth + 1)) xs
-	| LetTuple (xts, y, e) -> print_string "<LETTUPLE> " ; print_newline ();
+	| LetTuple (xts, y, e)   -> print_string "<LETTUPLE> " ; print_newline ();
+								print_indent (depth + 1); print_string "<TUPLE> ";
 								List.iter print_t_tuple xts;
+								print_string "</TUPLE> "; print_newline ();
 								print_code (depth + 1)  y;
 								print_indent depth; print_string "<IN>"; print_newline ();
 								(*print_code (depth + 1)  e*)

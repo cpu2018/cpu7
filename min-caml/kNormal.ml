@@ -294,13 +294,13 @@ let rec print_kNormal depth expr =
 								List.iter (fun x -> Id.print_t x; print_string ", ") xs;
 								print_string "</ARGS> ";
 	| Tuple xs  		 	 -> print_string "<TUPLE> "; print_newline ();
-								List.iter (fun x -> Id.print_t x; print_string ", ") xs
-	| LetTuple (xts, y, e)	 -> print_string "<LETTUPLE> ";
+								print_indent (depth + 1); List.iter (fun x -> Id.print_t x; print_string ", ") xs
+	| LetTuple (xts, y, e)	 -> print_string "<LETTUPLE> "; print_newline ();
 								print_indent (depth + 1); print_string "<TUPLE> ";
 								List.iter print_t_tuple xts;
 								print_string "</TUPLE>"; print_newline ();
 								print_t (depth + 1) y; print_newline ();
-								print_code (depth + 1)  e
+								print_code (depth + 1) e
 	| Get (x, y)     		 -> print_string "<GET> "; print_newline ();
 								print_t (depth + 1) x; print_newline ();
 								print_t (depth + 1) y
