@@ -7,6 +7,7 @@ let beta_flag = ref 0
 let inline_flag = ref 0
 let before_cls_flag = ref 0
 let cls_flag = ref 0
+let flattening_flag = ref 0
 
 let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 	Format.eprintf "iteration %d@." n;
@@ -29,13 +30,14 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 		(RegAlloc.f
 			(Simm.f
 				(Virtual.f
+				(Flattening.f !flattening_flag
 					(Closure.f !before_cls_flag !cls_flag
 						(iter !limit
 							(Alpha.f !alpha_flag
 								(KNormal.f !kNormal_flag
 									(Typing.f !syntax_flag
 										(Parser.exp Lexer.token l)))))))))
-
+)
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 
 let file f = (* ファイルをコンパイルしてファイルに出力する (caml2html: main_file) *)
@@ -60,7 +62,9 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 		 ("-beta", Arg.Unit(fun () -> beta_flag := 1), "dump code after beta");
 		 ("-inline", Arg.Unit(fun () -> inline_flag := 1), "dump code after inline");
 		 ("-before_cls", Arg.Unit(fun () -> before_cls_flag := 1), "dump code before closure");
-		 ("-cls", Arg.Unit(fun () -> cls_flag := 1), "dump code after closure")
+		 ("-cls", Arg.Unit(fun () -> cls_flag := 1), "dump code after closure");
+		 ("-flatten", Arg.Unit(fun () -> flattening_flag := 1), "dump code after flattening");
+		 ("-flattening", Arg.Unit(fun () -> flattening_flag := 1), "dump code after flattening")
 		 ]
 		(fun s -> files := !files @ [s])
 		("Mitou Min-Caml Compiler (C) Eijiro Sumii\n" ^
