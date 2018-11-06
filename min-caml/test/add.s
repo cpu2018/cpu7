@@ -1,27 +1,23 @@
-.data
-.balign	8
-.text
-.globl	min_caml_start
-min_caml_start:
-.globl	_min_caml_start
-_min_caml_start: # for cygwin
-	pushl	%eax
-	pushl	%ebx
-	pushl	%ecx
-	pushl	%edx
-	pushl	%esi
-	pushl	%edi
-	pushl	%ebp
-	movl	32(%esp),%ebp
-	movl	36(%esp),%eax
-	movl	%eax,min_caml_hp
-	movl	$3, %eax
-	call	min_caml_print_init
-	popl	%ebp
-	popl	%edi
-	popl	%esi
-	popl	%edx
-	popl	%ecx
-	popl	%ebx
-	popl	%eax
-	ret
+	.text
+	.globl _min_caml_start
+	.align 2
+_min_caml_start: # main entry point
+	mflr	r0
+	stmw	r30, -8(r1)
+	stw	r0, 8(r1)
+	stwu	r1, -96(r1)
+#	main program starts
+	li	r2, 3
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	min_caml_print_init
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+#	main program ends
+	lwz	r1, 0(r1)
+	lwz	r0, 8(r1)
+	mtlr	r0
+	lmw	r30, -8(r1)
+	blr
