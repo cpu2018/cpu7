@@ -43,11 +43,11 @@ let rec shuffle sw xys =
 	match List.partition (fun (_, y) -> List.mem_assoc y xys) xys with
 	| [], [] -> []
 	| (x, y) :: xys, [] -> (* no acyclic moves; resolve a cyclic move *)
-			(y, sw) :: (x, y) :: shuffle sw (List.map
-																				 (function
-																					 | (y', z) when y = y' -> (sw, z)
-																					 | yz -> yz)
-																				 xys)
+		(y, sw) :: (x, y) :: shuffle sw (List.map
+											(function
+											 | (y', z) when y = y' -> (sw, z)
+											 | yz -> yz)
+										 xys)
 	| xys, acyc -> acyc @ shuffle sw xys
 
 type dest = Tail | NonTail of Id.t (* 末尾かどうかを表すデータ型 (caml2html: emit_dest) *)
