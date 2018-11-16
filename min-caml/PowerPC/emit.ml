@@ -1,13 +1,10 @@
 open Asm
+open Mylib
 
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"
 
-let external_methods =
-"min_caml_print_int:
-\tout\tr2\n"
-
-let print_external_methods () = Printf.fprintf oc external_methods
+(* let ic = Printf.open_in "mylib.s"*)
 
 let stackset = ref S.empty (* すでにSaveされた変数の集合 (caml2html: emit_stackset) *)
 let stackmap = ref [] (* Saveされた変数の、スタックにおける位置 (caml2html: emit_stackmap) *)
@@ -291,7 +288,7 @@ let f oc (Prog(data, fundefs, e)) =
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
-	print_external_methods ();
+	Mylib.print_external_methods oc;
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	Printf.fprintf oc "_min_caml_start: # main entry point\n";
 	Printf.fprintf oc "\tmflr\tr0\n";
