@@ -18,6 +18,10 @@ let genid s =
 		(incr counter; (* カウンターをインクリメント *)
 		Printf.sprintf "%s.%d" s !counter)
 
+let gen_fun_name () = 
+	incr counter;
+	Printf.sprintf "Fun.%d" !counter
+
 (*  *)
 let rec id_of_typ = function
 	| Type.Unit -> "u"

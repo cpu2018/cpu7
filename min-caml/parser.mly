@@ -34,6 +34,8 @@ let getpos () = {
 %token <Id.t> IDENT
 %token LET
 %token IN
+%token FUN
+%token ARROW
 %token REC
 %token COMMA
 %token ARRAY_CREATE
@@ -131,6 +133,9 @@ exp: /* (* ∞Ï»Ã§Œº∞ (caml2html: parser_exp) *) */
 | LET IDENT EQUAL exp IN exp
     %prec prec_let
     { Let(addtyp $2, $4, $6) }
+| FUN funargs ARROW exp
+    %prec prec_let
+	{ Fun($2, $4, getpos ()) }
 | LET REC fundef IN exp
     %prec prec_let
     { LetRec($3, $5) }
@@ -168,6 +173,12 @@ formal_args:
     { addtyp $1 :: $2 }
 | IDENT
     { [addtyp $1] }
+
+funargs:
+| IDENT funargs
+	{ addtyp $1 :: $2 }
+| IDENT
+	{ [addtyp $1] }
 
 actual_args:
 | actual_args simple_exp

@@ -2,8 +2,6 @@
 	.globl _min_caml_start
 	.align 2
 # ここからライブラリ
-	.text
-	.align 	2
 	.global min_caml_print_int
 min_caml_print_int:
 	mflr	r31 # リンクレジスタの値をr31に一時格納
@@ -75,8 +73,8 @@ through: #引かない場合:次に割られる値はそのまま、商にも何
 	subi	r6, r6, 1
 	bgt	cr7, q2r7
 	blr
-
-# ここまでライブラリ_min_caml_start: # main entry point
+# ここまでライブラリ
+_min_caml_start: # main entry point
 	mflr	r0
 	stmw	r30, -8(r1)
 	stw	r0, 8(r1)

@@ -71,6 +71,10 @@ rule token = parse
     { LET }
 | "in"
     { IN }
+| "fun"
+	{ FUN }
+| "->"
+	{ ARROW }
 | "rec"
     { REC }
 | ','

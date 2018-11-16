@@ -19,6 +19,7 @@ type t = (* MinCamlの構文を表現するデータ型 (caml2html: syntax_t) *)
 	| If of t * t * t
 	| Let of (Id.t * Type.t) * t * t
 	| Var of Id.t * pos
+	| Fun of (Id.t * Type.t) list * t * pos
 	| LetRec of fundef * t
 	| App of t * t list
 	| Tuple of t list
@@ -38,10 +39,12 @@ let rec errpos e =
     | LE (t, _) | If (t, _, _) | App (t, _) | Tuple (t::_) 
 	| Array (t, _) | Get (t, _) | Put (t, _, _)
     	-> errpos t
-	|Let (_, t, _)|LetTuple (_, t, _)
+	| Let (_, t, _) | LetTuple (_, t, _)
     	-> errpos t
-	|LetRec ({name = (_, pos); args = _; body =_}, _)
+	| LetRec ({name = (_, pos); args = _; body =_}, _)
     	-> pos
+	| Fun (_, _, pos)
+		-> pos
 
 let print_pos {ls = ls; le = le; chs = chs; che = che} =
 	Printf.printf "typing error near line %d-%d character %d-%d\n" ls le chs che; ()
@@ -119,6 +122,11 @@ let rec print_syntax depth expr =
 								(*print_code (depth + 1) e2*)
 								print_code depth e2
 	| Var (x, _)			 -> print_string "<VAR> "	 ; Id.print_t x;
+	| Fun (args, e, _)		 ->	print_string "<FUN> "	 ;
+								print_indent (depth + 1); print_string "<ARGS> ";
+								List.iter print_t_tuple args;
+								print_string " </ARGS>"; print_newline ();
+								print_code (depth + 2) e
 	| LetRec ({name = ((x, t), _); args = yts; body = e1}, e2)
 							 -> print_string "<LETREC> " ; 
 								Id.print_t x    		 ; print_string " ------ Type : "; Type.print_code t;

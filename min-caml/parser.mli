@@ -23,6 +23,8 @@ type token =
   | IDENT of (Id.t)
   | LET
   | IN
+  | FUN
+  | ARROW
   | REC
   | COMMA
   | ARRAY_CREATE
