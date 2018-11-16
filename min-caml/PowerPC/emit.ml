@@ -3,6 +3,12 @@ open Asm
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"
 
+let external_methods =
+"min_caml_print_int:
+\tout\tr2\n"
+
+let print_external_methods () = Printf.fprintf oc external_methods
+
 let stackset = ref S.empty (* すでにSaveされた変数の集合 (caml2html: emit_stackset) *)
 let stackmap = ref [] (* Saveされた変数の、スタックにおける位置 (caml2html: emit_stackmap) *)
 let save x =
@@ -22,10 +28,10 @@ let locate x =
 		| y :: zs -> List.map succ (loc zs) in
 	loc !stackmap
 let offset x = 4 * List.hd (locate x)
-let stacksize () = align ((List.length !stackmap + 1) * 4)
+let stacksize () = align ((List.length !stackmap + 1) * 4) (* もしstackmap + 1の4倍が8の倍数ならばそれを返す、8の倍数でなければ4を足して返す *)
 
-let reg r =
-	if is_reg r
+let reg r = (* レジスタを表すための衣("%"記号)を取る作業 *)
+	if is_reg r (* レジスタかどうか *)
 	then String.sub r 1 (String.length r - 1)
 	else r
 
@@ -56,18 +62,26 @@ let rec g oc = function (* 命令列のアセンブリ生成 (caml2html: emit_g) *)
 	| dest, Let((x, t), exp, e) ->
 			g' oc (NonTail(x), exp);
 			g oc (dest, e)
+	| dest, WildCard -> raise FindWildCard
 and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	(* 末尾でなかったら計算結果をdestにセット (caml2html: emit_nontail) *)
 	| NonTail(_), Nop -> ()
-	| NonTail(x), Li(i) when -32768 <= i && i < 32768 -> Printf.fprintf oc "\tli\t%s, %d\n" (reg x) i
+	| NonTail(x), Li(i) when -32768 <= i && i < 32768 
+			-> Printf.fprintf oc "\tli\t%s, %d\n" (reg x) i
+			(*
+			-> Printf.fprintf oc "\taddi\t%s, r0, %d\n" (reg x) i
+			*)
 	| NonTail(x), Li(i) ->
 			let n = i lsr 16 in
 			let m = i lxor (n lsl 16) in
 			let r = reg x in
 			Printf.fprintf oc "\tlis\t%s, %d\n" r n;
+			(*
+			Printf.fprintf oc "\taddis\t%s, r0, %d\n" r n;
+			*)
 			Printf.fprintf oc "\tori\t%s, %s, %d\n" r r m
 	| NonTail(x), FLi(Id.L(l)) ->
-			let s = load_label (reg reg_tmp) l in
+			let s = load_label (reg reg_tmp) l in (* reg_tmp は "%r31" のこと*)
 			Printf.fprintf oc "%s\tlfd\t%s, 0(%s)\n" s (reg x) (reg reg_tmp)
 	| NonTail(x), SetL(Id.L(y)) ->
 			let s = load_label x y in
@@ -79,6 +93,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| NonTail(x), Add(y, C(z)) -> Printf.fprintf oc "\taddi\t%s, %s, %d\n" (reg x) (reg y) z
 	| NonTail(x), Sub(y, V(z)) -> Printf.fprintf oc "\tsub\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Sub(y, C(z)) -> Printf.fprintf oc "\tsubi\t%s, %s, %d\n" (reg x) (reg y) z
+	| NonTail(x), Mul(y, V(z)) -> Printf.fprintf oc "\tslw\t%s, %s, %s\n" (reg x) (reg y) (reg z)
+	| NonTail(x), Mul(y, C(z)) -> Printf.fprintf oc "\tslwi\t%s, %s, %d\n" (reg x) (reg y) z
+	| NonTail(x), Div(y, V(z)) -> Printf.fprintf oc "\tsrw\t%s, %s, %s\n" (reg x) (reg y) (reg z)
+	| NonTail(x), Div(y, C(z)) -> Printf.fprintf oc "\tsrwi\t%s, %s, %d\n" (reg x) (reg y) z
 	| NonTail(x), Slw(y, V(z)) -> Printf.fprintf oc "\tslw\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Slw(y, C(z)) -> Printf.fprintf oc "\tslwi\t%s, %s, %d\n" (reg x) (reg y) z
 	| NonTail(x), Lwz(y, V(z)) -> Printf.fprintf oc "\tlwzx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
@@ -115,7 +133,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| Tail, (Nop | Stw _ | Stfd _ | Comment _ | Save _ as exp) ->
 			g' oc (NonTail(Id.gentmp Type.Unit), exp);
 			Printf.fprintf oc "\tblr\n";
-	| Tail, (Li _ | SetL _ | Mr _ | Neg _ | Add _ | Sub _ | Slw _ | Lwz _ as exp) ->
+	| Tail, (Li _ | SetL _ | Mr _ | Neg _ | Add _ | Sub _ | Mul _ | Div _ | Slw _ | Lwz _ as exp) ->
 			g' oc (NonTail(regs.(0)), exp);
 			Printf.fprintf oc "\tblr\n";
 	| Tail, (FLi _ | FMr _ | FNeg _ | FAdd _ | FSub _ | FMul _ | FDiv _ | Lfd _ as exp) ->
@@ -184,11 +202,11 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 			g'_args oc [] ys zs;
 			Printf.fprintf oc "\tb\t%s\n" x
 	| NonTail(a), CallCls(x, ys, zs) ->
-			Printf.fprintf oc "\tmflr\t%s\n" (reg reg_tmp);
+			Printf.fprintf oc "\tmflr\t%s # リンクレジスタの値をr31に一時格納\n" (reg reg_tmp); (* reg_tmp は "%r31" のこと*)
 			g'_args oc [(x, reg_cl)] ys zs;
-			let ss = stacksize () in
-			Printf.fprintf oc "\tstw\t%s, %d(%s)\n" (reg reg_tmp) (ss - 4) (reg reg_sp);
-			Printf.fprintf oc "\taddi\t%s, %s, %d\n" (reg reg_sp) (reg reg_sp) ss;
+			let ss = stacksize () in (* reg_sp は "%r3" のこと *)
+			Printf.fprintf oc "\tstw\t%s, %d(%s) # 格納されたリンクレジスタの値をスタックに積む\n" (reg reg_tmp) (ss - 4) (reg reg_sp);
+			Printf.fprintf oc "\taddi\t%s, %s, %d # スタックポインタを更新\n" (reg reg_sp) (reg reg_sp) ss; (* スタックポインタを更新 *)
 			Printf.fprintf oc "\tlwz\t%s, 0(%s)\n" (reg reg_tmp) (reg reg_cl);
 			Printf.fprintf oc "\tmtctr\t%s\n" (reg reg_tmp);
 			Printf.fprintf oc "\tbctrl\n";
@@ -273,6 +291,7 @@ let f oc (Prog(data, fundefs, e)) =
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
+	print_external_methods ();
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	Printf.fprintf oc "_min_caml_start: # main entry point\n";
 	Printf.fprintf oc "\tmflr\tr0\n";

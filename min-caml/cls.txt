@@ -1,0 +1,50 @@
+<dump after closure>
+=================================================================================================
+<PROG> 
+.   fundef list = 
+.   .   fundef = {
+.   .   .   name = fact.4
+.   .   .   args = x.5, 
+.   .   .   formal_fv = 
+.   .   .   body = 
+.   .   .   .   <LET> Int0 ------ Type :  Int 
+.   .   .   .   .   <INT> 0
+.   .   .   .   <IN>
+.   .   .   .   <IF> 
+.   .   .   .   .   <EQ> 
+.   .   .   .   .   .   x.5
+.   .   .   .   .   .   Int0
+.   .   .   .   <THEN> 
+.   .   .   .   .   <INT> 1
+.   .   .   .   <ELSE> 
+.   .   .   .   .   <LET> Int1 ------ Type :  Int 
+.   .   .   .   .   .   <INT> 1
+.   .   .   .   .   <IN>
+.   .   .   .   .   <LET> Ti2.8 ------ Type :  Int 
+.   .   .   .   .   .   <SUB> 
+.   .   .   .   .   .   .   x.5
+.   .   .   .   .   .   .   Int1
+.   .   .   .   .   <IN>
+.   .   .   .   .   <LET> Ti3.7 ------ Type :  Int 
+.   .   .   .   .   .   <APPDIR> 
+.   .   .   .   .   .   .   <LABEL> fact.4
+.   .   .   .   .   .   .   <ARGS> Ti2.8, </ARGS>
+.   .   .   .   .   <IN>
+.   .   .   .   .   <MUL> 
+.   .   .   .   .   .   x.5
+.   .   .   .   .   .   Ti3.7
+.   .   }
+.   Closure.t = 
+.   .   <LET> Int10 ------ Type :  Int 
+.   .   .   <INT> 10
+.   .   <IN>
+.   .   <LET> Ti1.6 ------ Type :  Int 
+.   .   .   <APPDIR> 
+.   .   .   .   <LABEL> fact.4
+.   .   .   .   <ARGS> Int10, </ARGS>
+.   .   <IN>
+.   .   <APPDIR> 
+.   .   .   <LABEL> min_caml_print_int
+.   .   .   <ARGS> Ti1.6, </ARGS>
+=================================================================================================
+

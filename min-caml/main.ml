@@ -8,6 +8,9 @@ let inline_flag = ref 0
 let before_cls_flag = ref 0
 let cls_flag = ref 0
 let flattening_flag = ref 0
+let virtual_flag = ref 0
+let simm_flag = ref 0
+let regalloc_flag = ref 0
 
 let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 	Format.eprintf "iteration %d@." n;
@@ -27,9 +30,9 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 	Id.counter := 0;
 	Typing.extenv := M.empty;
 	Emit.f outchan
-		(RegAlloc.f
-			(Simm.f
-				(Virtual.f
+		(RegAlloc.f !regalloc_flag
+			(Simm.f !simm_flag
+				(Virtual.f !virtual_flag
 				(*
 				(Flattening.f !flattening_flag
 				*)
@@ -39,7 +42,7 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 								(KNormal.f !kNormal_flag
 									(Typing.f !syntax_flag
 										(Parser.exp Lexer.token l)))))))))
-(*)*)
+(* ) *)
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 
 let file f = (* ファイルをコンパイルしてファイルに出力する (caml2html: main_file) *)
@@ -66,7 +69,23 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 		 ("-before_cls", Arg.Unit(fun () -> before_cls_flag := 1), "dump code before closure");
 		 ("-cls", Arg.Unit(fun () -> cls_flag := 1), "dump code after closure");
 		 ("-flatten", Arg.Unit(fun () -> flattening_flag := 1), "dump code after flattening");
-		 ("-flattening", Arg.Unit(fun () -> flattening_flag := 1), "dump code after flattening")
+		 ("-flattening", Arg.Unit(fun () -> flattening_flag := 1), "dump code after flattening");
+		 ("-virtual", Arg.Unit(fun () -> virtual_flag := 1), "dump code after virtual");
+		 ("-simm", Arg.Unit(fun () -> simm_flag := 1), "dump code after simm");
+		 ("-regalloc", Arg.Unit(fun () -> regalloc_flag := 1), "dump code after regalloc");
+		 ("-dumpall", Arg.Unit(fun () -> 
+		 	syntax_flag := 1; 
+		 	kNormal_flag := 1; 
+			alpha_flag := 1; 
+			cse_flag := 1; 
+			beta_flag := 1;
+			inline_flag := 1; 
+			before_cls_flag := 1; 
+			cls_flag := 1; 
+			flattening_flag := 1; 
+			virtual_flag := 1; 
+			simm_flag := 1; 
+			regalloc_flag := 1), "dump all")
 		 ]
 		(fun s -> files := !files @ [s])
 		("Mitou Min-Caml Compiler (C) Eijiro Sumii\n" ^

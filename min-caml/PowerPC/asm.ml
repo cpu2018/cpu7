@@ -1,9 +1,11 @@
 (* PowerPC assembly with a few virtual instructions *)
+exception FindWildCard
 
 type id_or_imm = V of Id.t | C of int
 type t = (* 命令の列 (caml2html: sparcasm_t) *)
   | Ans of exp
   | Let of (Id.t * Type.t) * exp * t
+  | WildCard
 and exp = (* 一つ一つの命令に対応する式 (caml2html: sparcasm_exp) *)
   | Nop
   | Li of int
@@ -13,6 +15,8 @@ and exp = (* 一つ一つの命令に対応する式 (caml2html: sparcasm_exp) *)
   | Neg of Id.t
   | Add of Id.t * id_or_imm
   | Sub of Id.t * id_or_imm
+  | Mul of Id.t * id_or_imm
+  | Div of Id.t * id_or_imm
   | Slw of Id.t * id_or_imm
   | Lwz of Id.t * id_or_imm
   | Stw of Id.t * Id.t * id_or_imm
@@ -54,10 +58,11 @@ let allfregs = Array.to_list fregs
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)
 let reg_sw = regs.(Array.length regs - 2) (* temporary for swap *)
 let reg_fsw = fregs.(Array.length fregs - 1) (* temporary for swap *)
+(*let reg_zero = "%r00" (* zero register --- bobo custom *)*)
 let reg_sp = "%r3" (* stack pointer *)
 let reg_hp = "%r4" (* heap pointer (caml2html: sparcasm_reghp) *)
-let reg_tmp = "%r31" (* [XX] ad hoc *)
-let is_reg x = (x.[0] = '%')
+let reg_tmp = "%r31" (* [XX] ad hoc *) (* link register の内容を一時的に格納*)
+let is_reg x = (x.[0] = '%') (* レジスタかどうかを判定 *)
 
 (* super-tenuki *)
 let rec remove_and_uniq xs = function
@@ -70,7 +75,7 @@ let fv_id_or_imm = function V(x) -> [x] | _ -> []
 let rec fv_exp = function
   | Nop | Li(_) | FLi(_) | SetL(_) | Comment(_) | Restore(_) -> []
   | Mr(x) | Neg(x) | FMr(x) | FNeg(x) | Save(x, _) -> [x]
-  | Add(x, y') | Sub(x, y') | Slw(x, y') | Lfd(x, y') | Lwz(x, y') -> x :: fv_id_or_imm y'
+  | Add(x, y') | Sub(x, y') | Mul(x, y')| Div(x, y') | Slw(x, y') | Lfd(x, y') | Lwz(x, y') -> x :: fv_id_or_imm y'
   | Stw(x, y, z') | Stfd(x, y, z') -> x :: y :: fv_id_or_imm z'
   | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) -> [x; y]
   | IfEq(x, y', e1, e2) | IfLE(x, y', e1, e2) | IfGE(x, y', e1, e2) ->  x :: fv_id_or_imm y' @ remove_and_uniq S.empty (fv e1 @ fv e2) (* uniq here just for efficiency *)
@@ -81,11 +86,205 @@ and fv = function
   | Ans(exp) -> fv_exp exp
   | Let((x, t), exp, e) ->
       fv_exp exp @ remove_and_uniq (S.singleton x) (fv e)
+  | WildCard -> raise FindWildCard
 let fv e = remove_and_uniq S.empty (fv e)
 
 let rec concat e1 xt e2 =
   match e1 with
   | Ans(exp) -> Let(xt, exp, e2)
   | Let(yt, exp, e1') -> Let(yt, exp, concat e1' xt e2)
+  | WildCard -> raise FindWildCard
 
 let align i = (if i mod 8 = 0 then i else i + 4)
+
+(* ここからデバッグ用print関数 *)
+
+let rec print_indent depth =
+	if depth = 0 then ()
+	else (print_string ".   "; print_indent (depth - 1))
+
+let print_id_or_imm = function
+	| V idt -> Id.print_t idt
+	| C i -> print_string (string_of_int i)
+
+let rec print_id_list fv_list =
+	List.iter (fun id -> Id.print_t id; print_string ", ") fv_list
+
+let print_t_tuple (x, t) = Id.print_t x; print_string ", "
+
+let rec print_l_float depth (idl, floaT) =
+	print_indent depth; Id.print_l idl; print_newline ();
+	print_indent depth; print_string (string_of_float floaT); print_newline ()
+
+let newline_flag = ref 0
+
+let is_already_newline flag = 
+	if !flag = 0 then (print_newline (); flag := 1)
+	else ()
+
+let rec print_t depth ty =
+	is_already_newline newline_flag;
+	print_indent depth; newline_flag := 0;
+	match ty with
+	| Ans exp -> print_string "Ans "; print_exp (depth + 1) exp
+	| Let ((x, y), exp, t) ->
+		print_string "Let "	 ;
+		Id.print_t x; print_string " ------ Type : "; Type.print_code y; newline_flag := 1;
+		print_exp (depth + 1) exp; print_newline ();
+		print_indent depth; print_string "in ";
+		print_t depth t
+	| WildCard -> print_string "WildCard"; raise FindWildCard
+and print_exp depth expr =
+	is_already_newline newline_flag;
+	print_indent depth; newline_flag := 0;
+	match expr with
+	| Nop -> print_string "Nop "
+	| Li i -> print_string "Li "; print_string (string_of_int i)
+	| FLi x -> print_string "FLi "; Id.print_l x
+	| SetL x -> print_string "SetL "; Id.print_l x
+	| Mr x -> print_string "Mr "; Id.print_t x
+	| Neg x -> print_string "Neg "; Id.print_t x
+	| Add (x, y) -> 
+		print_string "Add "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); print_id_or_imm y
+	| Sub (x, y) -> 
+		print_string "Sub "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); print_id_or_imm y
+	| Mul (x, y) ->  
+		print_string "Mul "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); print_id_or_imm y
+	| Div (x, y) -> 
+		print_string "Div "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); print_id_or_imm y
+	| Slw (x, y) -> 
+		print_string "Slw "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); print_id_or_imm y
+	| Lwz (x, y) -> 
+		print_string "Lwz "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); print_id_or_imm y
+	| Stw (x, y, z) -> 
+		print_string "Stw "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); Id.print_t y; print_newline ();
+		print_indent (depth + 1); print_id_or_imm z
+	| FMr x -> 
+		print_string "FMr "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
+	| FNeg x -> 
+		print_string "FNeg "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
+	| FAdd (x, y) -> 
+		print_string "FAdd "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); Id.print_t y
+	| FSub (x, y) -> 
+		print_string "FSub "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); Id.print_t y
+	| FMul (x, y) -> 
+		print_string "FMul "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); Id.print_t y
+	| FDiv (x, y) -> 
+		print_string "FDiv "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); Id.print_t y
+	| Lfd (idt, idim) -> 
+		print_string "Lfd "; print_newline ();
+		print_indent (depth + 1); Id.print_t idt; print_newline ();
+		print_indent (depth + 1); print_id_or_imm idim
+	| Stfd (idt1, idt2, idim) -> 
+		print_string "Stfd "; print_newline ();
+		print_indent (depth + 1); Id.print_t idt1; print_newline ();
+		print_indent (depth + 1); Id.print_t idt2; print_newline ();
+		print_indent (depth + 1); print_id_or_imm idim
+	| Comment str -> print_string "Comment "; print_string str
+	| IfEq (idt, idim, t1, t2) -> 
+		print_string "IfEq "; print_newline ();
+		print_indent (depth + 1); Id.print_t idt; print_newline ();
+		print_indent (depth + 1); print_id_or_imm idim; print_newline ();
+		print_indent depth; print_string "then";
+		print_t (depth + 1) t1; print_newline ();
+		print_indent depth; print_string "else";
+		print_t (depth + 1) t2
+	| IfLE (idt, idim, t1, t2) -> 
+		print_string "IfLE "; print_newline ();
+		print_indent (depth + 1); Id.print_t idt; print_newline ();
+		print_indent (depth + 1); print_id_or_imm idim; print_newline ();
+		print_indent depth; print_string "then";
+		print_t (depth + 1) t1; print_newline ();
+		print_indent depth; print_string "else";
+		print_t (depth + 1) t2
+	| IfGE (idt, idim, t1, t2) -> 
+		print_string "IfGE "; print_newline ();
+		print_indent (depth + 1); Id.print_t idt; print_newline ();
+		print_indent (depth + 1); print_id_or_imm idim; print_newline ();
+		print_indent depth; print_string "then";
+		print_t (depth + 1) t1; print_newline ();
+		print_indent depth; print_string "else";
+		print_t (depth + 1) t2
+	| IfFEq (idt1, idt2, t1, t2) ->
+		print_string "IfFEq "; print_newline ();
+		print_indent (depth + 1); Id.print_t idt1; print_newline ();
+		print_indent (depth + 1); Id.print_t idt2; print_newline ();
+		print_indent depth; print_string "then";
+		print_t (depth + 1) t1; print_newline ();
+		print_indent depth; print_string "else";
+		print_t (depth + 1) t2
+	| IfFLE (idt1, idt2, t1, t2) -> 
+		print_string "IfFLE "; print_newline ();
+		print_indent (depth + 1); Id.print_t idt1; print_newline ();
+		print_indent (depth + 1); Id.print_t idt2; print_newline ();
+		print_indent depth; print_string "then";
+		print_t (depth + 1) t1; print_newline ();
+		print_indent depth; print_string "else";
+		print_t (depth + 1) t2
+	| CallCls (idt, idt_list1, idt_list2) -> 
+		print_string "CallCls "; print_newline ();
+		print_indent (depth + 1); print_string "address = "; Id.print_t idt; print_newline ();
+		print_indent (depth + 1); print_string "int args = ";
+		List.iter (fun t -> Id.print_t t; print_string ", ") idt_list1; print_newline ();
+		print_indent (depth + 1); print_string "float args = ";
+		List.iter (fun t -> Id.print_t t; print_string ", ") idt_list2
+	| CallDir (idl, idt_list1, idt_list2) -> 
+		print_string "CallDir "; print_newline ();
+		print_indent (depth + 1); Id.print_l idl; print_newline ();
+		print_indent (depth + 1); print_string "int args = ";
+		List.iter (fun t -> Id.print_t t; print_string ", ") idt_list1; print_newline ();
+		print_indent (depth + 1); print_string "float args = ";
+		List.iter (fun t -> Id.print_t t; print_string ", ") idt_list2
+	| Save (x, y) -> 
+		print_string "Save "; print_newline ();
+		print_indent (depth + 1); Id.print_t x; print_newline ();
+		print_indent (depth + 1); Id.print_t y
+	| Restore x -> 
+		print_string "Restore "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
+
+let print_fundef depth {name = name_l; 
+						args = arg_list; 
+						fargs = farg_list; 
+						body = t;
+						ret = ty} =
+	print_indent depth; print_string "fundef = {"; print_newline ();
+	print_indent (depth + 1); print_string "name = "; Id.print_l name_l; print_newline ();
+	print_indent (depth + 1); print_string "args = "; List.iter (fun id -> Id.print_t id; print_string ", ") arg_list; print_newline ();
+	print_indent (depth + 1); print_string "fargs = "; List.iter (fun id -> Id.print_t id; print_string ", ") farg_list; print_newline ();
+	print_indent (depth + 1); print_string "body = "; print_t (depth + 2) t; print_newline ();
+	print_indent (depth + 1); print_string "ret = Type : ";Type.print_type ty; print_newline ();
+	print_indent depth; print_string "}"; print_newline ()
+
+let print_prog depth (Prog (l_float_list, fundef_list, t)) =
+	print_string "Prog "; print_newline ();
+	print_indent (depth + 1); print_string "(Id.l * float) list = "; print_newline ();
+	List.iter (print_l_float (depth + 2)) l_float_list;
+	print_indent (depth + 1); print_string "fundef list = "; print_newline ();
+	List.iter (print_fundef (depth + 2)) fundef_list;
+	print_indent (depth + 1); print_string "Asm.t = ";
+	print_t (depth + 2) t

@@ -1,7 +1,10 @@
+exception FindWildCard
+
 type id_or_imm = V of Id.t | C of int
 type t =
   | Ans of exp
   | Let of (Id.t * Type.t) * exp * t
+  | WildCard
 and exp =
   | Nop
   | Li of int
@@ -11,6 +14,8 @@ and exp =
   | Neg of Id.t
   | Add of Id.t * id_or_imm
   | Sub of Id.t * id_or_imm
+  | Mul of Id.t * id_or_imm
+  | Div of Id.t * id_or_imm
   | Slw of Id.t * id_or_imm
   | Lwz of Id.t * id_or_imm
   | Stw of Id.t * Id.t * id_or_imm
@@ -56,3 +61,4 @@ val fv : t -> Id.t list
 val concat : t -> Id.t * Type.t -> t -> t
 
 val align : int -> int
+val print_prog : int -> prog -> unit

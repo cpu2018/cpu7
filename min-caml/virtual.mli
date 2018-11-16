@@ -1,1 +1,1 @@
-val f : Closure.prog -> Asm.prog
+val f : int -> Closure.prog -> Asm.prog
