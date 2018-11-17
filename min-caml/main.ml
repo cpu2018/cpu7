@@ -14,6 +14,7 @@ let virtual_flag = ref 0
 let simm_flag = ref 0
 let regalloc_flag = ref 0
 
+(*
 let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 	Format.eprintf "iteration %d@." n;
 	if n < 1 then e else
@@ -46,6 +47,34 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 										(Fun2letrec.f !parsing_flag !fun_flag
 											(Parser.exp Lexer.token l))))))))))
 (* ) *)
+*)
+
+let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
+	Format.eprintf "iteration %d@." n;
+	if n < 1 then e else
+	let e' = 
+		(Elim.f 
+			(ConstFold.f 
+				(Inline.f !inline_flag 
+					(Assoc.f 
+						(Beta.f !beta_flag 
+								e))))) in
+	if e = e' then e else
+	iter (n - 1) e'
+
+let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2html: main_lexbuf) *)
+	Id.counter := 0;
+	Typing.extenv := M.empty;
+	Emit.f outchan
+		(RegAlloc.f !regalloc_flag
+			(Simm.f !simm_flag
+				(Virtual.f !virtual_flag
+					(Closure.f !before_cls_flag !cls_flag
+						(iter !limit
+							(Alpha.f !alpha_flag
+								(KNormal.f !kNormal_flag
+									(Typing.f !syntax_flag
+											(Parser.exp Lexer.token l)))))))))
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 
 let file f = (* ファイルをコンパイルしてファイルに出力する (caml2html: main_file) *)
