@@ -33,16 +33,14 @@ let rec g = function
 		let new_body = g (LetRec ({name = ((letrec_name, Type.gentyp ()), pos); args = args; body = e1}, Var (letrec_name, pos))) in
 		LetRec ({name = ((name, t), pos); args = [arg]; body = new_body}, g e2)
 
-	(*
 	| App (e, e_list) -> App (g e, List.map g e_list)
-	*)
+	(*
+	| App (e, arg::[]) -> 
+		App (g e, List.map g e_list)
 
-	| App (e, args) ->
-		let rev_args = List.rev args in
-		(match rev_args with
-		| arg::[] -> App (g e, [g arg])
-		| outer::remain_args -> App (g (App (e, remain_args)), [g outer]))
-	
+	| App (e, arg::args) -> 
+		App (g e, List.map g e_list)
+	*)
 	| Tuple e_list -> Tuple (List.map g e_list)
 	| LetTuple (names, e1, e2) -> LetTuple (names, g e1, g e2)
 	| Array (x, y) -> Array (g x, g y)

@@ -174,7 +174,17 @@ formal_args:
 | IDENT
     { [addtyp $1] }
 
+argtuple:
+| LPAREN argtuple COMMA argtuple RPAREN
+	{ $2 @ $4 }
+| argtuple COMMA argtuple
+	{ $1 @ $3 }
+| IDENT
+	{ [addtyp $1] }
+
 funargs:
+| argtuple
+	{ $1 }
 | IDENT funargs
 	{ addtyp $1 :: $2 }
 | IDENT

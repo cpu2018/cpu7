@@ -22,6 +22,10 @@ let gen_fun_name () =
 	incr counter;
 	Printf.sprintf "Fun.%d" !counter
 
+let gen_letrec_name name = 
+	incr counter;
+	Printf.sprintf "%s.%d" name !counter
+
 (*  *)
 let rec id_of_typ = function
 	| Type.Unit -> "u"

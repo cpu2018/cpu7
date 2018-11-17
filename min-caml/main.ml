@@ -1,5 +1,6 @@
 let limit = ref 1000
 let syntax_flag = ref 0
+let parsing_flag = ref 0
 let fun_flag = ref 0
 let kNormal_flag = ref 0
 let cse_flag = ref 0
@@ -42,7 +43,7 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 							(Alpha.f !alpha_flag
 								(KNormal.f !kNormal_flag
 									(Typing.f !syntax_flag
-										(Fun2letrec.f !fun_flag
+										(Fun2letrec.f !parsing_flag !fun_flag
 											(Parser.exp Lexer.token l))))))))))
 (* ) *)
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
@@ -61,6 +62,8 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 	Arg.parse
 		[("-inline_size", Arg.Int(fun i -> Inline.threshold := i), "maximum size of functions inlined");
 		 ("-iter", Arg.Int(fun i -> limit := i), "maximum number of optimizations iterated");
+		 ("-parser", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
+		 ("-parsing", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
 		 ("-fun", Arg.Unit(fun () -> fun_flag := 1), "dump code after fun2letrec");
 		 ("-syntax", Arg.Unit(fun () -> syntax_flag := 1), "dump code after type checking");
 		 ("-knormal", Arg.Unit(fun () -> kNormal_flag := 1), "dump code after kNormal");
@@ -77,6 +80,8 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 		 ("-simm", Arg.Unit(fun () -> simm_flag := 1), "dump code after simm");
 		 ("-regalloc", Arg.Unit(fun () -> regalloc_flag := 1), "dump code after regalloc");
 		 ("-dumpall", Arg.Unit(fun () -> 
+		 	parsing_flag := 1;
+			fun_flag := 1;
 		 	syntax_flag := 1; 
 		 	kNormal_flag := 1; 
 			alpha_flag := 1; 

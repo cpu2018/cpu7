@@ -122,24 +122,25 @@ let rec print_syntax depth expr =
 								(*print_code (depth + 1) e2*)
 								print_code depth e2
 	| Var (x, _)			 -> print_string "<VAR> "	 ; Id.print_t x;
-	| Fun (args, e, _)		 ->	print_string "<FUN> "	 ;
+	| Fun (args, e, _)		 ->	print_string "<FUN> "	 ; print_newline ();
 								print_indent (depth + 1); print_string "<ARGS> ";
 								List.iter print_t_tuple args;
 								print_string " </ARGS>"; print_newline ();
-								print_code (depth + 2) e
+								print_code (depth + 1) e
 	| LetRec ({name = ((x, t), _); args = yts; body = e1}, e2)
 							 -> print_string "<LETREC> " ; 
 								Id.print_t x    		 ; print_string " ------ Type : "; Type.print_code t;
 								print_indent (depth + 1); print_string "<ARGS> ";
 								List.iter print_t_tuple yts;
 								print_string " </ARGS>"; print_newline ();
-								print_code (depth + 2) e1;
+								print_code (depth + 1) e1;
 								print_indent depth; print_string "<IN>"; print_newline ();
 								(*print_code (depth + 1) e2*)
 								print_code depth e2
 	| App (x, xs) 		 	 -> print_string "<APP> "	 ; print_newline ();
 								print_code (depth + 1)  x;
-								List.iter (print_code (depth + 1)) xs
+								print_indent (depth + 1) ; print_string "<ARGS> "; print_newline ();
+								List.iter (print_code (depth + 2)) xs
 	| Tuple xs  		 	 -> print_string "<TUPLE> "	 ; print_newline ();
 								List.iter (print_code (depth + 1)) xs
 	| LetTuple (xts, y, e)   -> print_string "<LETTUPLE> " ; print_newline ();
