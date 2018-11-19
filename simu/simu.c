@@ -19,6 +19,18 @@ int p(int i,int j){
   return v;
 }
 
+void r(unsigned char s,char memory[1000][9],int i){
+  for(int k=0;k<8;k++){
+    unsigned char m = (s >> (7-k)) - ((s >> (8-k)) <<1);
+    if(m==1){
+      memory[i][k]='1';
+    }
+    else{
+      memory[i][k]='0';
+    }
+  }
+}
+
 void read_i_j(CPU *cpu,int addr,char *code,int i,int j){
   strcat(cpu->s,(cpu->memory)[addr]);
   strcat(cpu->s,(cpu->memory)[addr+1]);
@@ -27,6 +39,7 @@ void read_i_j(CPU *cpu,int addr,char *code,int i,int j){
   strncpy(code,cpu->s+i,j-i+1);
   code[j-i+1]='\0';
   strcpy(cpu->s,"");
+
 }
 
 int change_ibit(int i,char *code){
@@ -85,7 +98,44 @@ void change_int(char *s,int len,int v){
     }
   }
 }
+
+void slw(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6];
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6];
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_20[6];
+  read_i_j(cpu,addr,code_16_20,16,20);
+
+  int ra = change_ibit(5,code_6_10);
+  int rs = change_ibit(5,code_11_15);
+  int rb = change_ibit(5,code_16_20);
+
+  unsigned int s = change_ibit(64,(cpu->reg)[rs]);
+  unsigned int b = change_ibit(64,(cpu->reg)[rs]);
+
+  unsigned int ns = s << b;
+
+  change_int((cpu->reg)[ra],64,ns);
+  *a+=4;
+}
+
   
+
+void out(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6];
+  read_i_j(cpu,addr,code_6_10,6,10);
+  int ra = change_ibit(5,code_6_10);
+
+  int value = change_ibit_f(64,(cpu->reg)[ra]);
+  printf("c %c\n",value);
+  //printf("d%d\n",value);
+  printf("%d\n",change_ibit_f(64,(cpu->reg)[2]));
+  //printf("%s\n",(cpu->cr)[7]);
+  *a+=4;
+}
 
 void cmpi(CPU *cpu,int *a){
   int addr = *a;
@@ -104,16 +154,44 @@ void cmpi(CPU *cpu,int *a){
   int bf = change_ibit(3,code_6_8);
   
   if (value < sim){
-    strcpy((cpu->cr)[bf],"1000");
+    strcpy((cpu->cr)[bf],"0001");
   }
   else if(value > sim){
-    strcpy((cpu->cr)[bf],"0100");
+    strcpy((cpu->cr)[bf],"0010");
   }
   else{
-    strcpy((cpu->cr)[bf],"0010");
+    strcpy((cpu->cr)[bf],"0100");
   }
   *a += 4;
 }
+
+void cmp(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_8[4];
+  read_i_j(cpu,addr,code_6_8,6,8);
+  char code_11_15[6];
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_20[6];
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int ra = change_ibit(5,code_11_15);
+  int rb = change_ibit(5,code_16_20);
+
+  int va = change_ibit_f(64,(cpu->reg)[ra]);
+  int vb = change_ibit_f(64,(cpu->reg)[rb]);
+  int bf = change_ibit(3,code_6_8);
+
+  if(va < vb){
+    strcpy((cpu->cr)[bf],"0001");
+  }
+  else if(va > vb){
+    strcpy((cpu->cr)[bf],"0010");
+  }
+  else{
+    strcpy((cpu->cr)[bf],"0100");
+  }
+  *a+=4;
+}
+  
 
 void bne(CPU *cpu,int *a){
   int addr = *a;
@@ -126,7 +204,7 @@ void bne(CPU *cpu,int *a){
 
   int cr = change_ibit(5,code_11_15);
   cr = (cr - 2)/4;
-  if(strcmp((cpu->cr)[cr],"0010")==0){
+  if(strcmp((cpu->cr)[cr],"0100")==0){
     *a+=4;
   }
   else{
@@ -134,6 +212,47 @@ void bne(CPU *cpu,int *a){
     *a+=j*4;
   }
 }
+
+void bgt(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6];
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6];
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_29[15];
+  read_i_j(cpu,addr,code_16_29,16,29);
+
+  int cr = change_ibit(5,code_11_15);
+  cr = (cr - 2)/4;
+  if(strcmp((cpu->cr)[cr],"0010")!=0){
+    *a+=4;
+  }
+  else{
+    int j = change_ibit_f(14,code_16_29);
+    *a+=j*4;
+  }
+}
+
+void blt(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6];
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6];
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_29[15];
+  read_i_j(cpu,addr,code_16_29,16,29);
+
+  int cr = change_ibit(5,code_11_15);
+  cr = (cr - 2)/4;
+  if(strcmp((cpu->cr)[cr],"0001")!=0){
+    *a+=4;
+  }
+  else{
+    int j = change_ibit_f(14,code_16_29);
+    *a+=j*4;
+  }
+}
+
 
 void addi(CPU *cpu,int *a){
   int addr = *a;
@@ -200,6 +319,7 @@ void stw(CPU *cpu,int *a){
 }
 
 void mflr(CPU *cpu,int *a){
+  //printf("a\n");
   int addr = *a;
   char code_6_10[6];
   read_i_j(cpu,addr,code_6_10,6,10);
@@ -218,6 +338,8 @@ void mr(CPU *cpu,int *a){
   int rs = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_11_15);
   strcpy((cpu->reg)[ra],(cpu->reg)[rs]);
+  //printf("mr2 %d\n",change_ibit(64,(cpu->reg)[2]));
+  //printf("mr5 %d\n",change_ibit(64,(cpu->reg)[5]));
   *a+=4;
 }
 
@@ -240,6 +362,27 @@ void add(CPU *cpu,int *a){
   change_int((cpu->reg)[rt],64,z);
   *a+=4;
 }
+
+void subf(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6];
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6];
+  int rt = change_ibit(5,code_11_15);
+  read_i_j(cpu,addr,code_11_15,11,15);
+  int ra = change_ibit(5,code_11_15);
+  char code_16_20[6];
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int rb = change_ibit(5,code_16_20);
+
+  int x = change_ibit_f(64,(cpu->reg)[ra]);
+  int y = change_ibit_f(64,(cpu->reg)[rb]);
+  int z = y - x;
+
+  change_int((cpu->reg)[rt],64,z);
+  *a+=4;
+}
+
 void b(CPU *cpu,int *a){
   int addr = *a;
   char code_6_29[25];
@@ -396,17 +539,26 @@ void lmw(CPU *cpu,int *a){
 void exec(CPU *cpu){
   int addr = 0;
   while(1){
+    //printf("%d\n",change_ibit(64,(cpu->reg)[2]));
     char code_0_5[7];
     read_i_j(cpu,addr,code_0_5,0,5);
+    //if(addr!=0)
+      //printf("%d\n",addr);
+    //printf("%s\n",code_0_5);
     if((strcmp(code_0_5,"011111"))==0){
       char code_22_30[10];
       read_i_j(cpu,addr,code_22_30,22,30);
       char code_21_30[11];
       read_i_j(cpu,addr,code_21_30,21,30);
+      //printf("%s\n",code_21_30);
       if(strcmp(code_22_30,"100001010")==0){
         add(cpu,&addr);/*addしてaddr+4*/
       }
+      else if(strcmp(code_22_30,"000101000")==0){
+        subf(cpu,&addr);
+      }
       else if(strcmp(code_21_30,"0101010011")==0){
+        //printf("mflr\n");
         mflr(cpu,&addr);
       }
       else if(strcmp(code_21_30,"0111010011")==0){
@@ -415,23 +567,42 @@ void exec(CPU *cpu){
       else if(strcmp(code_21_30,"0110111100")==0){
         mr(cpu,&addr);
       }
+      else if(strcmp(code_21_30,"0000000000")==0){
+        cmp(cpu,&addr);
+      }
+      else if(strcmp(code_21_30,"0000011000")==0){
+        slw(cpu,&addr);
+      }
     }
     else if(strcmp(code_0_5,"001011")==0){
       cmpi(cpu,&addr);/*addr+=4*/
     }
     else if(strcmp(code_0_5,"010000")==0){
+      char code_6_10[5];
+      read_i_j(cpu,addr,code_6_10,6,10);
       char code_30[2];
       read_i_j(cpu,addr,code_30,30,30);
       char code_31[2];
       read_i_j(cpu,addr,code_31,31,31);
       if(code_30[0] == '0'){
         if(code_31[0] == '0'){
-          bne(cpu,&addr);
+          if(strcmp(code_6_10,"00100")==0){
+            bne(cpu,&addr);
+          }
+          else if(strcmp(code_6_10,"00010")==0){
+            bgt(cpu,&addr);
+          }
+          else if(strcmp(code_6_10,"00001")==0){
+            blt(cpu,&addr);
+          }
         }
       }
     }
     else if(strcmp(code_0_5,"001110")==0){
       addi(cpu,&addr);
+    }
+    else if(strcmp(code_0_5,"000001")==0){
+      out(cpu,&addr);
     }
     else if(strcmp(code_0_5,"010011")==0){
       char code_21_30[11];
@@ -501,43 +672,30 @@ int main(int argc,char **argv){
   const int size = ftell(file);
   rewind(file);
 
-  char *memory = malloc(size*sizeof(unsigned char));
+  unsigned char *memory = malloc(size*sizeof(unsigned char));
 
-  fread(memory,1,size,file);
+  fread(memory,sizeof(unsigned char),size,file);
 
   int k=0;
   int i=0;
-  int j=0;
   for(int l=0 ;l<100000;l++){
     for(int m=0;m<9;m++){
       cpu.memory[l][m]='\0';
     }
   }
-  while(memory[k] != '\0'){
-    if(k%8==7){
-      if(memory[k] == '1'){
-        cpu.memory[i][j] = '1';
-        i+=1;
-        j=0;
-      }
-      else{
-        cpu.memory[i][j] = '0';
-        j=0;
-        i+=1;
-      }
+  int h=0;
+  while(h<500){
+    if(k%4==3){
+      r(memory[k],cpu.memory,i);
+      i+=1;
       k+=1;
     }
     else{
-      if(memory[k] == '1'){
-        cpu.memory[i][j] = '1';
-        j+=1;
-      }
-      else{
-        cpu.memory[i][j] = '0';
-        j+=1;
-      }
+      r(memory[k],cpu.memory,i);
       k+=1;
+      i+=1;
     }
+    h+=1;
   }
   fclose(file);
 
@@ -555,6 +713,6 @@ int main(int argc,char **argv){
   change_int((cpu.reg)[1],64,2000);
   change_int((cpu.reg)[3],64,5000);
   exec(&cpu);
-  printf("%d\n",change_ibit_f(64,(cpu.reg)[2]));
+  printf("\n%d\n",change_ibit_f(64,(cpu.reg)[3]));
   return 0;
 }
