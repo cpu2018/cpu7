@@ -17,16 +17,23 @@ typedef struct meirei{
 typedef struct llabel{
   char name[100];
   unsigned int addr;
-  ins meirei[100];
+  ins meirei[150];
 } label;
 
 void clean(char buf[256]){
   memset(buf,'\0',256);
 }
-void clean2(char buf[25][33]){
-  for(int i=0;i<25;i++){
+void clean2(char buf[40][33]){
+  for(int i=0;i<40;i++){
     memset(buf[i],'\0',33);
   }
+}
+unsigned char pow2(unsigned char d,int p){
+  int t=1;
+  for(int i=0;i<p;i++){
+    t*=d;
+  }
+  return t;
 }
 
 /*1桁の数字のみ*/
@@ -69,6 +76,39 @@ void change16bit(unsigned int l,char start[17]){
     int x = x1 - x2;
     char n = '0' + x;
     start[15-i] = n;
+  }
+}
+
+
+void change5bitf(int l,char s[6]){
+  if(l>0){
+    for(int i=0;i<5;i++){
+      int x1 = l >> i;
+      int x2 = (l >> (i+1)) << 1;
+      int x = x1 - x2;
+      char n = '0' + x;
+      s[4-i]=n;
+    }
+  }
+  else if(l==0){
+    for(int i=0;i<5;i++){
+      s[4-i]='0';
+    }
+  }
+  else{
+    int l2 = ~l;
+    for(int i=0;i<5;i++){
+      int x1 = l2 >> i;
+      int x2 = (l2 >> (i+1)) << 1;
+      int x = x1 - x2;
+      char n = '0' + x;
+      if(n=='0'){
+        s[4-i] = '1';
+      }
+      else{
+        s[4-i] = '0';
+      }
+    }
   }
 }
 
@@ -147,6 +187,38 @@ void extend15(int addr,char s[15]){
   }
 }
 
+void cpy14bit(int addr,char s[15]){
+  if(addr > 0){
+    for(int i=0;i<14;i++){
+      s[i]='0';
+    }
+    for(int i=0;i<14;i++){
+      int l = (addr >> i) - ((addr >> (i+1)) << 1);
+      char n = '0' + l;
+      s[13-i]=n;
+    }
+  }
+  else if(addr == 0){
+    for(int i=0;i<14;i++){
+      s[i]='0';
+    }
+  }
+  else{
+    int naddr = ~addr;
+    for(int i=0;i<14;i++){
+      int l = (naddr >> i) - ((naddr >> (i+1)) << 1);
+      char n;
+      if(l==1){
+        n='0';
+      }
+      else{
+        n='1';
+      }
+      s[13-i]=n;
+    }
+  }
+}
+
 void cpy24bit(int addr,char s[25]){
   if(addr > 0){
     for(int i=0;i<24;i++){
@@ -188,7 +260,6 @@ void change_reg_5bit(char *arg,char s[6]){
   char t[10]={'\0'};
   int k=0;
   while(arg[i] != ')'){
-    //printf("%c\n",arg[i]);
     if(('0' <= arg[i]) && (arg[i] <= '9')){
     t[k] = arg[i];
     k+=1;
@@ -196,9 +267,20 @@ void change_reg_5bit(char *arg,char s[6]){
     i+=1;
   }
   unsigned int x = (unsigned int) atoi(t);
-  //printf("%d xxx \n",(int) x);
   change5bit(x,s);
-  //printf("%s\n",s);
+}
+
+void change_reg_im_5bit(char *arg,char s[6]){
+  int i=0;
+  char t[10]={'\0'};
+  int k=0;
+  while(arg[i] != '('){
+    t[k] = arg[i];
+    i+=1;
+    k+=1;
+  }
+  int x = atoi(t);
+  change5bitf(x,s);
 }
 
 void change_reg_im_16bit(char *arg,char s[17]){
@@ -212,11 +294,14 @@ void change_reg_im_16bit(char *arg,char s[17]){
   }
   int x = atoi(t);
   change16bitf(x,s);
-  //printf("%s ssss\n",s);
-}
+  }
 
 void changeb(label labellist[100],char ans[][33],label label){
-  for(int k=0;k<100;k++){
+  int num=0;
+  for(int k=0;k<39;k++){
+    num+=1;
+    if((label.meirei[k]).name[0]!='\0')
+      printf("%s %d\n",(label.meirei[k]).name,num);
   if(strcmp((label.meirei[k]).name,"cmpwi")==0){
     char s1[7]="001011";
     char t[10];
@@ -226,7 +311,7 @@ void changeb(label labellist[100],char ans[][33],label label){
     change3bit(x,s2);
 
     char t2[10];
-    strncpy(t2,(label.meirei[0]).arg2+1,2);
+    strncpy(t2,(label.meirei[k]).arg2+1,2);
     unsigned int x2 = (unsigned int) (atoi(t2));
     char s3[6]={'\0'};
     change5bit(x2,s3);
@@ -242,6 +327,66 @@ void changeb(label labellist[100],char ans[][33],label label){
     strcat(ans[k],s3);
     strcat(ans[k],s4);
   }
+  else if(strcmp((label.meirei[k]).name,"slw")==0){
+    char s1[7] = "011111";
+
+    char t[10];
+    strncpy(t,(label.meirei[k]).arg1+1,2);
+    unsigned int x = (unsigned int) (atoi(t));
+    char s2[6]={'\0'};
+    change5bit(x,s2);
+
+    char t2[10];
+    strncpy(t2,(label.meirei[k]).arg2+1,2);
+    unsigned int x2 = (unsigned int) (atoi(t2));
+    char s3[6]={'\0'};
+    change5bit(x2,s3);
+
+    char t3[10];
+    strncpy(t3,(label.meirei[k]).arg3+1,2);
+    unsigned int x3 = (unsigned int) (atoi(t3));
+    char s4[6]={'\0'};
+    change5bit(x3,s4);
+
+    char s5[11]="0000011000";
+
+    strcat(ans[k],s1);
+    strcat(ans[k],s3);
+    strcat(ans[k],s2);
+    strcat(ans[k],s4);
+    strcat(ans[k],s5);
+    strcat(ans[k],"0");
+  }
+  else if(strcmp((label.meirei[k]).name,"cmpw")==0){
+    char s1[7] = "100000";
+    char t[10];
+
+    strncpy(t,(label.meirei[k]).arg1+2,2);
+    unsigned int x = (unsigned int) (atoi(t));
+    char s2[4]={'\0'};
+    change3bit(x,s2);
+
+    char t2[10];
+    strncpy(t2,(label.meirei[k]).arg2+1,2);
+    unsigned int x2 = (unsigned int) (atoi(t2));
+    char s3[6]={'\0'};
+    change5bit(x2,s3);
+
+    char t3[10];
+    strncpy(t3,(label.meirei[k]).arg3+1,2);
+    unsigned int x3 = (unsigned int) (atoi(t3));
+    char s4[6] = {'\0'};
+    change5bit(x3,s4);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],s2);
+    strcat(ans[k],"0");
+    strcat(ans[k],"0");
+    strcat(ans[k],s3);
+    strcat(ans[k],s4);
+    strcat(ans[k],"0000000000");
+    strcat(ans[k],"0");
+  }   
   else if(strcmp((label.meirei[k]).name,"bne")==0){
     char s1[7]="010000";
 
@@ -264,6 +409,50 @@ void changeb(label labellist[100],char ans[][33],label label){
     ans[k][30]='0';
     ans[k][31]='0';
   }
+  else if(strcmp((label.meirei[k]).name,"blt")==0){
+    char s1[7]="010000";
+
+    char t[10];
+    strncpy(t,(label.meirei[k]).arg1+2,2);
+    unsigned int x = (unsigned int) atoi(t);
+    char s[6] = {'\0'};
+    change5bit((unsigned int) (x*4+0),s);
+
+    unsigned int addr1 = search(labellist,(label.meirei[k]).arg2);
+    unsigned int addr2 = (label.meirei[k]).addr;
+    int raddr = ((int) addr1 - (int) addr2)/4;
+    char s2[15]={'\0'};
+    extend15(raddr,s2);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],"00001");
+    strcat(ans[k],s);
+    strcat(ans[k],s2);
+    ans[k][30]='0';
+    ans[k][31]='0';
+  }
+  else if(strcmp((label.meirei[k]).name,"bgt")==0){
+    char s1[7]="010000";
+
+    char t[10];
+    strncpy(t,(label.meirei[k]).arg1+2,2);
+    unsigned int x = (unsigned int) (atoi(t));
+    char s[6]={'\0'};
+    change5bit((unsigned int) (x*4+1),s);
+
+    unsigned int addr1 = search(labellist,(label.meirei[k]).arg2);
+    unsigned int addr2 = (label.meirei[k]).addr;
+    int raddr = ((int) addr1 - (int) addr2)/4;
+    char s2[15]={'\0'};
+    extend15(raddr,s2);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],"00010");
+    strcat(ans[k],s);
+    strcat(ans[k],s2);
+    ans[k][30]='0';
+    ans[k][31]='0';
+  }                               
   else if(strcmp((label.meirei[k]).name,"li")==0){
     char s1[7]="001110";
 
@@ -281,7 +470,6 @@ void changeb(label labellist[100],char ans[][33],label label){
     strcat(ans[k],s);
     strcat(ans[k],"00000");
     strcat(ans[k],s2);
-    //printf("%s  ans\n",ans[k]);
   }
   else if(strcmp((label.meirei[k]).name,"blr")==0){
     char s1[7] = "010011";
@@ -454,6 +642,40 @@ void changeb(label labellist[100],char ans[][33],label label){
     strcat(ans[k],s6);
     strcat(ans[k],s7);
   }
+  else if((strcmp((label.meirei[k]).name,"sub")==0)){
+    char s1[7] = "011111";
+
+    char t2[10];
+    strncpy(t2,(label.meirei[k]).arg1+1,2);
+    unsigned int x2 = (unsigned int) atoi(t2);
+    char s2[6]={'\0'};
+    change5bit(x2,s2);
+
+    char t3[10];
+    strncpy(t3,(label.meirei[k]).arg2+1,2);
+    unsigned int x3 = (unsigned int) atoi(t3);
+    char s3[6]={'\0'};
+    change5bit(x3,s3);
+
+    char t4[10];
+    strncpy(t4,(label.meirei[k]).arg3+1,2);
+    unsigned int x4 = (unsigned int) atoi(t4);
+    char s4[6]={'\0'};
+    change5bit(x4,s4);
+
+    char s5[2]="0";
+
+    char s6[10] = "000101000";
+    char s7[2]="0";
+
+    strcat(ans[k],s1);
+    strcat(ans[k],s2);
+    strcat(ans[k],s4);
+    strcat(ans[k],s3);
+    strcat(ans[k],s5);
+    strcat(ans[k],s6);
+    strcat(ans[k],s7);
+  }
   else if((strcmp((label.meirei[k]).name,"bl")==0)){
     char s1[7] = "010010";
 
@@ -546,8 +768,6 @@ void changeb(label labellist[100],char ans[][33],label label){
     char s3[6] = {'\0'};
     change_reg_5bit((label.meirei[k]).arg2,s3);
 
-    //printf("%s\n",s3);
-
     char s4[17] = {'\0'};
     change_reg_im_16bit((label.meirei[k]).arg2,s4);
 
@@ -555,6 +775,25 @@ void changeb(label labellist[100],char ans[][33],label label){
     strcat(ans[k],s2);
     strcat(ans[k],s3);
     strcat(ans[k],s4);
+  }
+  else if((strcmp((label.meirei[k]).name,"bcl")==0)){
+    char s1[7] = "010000";
+    char s2[6] = {'\0'};
+    change_reg_im_5bit((label.meirei[k]).arg1,s2);
+    char s3[6] = {'\0'};
+    change_reg_im_5bit((label.meirei[k]).arg2,s3);
+
+    unsigned int addr1 = search(labellist,(label.meirei[k]).arg3);
+    unsigned int addr2 = (label.meirei[k]).addr;
+    int rel = ((int) addr1 - (int) addr2)/4;
+    char s4[15]={'\0'};
+    cpy14bit(rel,s4);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],s2);
+    strcat(ans[k],s3);
+    strcat(ans[k],s4);
+    strcat(ans[k],"01");
   }
   else if((strcmp((label.meirei[k]).name,"lmw")==0)){
     char s1[7] = "101110";
@@ -576,10 +815,49 @@ void changeb(label labellist[100],char ans[][33],label label){
     strcat(ans[k],s3);
     strcat(ans[k],s4);
   }
+  else if((strcmp((label.meirei[k]).name,"out")==0)){
+    char s1[7] = "000001";
+    char s2[6] = {'\0'};
+    char t[10];
+    strncpy(t,(label.meirei[k]).arg1+1,2);
+    unsigned int x = (unsigned int) atoi(t);
+    change5bit(x,s2);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],s2);
+    strcat(ans[k],"000000000000000000000");
+  }
   else{
-    //printf("%s\n",(label.meirei[k]).name);
+    if((label.meirei[k]).name[0]!='\0'){
+    printf("%sがアセンブリに変換されていません\n",(label.meirei[k]).name);
+    }
   }
   }
+}
+
+void c_int_bit(char *s,int len,unsigned char codelist[4]){
+  unsigned char t1=0;
+  unsigned char t2=0;
+  unsigned char t3=0;
+  unsigned char t4=0;
+  for(int k = 0;k<8;k++){
+    if(s[k]=='1'){
+      t1+=pow2(2,7-k);
+    }
+    if(s[k+8]=='1'){
+      t2+=pow2(2,7-k);
+    }
+    if(s[k+16]=='1'){
+      t3+=pow2(2,7-k);
+    }
+    if(s[k+24]=='1'){
+      t4+=pow2(2,7-k);
+    }
+  }
+  codelist[0]=t1;
+  codelist[1]=t2;
+  codelist[2]=t3;
+  codelist[3]=t4;
 }
     
     
@@ -719,6 +997,9 @@ int main(int argc,char *argv[]){
       state=4;
       clean(buf);
     }
+    else if((state==5)&&(ch=='#')){
+      state=3;
+    }
     else if(state==5){
       buf[i]=ch;
       i+=1;
@@ -756,26 +1037,38 @@ int main(int argc,char *argv[]){
     }
   }
   FILE *fp2;
-  fp2 = fopen("binary","w+");
+  fp2 = fopen("binary","wb");
   char code[7] = "010010";
   char code2[25];
   cpy24bit(addrc/4,code2);
-  char codeall[33]={'\0'};
+  char codeall[33];
   strcat(codeall,code);
   strcat(codeall,code2);
   codeall[30]='0';
   codeall[31]='0';
-  
-  fprintf(fp2,"%s",codeall);
-  printf("%s\n",start);
+  //printf("codeall%s\n",codeall);
+  unsigned char listx[4];
+  c_int_bit(codeall,32,listx);
+  //printf("%d %d %d %d\n",listx[0],listx[1],listx[2],listx[3]);
+  //printf("%s\n",codeall);
+  fwrite(listx,sizeof(listx[0]),sizeof(listx),fp2);
   for(int k=0;k<labelnum+1;k++){
-    char code[25][33];
+    char code[40][33];
     changeb(labellist,code,labellist[k]);
-    for(int h=0;h<25;h++){
-      fprintf(fp2,"%s",code[h]);
+    for(int h=0;h<40;h++){
+      if(k==0){
+        //printf("%s\n",code[0]);
+      }
+      unsigned char codelist[4];
+      if(code[h][0]!='\0'){
+      c_int_bit(code[h],32,codelist);
+      printf("%d %d %d %d\n",codelist[0],codelist[1],codelist[2],codelist[3]);
+      fwrite(codelist,sizeof(codelist[0]),sizeof(codelist),fp2);
+      }
     }
     clean2(code);
   }
+  fclose(fp2);
   return 0;
 }
     
