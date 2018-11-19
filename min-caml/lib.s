@@ -7,19 +7,19 @@ min_caml_print_int:
 	stw	r31, 4(r3) # 格納されたリンクレジスタの値をスタックに積む
 	addi	r3, r3, 8 # スタックポインタを更新する
 	stw	r2, 4(r3)
-	addi	r3, e3, 8
+	addi	r3, r3, 8
 	stw	r5, 4(r3)
-	addi	r3, e3, 8
+	addi	r3, r3, 8
 	stw	r6, 4(r3)
-	addi	r3, e3, 8
+	addi	r3, r3, 8
 	stw	r7, 4(r3)
-	addi	r3, e3, 8
+	addi	r3, r3, 8
 	stw	r8, 4(r3)
-	addi	r3, e3, 8
+	addi	r3, r3, 8
 	stw	r9, 4(r3)
-	addi	r3, e3, 8
+	addi	r3, r3, 8
 	stw	r10, 4(r3)
-	addi	r3, e3, 8
+	addi	r3, r3, 8
 	li	r10, 10 # r10に10をセット
 	bl	print_int
 	subi	r3, r3, 8

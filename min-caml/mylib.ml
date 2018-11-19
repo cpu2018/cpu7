@@ -8,19 +8,19 @@ min_caml_print_int:
 \tstw\tr31, 4(r3) # 格納されたリンクレジスタの値をスタックに積む
 \taddi\tr3, r3, 8 # スタックポインタを更新する
 \tstw\tr2, 4(r3)
-\taddi\tr3, e3, 8
+\taddi\tr3, r3, 8
 \tstw\tr5, 4(r3)
-\taddi\tr3, e3, 8
+\taddi\tr3, r3, 8
 \tstw\tr6, 4(r3)
-\taddi\tr3, e3, 8
+\taddi\tr3, r3, 8
 \tstw\tr7, 4(r3)
-\taddi\tr3, e3, 8
+\taddi\tr3, r3, 8
 \tstw\tr8, 4(r3)
-\taddi\tr3, e3, 8
+\taddi\tr3, r3, 8
 \tstw\tr9, 4(r3)
-\taddi\tr3, e3, 8
+\taddi\tr3, r3, 8
 \tstw\tr10, 4(r3)
-\taddi\tr3, e3, 8
+\taddi\tr3, r3, 8
 \tli\tr10, 10 # r10に10をセット
 \tbl\tprint_int
 \tsubi\tr3, r3, 8
