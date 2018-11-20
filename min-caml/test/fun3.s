@@ -1,6 +1,7 @@
-# ------------------------------ ここからライブラリ ------------------------------
 	.text
-	.align 	2
+	.globl _min_caml_start
+	.align 2
+# ここからライブラリ
 	.globl min_caml_print_int
 min_caml_print_int:
 	mflr	r31 # リンクレジスタの値をr31に一時格納
@@ -72,5 +73,69 @@ through: #引かない場合:次に割られる値はそのまま、商にも何
 	subi	r6, r6, 1
 	bgt	cr7, q2r7
 	blr
-
-# ------------------------------ ここまでライブラリ ------------------------------
+# ここまでライブラリ
+g.6:
+	li	r5, 3
+	mr	r30, r2
+	mr	r2, r5
+	lwz	r29, 0(r30)
+	mtctr	r29
+	bctr
+f.8:
+	li	r5, 2
+	mflr	r31
+	mr	r30, r2
+	mr	r2, r5
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	lwz	r31, 0(r30)
+	mtctr	r31
+	bctrl
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	b	g.6
+Fun.2.14:
+	lwz	r5, 4(r30)
+	add	r2, r5, r2
+	blr
+Fun.1.12:
+	mr	r5, r4
+	addi	r4, r4, 8
+	lis	r6, ha16(Fun.2.14)
+	addi	r6, r6, lo16(Fun.2.14)
+	stw	r6, 0(r5)
+	stw	r2, 4(r5)
+	mr	r2, r5
+	blr
+_min_caml_start: # main entry point
+	mflr	r0
+	stmw	r30, -8(r1)
+	stw	r0, 8(r1)
+	stwu	r1, -96(r1)
+#	main program starts
+	mr	r2, r4
+	addi	r4, r4, 8
+	lis	r5, ha16(Fun.1.12)
+	addi	r5, r5, lo16(Fun.1.12)
+	stw	r5, 0(r2)
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	f.8
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	min_caml_print_int
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+#	main program ends
+	lwz	r1, 0(r1)
+	lwz	r0, 8(r1)
+	mtlr	r0
+	lmw	r30, -8(r1)
+	blr
