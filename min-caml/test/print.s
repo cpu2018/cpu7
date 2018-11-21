@@ -1,11 +1,7 @@
 	.text
 	.globl _min_caml_start
 	.align 2
-
 # ------------------------------ ここからライブラリ ------------------------------
-	.text
-	.align
-	.globl min_caml_print_int
 min_caml_print_int:
 	mflr	r31 # リンクレジスタの値をr31に一時格納
 	stw	r31, 4(r3) # 格納されたリンクレジスタの値をスタックに積む
@@ -67,7 +63,7 @@ print_int:
 #	サブルーチンq2r7から戻る
 	addi	r11, r7, 48 # asciiに変換 r11は2番目に表示する
 	cmpwi	cr7, r6, 4 # もしr6 = 4ならば、r6 - 3をして継続
-	bnq	r61or0
+	bne	r61or0
 	addi	r12, r7, 48 # asciiに変換 r12は3番目に表示する値
 	subi	r6, r6, 3
 #	サブルーチン的にprint_intを呼び出す ここで呼び出すprint_intはr6eq1or0に入る
@@ -83,7 +79,7 @@ print_int:
 	blr
 r61or0:
 	cmpwi	cr7, r6, 1
-	bnq	r6eq0
+	bne	r6eq0
 	subi	r6, r6, 1
 #	サブルーチン的にprint_intを呼び出す ここ呼び出すprint_intはr6eq0までいく
 	mflr	r31

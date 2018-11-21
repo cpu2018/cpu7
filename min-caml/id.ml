@@ -43,7 +43,8 @@ let gentmp typ =
 	Printf.sprintf "T%s%d" (id_of_typ typ) !counter
 
 let gentmp_int value =
-	Printf.sprintf "Int%d" value
+	incr counter;
+	Printf.sprintf "Int%d.%d" value !counter
 
 (* デバッグ用 *)
 let print_t = print_string

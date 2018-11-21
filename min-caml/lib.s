@@ -63,8 +63,8 @@ print_int:
 #	サブルーチンq2r7から戻る
 	addi	r11, r7, 48 # asciiに変換 r11は2番目に表示する
 	cmpwi	cr7, r6, 4 # もしr6 = 4ならば、r6 - 3をして継続
-	bnq	r61or0
-	addi	r12, r7, 48 # asciiに変換 r12は3番目に表示する値
+	bne	r61or0
+	addi	r12, r7, 48 # asciiに変換 r12は3番目に表示する値(最初に10で割られた余りは1の位)
 	subi	r6, r6, 3
 #	サブルーチン的にprint_intを呼び出す ここで呼び出すprint_intはr6eq1or0に入る
 	mflr	r31
@@ -79,7 +79,7 @@ print_int:
 	blr
 r61or0:
 	cmpwi	cr7, r6, 1
-	bnq	r6eq0
+	bne	r6eq0
 	subi	r6, r6, 1
 #	サブルーチン的にprint_intを呼び出す ここ呼び出すprint_intはr6eq0までいく
 	mflr	r31
@@ -90,7 +90,7 @@ r61or0:
 	lwz	r31, 4(r3)
 	mtlr	r31
 #	サブルーチン的にprint_intから戻る
-	addi	r12, r7, 48 # 
+#	addi	r12, r7, 48 # 
 	out	r11
 	blr
 r6eq0:

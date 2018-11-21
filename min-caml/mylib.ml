@@ -63,7 +63,7 @@ print_int:
 #\tサブルーチンq2r7から戻る
 \taddi\tr11, r7, 48 # asciiに変換 r11は2番目に表示する
 \tcmpwi\tcr7, r6, 4 # もしr6 = 4ならば、r6 - 3をして継続
-\tbnq\tr61or0
+\tbne\tr61or0
 \taddi\tr12, r7, 48 # asciiに変換 r12は3番目に表示する値
 \tsubi\tr6, r6, 3
 #\tサブルーチン的にprint_intを呼び出す ここで呼び出すprint_intはr6eq1or0に入る
@@ -79,7 +79,7 @@ print_int:
 \tblr
 r61or0:
 \tcmpwi\tcr7, r6, 1
-\tbnq\tr6eq0
+\tbne\tr6eq0
 \tsubi\tr6, r6, 1
 #\tサブルーチン的にprint_intを呼び出す ここ呼び出すprint_intはr6eq0までいく
 \tmflr\tr31

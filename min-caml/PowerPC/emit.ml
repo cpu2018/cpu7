@@ -199,11 +199,11 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 			g'_args oc [] ys zs;
 			Printf.fprintf oc "\tb\t%s\n" x
 	| NonTail(a), CallCls(x, ys, zs) ->
-			Printf.fprintf oc "\tmflr\t%s # リンクレジスタの値をr31に一時格納\n" (reg reg_tmp); (* reg_tmp は "%r31" のこと*)
+			Printf.fprintf oc "\tmflr\t%s\n" (reg reg_tmp); (* reg_tmp は "%r31" のこと*)
 			g'_args oc [(x, reg_cl)] ys zs;
 			let ss = stacksize () in (* reg_sp は "%r3" のこと *)
-			Printf.fprintf oc "\tstw\t%s, %d(%s) # 格納されたリンクレジスタの値をスタックに積む\n" (reg reg_tmp) (ss - 4) (reg reg_sp);
-			Printf.fprintf oc "\taddi\t%s, %s, %d # スタックポインタを更新\n" (reg reg_sp) (reg reg_sp) ss; (* スタックポインタを更新 *)
+			Printf.fprintf oc "\tstw\t%s, %d(%s)\n" (reg reg_tmp) (ss - 4) (reg reg_sp);
+			Printf.fprintf oc "\taddi\t%s, %s, %d\n" (reg reg_sp) (reg reg_sp) ss; (* スタックポインタを更新 *)
 			Printf.fprintf oc "\tlwz\t%s, 0(%s)\n" (reg reg_tmp) (reg reg_cl);
 			Printf.fprintf oc "\tmtctr\t%s\n" (reg reg_tmp);
 			Printf.fprintf oc "\tbctrl\n";
