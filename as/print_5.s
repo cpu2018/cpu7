@@ -1,7 +1,8 @@
-	.text
+.text
 	.globl _min_caml_start
 	.align 2
 min_caml_print_int:
+	addi	r2, r2, 48
 	out	r2
 	blr
 _min_caml_start:
@@ -9,7 +10,7 @@ _min_caml_start:
 	stmw	r30, -8(r1)
 	stw	r0, 8(r1)
 	stwu	r1, -96(r1)
-	li	r2, 5
+	li	r2, 3
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8

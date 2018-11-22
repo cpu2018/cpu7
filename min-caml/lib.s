@@ -94,8 +94,8 @@ r61or0:
 	out	r11
 	blr
 r6eq0:
-	addi	r7, r7, 48
-	out	r7
+	addi	r7, r7, 48 # asciiに変換
+	out	r7 # 一番高い位の数字(最初に出力する)
 	blr
 q2r7: # 割り算。商はr2、余りはr7へ
 	slw	r8, r10, r9 # 引いてみる値をセット
