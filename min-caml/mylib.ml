@@ -2,6 +2,19 @@ open Asm
 
 let print_external_methods oc = Printf.fprintf oc
 "# ------------------------------ ここからライブラリ ------------------------------
+min_caml_print_char:
+\tmflr\tr31
+\tstw\tr31, 4(r3)
+\taddi\tr3, r3, 8
+\tstw\tr2, 4(r3)
+\taddi\tr3, r3, 8
+\taddi\tr2, r2, 48
+\tout\tr2
+\tsubi\tr3, r3, 8
+\tlwz\tr2, 4(r3)
+\tsubi\tr3, r3, 8
+\tlwz\tr31, 4(r3)
+\tmtlr\tr31
 min_caml_print_int:
 \tmflr\tr31 # リンクレジスタの値をr31に一時格納
 \tstw\tr31, 4(r3) # 格納されたリンクレジスタの値をスタックに積む

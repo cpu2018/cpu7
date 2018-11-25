@@ -2,6 +2,19 @@
 	.globl _min_caml_start
 	.align 2
 # ------------------------------ ここからライブラリ ------------------------------
+min_caml_print_char:
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	stw	r2, 4(r3)
+	addi	r3, r3, 8
+	addi	r2, r2, 48
+	out	r2
+	subi	r3, r3, 8
+	lwz	r2, 4(r3)
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
 min_caml_print_int:
 	mflr	r31 # リンクレジスタの値をr31に一時格納
 	stw	r31, 4(r3) # 格納されたリンクレジスタの値をスタックに積む
@@ -119,29 +132,35 @@ r9eq0:
 	blr
 
 # ------------------------------ ここまでライブラリ ------------------------------
+g.5:
+	addi	r2, r2, 1
+	blr
+f.7:
+	stw	r2, 0(r3)
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	g.5
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	lwz	r5, 0(r3)
+	add	r2, r5, r2
+	blr
 _min_caml_start: # main entry point
 	mflr	r0
 	stmw	r30, -8(r1)
 	stw	r0, 8(r1)
 	stwu	r1, -96(r1)
 #	main program starts
-	li	r2, 123
+	li	r2, 1
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
-	bl	min_caml_print_int
+	bl	f.7
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
-	li	r2, -456
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_int
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	li	r2, 789
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8

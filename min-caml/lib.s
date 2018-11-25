@@ -1,6 +1,21 @@
 # ------------------------------ ここからライブラリ ------------------------------
 	.text
 	.align 	2
+	.globl min_caml_print_char
+min_caml_print_char:
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	stw	r2, 4(r3)
+	addi	r3, r3, 8
+	addi	r2, r2, 48
+	out	r2
+	subi	r3, r3, 8
+	lwz	r2, 4(r3)
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	blr
 	.globl min_caml_print_int
 min_caml_print_int:
 	mflr	r31 # リンクレジスタの値をr31に一時格納
