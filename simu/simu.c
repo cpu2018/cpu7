@@ -1,15 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#define R 32
+/*レジスタは32bitにしてる。crはバイナリでは4倍された値となっているので4で割っている*/
 typedef struct{
   char memory[100000][9];
-  char reg[32][65];
-  char lr[65];
+  char reg[32][R+1];
+  char lr[R+1];
   char cr[8][4];
-  char cor[65];
+  char cor[R+1];
   char s[33];
 } CPU;
+
+typedef struct llabel{
+  char name[20];
+  unsigned int addr;
+} label;
+
+int search(label labellist[15],char *name){
+  for(int i=0;i<15;i++){
+    if(strcmp(labellist[i].name,name)==0){
+      return labellist[i].addr;
+    }
+  }
+  return 0;
+}
+
+
+
+void clean(char buf[256]){
+  memset(buf,'\0',256);
+}
 
 int p(int i,int j){
   int v = 1;
@@ -17,6 +38,18 @@ int p(int i,int j){
     v *= i;
   }
   return v;
+}
+
+void inc(char *s,int len){
+  for(int i=0;i<len;i++){
+    if(s[len-1-i]=='0'){
+      s[len-1-i]='1';
+      break;
+    }
+    else{
+      s[len-1-i]='0';
+    }
+  }
 }
 
 void r(unsigned char s,char memory[1000][9],int i){
@@ -83,14 +116,19 @@ void change_int(char *s,int len,int v){
   }
   else if(v < 0){
     for(int k=0;k<len;k++){
-      int n = (v >> (len - k - 1)) - ((v >> (len - k)) << 1);
+      int l = -v;
+      int n = (l >> (len - k - 1)) - ((l >> (len - k)) << 1);
       if(n==1){
-        s[k] = '1';
-      }
-      else{
         s[k] = '0';
       }
+      else{
+        s[k] = '1';
+      }
     }
+    //printf("%s\n",s);
+    inc(s,len);
+    //printf("%s\n",s);
+    //printf("%d\n",v);
   }
   else{
     for(int k=0;k<len;k++){
@@ -108,32 +146,51 @@ void slw(CPU *cpu,int *a){
   char code_16_20[6];
   read_i_j(cpu,addr,code_16_20,16,20);
 
-  int ra = change_ibit(5,code_6_10);
-  int rs = change_ibit(5,code_11_15);
+  int rs = change_ibit(5,code_6_10);
+  int ra = change_ibit(5,code_11_15);
   int rb = change_ibit(5,code_16_20);
+  //printf("slw %d %d %d\n",ra,rs,rb);
 
-  unsigned int s = change_ibit(64,(cpu->reg)[rs]);
-  unsigned int b = change_ibit(64,(cpu->reg)[rs]);
+  unsigned int s = change_ibit(R,(cpu->reg)[rs]);
+  unsigned int b = change_ibit(R,(cpu->reg)[rb]);
 
   unsigned int ns = s << b;
 
-  change_int((cpu->reg)[ra],64,ns);
+  change_int((cpu->reg)[ra],32,ns);
   *a+=4;
+  printf("slwを実行\n");
 }
 
+void printreg(CPU *cpu){
+  for(int i=0;i<8;i++){
+    printf("reg%d %d     ",i,change_ibit_f(32,(cpu->reg)[i]));
+  }
+  printf("\n");
+  for(int i=8;i<16;i++){
+    printf("reg%d %d     ",i,change_ibit_f(32,(cpu->reg)[i]));
+  }
+  printf("\n");
+  for(int i=16;i<24;i++){
+    printf("reg%d %d     ",i,change_ibit_f(32,(cpu->reg)[i]));
+  }
+  printf("\n");
+  for(int i=24;i<32;i++){
+    printf("reg%d %d     ",i,change_ibit_f(32,(cpu->reg)[i]));
+  }
+  printf("\n");
+}
   
 
 void out(CPU *cpu,int *a){
+  //printf("%d %d %d\n",change_ibit_f(R,(cpu->reg)[7]),change_ibit_f(R,(cpu->reg)[11]),change_ibit_f(R,(cpu->reg)[12]));
   int addr = *a;
   char code_6_10[6];
   read_i_j(cpu,addr,code_6_10,6,10);
   int ra = change_ibit(5,code_6_10);
 
-  int value = change_ibit_f(64,(cpu->reg)[ra]);
-  printf("c %c\n",value);
-  //printf("d%d\n",value);
-  printf("%d\n",change_ibit_f(64,(cpu->reg)[2]));
-  //printf("%s\n",(cpu->cr)[7]);
+  int value = change_ibit_f(R,(cpu->reg)[ra]);
+  printf("レジスタ%dをoutした %c\n",ra,value);
+  //printf("%d\n",change_ibit_f(R,(cpu->reg)[2]));
   *a+=4;
 }
 
@@ -149,7 +206,7 @@ void cmpi(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_31,16,31);
 
   int ra = change_ibit(5,code_11_15);/*符号を考えないで数値化*/
-  int value = change_ibit_f(64,(cpu->reg)[ra]);/*符号も考える*/
+  int value = change_ibit_f(R,(cpu->reg)[ra]);/*符号も考える*/
   int sim = change_ibit_f(16,code_16_31);
   int bf = change_ibit(3,code_6_8);
   
@@ -163,6 +220,7 @@ void cmpi(CPU *cpu,int *a){
     strcpy((cpu->cr)[bf],"0100");
   }
   *a += 4;
+  printf("cmpiを実行\n");
 }
 
 void cmp(CPU *cpu,int *a){
@@ -176,8 +234,8 @@ void cmp(CPU *cpu,int *a){
   int ra = change_ibit(5,code_11_15);
   int rb = change_ibit(5,code_16_20);
 
-  int va = change_ibit_f(64,(cpu->reg)[ra]);
-  int vb = change_ibit_f(64,(cpu->reg)[rb]);
+  int va = change_ibit_f(R,(cpu->reg)[ra]);
+  int vb = change_ibit_f(R,(cpu->reg)[rb]);
   int bf = change_ibit(3,code_6_8);
 
   if(va < vb){
@@ -190,6 +248,7 @@ void cmp(CPU *cpu,int *a){
     strcpy((cpu->cr)[bf],"0100");
   }
   *a+=4;
+  printf("cmpを実行\n");
 }
   
 
@@ -210,7 +269,9 @@ void bne(CPU *cpu,int *a){
   else{
     int j = change_ibit_f(14,code_16_29);
     *a+=j*4;
+    //printf("bne %d\n",j);
   }
+  printf("bneを実行\n");
 }
 
 void bgt(CPU *cpu,int *a){
@@ -223,7 +284,8 @@ void bgt(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
-  cr = (cr - 2)/4;
+  cr = cr/4;
+  //cr = (cr - 2)/4;
   if(strcmp((cpu->cr)[cr],"0010")!=0){
     *a+=4;
   }
@@ -231,7 +293,32 @@ void bgt(CPU *cpu,int *a){
     int j = change_ibit_f(14,code_16_29);
     *a+=j*4;
   }
+  printf("bgtを実行\n");
 }
+
+void beq(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6];
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6];
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_29[15];
+  read_i_j(cpu,addr,code_16_29,16,29);
+
+  int cr = change_ibit(5,code_11_15);
+  cr = cr/4;
+  //cr = (cr - 2)/4;
+  if(strcmp((cpu->cr)[cr],"0100")!=0){
+    *a+=4;
+  }
+  else{
+    int j = change_ibit_f(14,code_16_29);
+    *a+=j*4;
+  }
+  printf("beqを実行\n");
+}
+
+
 
 void blt(CPU *cpu,int *a){
   int addr = *a;
@@ -243,14 +330,18 @@ void blt(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
-  cr = (cr - 2)/4;
+  //printf("blt %d\n",cr);
+  cr = cr/4;
   if(strcmp((cpu->cr)[cr],"0001")!=0){
+    //printf("通過1\n");
     *a+=4;
   }
   else{
+    //printf("通過2\n");
     int j = change_ibit_f(14,code_16_29);
     *a+=j*4;
   }
+  printf("bltを実行\n");
 }
 
 
@@ -268,24 +359,28 @@ void addi(CPU *cpu,int *a){
   int si = change_ibit_f(16,code_16_31);
 
   if(ra==0){
-    change_int((cpu->reg)[rt],64,si);
+    change_int((cpu->reg)[rt],32,si);
   }
   else{
-    int x = change_ibit_f(64,(cpu->reg)[ra]);
+    int x = change_ibit_f(R,(cpu->reg)[ra]);
     int y = x + si;
-    change_int((cpu->reg)[rt],64,y);
+    //printf("add %d\n",y);
+    change_int((cpu->reg)[rt],32,y);
+    //printf("%s\n",(cpu->reg)[rt]);
   }
   *a+=4;
+  printf("addiを実行\n");
 }
 
 void blr(CPU *cpu,int *addr){
-  int x = change_ibit_f(64,(cpu->lr));
+  int x = change_ibit_f(R,(cpu->lr));
   if(x==-1){
     *addr+=4;
   }
   else{
     *addr = x;
   }
+  printf("blrを実行\n");
 }
 
 void stw(CPU *cpu,int *a){
@@ -304,7 +399,7 @@ void stw(CPU *cpu,int *a){
     b=0;
   }
   else{
-    b = change_ibit_f(64,(cpu->reg)[ra]);
+    b = change_ibit_f(R,(cpu->reg)[ra]);
   }
   int d = change_ibit_f(16,code_16_31);
 
@@ -316,17 +411,20 @@ void stw(CPU *cpu,int *a){
   strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]+56,8);
 
   *a+=4;
+  printf("stwを実行\n");
 }
 
 void mflr(CPU *cpu,int *a){
-  //printf("a\n");
   int addr = *a;
   char code_6_10[6];
   read_i_j(cpu,addr,code_6_10,6,10);
 
   int rd = change_ibit(5,code_6_10);
+  //printf("a\n");
   strcpy((cpu->reg)[rd],cpu->lr);
+  //printf("b\n");
   *a+=4;
+  printf("mflrを実行\n");
 }
 
 void mr(CPU *cpu,int *a){
@@ -337,10 +435,10 @@ void mr(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_11_15,11,15);
   int rs = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_11_15);
+  //printf("rs%d ra%d\n",rs,ra);
   strcpy((cpu->reg)[ra],(cpu->reg)[rs]);
-  //printf("mr2 %d\n",change_ibit(64,(cpu->reg)[2]));
-  //printf("mr5 %d\n",change_ibit(64,(cpu->reg)[5]));
   *a+=4;
+  printf("mrを実行\n");
 }
 
 void add(CPU *cpu,int *a){
@@ -355,12 +453,13 @@ void add(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_20,16,20);
   int rb = change_ibit(5,code_16_20);
 
-  int x = change_ibit_f(64,(cpu->reg)[ra]);
-  int y = change_ibit_f(64,(cpu->reg)[rb]);
+  int x = change_ibit_f(R,(cpu->reg)[ra]);
+  int y = change_ibit_f(R,(cpu->reg)[rb]);
   int z = x + y;
 
-  change_int((cpu->reg)[rt],64,z);
+  change_int((cpu->reg)[rt],32,z);
   *a+=4;
+  printf("addを実行\n");
 }
 
 void subf(CPU *cpu,int *a){
@@ -368,19 +467,20 @@ void subf(CPU *cpu,int *a){
   char code_6_10[6];
   read_i_j(cpu,addr,code_6_10,6,10);
   char code_11_15[6];
-  int rt = change_ibit(5,code_11_15);
+  int rt = change_ibit(5,code_6_10);
   read_i_j(cpu,addr,code_11_15,11,15);
   int ra = change_ibit(5,code_11_15);
   char code_16_20[6];
   read_i_j(cpu,addr,code_16_20,16,20);
   int rb = change_ibit(5,code_16_20);
 
-  int x = change_ibit_f(64,(cpu->reg)[ra]);
-  int y = change_ibit_f(64,(cpu->reg)[rb]);
+  int x = change_ibit_f(R,(cpu->reg)[ra]);
+  int y = change_ibit_f(R,(cpu->reg)[rb]);
   int z = y - x;
 
-  change_int((cpu->reg)[rt],64,z);
+  change_int((cpu->reg)[rt],32,z);
   *a+=4;
+  printf("subfを実行\n");
 }
 
 void b(CPU *cpu,int *a){
@@ -389,14 +489,16 @@ void b(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_6_29,6,29);
   int target = change_ibit_f(24,code_6_29) * 4;
   *a=target+*a;
+  printf("bを実行\n");
 }
 void bl(CPU *cpu,int *a){
   int addr = *a;
   char code_6_29[25];
   read_i_j(cpu,addr,code_6_29,6,29);
   int target = change_ibit_f(24,code_6_29) * 4;
-  change_int((cpu->lr),64,addr+4);
+  change_int((cpu->lr),32,addr+4);
   *a=target+*a;
+  printf("blを実行\n");
 }
 
 void lwz(CPU *cpu,int *a){
@@ -417,10 +519,11 @@ void lwz(CPU *cpu,int *a){
     b = 0;
   }
   else{
-    b = change_ibit_f(64,(cpu->reg)[ra]);
+    b = change_ibit_f(R,(cpu->reg)[ra]);
   }
   int ea = b + d;
-  char s[65]="00000000000000000000000000000000";
+  //char s[65]="00000000000000000000000000000000";
+  char s[33]={'\0'};
   strcat(s,(cpu->memory)[ea]);
   strcat(s,(cpu->memory)[ea+1]);
   strcat(s,(cpu->memory)[ea+2]);
@@ -428,6 +531,7 @@ void lwz(CPU *cpu,int *a){
 
   strcpy((cpu->reg)[rt],s);
   *a+=4;
+  printf("lwzを実行\n");
 }
 
 void mtlr(CPU *cpu,int *addr){
@@ -436,8 +540,11 @@ void mtlr(CPU *cpu,int *addr){
   read_i_j(cpu,a,code_6_10,6,10);
 
   int rs = change_ibit(5,code_6_10);
+  //printf("%s\n",(cpu->reg)[rs]);
   strcpy((cpu->lr),(cpu->reg)[rs]);
+  //printf("b\n");
   *addr+=4;
+  printf("mtlrを実行\n");
 }
 
 void stmw(CPU *cpu,int *a){
@@ -459,7 +566,7 @@ void stmw(CPU *cpu,int *a){
     b=0;
   }
   else{
-    b = change_ibit(64,(cpu->reg)[ra]);
+    b = change_ibit(R,(cpu->reg)[ra]);
   }
   int ea = b + d;
   int r = rs;
@@ -473,6 +580,7 @@ void stmw(CPU *cpu,int *a){
     ea+=4;
   }
   *a+=4;
+  printf("stmwを実行\n");
 }
 
 void stwu(CPU *cpu,int *a){
@@ -489,14 +597,15 @@ void stwu(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_31,16,31);
   int d = change_ibit_f(16,code_16_31);
 
-  int ea = change_ibit_f(64,(cpu->reg)[ra]) + d;
+  int ea = change_ibit_f(R,(cpu->reg)[ra]) + d;
   strncpy((cpu->memory)[ea],(cpu->reg)[rs]+32,8);
   strncpy((cpu->memory)[ea+1],(cpu->reg)[rs]+40,8);
   strncpy((cpu->memory)[ea+2],(cpu->reg)[rs]+48,8);
   strncpy((cpu->memory)[ea+3],(cpu->reg)[rs]+56,8);
 
-  change_int((cpu->reg)[ra],64,ea);
+  change_int((cpu->reg)[ra],32,ea);
   *a+=4;
+  printf("stwuを実行\n");
 }
 
 void lmw(CPU *cpu,int *a){
@@ -518,12 +627,13 @@ void lmw(CPU *cpu,int *a){
     b=0;
   }
   else{
-    b=change_ibit_f(64,(cpu->reg)[ra]);
+    b=change_ibit_f(R,(cpu->reg)[ra]);
   }
   int ea = b + d;
   int r = rt;
   while(r <= 31){
-    char s[65] = "00000000000000000000000000000000";
+    //char s[65] = "00000000000000000000000000000000";
+    char s[33]={'\0'};
     strcat(s,(cpu->memory)[ea]);
     strcat(s,(cpu->memory)[ea+1]);
     strcat(s,(cpu->memory)[ea+2]);
@@ -533,24 +643,47 @@ void lmw(CPU *cpu,int *a){
     r+=1;
   }
   *a+=4;
+  printf("lmwを実行\n");
 }
     
 
-void exec(CPU *cpu){
+void exec(CPU *cpu,label labellist[15]){
   int addr = 0;
+  int k;
+  int state=1;
+  int r=1;
+  printf("ブレークポイントを入れるなら0入れないなら1:");
+  scanf("%d",&k);
+  char name[15];
+  int stopaddr=0;
+  if(k==0){
+    printf("ラベル名:");
+    scanf("%s",name);
+    stopaddr = search(labellist,name);
+  }
   while(1){
-    //printf("%d\n",change_ibit(64,(cpu->reg)[2]));
+    if(k==0){
+      if(addr==stopaddr){
+        printf("1行ずつ実行するなら0しないなら1");
+        scanf("%d",&state);
+      }
+    }
+    if(state==0){
+      printf("レジスタを表示するなら0しないなら1");
+      scanf("%d",&r);
+    }
+    if(r==0){
+      printreg(cpu);
+    }
+    //printf("%d\n",addr);
     char code_0_5[7];
     read_i_j(cpu,addr,code_0_5,0,5);
-    //if(addr!=0)
-      //printf("%d\n",addr);
     //printf("%s\n",code_0_5);
     if((strcmp(code_0_5,"011111"))==0){
       char code_22_30[10];
       read_i_j(cpu,addr,code_22_30,22,30);
       char code_21_30[11];
       read_i_j(cpu,addr,code_21_30,21,30);
-      //printf("%s\n",code_21_30);
       if(strcmp(code_22_30,"100001010")==0){
         add(cpu,&addr);/*addしてaddr+4*/
       }
@@ -558,7 +691,6 @@ void exec(CPU *cpu){
         subf(cpu,&addr);
       }
       else if(strcmp(code_21_30,"0101010011")==0){
-        //printf("mflr\n");
         mflr(cpu,&addr);
       }
       else if(strcmp(code_21_30,"0111010011")==0){
@@ -594,6 +726,9 @@ void exec(CPU *cpu){
           }
           else if(strcmp(code_6_10,"00001")==0){
             blt(cpu,&addr);
+          }
+          else if(strcmp(code_6_10,"00100")==0){
+            beq(cpu,&addr);
           }
         }
       }
@@ -664,6 +799,61 @@ void exec(CPU *cpu){
 }
 
 int main(int argc,char **argv){
+  FILE *file2;
+  file2=fopen(argv[2],"r");
+  int state=0;
+  int z=0;
+  int labelnum=-1;
+  unsigned int addrx = 4;
+  char bufx[256];
+  char ch;
+  label labellist[15];
+  while((ch=fgetc(file2)) != EOF){
+    if((state==0)&&(ch=='\n')){
+      clean(bufx);
+      z=0;
+    }
+    else if((state==0)&&((ch=='\t')||(ch==' '))){
+    }
+    else if(ch == ':'){
+      labelnum+=1;
+      strcpy(labellist[labelnum].name,bufx);
+      state=1;
+      labellist[labelnum].addr=addrx;
+      clean(bufx);
+      z=0;
+    }
+    else if(state==0){
+      bufx[z]=ch;
+      z+=1;
+    }
+    else if((state==1)&&(ch=='\n')){
+      state=2;
+    }
+    else if(state==1){
+    }
+    else if(state==2){
+      if((ch==' ')||(ch=='\t')){
+        state=3;
+      }
+      else{
+        state=0;
+        bufx[z]=ch;
+        z+=1;
+      }
+    }
+    else if((state==3)&&((ch==' ')||(ch=='\t'))){
+    }
+    else if((state==3)&&(ch=='\n')){
+      addrx+=4;
+      state=2;
+    }
+    else if(state==3){
+    }
+    }
+  fclose(file2);
+  //printf("%s %d\n",labellist[1].name,labellist[0].addr);
+    
   CPU cpu;
 
   FILE *file;
@@ -699,20 +889,20 @@ int main(int argc,char **argv){
   }
   fclose(file);
 
-  for(int l=0;l<65;l++){
+  for(int l=0;l<R;l++){
     (cpu.reg)[0][l]='0';
     (cpu.reg)[1][l]='0';
     (cpu.reg)[30][l]='0';
     (cpu.reg)[31][l]='0';
     (cpu.reg)[5][l]='0';
   }
-  for(int l=0;l<64;l++){
+  for(int l=0;l<R;l++){
     (cpu.lr)[l]='1';
   }
-  (cpu.lr)[64]='\0';
-  change_int((cpu.reg)[1],64,2000);
-  change_int((cpu.reg)[3],64,5000);
-  exec(&cpu);
-  printf("\n%d\n",change_ibit_f(64,(cpu.reg)[3]));
+  (cpu.lr)[R]='\0';
+  change_int((cpu.reg)[1],32,2000);
+  change_int((cpu.reg)[3],32,5000);
+  exec(&cpu,labellist);
+  //printf("\n%d\n",change_ibit_f(R,(cpu.reg)[3]));
   return 0;
 }

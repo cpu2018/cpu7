@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define N 50
 
 typedef struct int_24{
   int addr : 24;
@@ -23,8 +24,8 @@ typedef struct llabel{
 void clean(char buf[256]){
   memset(buf,'\0',256);
 }
-void clean2(char buf[40][33]){
-  for(int i=0;i<40;i++){
+void clean2(char buf[N][33]){
+  for(int i=0;i<N;i++){
     memset(buf[i],'\0',33);
   }
 }
@@ -296,12 +297,16 @@ void change_reg_im_16bit(char *arg,char s[17]){
   change16bitf(x,s);
   }
 
+static int count=0;
+
 void changeb(label labellist[100],char ans[][33],label label){
   int num=0;
-  for(int k=0;k<39;k++){
+  for(int k=0;k<N;k++){
     num+=1;
-    if((label.meirei[k]).name[0]!='\0')
-      printf("%s %d\n",(label.meirei[k]).name,num);
+    if((label.meirei[k]).name[0]!='\0'){
+      count+=1;
+      printf("%s %d\n",(label.meirei[k]).name,count);
+    }
   if(strcmp((label.meirei[k]).name,"cmpwi")==0){
     char s1[7]="001011";
     char t[10];
@@ -426,6 +431,28 @@ void changeb(label labellist[100],char ans[][33],label label){
 
     strcat(ans[k],s1);
     strcat(ans[k],"00001");
+    strcat(ans[k],s);
+    strcat(ans[k],s2);
+    ans[k][30]='0';
+    ans[k][31]='0';
+  }
+  else if(strcmp((label.meirei[k]).name,"beq")==0){
+     char s1[7]="010000";
+
+    char t[10];
+    strncpy(t,(label.meirei[k]).arg1+2,2);
+    unsigned int x = (unsigned int) (atoi(t));
+    char s[6]={'\0'};
+    change5bit((unsigned int) (x*4+1),s);
+
+    unsigned int addr1 = search(labellist,(label.meirei[k]).arg2);
+    unsigned int addr2 = (label.meirei[k]).addr;
+    int raddr = ((int) addr1 - (int) addr2)/4;
+    char s2[15]={'\0'};
+    extend15(raddr,s2);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],"00100");
     strcat(ans[k],s);
     strcat(ans[k],s2);
     ans[k][30]='0';
@@ -682,6 +709,7 @@ void changeb(label labellist[100],char ans[][33],label label){
 
     unsigned int addr1 = search(labellist,(label.meirei[k]).arg1);
     unsigned int addr2 = (label.meirei[k]).addr;
+    //printf("ラベル%d\n",(int) addr1);
     int rel = ((int) addr1 - (int) addr2)/4;
     char s2[25]={'\0'};
     cpy24bit(rel,s2);
@@ -701,7 +729,7 @@ void changeb(label labellist[100],char ans[][33],label label){
     char s2[6] = {'\0'};
     char t[10] = {'\0'};
 
-    strncpy(t,(label.meirei[k]).arg1+1,2);
+    strncpy(t,(label.meirei[k]).arg1+1,3);
     unsigned int x = (unsigned int) atoi(t);
     change5bit(x,s2);
 
@@ -827,6 +855,20 @@ void changeb(label labellist[100],char ans[][33],label label){
     strcat(ans[k],s2);
     strcat(ans[k],"000000000000000000000");
   }
+  else if((strcmp((label.meirei[k]).name,"b")==0)){
+    char s1[7]="010010";
+
+    unsigned int addr1 = search(labellist,(label.meirei[k]).arg1);
+    unsigned int addr2 = (label.meirei[k]).addr;
+    int rel = ((int)addr1 - (int)addr2)/4;
+
+    char s2[25]={'\0'};
+    cpy24bit(rel,s2);
+    strcat(ans[k],s1);
+    strcat(ans[k],s2);
+    strcat(ans[k],"0");
+    strcat(ans[k],"0");
+  } 
   else{
     if((label.meirei[k]).name[0]!='\0'){
     printf("%sがアセンブリに変換されていません\n",(label.meirei[k]).name);
@@ -1041,6 +1083,7 @@ int main(int argc,char *argv[]){
   char code[7] = "010010";
   char code2[25];
   cpy24bit(addrc/4,code2);
+  printf("%d\n",addrc);
   char codeall[33];
   strcat(codeall,code);
   strcat(codeall,code2);
@@ -1053,16 +1096,16 @@ int main(int argc,char *argv[]){
   //printf("%s\n",codeall);
   fwrite(listx,sizeof(listx[0]),sizeof(listx),fp2);
   for(int k=0;k<labelnum+1;k++){
-    char code[40][33];
+    char code[N][33];
     changeb(labellist,code,labellist[k]);
-    for(int h=0;h<40;h++){
+    for(int h=0;h<N;h++){
       if(k==0){
         //printf("%s\n",code[0]);
       }
       unsigned char codelist[4];
       if(code[h][0]!='\0'){
       c_int_bit(code[h],32,codelist);
-      printf("%d %d %d %d\n",codelist[0],codelist[1],codelist[2],codelist[3]);
+      //printf("%d %d %d %d\n",codelist[0],codelist[1],codelist[2],codelist[3]);
       fwrite(codelist,sizeof(codelist[0]),sizeof(codelist),fp2);
       }
     }
