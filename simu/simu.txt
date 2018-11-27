@@ -1,2 +1,0 @@
-gcc -o main simu.c
-./main バイナリファイル
