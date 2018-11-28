@@ -30,6 +30,7 @@ let rec deref_id_typ (x, t) = (x, deref_typ t) (* (Id.t * Type.t) の処理 *)
 let rec deref_term = function
 	| Not(e) -> Not(deref_term e)
 	| Neg(e) -> Neg(deref_term e)
+	| AdHoc(e1, e2) -> AdHoc(deref_term e1, deref_term e2)
 	| Add(e1, e2) -> Add(deref_term e1, deref_term e2)
 	| Sub(e1, e2) -> Sub(deref_term e1, deref_term e2)
 	| Mul(e1, e2) -> Mul(deref_term e1, deref_term e2)
@@ -119,7 +120,8 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 			Type.Int
 	| AdHoc(e1, e2) ->
 			(try
-				(unify Type.Int (g env e1);
+				(unify (g env e1) (g env e2);
+				 unify Type.Int (g env e1);
 				 unify Type.Int (g env e2);
 				 Type.Int)
 			with

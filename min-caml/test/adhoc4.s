@@ -1,3 +1,9 @@
+	.data
+	.literal8
+	.align 3
+l.7:	 # 2.000000
+	.long	0
+	.long	1073741824
 	.text
 	.globl _min_caml_start
 	.align 2
@@ -138,7 +144,9 @@ _min_caml_start: # main entry point
 	stw	r0, 8(r1)
 	stwu	r1, -96(r1)
 #	main program starts
-	li	r2, 8
+	lis	r31, ha16(l.7)
+	addi	r31, r31, lo16(l.7)
+	lfd	f0, 0(r31)
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
