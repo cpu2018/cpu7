@@ -16,6 +16,7 @@ let getpos () = {
 %token NOT
 %token MINUS
 %token PLUS
+%token ADHOC
 %token AST
 %token SLASH
 %token MINUS_DOT
@@ -96,6 +97,8 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
     { match $2 with
     | Float(f, p) -> Float(-.f, p) (* -1.23などは型エラーではないので別扱い *)
     | e -> Neg(e) }
+| exp ADHOC exp
+	{ AdHoc($1, $3) }
 | exp PLUS exp /* (* 足し算を構文解析するルール (caml2html: parser_add) *) */
     { Add($1, $3) }
 | exp MINUS exp

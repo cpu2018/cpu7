@@ -5,6 +5,7 @@ type t = (* MinCamlの構文を表現するデータ型 (caml2html: syntax_t) *)
 	| Float of float * pos
 	| Not of t
 	| Neg of t
+	| AdHoc of t * t
 	| Add of t * t
 	| Sub of t * t
 	| Mul of t * t
@@ -34,7 +35,7 @@ let rec errpos e =
 	match e with
 	| Unit pos | Bool (_, pos) | Int (_, pos) | Float (_, pos) | Var (_, pos) 
 		-> pos
-	| Not t | Neg t | Add (t, _) | Sub (t, _) | Mul (t, _) | Div (t, _)
+	| Not t | Neg t | AdHoc (t, _) | Add (t, _) | Sub (t, _) | Mul (t, _) | Div (t, _)
     | FNeg t| FAdd (t, _) | FSub (t, _) | FMul (t, _) | FDiv (t, _) | Eq (t, _)
     | LE (t, _) | If (t, _, _) | App (t, _) | Tuple (t::_) 
 	| Array (t, _) | Get (t, _) | Put (t, _, _)
@@ -77,6 +78,9 @@ let rec print_syntax depth expr =
 					print_code (depth + 1) x
 	| Neg x      -> print_string "<NEG> "	; print_newline (); 
 					print_code (depth + 1) x
+	| AdHoc (x, y) -> print_string "<ADHOC> "	; print_newline ();
+					print_code (depth + 1) x; 
+					print_code (depth + 1) y
 	| Add (x, y) -> print_string "<ADD> "	; print_newline ();
 					print_code (depth + 1) x; 
 					print_code (depth + 1) y

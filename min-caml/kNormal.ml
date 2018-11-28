@@ -60,7 +60,7 @@ let insert_let (e, t) k = (* letを挿入する補助関数 (caml2html: knormal_insert) *
 		let e', t' = k x in
 		Let ((x, t), e, e'), t'
 
-(* S.t -> Syntax.t -> (KNormal.t * Type.t) *)
+(* M.t -> Syntax.t -> (KNormal.t * Type.t) *)
 let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 	| Syntax.Unit _ -> Unit, Type.Unit
 	| Syntax.Bool(b, _) -> Int(if b then 1 else 0), Type.Int (* 論理値true, falseを整数1, 0に変換 (caml2html: knormal_bool) *)
@@ -70,6 +70,15 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 	| Syntax.Neg(e) ->
 			insert_let (g env e)
 				(fun x -> Neg(x), Type.Int)
+	| Syntax.AdHoc (e1, e2) ->
+			let e, t = g env e1 in
+			insert_let (e, t)
+				(fun x -> insert_let (g env e2)
+						(fun y -> 
+							(match t with
+							| Type.Int -> Add(x, y)
+							| Type.Float -> FAdd(x, y)), 
+							t))
 	| Syntax.Add(e1, e2) -> (* 足し算のK正規化 (caml2html: knormal_add) *)
 			insert_let (g env e1)
 				(fun x -> insert_let (g env e2)

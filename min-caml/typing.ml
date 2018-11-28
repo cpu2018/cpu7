@@ -117,6 +117,23 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 					print_string "actual   : "; Type.print_type t2; print_newline ();
 					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
 			Type.Int
+	| AdHoc(e1, e2) ->
+			(try
+				(unify Type.Int (g env e1);
+				 unify Type.Int (g env e2);
+				 Type.Int)
+			with
+			| Unify (t1, t2) 
+				-> (try
+						(unify Type.Float (g env e1);
+						 unify Type.Float (g env e2);
+						 Type.Float)
+					with
+					| Unify (tt1, tt2) -> 
+							(Syntax.print_pos (errpos e1);
+							print_string "expected : "; Type.print_type tt1; print_newline ();
+							print_string "actual   : "; Type.print_type tt2; print_newline ();
+							raise (Error (deref_typ t1, deref_typ t2, errpos e1)))))
 	| Add(e1, e2) | Sub(e1, e2) | Mul(e1, e2) | Div (e1, e2) -> (* 足し算（と引き算）の型推論 (caml2html: typing_add) *)
 			(try
 				unify Type.Int (g env e1)
