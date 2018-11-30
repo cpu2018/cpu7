@@ -1,6 +1,19 @@
 	.text
-	.globl _min_caml_start
 	.align 2
+min_caml_print_char:
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	stw	r2, 4(r3)
+	addi	r3, r3, 8
+	addi	r2, r2, 48
+	out	r2
+	subi	r3, r3, 8
+	lwz	r2, 4(r3)
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	blr
 min_caml_print_int:
 	mflr	r31
 	stw	r31, 4(r3)
@@ -89,11 +102,12 @@ r6eq0:
 	addi	r7, r7, 48
 	out	r7
 	blr
-q2r7: 
+q2r7:
 	slw	r8, r10, r9
 	sub	r8, r5, r8
 	cmpwi	cr7, r8, 0
 	blt	idle
+	mr	r7, r8
 	mr	r5, r8
 	li	r8, 1
 	slw	r8, r8, r9
@@ -104,7 +118,7 @@ q2r7:
 	b	q2r7
 idle:
 	cmpwi	cr7, r9, 0
-	bgt	cr7, r9eq0 # 
+	bgt	cr7, r9eq0
 	subi	r9, r9, 1
 	b	q2r7
 r9eq0:

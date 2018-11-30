@@ -5,7 +5,7 @@ SIMU = simu.c
 TARGETS = 
 TARGETB = binary
 
-.PHONY: all clean
+.PHONY: all cb clean
 
 all: assembler simulator
 
@@ -14,6 +14,9 @@ assembler: $(AS)
 
 simulator: $(SIMU)
 	$(CC) $(CFALGS) -o $@ $^
+
+cb:
+	-rm binary
 
 clean:
 	-rm assembler simulator binary
