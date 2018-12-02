@@ -128,11 +128,11 @@ _min_caml_start:
 	stmw	r30, -8(r1)
 	stw	r0, 8(r1)
 	stwu	r1, -96(r1)
-	li	r2, 5
+	li	r2, 10
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
-	bl	min_caml_print_int
+	bl	min_caml_print_char
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
