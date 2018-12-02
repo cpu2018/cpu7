@@ -1,4 +1,4 @@
-.text
+        .text
 	.globl _min_caml_start
 	.align 2
 min_caml_print_int:

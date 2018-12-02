@@ -662,6 +662,7 @@ void exec(CPU *cpu,label labellist[15]){
     stopaddr = search(labellist,name);
   }
   while(1){
+    printf("%d\n",addr);
     if(k==0){
       if(addr==stopaddr){
         printf("1行ずつ実行するなら0しないなら1");
