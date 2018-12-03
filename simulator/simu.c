@@ -269,7 +269,7 @@ void bne(CPU *cpu,int *a){
   else{
     int j = change_ibit_f(14,code_16_29);
     *a+=j*4;
-    //printf("bne %d\n",j);
+    printf("bne %d\n",j);
   }
   printf("bneを実行\n");
 }
@@ -369,7 +369,7 @@ void addi(CPU *cpu,int *a){
     //printf("%s\n",(cpu->reg)[rt]);
   }
   *a+=4;
-  printf("addiを実行\n");
+  printf("addiを実行 レジスタ%dにレジスタ%dと%dの和を代入\n",rt,ra,si);
 }
 
 void blr(CPU *cpu,int *addr){
@@ -673,9 +673,6 @@ void exec(CPU *cpu,label labellist[15]){
       printf("レジスタを表示するなら0しないなら1");
       scanf("%d",&r);
     }
-    if(r==0){
-      printreg(cpu);
-    }
     //printf("%d\n",addr);
     char code_0_5[7];
     read_i_j(cpu,addr,code_0_5,0,5);
@@ -795,6 +792,9 @@ void exec(CPU *cpu,label labellist[15]){
     }
     else{
       break;
+    }
+    if(r==0){
+      printreg(cpu);
     }
   }
 }

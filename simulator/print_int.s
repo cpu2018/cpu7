@@ -1,5 +1,6 @@
 	.text
 	.align 	2
+	.globl _min_caml_start
 min_caml_print_char:
 	mflr	r31
 	stw	r31, 4(r3)
