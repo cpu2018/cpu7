@@ -294,18 +294,22 @@ let f oc (Prog(data, fundefs, e)) =
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	(*Printf.fprintf oc "_min_caml_start: # main entry point\n";*)
 	Printf.fprintf oc "_min_caml_start:\n";
+	(*
 	Printf.fprintf oc "\tmflr\tr0\n";
 	Printf.fprintf oc "\tstmw\tr30, -8(r1)\n";
 	Printf.fprintf oc "\tstw\tr0, 8(r1)\n";
 	Printf.fprintf oc "\tstwu\tr1, -96(r1)\n";
+	*)
 	(*Printf.fprintf oc "#\tmain program starts\n";*)
 	stackset := S.empty;
 	stackmap := [];
 	g oc (NonTail("_R_0"), e);
 	(*Printf.fprintf oc "#\tmain program ends\n";*)
 	(* Printf.fprintf oc "\tmr\tr3, %s\n" regs.(0); *)
+	(*
 	Printf.fprintf oc "\tlwz\tr1, 0(r1)\n";
 	Printf.fprintf oc "\tlwz\tr0, 8(r1)\n";
 	Printf.fprintf oc "\tmtlr\tr0\n";
 	Printf.fprintf oc "\tlmw\tr30, -8(r1)\n";
 	Printf.fprintf oc "\tblr\n"
+	*)

@@ -19,45 +19,9 @@ min_caml_print_int:
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
-	stw	r2, 4(r3)
-	addi	r3, r3, 8
-	stw	r5, 4(r3)
-	addi	r3, r3, 8
-	stw	r6, 4(r3)
-	addi	r3, r3, 8
-	stw	r7, 4(r3)
-	addi	r3, r3, 8
-	stw	r8, 4(r3)
-	addi	r3, r3, 8
-	stw	r9, 4(r3)
-	addi	r3, r3, 8
-	stw	r10, 4(r3)
-	addi	r3, r3, 8
-	stw	r11, 4(r3)
-	addi	r3, r3, 8
-	stw	r12, 4(r3)
-	addi	r3, r3, 8
 	li	r10, 10
 	li	r6, 4
 	bl	print_int
-	subi	r3, r3, 8
-	lwz	r12, 4(r3)
-	subi	r3, r3, 8
-	lwz	r11, 4(r3)
-	subi	r3, r3, 8
-	lwz	r10, 4(r3)
-	subi	r3, r3, 8
-	lwz	r9, 4(r3)
-	subi	r3, r3, 8
-	lwz	r8, 4(r3)
-	subi	r3, r3, 8
-	lwz	r7, 4(r3)
-	subi	r3, r3, 8
-	lwz	r6, 4(r3)
-	subi	r3, r3, 8
-	lwz	r5, 4(r3)
-	subi	r3, r3, 8
-	lwz	r2, 4(r3)
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
