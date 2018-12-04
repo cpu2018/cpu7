@@ -1,7 +1,14 @@
-open Asm
-
-let print_external_methods oc = Printf.fprintf oc
-"	.text
+	.data
+	.literal8
+	.align 3
+l.9:	 # 2.000000
+	.long	0
+	.long	1073741824
+	.align 3
+l.8:	 # 1.000000
+	.long	0
+	.long	1072693248
+	.text
 	.align 	2
 	.globl _min_caml_start
 min_caml_print_char:
@@ -127,4 +134,27 @@ idle:
 	b	q2r7
 r9eq0:
 	blr
-"
+f.3:
+	lis	r31, ha16(l.8)
+	addi	r31, r31, lo16(l.8)
+	lfd	f1, 0(r31)
+	fadd	f0, f0, f1
+	blr
+_min_caml_start:
+	lis	r31, ha16(l.9)
+	addi	r31, r31, lo16(l.9)
+	lfd	f0, 0(r31)
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	f.3
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	min_caml_print_int
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31

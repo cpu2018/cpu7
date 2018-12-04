@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -O2
 AS = as.c
 SIMU = simu.c
-TESTS = out print_5 print_int
+TESTS = out print_5 print_int test test10 bobo_test
 MIN_CAML = min_caml
 
 .PHONY: all rm_binary clean
@@ -25,3 +25,4 @@ rm_binary:
 
 clean:
 	-rm assembler simulator binary $(TESTS)
+	echo "make clean が正常に終了しました。\n"

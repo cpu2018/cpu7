@@ -1,5 +1,4 @@
 open Asm
-open Mylib
 
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"

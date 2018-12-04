@@ -107,7 +107,7 @@ q2r7:
 	slw	r8, r10, r9
 	sub	r8, r5, r8
 	cmpwi	cr7, r8, 0
-	blt	idle
+	blt	cr7, idle
 	mr	r7, r8
 	mr	r5, r8
 	li	r8, 1
