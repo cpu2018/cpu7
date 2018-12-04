@@ -1,61 +1,57 @@
 	.data
 	.literal8
 	.align 3
-l.260:	 # 0.000000
+l.375:	 # 13.000000
 	.long	0
-	.long	0
+	.long	1076494336
 	.align 3
-l.259:	 # 479001600.000000
+l.374:	 # 11.000000
+	.long	0
+	.long	1076232192
+	.align 3
+l.373:	 # 9.000000
+	.long	0
+	.long	1075970048
+	.align 3
+l.372:	 # 7.000000
+	.long	0
+	.long	1075576832
+	.align 3
+l.371:	 # 5.000000
+	.long	0
+	.long	1075052544
+	.align 3
+l.370:	 # 3.000000
+	.long	0
+	.long	1074266112
+	.align 3
+l.369:	 # 479001600.000000
 	.long	0
 	.long	1102875900
 	.align 3
-l.258:	 # 3628800.000000
+l.368:	 # 3628800.000000
 	.long	0
 	.long	1095479168
 	.align 3
-l.257:	 # 40320.000000
+l.367:	 # 40320.000000
 	.long	0
 	.long	1088663552
 	.align 3
-l.256:	 # 720.000000
+l.366:	 # 720.000000
 	.long	0
 	.long	1082556416
 	.align 3
-l.255:	 # 24.000000
+l.365:	 # 24.000000
 	.long	0
 	.long	1077411840
 	.align 3
-l.254:	 # 2.000000
+l.364:	 # 2.000000
 	.long	0
 	.long	1073741824
 	.align 3
-l.253:	 # 1.000000
+l.363:	 # 1.000000
 	.long	0
 	.long	1072693248
-	.align 3
-l.252:	 # 6227020800.000000
-	.long	-1073741824
-	.long	1106719372
-	.align 3
-l.251:	 # 39916800.000000
-	.long	0
-	.long	1099106472
-	.align 3
-l.250:	 # 362880.000000
-	.long	0
-	.long	1091970560
-	.align 3
-l.249:	 # 5040.000000
-	.long	0
-	.long	1085517824
-	.align 3
-l.248:	 # 120.000000
-	.long	0
-	.long	1079902208
-	.align 3
-l.247:	 # 6.000000
-	.long	0
-	.long	1075314688
 	.text
 	.align 	2
 	.globl _min_caml_start
@@ -182,20 +178,91 @@ idle:
 	b	q2r7
 r9eq0:
 	blr
-min_caml_sin.119:
+min_caml_cos.179:
+	lis	r31, ha16(l.363)
+	addi	r31, r31, lo16(l.363)
+	lfd	f1, 0(r31)
+	fmul	f2, f0, f0
+	lis	r31, ha16(l.364)
+	addi	r31, r31, lo16(l.364)
+	lfd	f3, 0(r31)
+	fdiv	f2, f2, f3
+	fsub	f1, f1, f2
+	fmul	f2, f0, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	lis	r31, ha16(l.365)
+	addi	r31, r31, lo16(l.365)
+	lfd	f3, 0(r31)
+	fdiv	f2, f2, f3
+	fadd	f1, f1, f2
+	fmul	f2, f0, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	lis	r31, ha16(l.366)
+	addi	r31, r31, lo16(l.366)
+	lfd	f3, 0(r31)
+	fdiv	f2, f2, f3
+	fsub	f1, f1, f2
+	fmul	f2, f0, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	lis	r31, ha16(l.367)
+	addi	r31, r31, lo16(l.367)
+	lfd	f3, 0(r31)
+	fdiv	f2, f2, f3
+	fadd	f1, f1, f2
+	fmul	f2, f0, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	lis	r31, ha16(l.368)
+	addi	r31, r31, lo16(l.368)
+	lfd	f3, 0(r31)
+	fdiv	f2, f2, f3
+	fsub	f1, f1, f2
+	fmul	f2, f0, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f0, f2, f0
+	lis	r31, ha16(l.369)
+	addi	r31, r31, lo16(l.369)
+	lfd	f2, 0(r31)
+	fdiv	f0, f0, f2
+	fadd	f0, f1, f0
+	blr
+min_caml_sin.181:
 	fmul	f1, f0, f0
 	fmul	f1, f1, f0
-	lis	r31, ha16(l.247)
-	addi	r31, r31, lo16(l.247)
+	lis	r31, ha16(l.370)
+	addi	r31, r31, lo16(l.370)
 	lfd	f2, 0(r31)
 	fdiv	f1, f1, f2
-	fadd	f1, f0, f1
+	fsub	f1, f0, f1
 	fmul	f2, f0, f0
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
-	lis	r31, ha16(l.248)
-	addi	r31, r31, lo16(l.248)
+	lis	r31, ha16(l.371)
+	addi	r31, r31, lo16(l.371)
 	lfd	f3, 0(r31)
 	fdiv	f2, f2, f3
 	fadd	f1, f1, f2
@@ -205,8 +272,21 @@ min_caml_sin.119:
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
-	lis	r31, ha16(l.249)
-	addi	r31, r31, lo16(l.249)
+	lis	r31, ha16(l.372)
+	addi	r31, r31, lo16(l.372)
+	lfd	f3, 0(r31)
+	fdiv	f2, f2, f3
+	fsub	f1, f1, f2
+	fmul	f2, f0, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	lis	r31, ha16(l.373)
+	addi	r31, r31, lo16(l.373)
 	lfd	f3, 0(r31)
 	fdiv	f2, f2, f3
 	fadd	f1, f1, f2
@@ -218,26 +298,13 @@ min_caml_sin.119:
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
-	lis	r31, ha16(l.250)
-	addi	r31, r31, lo16(l.250)
+	fmul	f2, f2, f0
+	fmul	f2, f2, f0
+	lis	r31, ha16(l.374)
+	addi	r31, r31, lo16(l.374)
 	lfd	f3, 0(r31)
 	fdiv	f2, f2, f3
-	fadd	f1, f1, f2
-	fmul	f2, f0, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	lis	r31, ha16(l.251)
-	addi	r31, r31, lo16(l.251)
-	lfd	f3, 0(r31)
-	fdiv	f2, f2, f3
-	fadd	f1, f1, f2
+	fsub	f1, f1, f2
 	fmul	f2, f0, f0
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
@@ -250,121 +317,44 @@ min_caml_sin.119:
 	fmul	f2, f2, f0
 	fmul	f2, f2, f0
 	fmul	f0, f2, f0
-	lis	r31, ha16(l.252)
-	addi	r31, r31, lo16(l.252)
+	lis	r31, ha16(l.375)
+	addi	r31, r31, lo16(l.375)
 	lfd	f2, 0(r31)
 	fdiv	f0, f0, f2
 	fadd	f0, f1, f0
-	blr
-min_caml_cos.121:
-	lis	r31, ha16(l.253)
-	addi	r31, r31, lo16(l.253)
-	lfd	f1, 0(r31)
-	fmul	f2, f0, f0
-	lis	r31, ha16(l.254)
-	addi	r31, r31, lo16(l.254)
-	lfd	f3, 0(r31)
-	fdiv	f2, f2, f3
-	fadd	f1, f1, f2
-	fmul	f2, f0, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	lis	r31, ha16(l.255)
-	addi	r31, r31, lo16(l.255)
-	lfd	f3, 0(r31)
-	fdiv	f2, f2, f3
-	fadd	f1, f1, f2
-	fmul	f2, f0, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	lis	r31, ha16(l.256)
-	addi	r31, r31, lo16(l.256)
-	lfd	f3, 0(r31)
-	fdiv	f2, f2, f3
-	fadd	f1, f1, f2
-	fmul	f2, f0, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	lis	r31, ha16(l.257)
-	addi	r31, r31, lo16(l.257)
-	lfd	f3, 0(r31)
-	fdiv	f2, f2, f3
-	fadd	f1, f1, f2
-	fmul	f2, f0, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	lis	r31, ha16(l.258)
-	addi	r31, r31, lo16(l.258)
-	lfd	f3, 0(r31)
-	fdiv	f2, f2, f3
-	fadd	f1, f1, f2
-	fmul	f2, f0, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f2, f2, f0
-	fmul	f0, f2, f0
-	lis	r31, ha16(l.259)
-	addi	r31, r31, lo16(l.259)
-	lfd	f2, 0(r31)
-	fdiv	f0, f0, f2
-	fadd	f0, f1, f0
-	blr
-min_caml_atan.123:
-	lis	r31, ha16(l.260)
-	addi	r31, r31, lo16(l.260)
-	lfd	f1, 0(r31)
-	fadd	f0, f0, f1
 	blr
 _min_caml_start:
-	lis	r31, ha16(l.253)
-	addi	r31, r31, lo16(l.253)
+	lis	r31, ha16(l.363)
+	addi	r31, r31, lo16(l.363)
 	lfd	f0, 0(r31)
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
-	bl	min_caml_sin.119
+	bl	min_caml_sin.181
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
-	lis	r31, ha16(l.253)
-	addi	r31, r31, lo16(l.253)
+	lis	r31, ha16(l.363)
+	addi	r31, r31, lo16(l.363)
 	lfd	f1, 0(r31)
 	stfd	f0, 0(r3)
 	mflr	r31
 	fmr	f0, f1
 	stw	r31, 12(r3)
 	addi	r3, r3, 16
-	bl	min_caml_cos.121
+	bl	min_caml_cos.179
 	subi	r3, r3, 16
 	lwz	r31, 12(r3)
 	mtlr	r31
-	lis	r31, ha16(l.253)
-	addi	r31, r31, lo16(l.253)
+	lis	r31, ha16(l.363)
+	addi	r31, r31, lo16(l.363)
 	lfd	f1, 0(r31)
 	stfd	f0, 8(r3)
 	mflr	r31
 	fmr	f0, f1
 	stw	r31, 20(r3)
 	addi	r3, r3, 24
-	bl	min_caml_atan.123
+	bl	min_caml_min_caml_atan
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
