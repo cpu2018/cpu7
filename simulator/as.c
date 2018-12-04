@@ -1083,7 +1083,7 @@ int main(int argc,char *argv[]){
   // 出力ファイルがアセンブリファイルの名前と一致するように書き換えました。by BOBO
   char* output_file = malloc((strlen(argv[1]) - 2) * sizeof(char));
   memcpy(output_file, argv[1], (strlen(argv[1]) - 2) * sizeof(char));
-  printf("assembling %s to %s ...\n", argv[1]);
+  printf("assembling %s to %s ...\n", argv[1], output_file);
   FILE *fp2;
   fp2 = fopen(output_file,"wb");
   
