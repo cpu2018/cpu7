@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -O2
 AS = as.c
 SIMU = simu.c
-TESTS = out print_5 print_int test test10 bobo_test
+TESTS = out print_5 print_int test test10 bobo_test float
 MIN_CAML = min_caml
 
 .PHONY: all rm_binary clean
