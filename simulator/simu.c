@@ -415,9 +415,9 @@ void stw(CPU *cpu,int *a){
   strncpy((cpu->memory)[addr2+2],(cpu->reg)[rs]/*+48*/+16,8);
   strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]/*+56*/+24,8);
 
-  for(int i=0;i<4;i++){
+  /*for(int i=0;i<4;i++){
     printf("%d %s\n",addr2,(cpu->memory)[addr2+i]);
-  }
+    }*/
 
   *a+=4;
   printf("stw reg%d %d(reg%d)を実行\n",rs,d,ra);
@@ -533,16 +533,16 @@ void lwz(CPU *cpu,int *a){
   int ea = b + d;
   //char s[65]="00000000000000000000000000000000";
   char s[33]={'\0'};
-  for(int i=0;i<4;i++){
+  /*for(int i=0;i<4;i++){
     printf("%d %s\n",ea,(cpu->memory)[ea+i]);
-  }
+    }*/
   strcat(s,(cpu->memory)[ea]);
   strcat(s,(cpu->memory)[ea+1]);
   strcat(s,(cpu->memory)[ea+2]);
   strcat(s,(cpu->memory)[ea+3]);
 
   strcpy((cpu->reg)[rt],s);
-  printf("reg%d %s\n",rt,(cpu->reg)[rt]);
+  /*printf("reg%d %s\n",rt,(cpu->reg)[rt]);*/
   *a+=4;
   printf("lwz reg%d %d(reg%d)を実行\n",rt,d,ra);
 }
