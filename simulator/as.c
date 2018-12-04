@@ -402,6 +402,7 @@ void changeb(label labellist[100],char ans[][33],label label){
     change5bit((unsigned int) (x*4+2),s);
 
     unsigned int addr1 = search(labellist,(label.meirei[k]).arg2);
+    printf("addr1 %d\n",addr1);
     unsigned int addr2 = (label.meirei[k]).addr;
     int raddr = ((int) addr1 - (int) addr2)/4;/*本当はaddr1などはint型が良い*/
     char s2[15]={'\0'};

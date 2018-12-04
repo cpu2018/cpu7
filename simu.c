@@ -178,11 +178,7 @@ void printreg(CPU *cpu){
     printf("reg%d %d     ",i,change_ibit_f(32,(cpu->reg)[i]));
   }
   printf("\n");
-  printf("lr %d          \n",change_ibit_f(32,(cpu->lr)));
-  for(int i=0;i<8;i++){
-    printf("cr%d %s      ",i,(cpu->cr)[i]);
-  }
-  printf("\n");
+  printf("lr %d          ",change_ibit_f(32,(cpu->lr)));
 }
   
 
@@ -410,14 +406,10 @@ void stw(CPU *cpu,int *a){
 
   int addr2 = b+d;
 
-  strncpy((cpu->memory)[addr2],(cpu->reg)[rs]/*+32*/,8);
-  strncpy((cpu->memory)[addr2+1],(cpu->reg)[rs]/*+40*/+8,8);
-  strncpy((cpu->memory)[addr2+2],(cpu->reg)[rs]/*+48*/+16,8);
-  strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]/*+56*/+24,8);
-
-  /*for(int i=0;i<4;i++){
-    printf("%d %s\n",addr2,(cpu->memory)[addr2+i]);
-    }*/
+  strncpy((cpu->memory)[addr2],(cpu->reg)[rs]+32,8);
+  strncpy((cpu->memory)[addr2+1],(cpu->reg)[rs]+40,8);
+  strncpy((cpu->memory)[addr2+2],(cpu->reg)[rs]+48,8);
+  strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]+56,8);
 
   *a+=4;
   printf("stw reg%d %d(reg%d)を実行\n",rs,d,ra);
@@ -533,16 +525,12 @@ void lwz(CPU *cpu,int *a){
   int ea = b + d;
   //char s[65]="00000000000000000000000000000000";
   char s[33]={'\0'};
-  /*for(int i=0;i<4;i++){
-    printf("%d %s\n",ea,(cpu->memory)[ea+i]);
-    }*/
   strcat(s,(cpu->memory)[ea]);
   strcat(s,(cpu->memory)[ea+1]);
   strcat(s,(cpu->memory)[ea+2]);
   strcat(s,(cpu->memory)[ea+3]);
 
   strcpy((cpu->reg)[rt],s);
-  /*printf("reg%d %s\n",rt,(cpu->reg)[rt]);*/
   *a+=4;
   printf("lwz reg%d %d(reg%d)を実行\n",rt,d,ra);
 }
@@ -584,10 +572,10 @@ void stmw(CPU *cpu,int *a){
   int ea = b + d;
   int r = rs;
   while(r <= 31){
-    strncpy((cpu->memory)[ea],(cpu->reg)[r]/*+32*/,8);
-    strncpy((cpu->memory)[ea+1],(cpu->reg)[r]/*+40*/+8,8);
-    strncpy((cpu->memory)[ea+2],(cpu->reg)[r]/*+48*/+16,8);
-    strncpy((cpu->memory)[ea+3],(cpu->reg)[r]/*+56*/+24,8);
+    strncpy((cpu->memory)[ea],(cpu->reg)[r]+32,8);
+    strncpy((cpu->memory)[ea+1],(cpu->reg)[r]+40,8);
+    strncpy((cpu->memory)[ea+2],(cpu->reg)[r]+48,8);
+    strncpy((cpu->memory)[ea+3],(cpu->reg)[r]+56,8);
 
     r+=1;
     ea+=4;
@@ -611,10 +599,10 @@ void stwu(CPU *cpu,int *a){
   int d = change_ibit_f(16,code_16_31);
 
   int ea = change_ibit_f(R,(cpu->reg)[ra]) + d;
-  strncpy((cpu->memory)[ea],(cpu->reg)[rs]/*+32*/,8);
-  strncpy((cpu->memory)[ea+1],(cpu->reg)[rs]/*+40*/+8,8);
-  strncpy((cpu->memory)[ea+2],(cpu->reg)[rs]/*+48*/+16,8);
-  strncpy((cpu->memory)[ea+3],(cpu->reg)[rs]/*+56*/+24,8);
+  strncpy((cpu->memory)[ea],(cpu->reg)[rs]+32,8);
+  strncpy((cpu->memory)[ea+1],(cpu->reg)[rs]+40,8);
+  strncpy((cpu->memory)[ea+2],(cpu->reg)[rs]+48,8);
+  strncpy((cpu->memory)[ea+3],(cpu->reg)[rs]+56,8);
 
   change_int((cpu->reg)[ra],32,ea);
   *a+=4;
