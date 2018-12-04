@@ -77,7 +77,7 @@ print_int:
 	mtlr	r31
 	addi	r11, r7, 48
 	cmpwi	cr7, r6, 4
-	bne	r61or0
+	bne	cr7, r61or0
 	addi	r12, r7, 48
 	subi	r6, r6, 3
 	mflr	r31
@@ -91,7 +91,7 @@ print_int:
 	blr
 r61or0:
 	cmpwi	cr7, r6, 1
-	bne	r6eq0
+	bne	cr7, r6eq0
 	subi	r6, r6, 1
 	mflr	r31
 	stw	r31, 4(r3)
