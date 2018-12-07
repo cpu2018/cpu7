@@ -35,6 +35,8 @@ type token =
   | LPAREN
   | RPAREN
   | EOF
+  | SFTL
+  | SFTR
 
 val exp :
   (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> Syntax.t

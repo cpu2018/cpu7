@@ -1,5 +1,3 @@
-open Asm
-
 let print_external_methods oc = Printf.fprintf oc
 "	.text
 	.align 	2

@@ -46,6 +46,8 @@ let getpos () = {
 %token LPAREN
 %token RPAREN
 %token EOF
+%token SFTL
+%token SFTR
 
 /* (* 優先順位とassociativityの定義（低い方から高い方へ） (caml2html: parser_prior) *) */
 %nonassoc IN
@@ -107,6 +109,10 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
 	{ Mul($1, $3) }
 | exp SLASH exp
 	{ Div($1, $3) }
+| exp SFTL exp
+	{ ShiftIL($1, $3) }
+| exp SFTR exp
+	{ ShiftIR($1, $3) }
 | exp EQUAL exp
     { Eq($1, $3) }
 | exp LESS_GREATER exp

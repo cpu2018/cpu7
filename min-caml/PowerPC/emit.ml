@@ -95,6 +95,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| NonTail(x), Div(y, C(z)) -> Printf.fprintf oc "\tsrwi\t%s, %s, %d\n" (reg x) (reg y) (z / 2)
 	| NonTail(x), Slw(y, V(z)) -> Printf.fprintf oc "\tslw\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Slw(y, C(z)) -> Printf.fprintf oc "\tslwi\t%s, %s, %d\n" (reg x) (reg y) z
+	| NonTail(x), Srw(y, V(z)) -> Printf.fprintf oc "\tsrw\t%s, %s, %s\n" (reg x) (reg y) (reg z)
+	| NonTail(x), Srw(y, C(z)) -> Printf.fprintf oc "\tsrwi\t%s, %s, %d\n" (reg x) (reg y) z
 	| NonTail(x), Lwz(y, V(z)) -> Printf.fprintf oc "\tlwzx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Lwz(y, C(z)) -> Printf.fprintf oc "\tlwz\t%s, %d(%s)\n" (reg x) z (reg y)
 	| NonTail(_), Stw(x, y, V(z)) -> Printf.fprintf oc "\tstwx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
@@ -129,7 +131,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| Tail, (Nop | Stw _ | Stfd _ | Comment _ | Save _ as exp) ->
 			g' oc (NonTail(Id.gentmp Type.Unit), exp);
 			Printf.fprintf oc "\tblr\n";
-	| Tail, (Li _ | SetL _ | Mr _ | Neg _ | Add _ | Sub _ | Mul _ | Div _ | Slw _ | Lwz _ as exp) ->
+	| Tail, (Li _ | SetL _ | Mr _ | Neg _ | Add _ | Sub _ | Mul _ | Div _ | Slw _ | Srw _ | Lwz _ as exp) ->
 			g' oc (NonTail(regs.(0)), exp);
 			Printf.fprintf oc "\tblr\n";
 	| Tail, (FLi _ | FMr _ | FNeg _ | FAdd _ | FSub _ | FMul _ | FDiv _ | Lfd _ as exp) ->
@@ -284,7 +286,11 @@ let f oc (Prog(data, fundefs, e)) =
 				 Printf.fprintf oc "\t.long\t%ld\n" (gethi d);
 				 Printf.fprintf oc "\t.long\t%ld\n" (getlo d))
 			 data);
-	Lib.print_external_methods oc;
+	Lib_sca.print_external_methods oc;
+	(*
+	Lib_float.print_external_methods oc;
+	*)
+	Lib_print_int.print_external_methods oc;
 	(*
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
@@ -303,6 +309,7 @@ let f oc (Prog(data, fundefs, e)) =
 	stackset := S.empty;
 	stackmap := [];
 	g oc (NonTail("_R_0"), e);
+	()
 	(*Printf.fprintf oc "#\tmain program ends\n";*)
 	(* Printf.fprintf oc "\tmr\tr3, %s\n" regs.(0); *)
 	(*

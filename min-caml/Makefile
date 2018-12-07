@@ -20,8 +20,9 @@ clean:: nobackup
 
 # ↓ もし実装を改造したら、それに合わせて変える
 SOURCES = float.c \
-mylib.ml \
-lib.ml \
+lib_float.ml \
+lib_sca.ml \
+lib_print_int.ml \
 type.ml \
 id.ml \
 m.ml s.ml \

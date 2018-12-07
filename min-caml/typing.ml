@@ -55,6 +55,8 @@ let rec deref_term = function
 	| Array(e1, e2) -> Array(deref_term e1, deref_term e2)
 	| Get(e1, e2) -> Get(deref_term e1, deref_term e2)
 	| Put(e1, e2, e3) -> Put(deref_term e1, deref_term e2, deref_term e3)
+	| ShiftIL(e1, e2) -> ShiftIL(deref_term e1, deref_term e2)
+	| ShiftIR(e1, e2) -> ShiftIR(deref_term e1, deref_term e2)
 	| e -> e (* Unit, Bool, Int, Float はそのまま(最終形態) *)
 
 let rec occur r1 = function (* occur check (caml2html: typing_occur) *)
@@ -136,7 +138,7 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 							print_string "expected : "; Type.print_type tt1; print_newline ();
 							print_string "actual   : "; Type.print_type tt2; print_newline ();
 							raise (Error (deref_typ t1, deref_typ t2, errpos e1)))))
-	| Add(e1, e2) | Sub(e1, e2) | Mul(e1, e2) | Div (e1, e2) -> (* 足し算（と引き算）の型推論 (caml2html: typing_add) *)
+	| Add(e1, e2) | Sub(e1, e2) | Mul(e1, e2) | Div (e1, e2) | ShiftIL (e1, e2) | ShiftIR (e1, e2) -> (* 足し算（と引き算）の型推論 (caml2html: typing_add) *)
 			(try
 				unify Type.Int (g env e1)
 			with
@@ -183,8 +185,7 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 					raise (Error (deref_typ t1, deref_typ t2, errpos e2))));
 			Type.Float
 	| Eq(e1, e2) | LE(e1, e2) ->
-			(try
-				unify (g env e1) (g env e2);
+			(try unify (g env e1) (g env e2);
 			with
 			| Unify (t1, t2) 
 				-> (Syntax.print_pos (errpos e1);

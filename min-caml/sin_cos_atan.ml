@@ -16,7 +16,7 @@ let rec min_caml_cos x =
 	-. x *. x *. x *. x *. x *. x *. x *. x *. x *. x /. 3628800.0
 	+. x *. x *. x *. x *. x *. x *. x *. x *. x *. x *. x *. x /. 479001600.0
 in
-let rec min_caml_sin x =
+let rec min_caml_atan x =
 	   x
 	-. x *. x *. x /. 3.0
 	+. x *. x *. x *. x *. x /. 5.0

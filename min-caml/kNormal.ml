@@ -9,6 +9,8 @@ type t = (* K正規化後の式 (caml2html: knormal_t) *)
 	| Sub of Id.t * Id.t
 	| Mul of Id.t * Id.t
 	| Div of Id.t * Id.t
+	| ShiftIL of Id.t * Id.t
+	| ShiftIR of Id.t * Id.t
 	| FNeg of Id.t
 	| FAdd of Id.t * Id.t
 	| FSub of Id.t * Id.t
@@ -35,7 +37,7 @@ let dummy_pos = {Syntax.ls = 0; Syntax.le = 0; Syntax.chs = 0; Syntax.che = 0}
 let rec fv = function (* 式に出現する（自由な ）変数 (free variant) (caml2html: knormal_fv) *)
 	| Unit | Int(_) | Float(_) | ExtArray(_) -> S.empty
 	| Neg(x) | FNeg(x) -> S.singleton x (* 要素が1個の集合を作る *)
-	| Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
+	| Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | ShiftIL(x, y) | ShiftIR(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
 	| IfEq(x, y, e1, e2) | IfLE(x, y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
 	| Let((x, t), e1, e2) -> S.union (fv e1) (S.remove x (fv e2)) (* 和集合 *)
 	| Var(x) -> S.singleton x
@@ -95,6 +97,14 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 			insert_let (g env e1)
 				(fun x -> insert_let (g env e2)
 						(fun y -> Div(x, y), Type.Int))
+	| Syntax.ShiftIL(e1, e2) ->
+			insert_let (g env e1)
+				(fun x -> insert_let (g env e2)
+						(fun y -> ShiftIL(x, y), Type.Int))
+	| Syntax.ShiftIR(e1, e2) ->
+			insert_let (g env e1)
+				(fun x -> insert_let (g env e2)
+						(fun y -> ShiftIR(x, y), Type.Int))
 	| Syntax.FNeg(e) ->
 			insert_let (g env e)
 				(fun x -> FNeg(x), Type.Float)
@@ -246,6 +256,12 @@ let rec print_kNormal depth expr =
 					print_t (depth + 1) x; print_newline ();
 					print_t (depth + 1) y
 	| Div (x, y) -> print_string "<DIV> "; print_newline ();
+					print_t (depth + 1) x; print_newline ();
+					print_t (depth + 1) y
+	| ShiftIL (x, y) -> print_string "<ShiftIL> "; print_newline ();
+					print_t (depth + 1) x; print_newline ();
+					print_t (depth + 1) y
+	| ShiftIR (x, y) -> print_string "<ShiftIR> "; print_newline ();
 					print_t (depth + 1) x; print_newline ();
 					print_t (depth + 1) y
 	| FNeg x  	 -> print_string "<FNEG> "; Id.print_t x

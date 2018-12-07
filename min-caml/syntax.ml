@@ -28,6 +28,8 @@ type t = (* MinCamlの構文を表現するデータ型 (caml2html: syntax_t) *)
 	| Array of t * t
 	| Get of t * t
 	| Put of t * t * t
+	| ShiftIL of t * t
+	| ShiftIR of t * t
 and fundef = { name : (Id.t * Type.t) * pos; args : (Id.t * Type.t) list; body : t }
 and pos = {ls : int; le: int; chs : int; che : int}
 
@@ -46,6 +48,8 @@ let rec errpos e =
     	-> pos
 	| Fun (_, _, pos)
 		-> pos
+	| ShiftIL (t, _) | ShiftIR (t, _)
+		-> errpos t
 
 let print_pos {ls = ls; le = le; chs = chs; che = che} =
 	Printf.printf "typing error near line %d-%d character %d-%d\n" ls le chs che; ()
@@ -165,5 +169,11 @@ let rec print_syntax depth expr =
 								print_code (depth + 1)  x;
 								print_code (depth + 1)  y;
 								print_code (depth + 1)  z
+	| ShiftIL (x, y)     	 -> print_string "<SHIFT_INT_LEFT> "; print_newline ();
+								print_code (depth + 1)  x;
+								print_code (depth + 1)  y
+	| ShiftIR (x, y)     	 -> print_string "<SHIFT_INT_RIGHT> "; print_newline ();
+								print_code (depth + 1)  x;
+								print_code (depth + 1)  y
 
 and print_code depth expr = print_syntax depth expr; is_already_newline newline_flag
