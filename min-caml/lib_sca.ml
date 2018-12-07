@@ -80,7 +80,7 @@ lf.363:	 # 6.000000
 	.text
 	.align 2
 	.globl _min_caml_start
-min_caml_sin.177:
+min_caml_sin:
 	fmul	f1, f0, f0
 	fmul	f1, f1, f0
 	lis	r31, ha16(lf.363)
@@ -154,7 +154,7 @@ min_caml_sin.177:
 	fdiv	f0, f0, f2
 	fadd	f0, f1, f0
 	blr
-min_caml_cos.179:
+min_caml_cos:
 	lis	r31, ha16(lf.369)
 	addi	r31, r31, lo16(lf.369)
 	lfd	f1, 0(r31)
@@ -225,7 +225,7 @@ min_caml_cos.179:
 	fdiv	f0, f0, f2
 	fadd	f0, f1, f0
 	blr
-min_caml_atan.181:
+min_caml_atan:
 	fmul	f1, f0, f0
 	fmul	f1, f1, f0
 	lis	r31, ha16(lf.376)
