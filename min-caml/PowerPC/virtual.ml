@@ -4,15 +4,15 @@ open Asm
 
 let data = ref [] (* 浮動小数点数の定数テーブル (caml2html: virtual_data) *)
 
-let classify xts ini addf addi =
+let classify xts ini addf addi = (* 引数や自由変数のlistの要素を、intとfloatで分類し、Tupleを返す *)
   List.fold_left
     (fun acc (x, t) ->
       match t with
       | Type.Unit -> acc
-      | Type.Float -> addf acc x
-      | _ -> addi acc x t)
-    ini
-    xts
+      | Type.Float -> addf acc x (* 引数がfloatの場合 *)
+      | _ -> addi acc x t) (* 引数がintの場合 *)
+    ini (* ここに追加していく *)
+    xts (* このlistの要素を走査する *)
 
 let separate xts =
   classify
@@ -27,10 +27,11 @@ let expand xts ini addf addi =
     ini
     (fun (offset, acc) x ->
       let offset = align offset in
-      (offset + 8, addf x offset acc))
+      (offset + 8, addf x offset acc)) (* floatの場合 *)
     (fun (offset, acc) x t ->
-      (offset + 4, addi x t offset acc))
+      (offset + 4, addi x t offset acc)) (* intの場合 *)
 
+(* M.t -> Closure.t -> Asm.t *)
 let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
   | Closure.Unit -> Ans(Nop)
   | Closure.Int(i) -> Ans(Li(i))
@@ -41,7 +42,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
           let (l, _) = List.find (fun (_, d') -> d = d') !data in
           l
         with Not_found ->
-          let l = Id.L(Id.genid "l") in
+          let l = Id.L(Id.genid "l") in (* ちなみにライブラリ実装のfloatラベルはlf.数字 *)
           data := (l, d) :: !data;
           l in
       Ans(FLi(l))
@@ -57,14 +58,14 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
   | Closure.FSub(x, y) -> Ans(FSub(x, y))
   | Closure.FMul(x, y) -> Ans(FMul(x, y))
   | Closure.FDiv(x, y) -> Ans(FDiv(x, y))
-  | Closure.IfEq(x, y, e1, e2) ->
+  | Closure.IfEq(x, y, e1, e2) -> (* ここで比較対象がintかfloatかで分類する *)
       (match M.find x env with
-      | Type.Bool | Type.Int -> Ans(IfEq(x, V(y), g env e1, g env e2))
+      | Type.Bool | Type.Int -> Ans(IfEq(x, V(y), g env e1, g env e2)) (* kNormal.tの時点でbool型の表現が1or0になっていることに注意 *)
       | Type.Float -> Ans(IfFEq(x, y, g env e1, g env e2))
       | _ -> failwith "equality supported only for bool, int, and float")
-  | Closure.IfLE(x, y, e1, e2) ->
+  | Closure.IfLE(x, y, e1, e2) -> (* ここで比較対象がintかfloatかで分類する *)
       (match M.find x env with
-      | Type.Bool | Type.Int -> Ans(IfLE(x, V(y), g env e1, g env e2))
+      | Type.Bool | Type.Int -> Ans(IfLE(x, V(y), g env e1, g env e2)) (* kNormal.tの時点でbool型の表現が1or0になっていることに注意 *)
       | Type.Float -> Ans(IfFLE(x, y, g env e1, g env e2))
       | _ -> failwith "inequality supported only for bool, int, and float")
   | Closure.Let((x, t1), e1, e2) ->
@@ -91,10 +92,10 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
               Let((z, Type.Int), SetL(l),
                   seq(Stw(z, x, C(0)),
                       store_fv))))
-  | Closure.AppCls(x, ys) ->
+  | Closure.AppCls(x, ys) -> (* 引数をintとfloatに分離 *)
       let (int, float) = separate (List.map (fun y -> (y, M.find y env)) ys) in
       Ans(CallCls(x, int, float))
-  | Closure.AppDir(Id.L(x), ys) ->
+  | Closure.AppDir(Id.L(x), ys) -> (* 引数をintとfloatに分離 *)
       let (int, float) = separate (List.map (fun y -> (y, M.find y env)) ys) in
       Ans(CallDir(Id.L(x), int, float))
   | Closure.Tuple(xs) -> (* 組の生成 (caml2html: virtual_tuple) *)
@@ -151,10 +152,10 @@ let h { Closure.name = (Id.L(x), t); Closure.args = yts; Closure.formal_fv = zts
   let (int, float) = separate yts in
   let (offset, load) =
     expand
-      zts
-      (4, g (M.add x t (M.add_list yts (M.add_list zts M.empty))) e)
-      (fun z offset load -> fletd(z, Lfd(x, C(offset)), load))
-      (fun z t offset load -> Let((z, t), Lwz(x, C(offset)), load)) in
+      zts (* その関数の中の自由変数の集合 *)
+      (4, g (M.add x t (M.add_list yts (M.add_list zts M.empty))) e) (* ini *)
+      (fun z offset load -> fletd(z, Lfd(x, C(offset)), load)) (* addf *)
+      (fun z t offset load -> Let((z, t), Lwz(x, C(offset)), load)) in (* addi *)
   match t with
   | Type.Fun(_, t2) ->
       { name = Id.L(x); args = int; fargs = float; body = load; ret = t2 }

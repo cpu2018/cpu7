@@ -1,7 +1,7 @@
 (* PowerPC assembly with a few virtual instructions *)
 exception FindWildCard
 
-type id_or_imm = V of Id.t | C of int
+type id_or_imm = V of Id.t | C of int (* 変数または定数 *)
 type t = (* 命令の列 (caml2html: sparcasm_t) *)
   | Ans of exp
   | Let of (Id.t * Type.t) * exp * t
@@ -37,8 +37,8 @@ and exp = (* 一つ一つの命令に対応する式 (caml2html: sparcasm_exp) *)
   | IfFEq of Id.t * Id.t * t * t
   | IfFLE of Id.t * Id.t * t * t
   (* closure address, integer arguments, and float arguments *)
-  | CallCls of Id.t * Id.t list * Id.t list
-  | CallDir of Id.l * Id.t list * Id.t list
+  | CallCls of Id.t * Id.t list * Id.t list (* 呼び出すclsの名前 * int/boolの引数 * floatの引数 *)
+  | CallDir of Id.l * Id.t list * Id.t list (* 呼び出すclsの名前 * int/boolの引数 * floatの引数 *)
   | Save of Id.t * Id.t (* レジスタ変数の値をスタック変数へ保存 (caml2html: sparcasm_save) *)
   | Restore of Id.t (* スタック変数から値を復元 (caml2html: sparcasm_restore) *)
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
@@ -53,9 +53,9 @@ let regs = (* Array.init 27 (fun i -> Printf.sprintf "_R_%d" i) *)
      "%r11"; "%r12"; "%r13"; "%r14"; "%r15"; "%r16"; "%r17"; "%r18";
      "%r19"; "%r20"; "%r21"; "%r22"; "%r23"; "%r24"; "%r25"; "%r26";
      "%r27"; "%r28"; "%r29"; "%r30" |]
-let fregs = Array.init 32 (fun i -> Printf.sprintf "%%f%d" i)
-let allregs = Array.to_list regs
-let allfregs = Array.to_list fregs
+let fregs = Array.init 32 (fun i -> Printf.sprintf "%%f%d" i) (* rをfに変換 *)
+let allregs = Array.to_list regs (* listに変換 *)
+let allfregs = Array.to_list fregs (* listに変換 *)
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)
 let reg_sw = regs.(Array.length regs - 2) (* temporary for swap *)
 let reg_fsw = fregs.(Array.length fregs - 1) (* temporary for swap *)

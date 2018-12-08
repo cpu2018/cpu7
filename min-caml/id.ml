@@ -37,7 +37,7 @@ let rec id_of_typ = function
 	| Type.Array _ -> "a" 
 	| Type.Var _ -> assert false
 
-(* k³‹K‰»—p *)
+(* k³‹K‰»—p *) (* regAlloc‚Å‚ào‚Ä‚­‚é *)
 let gentmp typ =
 	incr counter;
 	Printf.sprintf "T%s%d" (id_of_typ typ) !counter
