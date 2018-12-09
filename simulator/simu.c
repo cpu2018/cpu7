@@ -184,6 +184,43 @@ void printreg(CPU *cpu){
   }
   printf("\n");
 }
+
+void rot_l(char ans[33],char so[33],int n){
+  strcpy(ans,so);
+  for(int i=0;i<n;i++){
+    for(int j=0;j<32;j++){
+      if(j==31){
+        ans[j]='0';
+      }
+      else{
+        ans[j]=ans[j+1];
+      }
+    }
+  }
+}
+
+void make_mask(char mask[33],int mb,int me){
+  for(int i=0;i<32;i++){
+    if((i>=mb)&&(i<=me)){
+      mask[i]='1';
+    }
+    else{
+      mask[i]='0';
+    }
+  }
+}
+
+void and(char ans[33],char s1[33],char s2[33]){
+  for(int i=0;i<32;i++){
+    if((s1[i]=='1')&&(s2[i]=='1')){
+      ans[i]='1';
+    }
+    else{
+      ans[i]='0';
+    }
+  }
+}
+      
   
 
 void out(CPU *cpu,int *a){
@@ -596,6 +633,43 @@ void stmw(CPU *cpu,int *a){
   printf("stmw reg%d %d(reg%d)を実行\n",rs,d,ra);
 }
 
+void rlwinm(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6];
+  read_i_j(cpu,addr,code_6_10,6,10);
+  int rs = change_ibit(5,code_6_10);
+
+  char code_11_15[6];
+  read_i_j(cpu,addr,code_11_15,11,15);
+  int ra = change_ibit(5,code_11_15);
+
+  char code_16_20[6];
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int sh = change_ibit(5,code_16_20);
+
+  char code_21_25[6];
+  read_i_j(cpu,addr,code_21_25,21,25);
+  int mb = change_ibit(5,code_21_25);
+
+  char code_26_30[6];
+  read_i_j(cpu,addr,code_26_30,26,30);
+  int me = change_ibit(5,code_26_30);
+
+  int n = sh;
+  char rc[33]={'\0'};
+  //printf("%s\n",(cpu->reg)[rs]);
+  rot_l(rc,(cpu->reg)[rs],n);/*左にnだけ回転*/
+  //printf("%s\n",rc);
+  char mask[33]={'\0'};
+  make_mask(mask,mb,me);
+  char ra_c[33]={'\0'};
+  and(ra_c,rc,mask);
+  strcpy((cpu->reg)[ra],ra_c);
+  *a+=4;
+  printf("rlwinm r%d r%d %d %d %dを実行\n",ra,rs,sh,mb,me);
+}
+  
+
 void stwu(CPU *cpu,int *a){
   int addr = *a;
   char code_6_10[6];
@@ -658,6 +732,7 @@ void lmw(CPU *cpu,int *a){
   *a+=4;
   printf("lmw reg%d %d(reg%d)を実行\n",rt,d,ra);
 }
+
     
 
 void exec(CPU *cpu,label labellist[15]){
@@ -802,6 +877,9 @@ void exec(CPU *cpu,label labellist[15]){
     }
     else if(strcmp(code_0_5,"100000")==0){
       lwz(cpu,&addr);
+    }
+    else if(strcmp(code_0_5,"010101")==0){
+      rlwinm(cpu,&addr);
     }
     else{
       break;

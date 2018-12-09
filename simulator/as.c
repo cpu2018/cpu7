@@ -869,7 +869,77 @@ void changeb(label labellist[100],char ans[][33],label label){
     strcat(ans[k],s2);
     strcat(ans[k],"0");
     strcat(ans[k],"0");
-  } 
+  }
+  else if((strcmp((label.meirei[k]).name,"slwi")==0)){
+    char s1[7]="010101";
+
+    char s2[6]={'\0'};
+    char t2[10];
+    strncpy(t2,(label.meirei[k]).arg2+1,2);
+    unsigned int x2 = (unsigned int) atoi(t2);
+    change5bit(x2,s2);
+
+    char s3[6] = {'\0'};
+    char t3[10];
+    strncpy(t3,(label.meirei[k]).arg1+1,2);
+    unsigned int x3=(unsigned int) atoi(t3);
+    change5bit(x3,s3);
+
+    char s4[6]={'\0'};
+    int x4 = atoi((label.meirei[k]).arg3);
+    change5bit(x4,s4);
+
+    char s5[6]="00000";
+
+    char s6[6]={'\0'};
+    int x6=31-x4;
+    //printf("%d %d\n",x4,x6);
+    change5bit(x6,s6);
+    //printf("%s\n",s6);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],s2);
+    strcat(ans[k],s3);
+    strcat(ans[k],s4);
+    strcat(ans[k],s5);
+    strcat(ans[k],s6);
+    strcat(ans[k],"0");
+  }
+  else if(strcmp((label.meirei[k]).name,"srwi")==0){
+    char s1[7]="010101";
+
+    char s2[6]={'\0'};
+    char t2[10];
+    strncpy(t2,(label.meirei[k]).arg2+1,2);
+    unsigned int x2 = (unsigned int) atoi(t2);
+    change5bit(x2,s2);
+
+    char s3[6] = {'\0'};
+    char t3[10];
+    strncpy(t3,(label.meirei[k]).arg1+1,2);
+    unsigned int x3=(unsigned int) atoi(t3);
+    change5bit(x3,s3);
+
+    char s4[6]={'\0'};
+    int x4 = atoi((label.meirei[k]).arg3);
+    change5bit(32-x4,s4);
+
+    int x5 = x4;
+    char s5[6]={'\0'};
+    change5bit(x5,s5);
+
+    char s6[6]={'\0'};
+    int x6=31;
+    change5bit(x6,s6);
+
+    strcat(ans[k],s1);
+    strcat(ans[k],s2);
+    strcat(ans[k],s3);
+    strcat(ans[k],s4);
+    strcat(ans[k],s5);
+    strcat(ans[k],s6);
+    strcat(ans[k],"0");
+  }
   else{
     if((label.meirei[k]).name[0]!='\0'){
     printf("%sがアセンブリに変換されていません\n",(label.meirei[k]).name);
