@@ -3,9 +3,9 @@ let print_external_methods oc = Printf.fprintf oc
 	slwi	r5, r2, 7
 	slwi	r6, r2, 6
 	add	r5, r5, r6
-	slwi	r6, r2, 4
-	add	r5, r5, r6
 	slwi	r6, r2, 3
+	add	r5, r5, r6
+	slwi	r6, r2, 2
 	add	r5, r5, r6
 	add	r2, r5, r2
 	srwi	r2, r2, 11
@@ -44,7 +44,6 @@ beq_else_print_int:
 	out	r2
 	blr
 min_caml_print_int:
-	li	r2, 10
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
@@ -52,4 +51,5 @@ min_caml_print_int:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
+	blr
 "
