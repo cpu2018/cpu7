@@ -765,7 +765,7 @@ void exec(CPU *cpu,label labellist[15]){
     //printf("%d\n",addr);
     char code_0_5[7];
     read_i_j(cpu,addr,code_0_5,0,5);
-    printf("%s\n",code_0_5);
+    //printf("%s\n",code_0_5);
     if((strcmp(code_0_5,"011111"))==0){
       char code_22_30[10];
       read_i_j(cpu,addr,code_22_30,22,30);
