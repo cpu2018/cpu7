@@ -54,6 +54,7 @@ min_caml_print_int:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
+        blr
 _min_caml_start:
 	li	r2, 5
 	mflr	r31

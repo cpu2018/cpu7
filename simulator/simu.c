@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define R 32
-#define M 10000
+#define M 100000
 /*レジスタは32bitにしてる。crはバイナリでは4倍された値となっているので4で割っている*/
 typedef struct{
   char memory[M][9];
@@ -571,9 +571,9 @@ void lwz(CPU *cpu,int *a){
   int ea = b + d;
   //char s[65]="00000000000000000000000000000000";
   char s[33]={'\0'};
-  /*for(int i=0;i<4;i++){
+  for(int i=0;i<4;i++){
     printf("%d %s\n",ea,(cpu->memory)[ea+i]);
-    }*/
+    }
   strcat(s,(cpu->memory)[ea]);
   strcat(s,(cpu->memory)[ea+1]);
   strcat(s,(cpu->memory)[ea+2]);
@@ -765,7 +765,7 @@ void exec(CPU *cpu,label labellist[15]){
     //printf("%d\n",addr);
     char code_0_5[7];
     read_i_j(cpu,addr,code_0_5,0,5);
-    //printf("%s\n",code_0_5);
+    printf("%s\n",code_0_5);
     if((strcmp(code_0_5,"011111"))==0){
       char code_22_30[10];
       read_i_j(cpu,addr,code_22_30,22,30);
