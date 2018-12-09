@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #define R 32
+#define M 10000
 /*レジスタは32bitにしてる。crはバイナリでは4倍された値となっているので4で割っている*/
 typedef struct{
-  char memory[100000][9];
+  char memory[M][9];
   char reg[32][R+1];
   char lr[R+1];
   char cr[8][4];
@@ -960,7 +961,7 @@ int main(int argc,char **argv){
 
   int k=0;
   int i=0;
-  for(int l=0 ;l<100000;l++){
+  for(int l=0 ;l<M;l++){
     for(int m=0;m<9;m++){
       cpu.memory[l][m]='\0';
     }
