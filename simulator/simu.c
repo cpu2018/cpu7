@@ -571,9 +571,9 @@ void lwz(CPU *cpu,int *a){
   int ea = b + d;
   //char s[65]="00000000000000000000000000000000";
   char s[33]={'\0'};
-  for(int i=0;i<4;i++){
+  /*for(int i=0;i<4;i++){
     printf("%d %s\n",ea,(cpu->memory)[ea+i]);
-    }
+    }*/
   strcat(s,(cpu->memory)[ea]);
   strcat(s,(cpu->memory)[ea+1]);
   strcat(s,(cpu->memory)[ea+2]);
