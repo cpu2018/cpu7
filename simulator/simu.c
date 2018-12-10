@@ -450,12 +450,19 @@ void stw(CPU *cpu,int *a){
   int d = change_ibit_f(16,code_16_31);
 
   int addr2 = b+d;
+  printf("code_6_10 %s\n",code_6_10);
+
+  printf("cpu->reg[%d] %s\n",rs,(cpu->reg)[rs]);
 
   strncpy((cpu->memory)[addr2],(cpu->reg)[rs]/*+32*/,8);
   strncpy((cpu->memory)[addr2+1],(cpu->reg)[rs]/*+40*/+8,8);
   strncpy((cpu->memory)[addr2+2],(cpu->reg)[rs]/*+48*/+16,8);
   strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]/*+56*/+24,8);
-
+  printf("%d\n",addr2);
+  printf("memory %s\n",(cpu->memory)[addr2]);
+  printf("memory %s\n",(cpu->memory)[addr2+1]);
+  printf("memory %s\n",(cpu->memory)[addr2+2]);
+  printf("memory %s\n",(cpu->memory)[addr2+3]);
   /*for(int i=0;i<4;i++){
     printf("%d %s\n",addr2,(cpu->memory)[addr2+i]);
     }*/
@@ -755,6 +762,7 @@ void exec(CPU *cpu,label labellist[15]){
     stopaddr = search(labellist,name);
   }
   while(1){
+	  printf("reg 31 %s\n",(cpu->reg)[31]);
     printf("%d\n",addr);
     if(k==0){
       if(addr==stopaddr){

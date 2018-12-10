@@ -549,11 +549,14 @@ void changeb(label labellist[100],char ans[][33],label label){
   else if(strcmp((label.meirei[k]).name,"stw")==0){
     char s1[7] = "100100";
 
-    char t2[10];
+	char t2[10]={'\0'};
     strncpy(t2,(label.meirei[k]).arg1+1,2);
     char s2[6] = {'\0'};
     unsigned int x2 = (unsigned int) atoi(t2);
     change5bit(x2,s2);
+	printf("x2 %d\n",x2);
+	printf("s2 %s\n",s2);
+	printf("arg %s\n",t2);
 
     char s3[6] = {'\0'};
     change_reg_5bit((label.meirei[k]).arg2,s3);/*0(r3)などから3をchar型で取り出す*/
