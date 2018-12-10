@@ -7,7 +7,7 @@ print_int \
 print_char
 ASM_TESTS = \
 print_int1
-MIN_CAML = min-caml
+MIN_CAML = min-caml-int # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
 .PHONY: all clean rm_binary
 
@@ -24,7 +24,7 @@ do_casm: $(ML_TESTS:%.ml=%)
 .PRECIOUS: %.s
 
 %.s: %.ml
-	-./min-caml $*
+	-./$(MIN_CAML) $*
 
 %: %.s
 	-./assembler $^
