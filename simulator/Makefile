@@ -1,32 +1,41 @@
 CC = gcc
 CFLAGS = -Wall -O2
-AS = as.c
-SIMU = simu.c
-TESTS = out print_5 print_int print_int1 test test10 bobo_test float
-MIN_CAML = min_caml
+AS_SOURCE = as.c
+SIMU_SOURCE = simu.c
+ML_TESTS = \
+print_int \
+print_char
+ASM_TESTS = \
+print_int1
+MIN_CAML = min-caml
 
-.PHONY: all rm_binary clean
+.PHONY: all clean rm_binary
 
-all: assembler simulator do_cpl do_asm do_simu
+all: assembler simulator do_casm do_asm
 
-assembler: $(AS)
-	$(CC) $(CFALGS) -o $@ $^
+assembler: $(AS_SOURCE)
+	$(CC) $(CFLAGS) -o $@ $^
 
-simulator: $(SIMU)
-	$(CC) $(CFALGS) -o $@ $^
+simulator: $(SIMU_SOURCE)
+	$(CC) $(CFLAGS) -o $@ $^
 
-do_cpl: $(TESTS:%=./%.s)
+do_casm: $(ML_TESTS:%.ml=%)
 
-./%.s: $(MIN_CAML) ./%.ml
-	./$(MIN_CAML) $*
+.PRECIOUS: %.s
 
-do_asm:
+%.s: %.ml
+	-./min-caml $*
 
-do_simu:
+%: %.s
+	-./assembler $^
+
+do_asm: $(ASM_TESTS:%.s=%)
+
+%: %.s
+	-./assembler $^
 
 rm_binary:
-	-rm binary $(TESTS)
+	-rm -f $(ML_TESTS) $(ASM_TESTS)
 
 clean:
-	-rm assembler simulator binary $(TESTS)
-	echo "make clean が正常に終了しました。\n"
+	-rm -f assembler simulator $(ML_TESTS) $(ML_TESTS:%=%.s) $(ASM_TESTS)
