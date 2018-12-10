@@ -18,6 +18,39 @@ typedef struct llabel{
   unsigned int addr;
 } label;
 
+void init_cpu(CPU *cpu){
+  for(int i=0;i<M;i++){
+    for(int j=0;j<9;j++){
+      (cpu->memory)[i][j]='\0';
+    }
+  }
+  for(int i=0;i<32;i++){
+    for(int j=0;j<R+1;j++){
+      (cpu->reg)[i][j]='\0';
+    }
+  }
+  for(int i=0;i<R+1;i++){
+    (cpu->lr)[i]='\0';
+  }
+  for(int i=0;i<8;i++){
+    for(int j=0;j<5;j++){
+      (cpu->cr)[i][j]='\0';
+    }
+  }
+  for(int i=0;i<R+1;i++){
+    (cpu->cor)[i]='\0';
+  }
+  for(int i=0;i<33;i++){
+    (cpu->s)[i]='\0';
+  }
+}
+
+void init_label(label *label){
+  for(int i=0;i<20;i++){
+    (label->name)[i]='\0';
+  }
+}
+
 int search(label labellist[15],char *name){
   for(int i=0;i<15;i++){
     if(strcmp(labellist[i].name,name)==0){
@@ -138,11 +171,11 @@ void change_int(char *s,int len,int v){
 
 void slw(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_20[6];
+  char code_16_20[6]={'\0'};
   read_i_j(cpu,addr,code_16_20,16,20);
 
   int rs = change_ibit(5,code_6_10);
@@ -222,7 +255,7 @@ void and(char ans[33],char s1[33],char s2[33]){
 
 void out(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int ra = change_ibit(5,code_6_10);
 
@@ -233,13 +266,13 @@ void out(CPU *cpu,int *a){
 
 void cmpi(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_8[4];
+  char code_6_8[4]={'\0'};
   read_i_j(cpu,addr,code_6_8,6,8);
-  char code_10[2];
+  char code_10[2]={'\0'};
   read_i_j(cpu,addr,code_10,10,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_31[17];
+  char code_16_31[17]={'\0'};
   read_i_j(cpu,addr,code_16_31,16,31);
 
   int ra = change_ibit(5,code_11_15);/*符号を考えないで数値化*/
@@ -262,11 +295,11 @@ void cmpi(CPU *cpu,int *a){
 
 void cmp(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_8[4];
+  char code_6_8[4]={'\0'};
   read_i_j(cpu,addr,code_6_8,6,8);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_20[6];
+  char code_16_20[6]={'\0'};
   read_i_j(cpu,addr,code_16_20,16,20);
   int ra = change_ibit(5,code_11_15);
   int rb = change_ibit(5,code_16_20);
@@ -291,11 +324,11 @@ void cmp(CPU *cpu,int *a){
 
 void bne(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_29[15];
+  char code_16_29[15]={'\0'};
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
@@ -313,11 +346,11 @@ void bne(CPU *cpu,int *a){
 
 void bgt(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_29[15];
+  char code_16_29[15]={'\0'};
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
@@ -335,11 +368,11 @@ void bgt(CPU *cpu,int *a){
 
 void beq(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_29[15];
+  char code_16_29[15]={'\0'};
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
@@ -359,11 +392,11 @@ void beq(CPU *cpu,int *a){
 
 void blt(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_29[15];
+  char code_16_29[15]={'\0'};
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
@@ -384,11 +417,11 @@ void blt(CPU *cpu,int *a){
 
 void addi(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_31[17];
+  char code_16_31[17]={'\0'};
   read_i_j(cpu,addr,code_16_31,16,31);
 
   int rt = change_ibit(5,code_6_10);
@@ -423,11 +456,11 @@ void blr(CPU *cpu,int *addr){
 
 void stw(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_31[17];
+  char code_16_31[17]={'\0'};
   read_i_j(cpu,addr,code_16_31,16,31);
 
   int rs = change_ibit(5,code_6_10);
@@ -455,7 +488,7 @@ void stw(CPU *cpu,int *a){
 
 void mflr(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
 
   int rd = change_ibit(5,code_6_10);
@@ -468,9 +501,9 @@ void mflr(CPU *cpu,int *a){
 
 void mr(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
   int rs = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_11_15);
@@ -482,13 +515,13 @@ void mr(CPU *cpu,int *a){
 
 void add(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int rt = change_ibit(5,code_6_10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
   int ra = change_ibit(5,code_11_15);
-  char code_16_20[6];
+  char code_16_20[6]={'\0'};
   read_i_j(cpu,addr,code_16_20,16,20);
   int rb = change_ibit(5,code_16_20);
 
@@ -503,13 +536,13 @@ void add(CPU *cpu,int *a){
 
 void subf(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   int rt = change_ibit(5,code_6_10);
   read_i_j(cpu,addr,code_11_15,11,15);
   int ra = change_ibit(5,code_11_15);
-  char code_16_20[6];
+  char code_16_20[6]={'\0'};
   read_i_j(cpu,addr,code_16_20,16,20);
   int rb = change_ibit(5,code_16_20);
 
@@ -524,7 +557,7 @@ void subf(CPU *cpu,int *a){
 
 void b(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_29[25];
+  char code_6_29[25]={'\0'};
   read_i_j(cpu,addr,code_6_29,6,29);
   int target = change_ibit_f(24,code_6_29) * 4;
   *a=target+*a;
@@ -532,7 +565,7 @@ void b(CPU *cpu,int *a){
 }
 void bl(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_29[25];
+  char code_6_29[25]={'\0'};
   read_i_j(cpu,addr,code_6_29,6,29);
   int target = change_ibit_f(24,code_6_29) * 4;
   change_int((cpu->lr),32,addr+4);
@@ -542,11 +575,11 @@ void bl(CPU *cpu,int *a){
 
 void lwz(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
-  char code_16_31[17];
+  char code_16_31[17]={'\0'};
   read_i_j(cpu,addr,code_16_31,16,31);
 
   int rt = change_ibit(5,code_6_10);
@@ -579,7 +612,7 @@ void lwz(CPU *cpu,int *a){
 
 void mtlr(CPU *cpu,int *addr){
   int a=*addr;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,a,code_6_10,6,10);
 
   int rs = change_ibit(5,code_6_10);
@@ -591,15 +624,15 @@ void mtlr(CPU *cpu,int *addr){
 
 void stmw(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int rs = change_ibit(5,code_6_10);
 
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
   int ra = change_ibit(5,code_11_15);
 
-  char code_16_31[17];
+  char code_16_31[17]={'\0'};
   read_i_j(cpu,addr,code_16_31,16,31);
   int d = change_ibit_f(16,code_16_31);
 
@@ -627,23 +660,23 @@ void stmw(CPU *cpu,int *a){
 
 void rlwinm(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int rs = change_ibit(5,code_6_10);
 
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
   int ra = change_ibit(5,code_11_15);
 
-  char code_16_20[6];
+  char code_16_20[6]={'\0'};
   read_i_j(cpu,addr,code_16_20,16,20);
   int sh = change_ibit(5,code_16_20);
 
-  char code_21_25[6];
+  char code_21_25[6]={'\0'};
   read_i_j(cpu,addr,code_21_25,21,25);
   int mb = change_ibit(5,code_21_25);
 
-  char code_26_30[6];
+  char code_26_30[6]={'\0'};
   read_i_j(cpu,addr,code_26_30,26,30);
   int me = change_ibit(5,code_26_30);
 
@@ -664,15 +697,15 @@ void rlwinm(CPU *cpu,int *a){
 
 void stwu(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int rs = change_ibit(5,code_6_10);
 
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
   int ra = change_ibit(5,code_11_15);
 
-  char code_16_31[17];
+  char code_16_31[17]={'\0'};
   read_i_j(cpu,addr,code_16_31,16,31);
   int d = change_ibit_f(16,code_16_31);
 
@@ -689,15 +722,15 @@ void stwu(CPU *cpu,int *a){
 
 void lmw(CPU *cpu,int *a){
   int addr = *a;
-  char code_6_10[6];
+  char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int rt = change_ibit(5,code_6_10);
 
-  char code_11_15[6];
+  char code_11_15[6]={'\0'};
   read_i_j(cpu,addr,code_11_15,11,15);
   int ra = change_ibit(5,code_11_15);
 
-  char code_16_31[17];
+  char code_16_31[17]={'\0'};
   read_i_j(cpu,addr,code_16_31,16,31);
   int d = change_ibit_f(16,code_16_31);
 
@@ -734,7 +767,7 @@ void exec(CPU *cpu,label labellist[15]){
   int r=1;
   printf("ブレークポイントを入れるなら0入れないなら1:");
   scanf("%d",&k);
-  char name[15];
+  char name[15]={'\0'};
   int stopaddr=0;
   if(k==0){
     printf("ラベル名:");
@@ -754,13 +787,13 @@ void exec(CPU *cpu,label labellist[15]){
       scanf("%d",&r);
     }
     //printf("%d\n",addr);
-    char code_0_5[7];
+    char code_0_5[7]={'\0'};
     read_i_j(cpu,addr,code_0_5,0,5);
     //printf("code %s\n",code_0_5);
     if((strcmp(code_0_5,"011111"))==0){
-      char code_22_30[10];
+      char code_22_30[10]={'\0'};
       read_i_j(cpu,addr,code_22_30,22,30);
-      char code_21_30[11];
+      char code_21_30[11]={'\0'};
       read_i_j(cpu,addr,code_21_30,21,30);
       if(strcmp(code_22_30,"100001010")==0){
         add(cpu,&addr);/*addしてaddr+4*/
@@ -788,11 +821,11 @@ void exec(CPU *cpu,label labellist[15]){
       cmpi(cpu,&addr);/*addr+=4*/
     }
     else if(strcmp(code_0_5,"010000")==0){
-      char code_6_10[5];
+      char code_6_10[5]={'\0'};
       read_i_j(cpu,addr,code_6_10,6,10);
-      char code_30[2];
+      char code_30[2]={'\0'};
       read_i_j(cpu,addr,code_30,30,30);
-      char code_31[2];
+      char code_31[2]={'\0'};
       read_i_j(cpu,addr,code_31,31,31);
       if(code_30[0] == '0'){
         if(code_31[0] == '0'){
@@ -828,21 +861,21 @@ void exec(CPU *cpu,label labellist[15]){
       stw(cpu,&addr);
     }
     else if(strcmp(code_0_5,"011111")==0){
-      char code_21_30[11];
+      char code_21_30[11]={'\0'};
       read_i_j(cpu,addr,code_21_30,21,30);
       if(strcmp(code_21_30,"0101010011")==0){
         mflr(cpu,&addr);
       }
     }
     else if(strcmp(code_0_5,"011111")==0){
-      char code_21_30[11];
+      char code_21_30[11]={'\0'};
       read_i_j(cpu,addr,code_21_30,21,30);
       if(strcmp(code_21_30,"0110111100")==0){
         mr(cpu,&addr);
       }
     }
     else if(strcmp(code_0_5,"010010")==0){
-      char code_31[2];
+      char code_31[2]={'\0'};
       read_i_j(cpu,addr,code_31,31,31);
       if(code_31[0] == '1'){
         bl(cpu,&addr);
@@ -852,7 +885,7 @@ void exec(CPU *cpu,label labellist[15]){
       }
     }
     else if(strcmp(code_0_5,"011111")==0){
-      char code_21_30[11];
+      char code_21_30[11]={'\0'};
       read_i_j(cpu,addr,code_21_30,21,30);
       if(strcmp(code_21_30,"0111010011")==0){
         mtlr(cpu,&addr);
@@ -889,9 +922,12 @@ int main(int argc,char **argv){
   int z=0;
   int labelnum=-1;
   unsigned int addrx = 4;
-  char bufx[256];
+  char bufx[256]={'\0'};
   char ch;
-  label labellist[15];
+  label labellist[15];/*初期化*/
+  for(int y=0;y<15;y++){
+    init_label(&(labellist[y]));
+  }
   while((ch=fgetc(file2)) != EOF){
     if((state==0)&&(ch=='\n')){
       clean(bufx);
@@ -938,7 +974,8 @@ int main(int argc,char **argv){
   fclose(file2);
   //printf("%s %d\n",labellist[1].name,labellist[0].addr);
     
-  CPU cpu;
+  CPU cpu;/*初期化*/
+  init_cpu(&cpu);
 
   FILE *file;
   file=fopen(argv[1],"rb");
@@ -992,7 +1029,7 @@ int main(int argc,char **argv){
 		  cpu.cr[l][j]='\0';
 	  }
   }
-  char code_0_5[7];
+  char code_0_5[7]={'\0'};
   printf("%s\n",cpu.memory[0]);
   read_i_j(&cpu,0,code_0_5,0,5);
   printf("%s\n",code_0_5);
