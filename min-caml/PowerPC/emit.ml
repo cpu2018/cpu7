@@ -309,7 +309,6 @@ let f oc (Prog(data, fundefs, e)) =
 	stackset := S.empty;
 	stackmap := [];
 	g oc (NonTail("_R_0"), e);
-	()
 	(*Printf.fprintf oc "#\tmain program ends\n";*)
 	(* Printf.fprintf oc "\tmr\tr3, %s\n" regs.(0); *)
 	(*
@@ -317,5 +316,5 @@ let f oc (Prog(data, fundefs, e)) =
 	Printf.fprintf oc "\tlwz\tr0, 8(r1)\n";
 	Printf.fprintf oc "\tmtlr\tr0\n";
 	Printf.fprintf oc "\tlmw\tr30, -8(r1)\n";
-	Printf.fprintf oc "\tblr\n"
 	*)
+	Printf.fprintf oc "\tblr\n"
