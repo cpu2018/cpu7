@@ -8,7 +8,7 @@ typedef struct{
   char memory[M][9];
   char reg[32][R+1];
   char lr[R+1];
-  char cr[8][4];
+  char cr[8][5];
   char cor[R+1];
   char s[33];
 } CPU;
@@ -66,10 +66,12 @@ void r(unsigned char s,char memory[1000][9],int i){
 }
 
 void read_i_j(CPU *cpu,int addr,char *code,int i,int j){
+	strcpy(cpu->s,"");
   strcat(cpu->s,(cpu->memory)[addr]);
   strcat(cpu->s,(cpu->memory)[addr+1]);
   strcat(cpu->s,(cpu->memory)[addr+2]);
   strcat(cpu->s,(cpu->memory)[addr+3]);
+  //printf("cpu->s%s\n",cpu->s);
   strncpy(code,cpu->s+i,j-i+1);
   code[j-i+1]='\0';
   strcpy(cpu->s,"");
@@ -417,8 +419,9 @@ void addi(CPU *cpu,int *a){
 
 void blr(CPU *cpu,int *addr){
   int x = change_ibit_f(R,(cpu->lr));
-  if(x==-1){
+  if(x==1){
     *addr+=4;
+	exit(0);
   }
   else{
     *addr = x;
@@ -591,7 +594,8 @@ void mtlr(CPU *cpu,int *addr){
   read_i_j(cpu,a,code_6_10,6,10);
 
   int rs = change_ibit(5,code_6_10);
-  //printf("%s\n",(cpu->reg)[rs]);
+  printf("rs %d\n",rs);
+  printf("%s\n",(cpu->reg)[31]);
   strcpy((cpu->lr),(cpu->reg)[rs]);
   //printf("b\n");
   *addr+=4;
@@ -751,7 +755,7 @@ void exec(CPU *cpu,label labellist[15]){
     stopaddr = search(labellist,name);
   }
   while(1){
-    //printf("%d\n",addr);
+    printf("%d\n",addr);
     if(k==0){
       if(addr==stopaddr){
         printf("1行ずつ実行するなら0しないなら1");
@@ -765,7 +769,7 @@ void exec(CPU *cpu,label labellist[15]){
     //printf("%d\n",addr);
     char code_0_5[7];
     read_i_j(cpu,addr,code_0_5,0,5);
-    //printf("%s\n",code_0_5);
+    printf("code %s\n",code_0_5);
     if((strcmp(code_0_5,"011111"))==0){
       char code_22_30[10];
       read_i_j(cpu,addr,code_22_30,22,30);
@@ -885,7 +889,9 @@ void exec(CPU *cpu,label labellist[15]){
     else{
       break;
     }
+	printf("aaaaaaa\n");
     if(r==0){
+		printf("bbbbbbbbbb\n");
       printreg(cpu);
     }
   }
@@ -990,11 +996,21 @@ int main(int argc,char **argv){
     (cpu.reg)[5][l]='0';
   }
   for(int l=0;l<R;l++){
-    (cpu.lr)[l]='1';
+    (cpu.lr)[l]='0';
   }
+  (cpu.lr)[R-1]='1';
   (cpu.lr)[R]='\0';
   change_int((cpu.reg)[1],32,2000);
   change_int((cpu.reg)[3],32,5000);
+  for(int l=0;l<8;l++){
+	  for(int j=0;j<5;j++){
+		  cpu.cr[l][j]='\0';
+	  }
+  }
+  char code_0_5[7];
+  printf("%s\n",cpu.memory[0]);
+  read_i_j(&cpu,0,code_0_5,0,5);
+  printf("%s\n",code_0_5);
   exec(&cpu,labellist);
   //printf("\n%d\n",change_ibit_f(R,(cpu.reg)[3]));
   return 0;

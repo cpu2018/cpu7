@@ -7,7 +7,7 @@ MIN_CAML = min_caml
 
 .PHONY: all rm_binary clean
 
-all: assembler simulator do_asm
+all: assembler simulator do_cpl do_asm do_simu
 
 assembler: $(AS)
 	$(CC) $(CFALGS) -o $@ $^
@@ -15,10 +15,14 @@ assembler: $(AS)
 simulator: $(SIMU)
 	$(CC) $(CFALGS) -o $@ $^
 
-do_asm: $(TESTS:%=./%.s)
+do_cpl: $(TESTS:%=./%.s)
 
 ./%.s: $(MIN_CAML) ./%.ml
 	./$(MIN_CAML) $*
+
+do_asm:
+
+do_simu:
 
 rm_binary:
 	-rm binary $(TESTS)
