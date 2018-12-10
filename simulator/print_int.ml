@@ -1,1 +1,1 @@
-print_int 5
+print_int 12
