@@ -55,7 +55,7 @@ min_caml_print_int:
 	mtlr	r31
 	blr
 _min_caml_start:
-	li	r2, 169
+	li	r2, 30
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8

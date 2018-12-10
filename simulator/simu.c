@@ -71,7 +71,6 @@ void read_i_j(CPU *cpu,int addr,char *code,int i,int j){
   strcat(cpu->s,(cpu->memory)[addr+1]);
   strcat(cpu->s,(cpu->memory)[addr+2]);
   strcat(cpu->s,(cpu->memory)[addr+3]);
-  //printf("cpu->s%s\n",cpu->s);
   strncpy(code,cpu->s+i,j-i+1);
   code[j-i+1]='\0';
   strcpy(cpu->s,"");
@@ -128,10 +127,7 @@ void change_int(char *s,int len,int v){
         s[k] = '1';
       }
     }
-    //printf("%s\n",s);
     inc(s,len);
-    //printf("%s\n",s);
-    //printf("%d\n",v);
   }
   else{
     for(int k=0;k<len;k++){
@@ -152,8 +148,6 @@ void slw(CPU *cpu,int *a){
   int rs = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_11_15);
   int rb = change_ibit(5,code_16_20);
-  //printf("slw %d %d %d\n",ra,rs,rb);
-
   unsigned int s = change_ibit(R,(cpu->reg)[rs]);
   unsigned int b = change_ibit(R,(cpu->reg)[rb]);
 
@@ -227,7 +221,6 @@ void and(char ans[33],char s1[33],char s2[33]){
   
 
 void out(CPU *cpu,int *a){
-  //printf("%d %d %d\n",change_ibit_f(R,(cpu->reg)[7]),change_ibit_f(R,(cpu->reg)[11]),change_ibit_f(R,(cpu->reg)[12]));
   int addr = *a;
   char code_6_10[6];
   read_i_j(cpu,addr,code_6_10,6,10);
@@ -235,7 +228,6 @@ void out(CPU *cpu,int *a){
 
   int value = change_ibit_f(R,(cpu->reg)[ra]);
   printf("レジスタ%dをoutした %c\n",ra,value);
-  //printf("%d\n",change_ibit_f(R,(cpu->reg)[2]));
   *a+=4;
 }
 
@@ -314,7 +306,7 @@ void bne(CPU *cpu,int *a){
   else{
     int j = change_ibit_f(14,code_16_29);
     *a+=j*4;
-    printf("bne %d\n",j);
+    //printf("bne %d\n",j);
   }
   printf("bne cr%d を実行\n",cr);
 }
@@ -375,14 +367,14 @@ void blt(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
-  //printf("blt %d\n",cr);
+  
   cr = cr/4;
   if(strcmp((cpu->cr)[cr],"0001")!=0){
-    //printf("通過1\n");
+    
     *a+=4;
   }
   else{
-    //printf("通過2\n");
+    
     int j = change_ibit_f(14,code_16_29);
     *a+=j*4;
   }
@@ -409,9 +401,9 @@ void addi(CPU *cpu,int *a){
   else{
     int x = change_ibit_f(R,(cpu->reg)[ra]);
     int y = x + si;
-    //printf("add %d\n",y);
+    
     change_int((cpu->reg)[rt],32,y);
-    //printf("%s\n",(cpu->reg)[rt]);
+    
   }
   *a+=4;
   printf("addiを実行 レジスタ%dにレジスタ%dと%dの和を代入\n",rt,ra,si);
@@ -450,22 +442,12 @@ void stw(CPU *cpu,int *a){
   int d = change_ibit_f(16,code_16_31);
 
   int addr2 = b+d;
-  printf("code_6_10 %s\n",code_6_10);
 
-  printf("cpu->reg[%d] %s\n",rs,(cpu->reg)[rs]);
 
   strncpy((cpu->memory)[addr2],(cpu->reg)[rs]/*+32*/,8);
   strncpy((cpu->memory)[addr2+1],(cpu->reg)[rs]/*+40*/+8,8);
   strncpy((cpu->memory)[addr2+2],(cpu->reg)[rs]/*+48*/+16,8);
   strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]/*+56*/+24,8);
-  printf("%d\n",addr2);
-  printf("memory %s\n",(cpu->memory)[addr2]);
-  printf("memory %s\n",(cpu->memory)[addr2+1]);
-  printf("memory %s\n",(cpu->memory)[addr2+2]);
-  printf("memory %s\n",(cpu->memory)[addr2+3]);
-  /*for(int i=0;i<4;i++){
-    printf("%d %s\n",addr2,(cpu->memory)[addr2+i]);
-    }*/
 
   *a+=4;
   printf("stw reg%d %d(reg%d)を実行\n",rs,d,ra);
@@ -601,8 +583,6 @@ void mtlr(CPU *cpu,int *addr){
   read_i_j(cpu,a,code_6_10,6,10);
 
   int rs = change_ibit(5,code_6_10);
-  printf("rs %d\n",rs);
-  printf("%s\n",(cpu->reg)[31]);
   strcpy((cpu->lr),(cpu->reg)[rs]);
   //printf("b\n");
   *addr+=4;
@@ -762,8 +742,7 @@ void exec(CPU *cpu,label labellist[15]){
     stopaddr = search(labellist,name);
   }
   while(1){
-	  printf("reg 31 %s\n",(cpu->reg)[31]);
-    printf("%d\n",addr);
+    //printf("%d\n",addr);
     if(k==0){
       if(addr==stopaddr){
         printf("1行ずつ実行するなら0しないなら1");
@@ -777,7 +756,7 @@ void exec(CPU *cpu,label labellist[15]){
     //printf("%d\n",addr);
     char code_0_5[7];
     read_i_j(cpu,addr,code_0_5,0,5);
-    printf("code %s\n",code_0_5);
+    //printf("code %s\n",code_0_5);
     if((strcmp(code_0_5,"011111"))==0){
       char code_22_30[10];
       read_i_j(cpu,addr,code_22_30,22,30);
@@ -897,9 +876,7 @@ void exec(CPU *cpu,label labellist[15]){
     else{
       break;
     }
-	printf("aaaaaaa\n");
     if(r==0){
-		printf("bbbbbbbbbb\n");
       printreg(cpu);
     }
   }
