@@ -686,14 +686,14 @@ void rlwinm(CPU *cpu,int *a){
   char rc[33]={'\0'};
   //printf("%s\n",(cpu->reg)[rs]);
   rot_l(rc,(cpu->reg)[rs],n);/*左にnだけ回転*/
-  printf("rc %s\n",rc);
-  printf("(cpu->reg)[rs] %s\n",(cpu->reg)[rs]);
+  //printf("rc %s\n",rc);
+  //printf("(cpu->reg)[rs] %s\n",(cpu->reg)[rs]);
   //printf("%s\n",rc);
   char mask[33]={'\0'};
   make_mask(mask,mb,me);
   char ra_c[33]={'\0'};
   and(ra_c,rc,mask);
-  printf("mask = %s\n", mask);
+  //printf("mask = %s\n", mask);
   strcpy((cpu->reg)[ra],ra_c);
   *a+=4;
   printf("rlwinm r%d r%d %d %d %dを実行\n",ra,rs,sh,mb,me);
@@ -770,7 +770,7 @@ void exec(CPU *cpu,label labellist[15]){
   int k;
   int state=1;
   int r=1;
-  printf("ブレークポイントを入れるなら0入れないなら1:");
+  printf("ブレークポイントを入れるなら0, 入れないなら1:");
   scanf("%d",&k);
   char name[15]={'\0'};
   int stopaddr=0;
@@ -783,12 +783,12 @@ void exec(CPU *cpu,label labellist[15]){
     printf("%d番目の命令\n",addr/4);
     if(k==0){
       if(addr==stopaddr){
-        printf("1行ずつ実行するなら0しないなら1");
+        printf("1行ずつ実行するなら0, しないなら1:");
         scanf("%d",&state);
       }
     }
     if(state==0){
-      printf("レジスタを表示するなら0しないなら1");
+      printf("レジスタを表示するなら0, しないなら1:");
       scanf("%d",&r);
     }
     //printf("%d\n",addr);
