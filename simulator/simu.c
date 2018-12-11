@@ -217,10 +217,12 @@ void printreg(CPU *cpu){
 
 void rot_l(char ans[33],char so[33],int n){
   strcpy(ans,so);
+  char tmp;
   for(int i=0;i<n;i++){
+	  tmp=ans[0];
     for(int j=0;j<32;j++){
       if(j==31){
-        ans[j]='0';
+        ans[j]=tmp;
       }
       else{
         ans[j]=ans[j+1];
@@ -684,11 +686,14 @@ void rlwinm(CPU *cpu,int *a){
   char rc[33]={'\0'};
   //printf("%s\n",(cpu->reg)[rs]);
   rot_l(rc,(cpu->reg)[rs],n);/*左にnだけ回転*/
+  printf("rc %s\n",rc);
+  printf("(cpu->reg)[rs] %s\n",(cpu->reg)[rs]);
   //printf("%s\n",rc);
   char mask[33]={'\0'};
   make_mask(mask,mb,me);
   char ra_c[33]={'\0'};
   and(ra_c,rc,mask);
+  printf("mask = %s\n", mask);
   strcpy((cpu->reg)[ra],ra_c);
   *a+=4;
   printf("rlwinm r%d r%d %d %d %dを実行\n",ra,rs,sh,mb,me);
@@ -775,7 +780,7 @@ void exec(CPU *cpu,label labellist[15]){
     stopaddr = search(labellist,name);
   }
   while(1){
-    //printf("%d\n",addr);
+    printf("%d番目の命令\n",addr/4);
     if(k==0){
       if(addr==stopaddr){
         printf("1行ずつ実行するなら0しないなら1");

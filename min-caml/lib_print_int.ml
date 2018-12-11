@@ -19,10 +19,10 @@ print_int_main:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
-	slwi	r5, r2, 4
+	slwi	r5, r2, 3
 	lwz	r6, 0(r3)
 	sub	r5, r6, r5
-	slwi	r6, r2, 2
+	slwi	r6, r2, 1
 	sub	r5, r5, r6
 	cmpwi	cr7, r2, 0
 	bne	cr7, beq_else_print_int
