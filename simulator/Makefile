@@ -5,6 +5,7 @@ SIMU_SOURCE = simu.c
 ML_TESTS = \
 print_int \
 print_char \
+array \
 fib
 ASM_TESTS = \
 print_int1
