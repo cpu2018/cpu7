@@ -4,7 +4,7 @@ open Asm
 (* [XXX] Callがあったら、そこから先は無意味というか逆効果なので追わない。
 				 そのために「Callがあったかどうか」を返り値の第1要素に含める。 *)
 (* Id.t -> (Id.t * Type.t) -> Asm.exp -> (bool * Id.t list) *)
-let rec target' src (dest, t) = function
+let rec target' src (dest, t, id) = function
 	| Mr(x) when x = src && is_reg dest ->
 			assert (t <> Type.Unit);
 			assert (t <> Type.Float);
@@ -14,8 +14,8 @@ let rec target' src (dest, t) = function
 			false, [dest]
 	| IfEq(_, _, e1, e2) | IfLE(_, _, e1, e2) | IfGE(_, _, e1, e2)
 	| IfFEq(_, _, e1, e2) | IfFLE(_, _, e1, e2) ->
-			let c1, rs1 = target src (dest, t) e1 in
-			let c2, rs2 = target src (dest, t) e2 in
+			let c1, rs1 = target src (dest, t, gen_id ()) e1 in
+			let c2, rs2 = target src (dest, t, gen_id ()) e2 in
 			c1 && c2, rs1 @ rs2
 	| CallCls(x, ys, zs) ->
 			true, (target_args src regs 0 ys @ (*  *)
@@ -25,8 +25,8 @@ let rec target' src (dest, t) = function
 			true, (target_args src regs 0 ys @
 						 target_args src fregs 0 zs)
 	| _ -> false, []
-(* Id.t -> (Id.t * Type.t) -> Asm.t -> (bool * Id.t list) *)
-and target src dest = function (* register targeting (caml2html: regalloc_target) *)
+(* Id.t -> (Id.t * Type.t * id) -> Asm.t -> (bool * Id.t list) *)
+and target src (dest : Id.t * Type.t * id) = function (* register targeting (caml2html: regalloc_target) *)
 	| Ans(exp) -> target' src dest exp
 	| Let(xt, exp, e) ->
 			let c1, rs1 = target' src xt exp in
@@ -102,10 +102,10 @@ let find' x' regenv =
 	| V(x) -> V(find x Type.Int regenv) (* 変数ならば、その変数がレジスタに配置されているかどうかを判定し、探しだして、型合わせのためにid_or_immでラップする *)
 	| c -> c (* 定数ならば、即値として扱うため、そのまま返す *)
 
-(* (Id.t * Type.t) -> Asm.t -> M.t -> Asm.t -> (Asm.t * M.t) *)
-let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (caml2html: regalloc_g) *)
+(* (Id.t * Type.t * id) -> Asm.t -> M.t -> Asm.t -> (Asm.t * M.t) *)
+let rec g (dest : Id.t * Type.t * id) cont regenv = function (* 命令列のレジスタ割り当て (caml2html: regalloc_g) *)
 	| Ans(exp) -> g'_and_restore dest cont regenv exp (* もし1命令の時 *)
-	| Let((x, t) as xt, exp, e) ->
+	| Let((x, t, id) as xt, exp, e) ->
 			assert (not (M.mem x regenv)); (* Letは新しく宣言するから、まだレジスタに割り当てられていないことが必要 *)
 			let cont' = concat e dest cont in (* contの更新はここ！: destを名前として、すでにあるdestの名前のletのinの中の最も深いものの中に今回宣言されたLet式のinの内容を追加する *)
 			let (e1', regenv1) = g'_and_restore xt cont' regenv exp in
@@ -116,17 +116,17 @@ let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (caml2html: re
 					let save =
 						try Save(M.find y regenv, y)
 						with Not_found -> Nop in
-					(seq(save, concat e1' (r, t) e2'), regenv2)
+					(seq(save, concat e1' (r, t, id) e2'), regenv2)
 			| Alloc(r) ->
 					let (e2', regenv2) = g dest cont (add x r regenv1) e in
-					(concat e1' (r, t) e2', regenv2))
+					(concat e1' (r, t, id) e2', regenv2))
 	| WildCard -> raise FindWildCard
 (* (Id.t * Type.t) -> Asm.t -> M.t -> Asm.exp -> (Asm.t * M.t) *)
 and g'_and_restore dest cont regenv exp = (* 使用される変数をスタックからレジスタへRestore (caml2html: regalloc_unspill) *)
 	try g' dest cont regenv exp
 	with NoReg(x, t) -> (* ここでのxはfindの内容からレジスタ名ではなく必ず変数名である *)
 		((* Format.eprintf "restoring %s@." x; *)
-		 g dest cont regenv (Let((x, t), Restore(x), Ans(exp))))
+		 g dest cont regenv (Let((x, t, gen_id ()), Restore(x), Ans(exp))))
 (* (Id.t * Type.t) -> Asm.t -> M.t -> exp -> (Asm.t * M.t) *)
 and g' dest cont regenv = function (* 各命令のレジスタ割り当て (caml2html: regalloc_gprime) *)
 	| Nop | Li _ | SetL _ | Comment _ | Restore _ | FLi _ as exp -> (Ans(exp), regenv)
@@ -181,8 +181,8 @@ and g'_if dest cont regenv exp constr e1 e2 = (* ifのレジスタ割り当て (caml2html
 			M.empty (* ひとまず作った新しいレジスタ環境 *)
 			(fv cont) in (* fv : Asm.t -> Id.t list , たぶん、自由変数を洗い出してるんだと思う *)
 	(List.fold_left
-		 (fun e x ->
-			 if x = fst dest || not (M.mem x regenv) || M.mem x regenv' then e else
+		 (fun e x -> let first, _, _ = dest in
+			 if x = first || not (M.mem x regenv) || M.mem x regenv' then e else
 			 seq(Save(M.find x regenv, x), e)) (* そうでない(両方の分岐に出てこない)変数は分岐直前にセーブしておいて、後からもし使うなら適宜取り出す *)
 		 (Ans(constr e1' e2'))
 		 (fv cont), (* 今一度、こんどはすべての変数についてセーブするかどうかを決定する *)
@@ -190,8 +190,8 @@ and g'_if dest cont regenv exp constr e1 e2 = (* ifのレジスタ割り当て (caml2html
 (* (Id.t * Type.t) -> Asm.t -> M.t -> Asm.exp -> (Asm.t -> Asm.t -> Asm.exp) -> Id.t list -> Id.t list -> (Asm.t * M.t) *)
 and g'_call dest cont regenv exp constr ys zs = (* 関数呼び出しのレジスタ割り当て (caml2html: regalloc_call) *)
 	(List.fold_left
-		 (fun e x ->
-			 if x = fst dest || not (M.mem x regenv) then e else
+		 (fun e x -> let first, _, _ = dest in 
+			 if x = first || not (M.mem x regenv) then e else
 			 seq(Save(M.find x regenv, x), e)) (* レジスタ環境にある変数はセーブしなければならない *)
 		 (Ans(constr
 						(List.map (fun y -> find y Type.Int regenv) ys)
@@ -226,13 +226,13 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数のレ
 		| Type.Unit -> Id.gentmp Type.Unit
 		| Type.Float -> fregs.(0)
 		| _ -> regs.(0) in
-	let (e', regenv') = g (a, t) (Ans(Mr(a))) regenv e in
+	let (e', regenv') = g (a, t, gen_id ()) (Ans(Mr(a))) regenv e in
 	{ name = Id.L(x); args = arg_regs; fargs = farg_regs; body = e'; ret = t }
 
 let f print_flag (Prog(data, fundefs, e)) = (* プログラム全体のレジスタ割り当て (caml2html: regalloc_f) *)
 	Format.eprintf "register allocation: may take some time (up to a few minutes, depending on the size of functions)@.";
 	let fundefs' = List.map h fundefs in
-	let e', regenv' = g (Id.gentmp Type.Unit, Type.Unit) (Ans(Nop)) M.empty e in (* M : Id.t to Id.t *)
+	let e', regenv' = g (Id.gentmp Type.Unit, Type.Unit, gen_id ()) (Ans(Nop)) M.empty e in (* M : Id.t to Id.t *)
 	let prog = Prog(data, fundefs', e') in
 	if print_flag = 1
 	then

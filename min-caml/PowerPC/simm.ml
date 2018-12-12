@@ -2,10 +2,10 @@ open Asm
 
 let rec g env = function (* Ì¿ÎáÎó¤Î16bitÂ¨ÃÍºÇÅ¬²½ (caml2html: simm13_g) *)
 	| Ans(exp) -> Ans(g' env exp)
-	| Let((x, t), Li(i), e) when -32768 <= i && i < 32768 ->
+	| Let((x, t, id), Li(i), e) when -32768 <= i && i < 32768 ->
 			(* Format.eprintf "found simm16 %s = %d@." x i; *)
 			let e' = g (M.add x i env) e in
-			if List.mem x (fv e') then Let((x, t), Li(i), e') else
+			if List.mem x (fv e') then Let((x, t, id), Li(i), e') else
 			((* Format.eprintf "erased redundant Set to %s@." x; *)
 			 e')
 	| Let(xt, Slw(y, C(i)), e) when M.mem y env -> (* for array access *)

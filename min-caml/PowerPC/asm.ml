@@ -1,10 +1,11 @@
 (* PowerPC assembly with a few virtual instructions *)
 exception FindWildCard
 
+type id = int
 type id_or_imm = V of Id.t | C of int (* 変数または定数 *)
 type t = (* 命令の列 (caml2html: sparcasm_t) *)
   | Ans of exp
-  | Let of (Id.t * Type.t) * exp * t
+  | Let of (Id.t * Type.t * id) * exp * t
   | WildCard
 and exp = (* 一つ一つの命令に対応する式 (caml2html: sparcasm_exp) *)
   | Nop
@@ -45,8 +46,11 @@ type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret 
 (* プログラム全体 = 浮動小数点数テーブル + トップレベル関数 + メインの式 (caml2html: sparcasm_prog) *)
 type prog = Prog of (Id.l * float) list * fundef list * t
 
-let fletd(x, e1, e2) = Let((x, Type.Float), e1, e2)
-let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit), e1, e2)
+let id_incr = ref 0
+let gen_id () = id_incr := !id_incr + 1; !id_incr
+
+let fletd(x, e1, e2) = Let((x, Type.Float, gen_id ()), e1, e2)
+let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit, gen_id ()), e1, e2)
 
 let regs = (* Array.init 27 (fun i -> Printf.sprintf "_R_%d" i) *)
   [| "%r2"; "%r5"; "%r6"; "%r7"; "%r8"; "%r9"; "%r10";
@@ -85,12 +89,12 @@ let rec fv_exp = function
   | CallDir(_, ys, zs) -> ys @ zs
 and fv = function
   | Ans(exp) -> fv_exp exp
-  | Let((x, t), exp, e) ->
+  | Let((x, t, id), exp, e) ->
       fv_exp exp @ remove_and_uniq (S.singleton x) (fv e)
   | WildCard -> raise FindWildCard
 let fv e = remove_and_uniq S.empty (fv e)
 
-let rec concat e1 xt e2 =
+let rec concat e1 (xt : Id.t * Type.t * id) e2 =
   match e1 with
   | Ans(exp) -> Let(xt, exp, e2)
   | Let(yt, exp, e1') -> Let(yt, exp, concat e1' xt e2)
@@ -128,9 +132,9 @@ let rec print_t depth ty =
 	print_indent depth; newline_flag := 0;
 	match ty with
 	| Ans exp -> print_string "Ans "; print_exp (depth + 1) exp
-	| Let ((x, y), exp, t) ->
-		print_string "Let "	 ;
-		Id.print_t x; print_string " ------ Type : "; Type.print_code y; newline_flag := 1;
+	| Let ((x, y, id), exp, t) ->
+		print_string "Let ";
+		Id.print_t x; print_string "(id: "; print_int id; print_string ")"; print_string " ------ Type : "; Type.print_code y; newline_flag := 1;
 		print_exp (depth + 1) exp; print_newline ();
 		print_indent depth; print_string "in ";
 		print_t depth t

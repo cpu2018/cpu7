@@ -1,9 +1,10 @@
 exception FindWildCard
 
+type id = int
 type id_or_imm = V of Id.t | C of int
 type t =
   | Ans of exp
-  | Let of (Id.t * Type.t) * exp * t
+  | Let of (Id.t * Type.t * id) * exp * t
   | WildCard
 and exp =
   | Nop
@@ -43,6 +44,9 @@ and exp =
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
 type prog = Prog of (Id.l * float) list * fundef list * t
 
+val id_incr : int ref
+val gen_id : unit -> int
+
 val fletd : Id.t * exp * t -> t (* shorthand of Let for float *)
 val seq : exp * t -> t (* shorthand of Let for unit *)
 
@@ -59,7 +63,7 @@ val reg_tmp : Id.t
 val is_reg : Id.t -> bool
 
 val fv : t -> Id.t list
-val concat : t -> Id.t * Type.t -> t -> t
+val concat : t -> Id.t * Type.t * id -> t -> t
 
 val align : int -> int
 val print_prog : int -> prog -> unit

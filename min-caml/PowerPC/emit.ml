@@ -55,7 +55,7 @@ let rec shuffle sw xys =
 type dest = Tail | NonTail of Id.t (* 末尾かどうかを表すデータ型 (caml2html: emit_dest) *)
 let rec g oc = function (* 命令列のアセンブリ生成 (caml2html: emit_g) *)
 	| dest, Ans(exp) -> g' oc (dest, exp)
-	| dest, Let((x, t), exp, e) ->
+	| dest, Let((x, t, _), exp, e) ->
 			g' oc (NonTail(x), exp);
 			g oc (dest, e)
 	| dest, WildCard -> raise FindWildCard
