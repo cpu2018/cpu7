@@ -5,21 +5,21 @@ min_caml_
 	fiszero				=0の演算、実装済み
 	fispos				>0の演算、実装済み
 	fisneg				<0の演算、実装済み
+	read_float			未実装
+	read_int			未実装
 	fhalf				0.5倍の演算、実装済み
 	fneg				fnegと同じ
 	fless				<であるかどうかの判断、実装済み
+	create_array		まだライブラリをコピーしただけ
+	create_float_array	まだライブラリをコピーしただけ
 	float_of_int		FPU
 	int_of_float		FPU
 	sqrt				FPU
-	fsqr				2乗の演算、実装済み
+	fsqr				二乗の演算、実装済み
 	fabs				絶対値の演算、実装済み
 	floor				FPU
 	sin					範囲指定がまだ
 	cos					範囲指定がまだ
 	atan				範囲指定がまだ
-	read_float			未実装
-	read_int			未実装
 	print_int			実装済み(0~255のみ対応)
 	print_char			実装済み(0~255のみ対応)
-	create_array		まだライブラリをコピーしただけ
-	create_float_array	まだライブラリをコピーしただけ

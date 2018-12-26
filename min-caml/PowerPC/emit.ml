@@ -287,8 +287,9 @@ let f oc (Prog(data, fundefs, e)) =
 				 Printf.fprintf oc "\t.long\t%ld\n" (getlo d))
 			 data);
 	(*
-	Lib_sca.print_external_methods oc;
+	Lib_float_value.print_external_methods oc;
 	Lib_float.print_external_methods oc;
+	Lib_sca.print_external_methods oc;
 	*)
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
