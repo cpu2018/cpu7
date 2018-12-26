@@ -145,14 +145,16 @@ and make_graph_exp id def = function
 			write_set := M.add def id !write_set)
 	| Comment str -> ()
 	| IfEq (x, V(y), t1, t2) | IfLE (x, V(y), t1, t2) | IfGE (x, V(y), t1, t2) | IfFEq (x, V(y), t1, t2) | IfFLE (x, V(y), t1, t2) -> 
-		if <= 0 then ()
-		else 
-			
+		(if <= 0 then ()
+		else );
+		make_graph_t t1;
+		make_graph_t t2
 	| IfEq (x, C(i), t1, t2) | IfLE (x, C(i), t1, t2) | IfGE (x, C(i), t1, t2) | IfFEq (x, C(i), t1, t2) | IfFLE (x, C(i), t1, t2) -> 
 	| CallCls (x, is, fs) -> 
-		if <= 0 then ()
-		else
-			
+		(if <= 0 then ()
+		else );
+		make_graph_t t1;
+		make_graph_t t2
 	| CallDir (Id.L(x), is, fs) ->
 		if <= 0 then ()
 		else

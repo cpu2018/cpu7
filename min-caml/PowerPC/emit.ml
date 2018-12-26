@@ -294,6 +294,7 @@ let f oc (Prog(data, fundefs, e)) =
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
 	Lib_print_int.print_external_methods oc;
+	Lib_create_array.print_external_methods oc;
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	(*Printf.fprintf oc "_min_caml_start: # main entry point\n";*)
 	Printf.fprintf oc "_min_caml_start:\n";

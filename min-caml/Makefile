@@ -23,6 +23,7 @@ SOURCES = float.c \
 lib_float.ml \
 lib_sca.ml \
 lib_print_int.ml \
+lib_create_array.ml \
 type.ml \
 id.ml \
 m.ml s.ml \

@@ -1,3 +1,9 @@
+let pi = 3.1415926535 in
+let rec min_caml_resize_pi x =
+	if x > pi 
+	then
+	else
+in
 let rec min_caml_sin x =
 	   x
 	-. x *. x *. x /. 6.0
