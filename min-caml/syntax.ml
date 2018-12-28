@@ -15,6 +15,10 @@ type t = (* MinCamlの構文を表現するデータ型 (caml2html: syntax_t) *)
 	| FSub of t * t
 	| FMul of t * t
 	| FDiv of t * t
+	| Floor of t
+	| Sqrt of t
+	| FtoI of t
+	| ItoF of t
 	| Eq of t * t
 	| LE of t * t
 	| If of t * t * t
@@ -38,8 +42,9 @@ let rec errpos e =
 	| Unit pos | Bool (_, pos) | Int (_, pos) | Float (_, pos) | Var (_, pos) 
 		-> pos
 	| Not t | Neg t | AdHoc (t, _) | Add (t, _) | Sub (t, _) | Mul (t, _) | Div (t, _)
-    | FNeg t| FAdd (t, _) | FSub (t, _) | FMul (t, _) | FDiv (t, _) | Eq (t, _)
-    | LE (t, _) | If (t, _, _) | App (t, _) | Tuple (t::_) 
+    | FNeg t | FAdd (t, _) | FSub (t, _) | FMul (t, _) | FDiv (t, _) | Eq (t, _)
+    | Floor t | Sqrt t | FtoI t | ItoF t
+	| LE (t, _) | If (t, _, _) | App (t, _) | Tuple (t::_) 
 	| Array (t, _) | Get (t, _) | Put (t, _, _)
     	-> errpos t
 	| Let (_, t, _) | LetTuple (_, t, _)
@@ -111,6 +116,14 @@ let rec print_syntax depth expr =
 	| FDiv (x, y)-> print_string "<FDIV> "	; print_newline (); 
 					print_code (depth + 1) x; 
 					print_code (depth + 1) y
+	| Floor x  	 -> print_string "<Floor> "	; print_newline ();
+					print_code (depth + 1) x
+	| Sqrt x  	 -> print_string "<Sqrt> "	; print_newline ();
+					print_code (depth + 1) x
+	| FtoI x  	 -> print_string "<FtoI> "	; print_newline ();
+					print_code (depth + 1) x
+	| ItoF x  	 -> print_string "<ItoF> "	; print_newline ();
+					print_code (depth + 1) x
 	| Eq (x, y)	 -> print_string "<EQ> "	; print_newline ();
 					print_code (depth + 1) x;
 					print_code (depth + 1) y

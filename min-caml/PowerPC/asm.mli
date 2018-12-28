@@ -3,44 +3,48 @@ exception FindWildCard
 type id = int
 type id_or_imm = V of Id.t | C of int
 type t =
-  | Ans of exp
-  | Let of (Id.t * Type.t * id) * exp * t
-  | WildCard
+	| Ans of exp
+	| Let of (Id.t * Type.t * id) * exp * t
+	| WildCard
 and exp =
-  | Nop
-  | Li of int
-  | FLi of Id.l
-  | SetL of Id.l
-  | Mr of Id.t
-  | Neg of Id.t
-  | Add of Id.t * id_or_imm
-  | Sub of Id.t * id_or_imm
-  | Mul of Id.t * id_or_imm
-  | Div of Id.t * id_or_imm
-  | Slw of Id.t * id_or_imm
-  | Srw of Id.t * id_or_imm
-  | Lwz of Id.t * id_or_imm
-  | Stw of Id.t * Id.t * id_or_imm
-  | FMr of Id.t 
-  | FNeg of Id.t
-  | FAdd of Id.t * Id.t
-  | FSub of Id.t * Id.t
-  | FMul of Id.t * Id.t
-  | FDiv of Id.t * Id.t
-  | Lfd of Id.t * id_or_imm
-  | Stfd of Id.t * Id.t * id_or_imm
-  | Comment of string
-  (* virtual instructions *)
-  | IfEq of Id.t * id_or_imm * t * t
-  | IfLE of Id.t * id_or_imm * t * t
-  | IfGE of Id.t * id_or_imm * t * t
-  | IfFEq of Id.t * Id.t * t * t
-  | IfFLE of Id.t * Id.t * t * t
-  (* closure address, integer arguments, and float arguments *)
-  | CallCls of Id.t * Id.t list * Id.t list
-  | CallDir of Id.l * Id.t list * Id.t list
-  | Save of Id.t * Id.t (* レジスタ変数の値をスタック変数へ保存 *)
-  | Restore of Id.t (* スタック変数から値を復元 *)
+	| Nop
+	| Li of int
+	| FLi of Id.l
+	| SetL of Id.l
+	| Mr of Id.t
+	| Neg of Id.t
+	| Add of Id.t * id_or_imm
+	| Sub of Id.t * id_or_imm
+	| Mul of Id.t * id_or_imm
+	| Div of Id.t * id_or_imm
+	| Slw of Id.t * id_or_imm
+	| Srw of Id.t * id_or_imm
+	| Lwz of Id.t * id_or_imm
+	| Stw of Id.t * Id.t * id_or_imm
+	| FMr of Id.t 
+	| FNeg of Id.t
+	| FAdd of Id.t * Id.t
+	| FSub of Id.t * Id.t
+	| FMul of Id.t * Id.t
+	| FDiv of Id.t * Id.t
+	| Floor of Id.t
+	| Sqrt of Id.t
+	| FtoI of Id.t
+	| ItoF of Id.t
+	| Lfd of Id.t * id_or_imm
+	| Stfd of Id.t * Id.t * id_or_imm
+	| Comment of string
+	(* virtual instructions *)
+	| IfEq of Id.t * id_or_imm * t * t
+	| IfLE of Id.t * id_or_imm * t * t
+	| IfGE of Id.t * id_or_imm * t * t
+	| IfFEq of Id.t * Id.t * t * t
+	| IfFLE of Id.t * Id.t * t * t
+	(* closure address, integer arguments, and float arguments *)
+	| CallCls of Id.t * Id.t list * Id.t list
+	| CallDir of Id.l * Id.t list * Id.t list
+	| Save of Id.t * Id.t (* レジスタ変数の値をスタック変数へ保存 *)
+	| Restore of Id.t (* スタック変数から値を復元 *)
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
 type prog = Prog of (Id.l * float) list * fundef list * t
 

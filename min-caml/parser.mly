@@ -23,6 +23,10 @@ let getpos () = {
 %token PLUS_DOT
 %token AST_DOT
 %token SLASH_DOT
+%token FLOOR
+%token SQRT
+%token FTOI
+%token ITOF
 %token EQUAL
 %token LESS_GREATER
 %token LESS_EQUAL
@@ -139,6 +143,14 @@ exp: /* (* ∞Ï»Ã§Œº∞ (caml2html: parser_exp) *) */
     { FMul($1, $3) }
 | exp SLASH_DOT exp
     { FDiv($1, $3) }
+| FLOOR exp
+	{ Floor($2) }
+| SQRT exp
+	{ Sqrt($2) }
+| FTOI exp
+	{ FtoI($2) }
+| ITOF exp
+	{ ItoF($2) }
 | LET IDENT EQUAL exp IN exp
     %prec prec_let
     { Let(addtyp $2, $4, $6) }

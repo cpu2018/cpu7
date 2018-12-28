@@ -42,6 +42,10 @@ let rec deref_term = function
 	| FSub(e1, e2) -> FSub(deref_term e1, deref_term e2)
 	| FMul(e1, e2) -> FMul(deref_term e1, deref_term e2)
 	| FDiv(e1, e2) -> FDiv(deref_term e1, deref_term e2)
+	| Floor(e) -> Floor(deref_term e)
+	| Sqrt(e) -> Sqrt(deref_term e)
+	| FtoI(e) -> FtoI(deref_term e)
+	| ItoF(e) -> ItoF(deref_term e)
 	| If(e1, e2, e3) -> If(deref_term e1, deref_term e2, deref_term e3)
 	| Let(xt, e1, e2) -> Let(deref_id_typ xt, deref_term e1, deref_term e2)
 	| LetRec({ name = (xt, pos); args = yts; body = e1 }, e2) ->
@@ -156,7 +160,7 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 					print_string "actual   : "; Type.print_type t2; print_newline ();
 					raise (Error (deref_typ t1, deref_typ t2, errpos e2))));
 			Type.Int
-	| FNeg(e) ->
+	| FNeg(e) | Floor(e) | Sqrt(e) ->
 			(try
 				unify Type.Float (g env e);
 			with
@@ -183,6 +187,26 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 					print_string "expected : "; Type.print_type t1; print_newline ();
 					print_string "actual   : "; Type.print_type t2; print_newline ();
 					raise (Error (deref_typ t1, deref_typ t2, errpos e2))));
+			Type.Float
+	| FtoI(e) ->
+			(try
+				unify Type.Float (g env e);
+			with
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Int
+	| ItoF(e) ->
+			(try
+				unify Type.Int (g env e);
+			with
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
 			Type.Float
 	| Eq(e1, e2) | LE(e1, e2) ->
 			(try unify (g env e1) (g env e2);

@@ -15,6 +15,10 @@ type t = (* クロージャ変換後の式 (caml2html: closure_t) *)
 	| FSub of Id.t * Id.t
 	| FMul of Id.t * Id.t
 	| FDiv of Id.t * Id.t
+	| Floor of Id.t
+	| Sqrt of Id.t
+	| FtoI of Id.t
+	| ItoF of Id.t
 	| IfEq of Id.t * Id.t * t * t
 	| IfLE of Id.t * Id.t * t * t
 	| Let of (Id.t * Type.t) * t * t
@@ -37,7 +41,7 @@ type prog = Prog of fundef list * t
 (* Closure.t -> fvの集合*)
 let rec fv = function
 	| Unit | Int(_) | Float(_) | ExtArray(_) -> S.empty
-	| Neg(x) | FNeg(x) -> S.singleton x
+	| Neg(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) -> S.singleton x
 	| Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | ShiftIL(x, y) | ShiftIR(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
 	| IfEq(x, y, e1, e2)| IfLE(x, y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
 	| Let((x, t), e1, e2) -> S.union (fv e1) (S.remove x (fv e2))
@@ -67,6 +71,10 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
 	| KNormal.FSub(x, y) -> FSub(x, y)
 	| KNormal.FMul(x, y) -> FMul(x, y)
 	| KNormal.FDiv(x, y) -> FDiv(x, y)
+	| KNormal.Floor(x) -> Floor(x)
+	| KNormal.Sqrt(x) -> Sqrt(x)
+	| KNormal.FtoI(x) -> FtoI(x)
+	| KNormal.ItoF(x) -> ItoF(x)
 	| KNormal.IfEq(x, y, e1, e2) -> IfEq(x, y, g env known e1, g env known e2)
 	| KNormal.IfLE(x, y, e1, e2) -> IfLE(x, y, g env known e1, g env known e2)
 	| KNormal.Let((x, t), e1, e2) -> Let((x, t), g env known e1, g (M.add x t env) known e2)
@@ -175,6 +183,10 @@ let rec print_closure depth expr =
 	| FDiv (x, y)-> print_string "<FDIV> "; print_newline ();
 					print_t (depth + 1)	x; print_newline ();
 					print_t (depth + 1)	y
+	| Floor x		 -> print_string "<FLOOR> "; Id.print_t x
+	| Sqrt x		 -> print_string "<SQRT> "; Id.print_t x
+	| FtoI x		 -> print_string "<FTOI> "; Id.print_t x
+	| ItoF x		 -> print_string "<ITOF> "; Id.print_t x
 	| IfEq (x, y, e1, e2)	 -> print_string "<IF> "; print_newline ();
 								print_indent (depth + 1); print_string "<EQ> "; print_newline ();
 								print_t (depth + 2)	x; print_newline ();

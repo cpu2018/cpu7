@@ -12,6 +12,10 @@ type token =
   | PLUS_DOT
   | AST_DOT
   | SLASH_DOT
+  | FLOOR
+  | SQRT
+  | FTOI
+  | ITOF
   | EQUAL
   | LESS_GREATER
   | LESS_EQUAL

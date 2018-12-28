@@ -16,6 +16,10 @@ type t = (* K正規化後の式 (caml2html: knormal_t) *)
 	| FSub of Id.t * Id.t
 	| FMul of Id.t * Id.t
 	| FDiv of Id.t * Id.t
+	| Floor of Id.t
+	| Sqrt of Id.t
+	| FtoI of Id.t
+	| ItoF of Id.t
 	| IfEq of Id.t * Id.t * t * t (* 比較 + 分岐 (caml2html: knormal_branch) *)
 	| IfLE of Id.t * Id.t * t * t (* 比較 + 分岐 *)
 	| Let of (Id.t * Type.t) * t * t
@@ -36,7 +40,7 @@ let dummy_pos = {Syntax.ls = 0; Syntax.le = 0; Syntax.chs = 0; Syntax.che = 0}
 (* 自由変数の集合を保持する *)
 let rec fv = function (* 式に出現する（自由な ）変数 (free variant) (caml2html: knormal_fv) *)
 	| Unit | Int(_) | Float(_) | ExtArray(_) -> S.empty
-	| Neg(x) | FNeg(x) -> S.singleton x (* 要素が1個の集合を作る *)
+	| Neg(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) -> S.singleton x (* 要素が1個の集合を作る *)
 	| Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | ShiftIL(x, y) | ShiftIR(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
 	| IfEq(x, y, e1, e2) | IfLE(x, y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
 	| Let((x, t), e1, e2) -> S.union (fv e1) (S.remove x (fv e2)) (* 和集合 *)
@@ -124,6 +128,18 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 			insert_let (g env e1)
 				(fun x -> insert_let (g env e2)
 						(fun y -> FDiv(x, y), Type.Float))
+	| Syntax.Floor(e) ->
+			insert_let (g env e)
+				(fun x -> Floor(x), Type.Float)
+	| Syntax.Sqrt(e) ->
+			insert_let (g env e)
+				(fun x -> Sqrt(x), Type.Float)
+	| Syntax.FtoI(e) ->
+			insert_let (g env e)
+				(fun x -> FtoI(x), Type.Int)
+	| Syntax.ItoF(e) ->
+			insert_let (g env e)
+				(fun x -> ItoF(x), Type.Float)
 	| Syntax.Eq _ | Syntax.LE _ as cmp ->
 			g env (Syntax.If(cmp, Syntax.Bool(true, dummy_pos), Syntax.Bool(false, dummy_pos)))
 	| Syntax.If(Syntax.Not(e1), e2, e3) -> g env (Syntax.If(e1, e3, e2)) (* notによる分岐を変換 (caml2html: knormal_not) *)
@@ -277,6 +293,10 @@ let rec print_kNormal depth expr =
 	| FDiv (x, y)-> print_string "<FDIV> "; print_newline ();
 					print_t (depth + 1)  x; print_newline ();
 					print_t (depth + 1)  y
+	| Floor x  	 -> print_string "<FLOOR> "; Id.print_t x
+	| Sqrt x  	 -> print_string "<SQRT> "; Id.print_t x
+	| FtoI x  	 -> print_string "<FTOI> "; Id.print_t x
+	| ItoF x  	 -> print_string "<ITOF> "; Id.print_t x
 	| IfEq (x, y, e1, e2)	 -> print_string "<IF> "; print_newline ();
 								print_indent (depth + 1); print_string "<EQ> "; print_newline ();
 								print_t (depth + 2) x; print_newline ();

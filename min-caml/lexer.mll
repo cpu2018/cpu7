@@ -51,6 +51,14 @@ rule token = parse
     { AST_DOT }
 | "/."
     { SLASH_DOT }
+| "floor"
+	{ FLOOR }
+| "sqrt"
+	{ SQRT }
+| "int_of_float"
+	{ FTOI }
+| "float_of_int"
+	{ ITOF }
 | '='
     { EQUAL }
 | "<>"
