@@ -15,6 +15,12 @@ min_caml_fsqr:
 min_caml_fneg:
 	fneg	f0, f0
 	blr
+min_Caml_sqrt:
+	fsqrt	f0, f0
+	blr
+min_caml_floor:
+	floor	f0, f0
+	blr
 min_caml_fhalf:
 	lis	r31, ha16(lhalf)
 	addi	r31, r31, lo16(lhalf)

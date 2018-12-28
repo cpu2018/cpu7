@@ -288,12 +288,13 @@ let f oc (Prog(data, fundefs, e)) =
 			 data);
 	(*
 	Lib_float_value.print_external_methods oc;
-	Lib_float.print_external_methods oc;
-	Lib_sca.print_external_methods oc;
 	*)
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
+	Lib_float.print_external_methods oc;
+	Lib_sc.print_external_methods oc;
+	Lib_atan.print_external_methods oc;
 	Lib_print_int.print_external_methods oc;
 	Lib_create_array.print_external_methods oc;
 	List.iter (fun fundef -> h oc fundef) fundefs;
