@@ -131,148 +131,637 @@ l.5123:	 # 0.000000
 	.text
 	.globl _min_caml_start
 	.align 2
-# ------------------------------ ここからライブラリ ------------------------------
-min_caml_print_char:
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	stw	r2, 4(r3)
-	addi	r3, r3, 8
-	addi	r2, r2, 48
-	out	r2
-	subi	r3, r3, 8
-	lwz	r2, 4(r3)
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-min_caml_print_int:
-	mflr	r31 # リンクレジスタの値をr31に一時格納
-	stw	r31, 4(r3) # 格納されたリンクレジスタの値をスタックに積む
-	addi	r3, r3, 8 # スタックポインタを更新する
-	stw	r2, 4(r3)
-	addi	r3, r3, 8
-	stw	r5, 4(r3)
-	addi	r3, r3, 8
-	stw	r6, 4(r3)
-	addi	r3, r3, 8
-	stw	r7, 4(r3)
-	addi	r3, r3, 8
-	stw	r8, 4(r3)
-	addi	r3, r3, 8
-	stw	r9, 4(r3)
-	addi	r3, r3, 8
-	stw	r10, 4(r3)
-	addi	r3, r3, 8
-	stw	r11, 4(r3)
-	addi	r3, r3, 8
-	stw	r12, 4(r3)
-	addi	r3, r3, 8
-	li	r10, 10 # r10に10をセット
-	li	r6, 4
-	bl	print_int
-	subi	r3, r3, 8
-	lwz	r12, 4(r3)
-	subi	r3, r3, 8
-	lwz	r11, 4(r3)
-	subi	r3, r3, 8
-	lwz	r10, 4(r3)
-	subi	r3, r3, 8
-	lwz	r9, 4(r3)
-	subi	r3, r3, 8
-	lwz	r8, 4(r3)
-	subi	r3, r3, 8
-	lwz	r7, 4(r3)
-	subi	r3, r3, 8
-	lwz	r6, 4(r3)
-	subi	r3, r3, 8
-	lwz	r5, 4(r3)
-	subi	r3, r3, 8
-	lwz	r2, 4(r3)
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-print_int:
-	mr	r5, r2 # 転送する数の全体をr5に入れる:次の割られる数をセット
-	li	r2, 0 # 商をリセット
-	add	r9, r9, r6 # 注目する最大桁をセット
-#	サブルーチンq2r7を呼び出す
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	q2r7
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-#	サブルーチンq2r7から戻る
-	addi	r11, r7, 48 # asciiに変換 r11は2番目に表示する
-	cmpwi	cr7, r6, 4 # もしr6 = 4ならば、r6 - 3をして継続
-	bne	r61or0
-	addi	r12, r7, 48 # asciiに変換 r12は3番目に表示する値
-	subi	r6, r6, 3
-#	サブルーチン的にprint_intを呼び出す ここで呼び出すprint_intはr6eq1or0に入る
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	print_int
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-#	サブルーチン的にprint_intから戻る
-	out	r12
+min_caml_fabs:
+	lis	r31, ha16(lzero)
+	addi	r31, r31, lo16(lzero)
+	lfd	f1, 0(r31)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_fabs
 	blr
-r61or0:
-	cmpwi	cr7, r6, 1
-	bne	r6eq0
-	subi	r6, r6, 1
-#	サブルーチン的にprint_intを呼び出す ここ呼び出すprint_intはr6eq0までいく
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	print_int
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-#	サブルーチン的にprint_intから戻る
-	addi	r12, r7, 48 # 
-	out	r11
+ble_else_fabs:
+	fneg	f0, f0
 	blr
-r6eq0:
-	addi	r7, r7, 48
-	out	r7
+min_caml_fsqr:
+	fmul	f0, f0, f0
 	blr
-q2r7: # 割り算。商はr2、余りはr7へ
-	slw	r8, r10, r9 # 引いてみる値をセット
-	sub	r8, r5, r8 # とりあえず引いてみる
-	cmpwi	cr7, r8, 0 # 引かれた値が0未満かどうかを判定する
-	blt	idle # 負の数ならば、何もしない(idle)へ,
-	mr	r5, r8 # 引く場合次に割られる値を更新
-	li	r8, 1 # 足す値を作成
-	slw	r8, r8, r9 # 1を注目する桁までシフト
-	add	r2, r2, r8 # 商を更新
-	cmpwi	cr7, r9, 0 # 注目する桁が0まで行ったかどうか
-	bgt	cr7, r9eq0 # まだ0になっていなかったらまだ割れるので、q2r7にもどる
-	subi	r9, r9, 1 # 0まで行ってないならば、デクリメント
-	b	q2r7
-idle: #引かない場合:次に割られる値はそのまま、商にも何もたさない
-	cmpwi	cr7, r9, 0
-	bgt	cr7, r9eq0 # 
-	subi	r9, r9, 1
-	b	q2r7
-r9eq0:
+min_caml_fneg:
+	fneg	f0, f0
 	blr
-
-# ------------------------------ ここまでライブラリ ------------------------------
-xor.2461:
-	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7772
-	mr	r2, r5
+min_Caml_sqrt:
+	fsqrt	f0, f0
 	blr
-beq_else.7772:
-	cmpwi	cr7, r5, 0
-	bne	cr7, beq_else.7773
+min_caml_floor:
+	floor	f0, f0
+	blr
+min_caml_fhalf:
+	lis	r31, ha16(lhalf)
+	addi	r31, r31, lo16(lhalf)
+	lfd	f1, 0(r31)
+	fmul	f0, f0, f1
+	blr
+min_caml_fisneg:
+	lis	r31, ha16(lzero)
+	addi	r31, r31, lo16(lzero)
+	lfd	f1, 0(r31)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_fis_fless
+	li	r2, 0
+	blr
+min_caml_fispos:
+	lis	r31, ha16(lzero)
+	addi	r31, r31, lo16(lzero)
+	lfd	f1, 0(r31)
+	fcmpu	cr7, f0, f1
+	bgt	cr7, ble_else_fis_fless
+	li	r2, 0
+	blr
+min_caml_fiszero:
+	lis	r31, ha16(lzero)
+	addi	r31, r31, lo16(lzero)
+	lfd	f1, 0(r31)
+	fcmpu	cr7, f0, f1
+	bne	cr7, beq_else_fis_fless
 	li	r2, 1
 	blr
-beq_else.7773:
+min_caml_fless:
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_fis_fless
+	li	r2, 0
+	blr
+ble_else_fis_fless:
+	li	r2, 1
+	blr
+
+reverse_flag.52:
+	cmpwi	cr7, r2, 0
+	bne	cr7, beq_else_reverse_flag
+	li	r2, 1
+	blr
+beq_else_reverse_flag
+	li	r2, 0
+	blr
+add_flag.54:
+	cmpwi	cr7, r2, 0
+	bne	cr7, beq_else_add_flag
+	fneg	f0, f0
+	blr
+beq_else_add_flag:
+	blr
+while1.57:
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_while1
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f0, 0(r31)
+	fmul	f0, f1, f0
+	blr
+ble_else_while1:
+	fmr	f0, f1
+	blr
+while2.60:
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f3, 0(r31)
+	fmul	f3, f3, f2
+	fcmpu	cr7, f3, f0
+	bgt	cr7, ble_else_while2_1
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_while2_2
+	fsub	f0, f0, f1
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f3, 0(r31)
+	fdiv	f1, f1, f3
+	b	while2.60
+ble_else_while2_2:
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f3, 0(r31)
+	fdiv	f1, f1, f3
+	b	while2.60
+ble_else_while2_1:
+	mr	r2, r4
+	addi	r4, r4, 16
+	stfd	f1, 8(r2)
+	stfd	f0, 0(r2)
+	blr
+reduction_2pi.64:
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f2, 0(r31)
+	fmul	f2, f1, f2
+	stfd	f1, 0(r3)
+	stfd	f0, 8(r3)
+	mflr	r31
+	fmr	f1, f2
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
+	bl	while1.57
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
+	fmr	f1, f0
+	mtlr	r31
+	lfd	f0, 8(r3)
+	lfd	f2, 0(r3)
+	mflr	r31
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
+	bl	while2.60
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
+	mtlr	r31
+	lfd	f0, 0(r2)
+	blr
+kernel_sin.67:
+	fmul	f1, f0, f0
+	fmul	f2, f0, f1
+	fmul	f3, f2, f1
+	fmul	f1, f3, f1
+	lis	r31, ha16(lsc.160)
+	addi	r31, r31, lo16(lsc.160)
+	lfd	f4, 0(r31)
+	fdiv	f2, f2, f4
+	fsub	f0, f0, f2
+	lis	r31, ha16(lsc.161)
+	addi	r31, r31, lo16(lsc.161)
+	lfd	f2, 0(r31)
+	fdiv	f2, f3, f2
+	fadd	f0, f0, f2
+	lis	r31, ha16(lsc.162)
+	addi	r31, r31, lo16(lsc.162)
+	lfd	f2, 0(r31)
+	fdiv	f1, f1, f2
+	fsub	f0, f0, f1
+	blr
+kernel_cos.69:
+	fmul	f0, f0, f0
+	fmul	f1, f0, f0
+	fmul	f2, f1, f0
+	lis	r31, ha16(lsc.163)
+	addi	r31, r31, lo16(lsc.163)
+	lfd	f3, 0(r31)
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f4, 0(r31)
+	fdiv	f0, f0, f4
+	fsub	f0, f3, f0
+	lis	r31, ha16(lsc.164)
+	addi	r31, r31, lo16(lsc.164)
+	lfd	f3, 0(r31)
+	fdiv	f1, f1, f3
+	fadd	f0, f0, f1
+	lis	r31, ha16(lsc.165)
+	addi	r31, r31, lo16(lsc.165)
+	lfd	f1, 0(r31)
+	fdiv	f1, f2, f1
+	fsub	f0, f0, f1
+	blr
+min_caml_sin:
+	lis	r31, ha16(lsc.166)
+	addi	r31, r31, lo16(lsc.166)
+	lfd	f0, 0(r31)
+	stfd	f0, 0(r3)
+	stw	r2, 8(r3)
+	mflr	r31
+	stw	r31, 12(r3)
+	addi	r3, r3, 16
+	bl	min_caml_fispos
+	subi	r3, r3, 16
+	lwz	r31, 12(r3)
+	mtlr	r31
+	lwz	r5, 8(r3)
+	stw	r2, 12(r3)
+	mflr	r31
+	mr	r2, r5
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
+	bl	min_caml_fabs
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
+	mtlr	r31
+	lfd	f1, 0(r3)
+	mflr	r31
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
+	bl	reduction_2pi.64
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
+	mtlr	r31
+	lfd	f1, 0(r3)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_sin_1
+	fsub	f0, f0, f1
+	lwz	r2, 12(r3)
+	stfd	f0, 16(r3)
+	mflr	r31
+	stw	r31, 28(r3)
+	addi	r3, r3, 32
+	bl	reverse_flag.52
+	subi	r3, r3, 32
+	lwz	r31, 28(r3)
+	mtlr	r31
+	mr	r5, r4
+	addi	r4, r4, 16
+	stw	r2, 8(r5)
+	lfd	f0, 16(r3)
+	stfd	f0, 0(r5)
+	mr	r2, r5
+	b	ble_cont_sin_1
+ble_else_sin_1:
+	mr	r2, r4
+	addi	r4, r4, 16
+	lwz	r5, 12(r3)
+	stw	r5, 8(r2)
+	stfd	f0, 0(r2)
+ble_cont_sin_1:
+	lwz	r5, 8(r2)
+	lfd	f0, 0(r2)
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f1, 0(r31)
+	lfd	f2, 0(r3)
+	fdiv	f1, f2, f1
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_sin_2
+	fsub	f0, f2, f0
+	mr	r2, r4
+	addi	r4, r4, 16
+	stw	r5, 8(r2)
+	stfd	f0, 0(r2)
+	b	ble_cont_sin_2
+ble_else_sin_2:
+	mr	r2, r4
+	addi	r4, r4, 16
+	stw	r5, 8(r2)
+	stfd	f0, 0(r2)
+ble_cont_sin_2:
+	lwz	r5, 8(r2)
+	lfd	f0, 0(r2)
+	lis	r31, ha16(lsc.179)
+	addi	r31, r31, lo16(lsc.179)
+	lfd	f1, 0(r31)
+	fdiv	f1, f2, f1
+	stw	r5, 24(r3)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_sin_3
+	mflr	r31
+	stw	r31, 28(r3)
+	addi	r3, r3, 32
+	bl	kernel_cos.69
+	subi	r3, r3, 32
+	lwz	r31, 28(r3)
+	mtlr	r31
+	b	ble_cont_sin_3
+ble_else_sin_3:
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f1, 0(r31)
+	fdiv	f1, f2, f1
+	fsub	f0, f1, f0
+	mflr	r31
+	stw	r31, 28(r3)
+	addi	r3, r3, 32
+	bl	kernel_sin.67
+	subi	r3, r3, 32
+	lwz	r31, 28(r3)
+	mtlr	r31
+ble_cont_sin_3:
+	lwz	r2, 24(r3)
+	b	add_flag.54
+min_caml_cos:
+	lis	r31, ha16(lsc.166)
+	addi	r31, r31, lo16(lsc.166)
+	lfd	f0, 0(r31)
+	li	r5, 1
+	stw	r5, 0(r3)
+	stfd	f0, 8(r3)
+	mflr	r31
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
+	bl	min_caml_fabs
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
+	mtlr	r31
+	lfd	f1, 8(r3)
+	mflr	r31
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
+	bl	reduction_2pi.64
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
+	mtlr	r31
+	lfd	f1, 8(r3)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_cos_1
+	fsub	f0, f0, f1
+	lwz	r2, 0(r3)
+	stfd	f0, 16(r3)
+	mflr	r31
+	stw	r31, 28(r3)
+	addi	r3, r3, 32
+	bl	reverse_flag.52
+	subi	r3, r3, 32
+	lwz	r31, 28(r3)
+	mtlr	r31
+	mr	r5, r4
+	addi	r4, r4, 16
+	stw	r2, 8(r5)
+	lfd	f0, 16(r3)
+	stfd	f0, 0(r5)
+	mr	r2, r5
+	b	ble_cont_cos_1
+ble_else_cos_1:
+	mr	r2, r4
+	addi	r4, r4, 16
+	lwz	r5, 0(r3)
+	stw	r5, 8(r2)
+	stfd	f0, 0(r2)
+ble_cont_cos_1:
+	lwz	r5, 8(r2)
+	lfd	f0, 0(r2)
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f1, 0(r31)
+	lfd	f2, 8(r3)
+	fdiv	f1, f2, f1
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_cos_2
+	fsub	f0, f2, f0
+	stfd	f0, 24(r3)
+	mflr	r31
+	mr	r2, r5
+	stw	r31, 36(r3)
+	addi	r3, r3, 40
+	bl	reverse_flag.52
+	subi	r3, r3, 40
+	lwz	r31, 36(r3)
+	mtlr	r31
+	mr	r5, r4
+	addi	r4, r4, 16
+	stw	r2, 8(r5)
+	lfd	f0, 24(r3)
+	stfd	f0, 0(r5)
+	mr	r2, r5
+	b	ble_cont_cos_2
+ble_else_cos_2:
+	mr	r2, r4
+	addi	r4, r4, 16
+	stw	r5, 8(r2)
+	stfd	f0, 0(r2)
+ble_cont_cos_2:
+	lwz	r5, 8(r2)
+	lfd	f0, 0(r2)
+	lis	r31, ha16(lsc.179)
+	addi	r31, r31, lo16(lsc.179)
+	lfd	f1, 0(r31)
+	lfd	f2, 8(r3)
+	fdiv	f1, f2, f1
+	stw	r5, 32(r3)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_cos_3
+	mflr	r31
+	stw	r31, 36(r3)
+	addi	r3, r3, 40
+	bl	kernel_cos.69
+	subi	r3, r3, 40
+	lwz	r31, 36(r3)
+	mtlr	r31
+	b	ble_cont_cos_3
+ble_else_cos_3:
+	lis	r31, ha16(lsc.156)
+	addi	r31, r31, lo16(lsc.156)
+	lfd	f1, 0(r31)
+	fdiv	f1, f2, f1
+	fsub	f0, f1, f0
+	mflr	r31
+	stw	r31, 36(r3)
+	addi	r3, r3, 40
+	bl	kernel_sin.67
+	subi	r3, r3, 40
+	lwz	r31, 36(r3)
+	mtlr	r31
+ble_cont_cos_3:
+	lwz	r2, 32(r3)
+	b	add_flag.54
+kernel_atan.35:
+	fmul	f1, f0, f0
+	fmul	f2, f0, f1
+	fmul	f3, f2, f1
+	fmul	f4, f3, f1
+	fmul	f5, f4, f1
+	fmul	f6, f5, f1
+	fmul	f1, f6, f1
+	lis	r31, ha16(latan.84)
+	addi	r31, r31, lo16(latan.84)
+	lfd	f7, 0(r31)
+	fmul	f2, f7, f2
+	fsub	f0, f0, f2
+	lis	r31, ha16(latan.85)
+	addi	r31, r31, lo16(latan.85)
+	lfd	f2, 0(r31)
+	fmul	f2, f2, f3
+	fadd	f0, f0, f2
+	lis	r31, ha16(latan.86)
+	addi	r31, r31, lo16(latan.86)
+	lfd	f2, 0(r31)
+	fmul	f2, f2, f4
+	fsub	f0, f0, f2
+	lis	r31, ha16(latan.87)
+	addi	r31, r31, lo16(latan.87)
+	lfd	f2, 0(r31)
+	fmul	f2, f2, f5
+	fadd	f0, f0, f2
+	lis	r31, ha16(latan.88)
+	addi	r31, r31, lo16(latan.88)
+	lfd	f2, 0(r31)
+	fmul	f2, f2, f6
+	fsub	f0, f0, f2
+	lis	r31, ha16(latan.89)
+	addi	r31, r31, lo16(latan.89)
+	lfd	f2, 0(r31)
+	fmul	f1, f2, f1
+	fadd	f0, f0, f1
+	blr
+min_caml_atan:
+	lis	r31, ha16(latan.90)
+	addi	r31, r31, lo16(latan.90)
+	lfd	f1, 0(r31)
+	stfd	f0, 0(r3)
+	stfd	f1, 8(r3)
+	mflr	r31
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
+	bl	min_caml_fabs
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
+	mtlr	r31
+	lis	r31, ha16(latan.91)
+	addi	r31, r31, lo16(latan.91)
+	lfd	f1, 0(r31)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else_atan_1
+	lis	r31, ha16(latan.92)
+	addi	r31, r31, lo16(latan.92)
+	lfd	f1, 0(r31)
+	fcmpu	cr7, f0, f1
+	bgt	cr7, ble_else_atan_2
+	lis	r31, ha16(latan.96)
+	addi	r31, r31, lo16(latan.96)
+	lfd	f1, 0(r31)
+	lfd	f2, 8(r3)
+	fdiv	f1, f2, f1
+	lis	r31, ha16(latan.94)
+	addi	r31, r31, lo16(latan.94)
+	lfd	f2, 0(r31)
+	fsub	f2, f0, f2
+	lis	r31, ha16(latan.94)
+	addi	r31, r31, lo16(latan.94)
+	lfd	f3, 0(r31)
+	fadd	f0, f0, f3
+	fdiv	f0, f2, f0
+	stfd	f1, 16(r3)
+	mflr	r31
+	stw	r31, 28(r3)
+	addi	r3, r3, 32
+	bl	kernel_atan.35
+	subi	r3, r3, 32
+	lwz	r31, 28(r3)
+	mtlr	r31
+	lfd	f1, 16(r3)
+	fadd	f0, f1, f0
+	lis	r31, ha16(latan.95)
+	addi	r31, r31, lo16(latan.95)
+	lfd	f1, 0(r31)
+	lfd	f2, 0(r3)
+	fcmpu	cr7, f1, f2
+	bgt	cr7, ble_else_atan_3
+	blr
+ble_else_atan_3:
+	fneg	f0, f0
+	blr
+ble_else_atan_2:
+	lis	r31, ha16(latan.93)
+	addi	r31, r31, lo16(latan.93)
+	lfd	f1, 0(r31)
+	lfd	f2, 8(r3)
+	fdiv	f1, f2, f1
+	lis	r31, ha16(latan.94)
+	addi	r31, r31, lo16(latan.94)
+	lfd	f2, 0(r31)
+	fdiv	f0, f2, f0
+	stfd	f1, 24(r3)
+	mflr	r31
+	stw	r31, 36(r3)
+	addi	r3, r3, 40
+	bl	kernel_atan.35
+	subi	r3, r3, 40
+	lwz	r31, 36(r3)
+	mtlr	r31
+	lfd	f1, 24(r3)
+	fsub	f0, f1, f0
+	lis	r31, ha16(latan.95)
+	addi	r31, r31, lo16(latan.95)
+	lfd	f1, 0(r31)
+	lfd	f2, 0(r3)
+	fcmpu	cr7, f1, f2
+	bgt	cr7, ble_else_atan_4
+	blr
+ble_else_atan_4:
+	fneg	f0, f0
+	blr
+ble_else_atan_1:
+	lfd	f0, 0(r3)
+	b	kernel_atan.35
+div10:
+	slwi	r5, r2, 7
+	slwi	r6, r2, 6
+	add	r5, r5, r6
+	slwi	r6, r2, 3
+	add	r5, r5, r6
+	slwi	r6, r2, 2
+	add	r5, r5, r6
+	add	r2, r5, r2
+	srwi	r2, r2, 11
+	blr
+print_int_main:
+	stw	r2, 0(r3)
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	div10
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	slwi	r5, r2, 3
+	lwz	r6, 0(r3)
+	sub	r5, r6, r5
+	slwi	r6, r2, 1
+	sub	r5, r5, r6
+	cmpwi	cr7, r2, 0
+	bne	cr7, beq_else_print_int
+	mr	r2, r5
+	addi	r2, r2, 48
+	out	r2
+	blr
+beq_else_print_int:
+	stw	r5, 4(r3)
+	mflr	r31
+	stw	r31, 12(r3)
+	addi	r3, r3, 16
+	bl	print_int_main
+	subi	r3, r3, 16
+	lwz	r31, 12(r3)
+	mtlr	r31
+	lwz	r2, 4(r3)
+	addi	r2, r2, 48
+	out	r2
+	blr
+min_caml_print_int:
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	print_int_main
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	blr
+min_caml_create_array:	
+	mr	r6, r2
+	mr	r2, r4
+create_array_loop:
+	cmpwi	cr7, r6, 0
+	bne	cr7, create_array_cont
+	b	create_array_exit
+create_array_exit:
+	blr
+create_array_cont:
+	stw	r5, 0(r4)
+	subi  	r6, r6, 1
+	addi	r4, r4, 4
+	b	create_array_loop
+min_caml_create_float_array:
+	mr	r5, r2
+	mr	r2, r4
+create_float_array_loop:
+	cmpwi	cr7, r5, 0
+	bne	cr7, create_float_array_cont
+	blr
+create_float_array_cont:
+	stfd	f0, 0(r4)
+	subi	r5, r5, 1
+	addi	r4, r4, 8
+	b	create_float_array_loop
+xor.2461:
+	cmpwi	cr7, r2, 0
+	bne	cr7, beq_else.7731
+	mr	r2, r5
+	blr
+beq_else.7731:
+	cmpwi	cr7, r5, 0
+	bne	cr7, beq_else.7732
+	li	r2, 1
+	blr
+beq_else.7732:
 	li	r2, 0
 	blr
 sgn.2464:
@@ -285,7 +774,7 @@ sgn.2464:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7774
+	bne	cr7, beq_else.7733
 	lfd	f0, 0(r3)
 	mflr	r31
 	stw	r31, 12(r3)
@@ -295,34 +784,34 @@ sgn.2464:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7775
+	bne	cr7, beq_else.7734
 	lis	r31, ha16(l.5125)
 	addi	r31, r31, lo16(l.5125)
 	lfd	f0, 0(r31)
 	blr
-beq_else.7775:
+beq_else.7734:
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
 	blr
-beq_else.7774:
+beq_else.7733:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
 	blr
 fneg_cond.2466:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7776
+	bne	cr7, beq_else.7735
 	b	min_caml_fneg
-beq_else.7776:
+beq_else.7735:
 	blr
 add_mod5.2469:
 	add	r2, r2, r5
 	cmpwi	cr7, r2, 5
-	blt	cr7, bge_else.7777
+	blt	cr7, bge_else.7736
 	subi	r2, r2, 5
 	blr
-bge_else.7777:
+bge_else.7736:
 	blr
 vecset.2472:
 	stfd	f0, 0(r2)
@@ -384,13 +873,7 @@ vecunit_sgn.2490:
 	mtlr	r31
 	lfd	f1, 16(r3)
 	fadd	f0, f1, f0
-	mflr	r31
-	stw	r31, 28(r3)
-	addi	r3, r3, 32
-	bl	min_caml_sqrt
-	subi	r3, r3, 32
-	lwz	r31, 28(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	stfd	f0, 24(r3)
 	mflr	r31
 	stw	r31, 36(r3)
@@ -400,29 +883,29 @@ vecunit_sgn.2490:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7781
+	bne	cr7, beq_else.7740
 	lwz	r2, 0(r3)
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7783
+	bne	cr7, beq_else.7742
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
 	lfd	f1, 24(r3)
 	fdiv	f0, f0, f1
-	b	beq_cont.7784
-beq_else.7783:
+	b	beq_cont.7743
+beq_else.7742:
 	lis	r31, ha16(l.5125)
 	addi	r31, r31, lo16(l.5125)
 	lfd	f0, 0(r31)
 	lfd	f1, 24(r3)
 	fdiv	f0, f0, f1
-beq_cont.7784:
-	b	beq_cont.7782
-beq_else.7781:
+beq_cont.7743:
+	b	beq_cont.7741
+beq_else.7740:
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
-beq_cont.7782:
+beq_cont.7741:
 	lwz	r2, 4(r3)
 	lfd	f1, 0(r2)
 	fmul	f1, f1, f0
@@ -1242,10 +1725,10 @@ read_nth_object.2598:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, -1
-	bne	cr7, beq_else.7795
+	bne	cr7, beq_else.7754
 	li	r2, 0
 	blr
-beq_else.7795:
+beq_else.7754:
 	stw	r2, 8(r3)
 	mflr	r31
 	stw	r31, 12(r3)
@@ -1451,9 +1934,9 @@ beq_else.7795:
 	mtlr	r31
 	lwz	r5, 20(r3)
 	cmpwi	cr7, r5, 0
-	bne	cr7, beq_else.7796
-	b	beq_cont.7797
-beq_else.7796:
+	bne	cr7, beq_else.7755
+	b	beq_cont.7756
+beq_else.7755:
 	stw	r2, 44(r3)
 	mflr	r31
 	stw	r31, 52(r3)
@@ -1503,15 +1986,15 @@ beq_else.7796:
 	mtlr	r31
 	lwz	r2, 44(r3)
 	stfd	f0, 16(r2)
-beq_cont.7797:
+beq_cont.7756:
 	lwz	r5, 12(r3)
 	cmpwi	cr7, r5, 2
-	bne	cr7, beq_else.7798
+	bne	cr7, beq_else.7757
 	li	r6, 1
-	b	beq_cont.7799
-beq_else.7798:
+	b	beq_cont.7758
+beq_else.7757:
 	lwz	r6, 32(r3)
-beq_cont.7799:
+beq_cont.7758:
 	li	r7, 4
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
@@ -1554,7 +2037,7 @@ beq_cont.7799:
 	lwz	r10, 0(r3)
 	stwx	r5, r10, r9
 	cmpwi	cr7, r8, 3
-	bne	cr7, beq_else.7800
+	bne	cr7, beq_else.7759
 	lfd	f0, 0(r6)
 	stfd	f0, 56(r3)
 	mflr	r31
@@ -1565,7 +2048,7 @@ beq_cont.7799:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7803
+	bne	cr7, beq_else.7762
 	lfd	f0, 56(r3)
 	mflr	r31
 	stw	r31, 68(r3)
@@ -1586,12 +2069,12 @@ beq_cont.7799:
 	mtlr	r31
 	lfd	f1, 64(r3)
 	fdiv	f0, f1, f0
-	b	beq_cont.7804
-beq_else.7803:
+	b	beq_cont.7763
+beq_else.7762:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
-beq_cont.7804:
+beq_cont.7763:
 	lwz	r2, 24(r3)
 	stfd	f0, 0(r2)
 	lfd	f0, 8(r2)
@@ -1604,7 +2087,7 @@ beq_cont.7804:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7805
+	bne	cr7, beq_else.7764
 	lfd	f0, 72(r3)
 	mflr	r31
 	stw	r31, 84(r3)
@@ -1625,12 +2108,12 @@ beq_cont.7804:
 	mtlr	r31
 	lfd	f1, 80(r3)
 	fdiv	f0, f1, f0
-	b	beq_cont.7806
-beq_else.7805:
+	b	beq_cont.7765
+beq_else.7764:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
-beq_cont.7806:
+beq_cont.7765:
 	lwz	r2, 24(r3)
 	stfd	f0, 8(r2)
 	lfd	f0, 16(r2)
@@ -1643,7 +2126,7 @@ beq_cont.7806:
 	lwz	r31, 100(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7807
+	bne	cr7, beq_else.7766
 	lfd	f0, 88(r3)
 	mflr	r31
 	stw	r31, 100(r3)
@@ -1664,26 +2147,26 @@ beq_cont.7806:
 	mtlr	r31
 	lfd	f1, 96(r3)
 	fdiv	f0, f1, f0
-	b	beq_cont.7808
-beq_else.7807:
+	b	beq_cont.7767
+beq_else.7766:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
-beq_cont.7808:
+beq_cont.7767:
 	lwz	r2, 24(r3)
 	stfd	f0, 16(r2)
-	b	beq_cont.7801
-beq_else.7800:
+	b	beq_cont.7760
+beq_else.7759:
 	cmpwi	cr7, r8, 2
-	bne	cr7, beq_else.7809
+	bne	cr7, beq_else.7768
 	lwz	r5, 32(r3)
 	cmpwi	cr7, r5, 0
-	bne	cr7, beq_else.7811
+	bne	cr7, beq_else.7770
 	li	r5, 1
-	b	beq_cont.7812
-beq_else.7811:
+	b	beq_cont.7771
+beq_else.7770:
 	li	r5, 0
-beq_cont.7812:
+beq_cont.7771:
 	mflr	r31
 	mr	r2, r6
 	stw	r31, 108(r3)
@@ -1692,15 +2175,15 @@ beq_cont.7812:
 	subi	r3, r3, 112
 	lwz	r31, 108(r3)
 	mtlr	r31
-	b	beq_cont.7810
-beq_else.7809:
-beq_cont.7810:
-beq_cont.7801:
+	b	beq_cont.7769
+beq_else.7768:
+beq_cont.7769:
+beq_cont.7760:
 	lwz	r2, 20(r3)
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7813
-	b	beq_cont.7814
-beq_else.7813:
+	bne	cr7, beq_else.7772
+	b	beq_cont.7773
+beq_else.7772:
 	lwz	r2, 24(r3)
 	lwz	r5, 44(r3)
 	mflr	r31
@@ -1710,16 +2193,16 @@ beq_else.7813:
 	subi	r3, r3, 112
 	lwz	r31, 108(r3)
 	mtlr	r31
-beq_cont.7814:
+beq_cont.7773:
 	li	r2, 1
 	blr
 read_object.2600:
 	lwz	r5, 8(r30)
 	lwz	r6, 4(r30)
 	cmpwi	cr7, r2, 60
-	blt	cr7, bge_else.7815
+	blt	cr7, bge_else.7774
 	blr
-bge_else.7815:
+bge_else.7774:
 	stw	r30, 0(r3)
 	stw	r6, 4(r3)
 	stw	r2, 8(r3)
@@ -1734,12 +2217,12 @@ bge_else.7815:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7817
+	bne	cr7, beq_else.7776
 	lwz	r2, 4(r3)
 	lwz	r5, 8(r3)
 	stw	r5, 0(r2)
 	blr
-beq_else.7817:
+beq_else.7776:
 	lwz	r2, 8(r3)
 	addi	r2, r2, 1
 	lwz	r30, 0(r3)
@@ -1762,12 +2245,12 @@ read_net_item.2604:
 	lwz	r31, 4(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, -1
-	bne	cr7, beq_else.7819
+	bne	cr7, beq_else.7778
 	lwz	r2, 0(r3)
 	addi	r2, r2, 1
 	li	r5, -1
 	b	min_caml_create_array
-beq_else.7819:
+beq_else.7778:
 	lwz	r5, 0(r3)
 	addi	r6, r5, 1
 	stw	r2, 4(r3)
@@ -1798,11 +2281,11 @@ read_or_network.2606:
 	mtlr	r31
 	lwz	r2, 0(r5)
 	cmpwi	cr7, r2, -1
-	bne	cr7, beq_else.7820
+	bne	cr7, beq_else.7779
 	lwz	r2, 0(r3)
 	addi	r2, r2, 1
 	b	min_caml_create_array
-beq_else.7820:
+beq_else.7779:
 	lwz	r2, 0(r3)
 	addi	r6, r2, 1
 	stw	r5, 4(r3)
@@ -1835,9 +2318,9 @@ read_and_network.2608:
 	mtlr	r31
 	lwz	r5, 0(r2)
 	cmpwi	cr7, r5, -1
-	bne	cr7, beq_else.7821
+	bne	cr7, beq_else.7780
 	blr
-beq_else.7821:
+beq_else.7780:
 	lwz	r5, 8(r3)
 	slwi	r6, r5, 2
 	lwz	r7, 4(r3)
@@ -1931,7 +2414,7 @@ solver_rect_surface.2612:
 	lwz	r31, 60(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7827
+	bne	cr7, beq_else.7786
 	lwz	r2, 56(r3)
 	mflr	r31
 	stw	r31, 60(r3)
@@ -2016,10 +2499,10 @@ solver_rect_surface.2612:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7829
+	bne	cr7, beq_else.7788
 	li	r2, 0
 	blr
-beq_else.7829:
+beq_else.7788:
 	lwz	r2, 16(r3)
 	slwi	r5, r2, 3
 	lwz	r6, 48(r3)
@@ -2047,16 +2530,16 @@ beq_else.7829:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7830
+	bne	cr7, beq_else.7789
 	li	r2, 0
 	blr
-beq_else.7830:
+beq_else.7789:
 	lwz	r2, 0(r3)
 	lfd	f0, 72(r3)
 	stfd	f0, 0(r2)
 	li	r2, 1
 	blr
-beq_else.7827:
+beq_else.7786:
 	li	r2, 0
 	blr
 solver_rect.2621:
@@ -2080,7 +2563,7 @@ solver_rect.2621:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7831
+	bne	cr7, beq_else.7790
 	li	r6, 1
 	li	r7, 2
 	li	r8, 0
@@ -2100,7 +2583,7 @@ solver_rect.2621:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7832
+	bne	cr7, beq_else.7791
 	li	r6, 2
 	li	r7, 0
 	li	r8, 1
@@ -2120,16 +2603,16 @@ solver_rect.2621:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7833
+	bne	cr7, beq_else.7792
 	li	r2, 0
 	blr
-beq_else.7833:
+beq_else.7792:
 	li	r2, 3
 	blr
-beq_else.7832:
+beq_else.7791:
 	li	r2, 2
 	blr
-beq_else.7831:
+beq_else.7790:
 	li	r2, 1
 	blr
 solver_surface.2627:
@@ -2165,10 +2648,10 @@ solver_surface.2627:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7835
+	bne	cr7, beq_else.7794
 	li	r2, 0
 	blr
-beq_else.7835:
+beq_else.7794:
 	lfd	f0, 24(r3)
 	lfd	f1, 16(r3)
 	lfd	f2, 8(r3)
@@ -2272,10 +2755,10 @@ quadratic.2633:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7837
+	bne	cr7, beq_else.7796
 	lfd	f0, 72(r3)
 	blr
-beq_else.7837:
+beq_else.7796:
 	lfd	f0, 8(r3)
 	lfd	f1, 16(r3)
 	fmul	f2, f1, f0
@@ -2390,10 +2873,10 @@ bilinear.2638:
 	lwz	r31, 108(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7839
+	bne	cr7, beq_else.7798
 	lfd	f0, 96(r3)
 	blr
-beq_else.7839:
+beq_else.7798:
 	lfd	f0, 40(r3)
 	lfd	f1, 24(r3)
 	fmul	f2, f1, f0
@@ -2494,7 +2977,7 @@ solver_second.2646:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7841
+	bne	cr7, beq_else.7800
 	lwz	r2, 36(r3)
 	lfd	f0, 0(r2)
 	lfd	f1, 8(r2)
@@ -2535,16 +3018,16 @@ solver_second.2646:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 3
-	bne	cr7, beq_else.7842
+	bne	cr7, beq_else.7801
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
 	lfd	f1, 56(r3)
 	fsub	f0, f1, f0
-	b	beq_cont.7843
-beq_else.7842:
+	b	beq_cont.7802
+beq_else.7801:
 	lfd	f0, 56(r3)
-beq_cont.7843:
+beq_cont.7802:
 	lfd	f1, 48(r3)
 	stfd	f0, 64(r3)
 	mflr	r31
@@ -2568,18 +3051,12 @@ beq_cont.7843:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7844
+	bne	cr7, beq_else.7803
 	li	r2, 0
 	blr
-beq_else.7844:
+beq_else.7803:
 	lfd	f0, 72(r3)
-	mflr	r31
-	stw	r31, 84(r3)
-	addi	r3, r3, 88
-	bl	min_caml_sqrt
-	subi	r3, r3, 88
-	lwz	r31, 84(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lwz	r2, 32(r3)
 	stfd	f0, 80(r3)
 	mflr	r31
@@ -2590,7 +3067,7 @@ beq_else.7844:
 	lwz	r31, 92(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7845
+	bne	cr7, beq_else.7804
 	lfd	f0, 80(r3)
 	mflr	r31
 	stw	r31, 92(r3)
@@ -2599,10 +3076,10 @@ beq_else.7844:
 	subi	r3, r3, 96
 	lwz	r31, 92(r3)
 	mtlr	r31
-	b	beq_cont.7846
-beq_else.7845:
+	b	beq_cont.7805
+beq_else.7804:
 	lfd	f0, 80(r3)
-beq_cont.7846:
+beq_cont.7805:
 	lfd	f1, 48(r3)
 	fsub	f0, f0, f1
 	lfd	f1, 40(r3)
@@ -2611,7 +3088,7 @@ beq_cont.7846:
 	stfd	f0, 0(r2)
 	li	r2, 1
 	blr
-beq_else.7841:
+beq_else.7800:
 	li	r2, 0
 	blr
 solver.2652:
@@ -2677,7 +3154,7 @@ solver.2652:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.7847
+	bne	cr7, beq_else.7806
 	lfd	f0, 32(r3)
 	lfd	f1, 48(r3)
 	lfd	f2, 64(r3)
@@ -2687,9 +3164,9 @@ solver.2652:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7847:
+beq_else.7806:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.7848
+	bne	cr7, beq_else.7807
 	lfd	f0, 32(r3)
 	lfd	f1, 48(r3)
 	lfd	f2, 64(r3)
@@ -2699,7 +3176,7 @@ beq_else.7847:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7848:
+beq_else.7807:
 	lfd	f0, 32(r3)
 	lfd	f1, 48(r3)
 	lfd	f2, 64(r3)
@@ -2753,10 +3230,10 @@ solver_rect_fast.2656:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7851
+	bne	cr7, beq_else.7810
 	li	r2, 0
-	b	beq_cont.7852
-beq_else.7851:
+	b	beq_cont.7811
+beq_else.7810:
 	lwz	r2, 48(r3)
 	lfd	f0, 16(r2)
 	lfd	f1, 40(r3)
@@ -2789,10 +3266,10 @@ beq_else.7851:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7853
+	bne	cr7, beq_else.7812
 	li	r2, 0
-	b	beq_cont.7854
-beq_else.7853:
+	b	beq_cont.7813
+beq_else.7812:
 	lwz	r2, 24(r3)
 	lfd	f0, 8(r2)
 	mflr	r31
@@ -2803,16 +3280,16 @@ beq_else.7853:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7855
+	bne	cr7, beq_else.7814
 	li	r2, 1
-	b	beq_cont.7856
-beq_else.7855:
+	b	beq_cont.7815
+beq_else.7814:
 	li	r2, 0
-beq_cont.7856:
-beq_cont.7854:
-beq_cont.7852:
+beq_cont.7815:
+beq_cont.7813:
+beq_cont.7811:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7857
+	bne	cr7, beq_else.7816
 	lwz	r2, 24(r3)
 	lfd	f0, 16(r2)
 	lfd	f1, 16(r3)
@@ -2852,10 +3329,10 @@ beq_cont.7852:
 	lwz	r31, 92(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7858
+	bne	cr7, beq_else.7817
 	li	r2, 0
-	b	beq_cont.7859
-beq_else.7858:
+	b	beq_cont.7818
+beq_else.7817:
 	lwz	r2, 48(r3)
 	lfd	f0, 16(r2)
 	lfd	f1, 72(r3)
@@ -2888,10 +3365,10 @@ beq_else.7858:
 	lwz	r31, 100(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7860
+	bne	cr7, beq_else.7819
 	li	r2, 0
-	b	beq_cont.7861
-beq_else.7860:
+	b	beq_cont.7820
+beq_else.7819:
 	lwz	r2, 24(r3)
 	lfd	f0, 24(r2)
 	mflr	r31
@@ -2902,16 +3379,16 @@ beq_else.7860:
 	lwz	r31, 100(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7862
+	bne	cr7, beq_else.7821
 	li	r2, 1
-	b	beq_cont.7863
-beq_else.7862:
+	b	beq_cont.7822
+beq_else.7821:
 	li	r2, 0
-beq_cont.7863:
-beq_cont.7861:
-beq_cont.7859:
+beq_cont.7822:
+beq_cont.7820:
+beq_cont.7818:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7864
+	bne	cr7, beq_else.7823
 	lwz	r2, 24(r3)
 	lfd	f0, 32(r2)
 	lfd	f1, 32(r3)
@@ -2951,10 +3428,10 @@ beq_cont.7859:
 	lwz	r31, 116(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7865
+	bne	cr7, beq_else.7824
 	li	r2, 0
-	b	beq_cont.7866
-beq_else.7865:
+	b	beq_cont.7825
+beq_else.7824:
 	lwz	r2, 48(r3)
 	lfd	f0, 8(r2)
 	lfd	f1, 96(r3)
@@ -2987,10 +3464,10 @@ beq_else.7865:
 	lwz	r31, 124(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7867
+	bne	cr7, beq_else.7826
 	li	r2, 0
-	b	beq_cont.7868
-beq_else.7867:
+	b	beq_cont.7827
+beq_else.7826:
 	lwz	r2, 24(r3)
 	lfd	f0, 40(r2)
 	mflr	r31
@@ -3001,31 +3478,31 @@ beq_else.7867:
 	lwz	r31, 124(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7869
+	bne	cr7, beq_else.7828
 	li	r2, 1
-	b	beq_cont.7870
-beq_else.7869:
+	b	beq_cont.7829
+beq_else.7828:
 	li	r2, 0
-beq_cont.7870:
-beq_cont.7868:
-beq_cont.7866:
+beq_cont.7829:
+beq_cont.7827:
+beq_cont.7825:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7871
+	bne	cr7, beq_else.7830
 	li	r2, 0
 	blr
-beq_else.7871:
+beq_else.7830:
 	lwz	r2, 0(r3)
 	lfd	f0, 96(r3)
 	stfd	f0, 0(r2)
 	li	r2, 3
 	blr
-beq_else.7864:
+beq_else.7823:
 	lwz	r2, 0(r3)
 	lfd	f0, 72(r3)
 	stfd	f0, 0(r2)
 	li	r2, 2
 	blr
-beq_else.7857:
+beq_else.7816:
 	lwz	r2, 0(r3)
 	lfd	f0, 40(r3)
 	stfd	f0, 0(r2)
@@ -3048,10 +3525,10 @@ solver_surface_fast.2663:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7873
+	bne	cr7, beq_else.7832
 	li	r2, 0
 	blr
-beq_else.7873:
+beq_else.7832:
 	lwz	r2, 32(r3)
 	lfd	f0, 8(r2)
 	lfd	f1, 24(r3)
@@ -3087,7 +3564,7 @@ solver_second_fast.2669:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7876
+	bne	cr7, beq_else.7835
 	lwz	r2, 48(r3)
 	lfd	f0, 8(r2)
 	lfd	f1, 40(r3)
@@ -3123,16 +3600,16 @@ solver_second_fast.2669:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 3
-	bne	cr7, beq_else.7878
+	bne	cr7, beq_else.7837
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
 	lfd	f1, 64(r3)
 	fsub	f0, f1, f0
-	b	beq_cont.7879
-beq_else.7878:
+	b	beq_cont.7838
+beq_else.7837:
 	lfd	f0, 64(r3)
-beq_cont.7879:
+beq_cont.7838:
 	lfd	f1, 56(r3)
 	stfd	f0, 72(r3)
 	mflr	r31
@@ -3156,10 +3633,10 @@ beq_cont.7879:
 	lwz	r31, 92(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7880
+	bne	cr7, beq_else.7839
 	li	r2, 0
 	blr
-beq_else.7880:
+beq_else.7839:
 	lwz	r2, 16(r3)
 	mflr	r31
 	stw	r31, 92(r3)
@@ -3169,15 +3646,9 @@ beq_else.7880:
 	lwz	r31, 92(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7881
+	bne	cr7, beq_else.7840
 	lfd	f0, 80(r3)
-	mflr	r31
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
-	bl	min_caml_sqrt
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lfd	f1, 56(r3)
 	fsub	f0, f1, f0
 	lwz	r2, 48(r3)
@@ -3185,16 +3656,10 @@ beq_else.7880:
 	fmul	f0, f0, f1
 	lwz	r2, 0(r3)
 	stfd	f0, 0(r2)
-	b	beq_cont.7882
-beq_else.7881:
+	b	beq_cont.7841
+beq_else.7840:
 	lfd	f0, 80(r3)
-	mflr	r31
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
-	bl	min_caml_sqrt
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lfd	f1, 56(r3)
 	fadd	f0, f1, f0
 	lwz	r2, 48(r3)
@@ -3202,10 +3667,10 @@ beq_else.7881:
 	fmul	f0, f0, f1
 	lwz	r2, 0(r3)
 	stfd	f0, 0(r2)
-beq_cont.7882:
+beq_cont.7841:
 	li	r2, 1
 	blr
-beq_else.7876:
+beq_else.7835:
 	li	r2, 0
 	blr
 solver_fast.2675:
@@ -3286,7 +3751,7 @@ solver_fast.2675:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.7884
+	bne	cr7, beq_else.7843
 	lwz	r2, 16(r3)
 	mflr	r31
 	stw	r31, 84(r3)
@@ -3305,9 +3770,9 @@ solver_fast.2675:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7884:
+beq_else.7843:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.7885
+	bne	cr7, beq_else.7844
 	lfd	f0, 40(r3)
 	lfd	f1, 56(r3)
 	lfd	f2, 72(r3)
@@ -3317,7 +3782,7 @@ beq_else.7884:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7885:
+beq_else.7844:
 	lfd	f0, 40(r3)
 	lfd	f1, 56(r3)
 	lfd	f2, 72(r3)
@@ -3341,10 +3806,10 @@ solver_surface_fast2.2679:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7886
+	bne	cr7, beq_else.7845
 	li	r2, 0
 	blr
-beq_else.7886:
+beq_else.7845:
 	lwz	r2, 8(r3)
 	lfd	f0, 0(r2)
 	lwz	r2, 4(r3)
@@ -3374,7 +3839,7 @@ solver_second_fast2.2686:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7888
+	bne	cr7, beq_else.7847
 	lwz	r2, 48(r3)
 	lfd	f0, 8(r2)
 	lfd	f1, 40(r3)
@@ -3411,10 +3876,10 @@ solver_second_fast2.2686:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7890
+	bne	cr7, beq_else.7849
 	li	r2, 0
 	blr
-beq_else.7890:
+beq_else.7849:
 	lwz	r2, 4(r3)
 	mflr	r31
 	stw	r31, 84(r3)
@@ -3424,15 +3889,9 @@ beq_else.7890:
 	lwz	r31, 84(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7891
+	bne	cr7, beq_else.7850
 	lfd	f0, 72(r3)
-	mflr	r31
-	stw	r31, 84(r3)
-	addi	r3, r3, 88
-	bl	min_caml_sqrt
-	subi	r3, r3, 88
-	lwz	r31, 84(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lfd	f1, 56(r3)
 	fsub	f0, f1, f0
 	lwz	r2, 48(r3)
@@ -3440,16 +3899,10 @@ beq_else.7890:
 	fmul	f0, f0, f1
 	lwz	r2, 0(r3)
 	stfd	f0, 0(r2)
-	b	beq_cont.7892
-beq_else.7891:
+	b	beq_cont.7851
+beq_else.7850:
 	lfd	f0, 72(r3)
-	mflr	r31
-	stw	r31, 84(r3)
-	addi	r3, r3, 88
-	bl	min_caml_sqrt
-	subi	r3, r3, 88
-	lwz	r31, 84(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lfd	f1, 56(r3)
 	fadd	f0, f1, f0
 	lwz	r2, 48(r3)
@@ -3457,10 +3910,10 @@ beq_else.7891:
 	fmul	f0, f0, f1
 	lwz	r2, 0(r3)
 	stfd	f0, 0(r2)
-beq_cont.7892:
+beq_cont.7851:
 	li	r2, 1
 	blr
-beq_else.7888:
+beq_else.7847:
 	li	r2, 0
 	blr
 solver_fast2.2693:
@@ -3514,7 +3967,7 @@ solver_fast2.2693:
 	lwz	r31, 60(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.7894
+	bne	cr7, beq_else.7853
 	lwz	r2, 20(r3)
 	mflr	r31
 	stw	r31, 60(r3)
@@ -3533,9 +3986,9 @@ solver_fast2.2693:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7894:
+beq_else.7853:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.7895
+	bne	cr7, beq_else.7854
 	lfd	f0, 48(r3)
 	lfd	f1, 40(r3)
 	lfd	f2, 32(r3)
@@ -3546,7 +3999,7 @@ beq_else.7894:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7895:
+beq_else.7854:
 	lfd	f0, 48(r3)
 	lfd	f1, 40(r3)
 	lfd	f2, 32(r3)
@@ -3583,7 +4036,7 @@ setup_rect_table.2696:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7896
+	bne	cr7, beq_else.7855
 	lwz	r2, 0(r3)
 	mflr	r31
 	stw	r31, 12(r3)
@@ -3638,14 +4091,14 @@ setup_rect_table.2696:
 	lfd	f1, 0(r5)
 	fdiv	f0, f0, f1
 	stfd	f0, 8(r2)
-	b	beq_cont.7897
-beq_else.7896:
+	b	beq_cont.7856
+beq_else.7855:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
 	lwz	r2, 8(r3)
 	stfd	f0, 8(r2)
-beq_cont.7897:
+beq_cont.7856:
 	lwz	r5, 4(r3)
 	lfd	f0, 8(r5)
 	mflr	r31
@@ -3656,7 +4109,7 @@ beq_cont.7897:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7898
+	bne	cr7, beq_else.7857
 	lwz	r2, 0(r3)
 	mflr	r31
 	stw	r31, 20(r3)
@@ -3711,14 +4164,14 @@ beq_cont.7897:
 	lfd	f1, 8(r5)
 	fdiv	f0, f0, f1
 	stfd	f0, 24(r2)
-	b	beq_cont.7899
-beq_else.7898:
+	b	beq_cont.7858
+beq_else.7857:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
 	lwz	r2, 8(r3)
 	stfd	f0, 24(r2)
-beq_cont.7899:
+beq_cont.7858:
 	lwz	r5, 4(r3)
 	lfd	f0, 16(r5)
 	mflr	r31
@@ -3729,7 +4182,7 @@ beq_cont.7899:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7900
+	bne	cr7, beq_else.7859
 	lwz	r2, 0(r3)
 	mflr	r31
 	stw	r31, 28(r3)
@@ -3784,14 +4237,14 @@ beq_cont.7899:
 	lfd	f1, 16(r5)
 	fdiv	f0, f0, f1
 	stfd	f0, 40(r2)
-	b	beq_cont.7901
-beq_else.7900:
+	b	beq_cont.7860
+beq_else.7859:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
 	lwz	r2, 8(r3)
 	stfd	f0, 40(r2)
-beq_cont.7901:
+beq_cont.7860:
 	blr
 setup_surface_table.2699:
 	li	r6, 4
@@ -3865,14 +4318,14 @@ setup_surface_table.2699:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7903
+	bne	cr7, beq_else.7862
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
 	lwz	r2, 8(r3)
 	stfd	f0, 0(r2)
-	b	beq_cont.7904
-beq_else.7903:
+	b	beq_cont.7863
+beq_else.7862:
 	lis	r31, ha16(l.5125)
 	addi	r31, r31, lo16(l.5125)
 	lfd	f0, 0(r31)
@@ -3940,7 +4393,7 @@ beq_else.7903:
 	mtlr	r31
 	lwz	r2, 8(r3)
 	stfd	f0, 24(r2)
-beq_cont.7904:
+beq_cont.7863:
 	blr
 setup_second_table.2702:
 	li	r6, 5
@@ -4051,7 +4504,7 @@ setup_second_table.2702:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7906
+	bne	cr7, beq_else.7865
 	lwz	r2, 8(r3)
 	lfd	f0, 32(r3)
 	stfd	f0, 8(r2)
@@ -4059,8 +4512,8 @@ setup_second_table.2702:
 	stfd	f0, 16(r2)
 	lfd	f0, 64(r3)
 	stfd	f0, 24(r2)
-	b	beq_cont.7907
-beq_else.7906:
+	b	beq_cont.7866
+beq_else.7865:
 	lwz	r2, 4(r3)
 	lfd	f0, 16(r2)
 	lwz	r5, 0(r3)
@@ -4186,7 +4639,7 @@ beq_else.7906:
 	fsub	f0, f1, f0
 	lwz	r2, 8(r3)
 	stfd	f0, 24(r2)
-beq_cont.7907:
+beq_cont.7866:
 	lfd	f0, 16(r3)
 	mflr	r31
 	stw	r31, 148(r3)
@@ -4196,7 +4649,7 @@ beq_cont.7907:
 	lwz	r31, 148(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7908
+	bne	cr7, beq_else.7867
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
@@ -4204,15 +4657,15 @@ beq_cont.7907:
 	fdiv	f0, f0, f1
 	lwz	r2, 8(r3)
 	stfd	f0, 32(r2)
-	b	beq_cont.7909
-beq_else.7908:
-beq_cont.7909:
+	b	beq_cont.7868
+beq_else.7867:
+beq_cont.7868:
 	lwz	r2, 8(r3)
 	blr
 iter_setup_dirvec_constants.2705:
 	lwz	r6, 4(r30)
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else.7910
+	blt	cr7, bge_else.7869
 	slwi	r7, r5, 2
 	lwzx	r6, r6, r7
 	stw	r30, 0(r3)
@@ -4247,7 +4700,7 @@ iter_setup_dirvec_constants.2705:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.7911
+	bne	cr7, beq_else.7870
 	lwz	r2, 20(r3)
 	lwz	r5, 8(r3)
 	mflr	r31
@@ -4261,10 +4714,10 @@ iter_setup_dirvec_constants.2705:
 	slwi	r6, r5, 2
 	lwz	r7, 16(r3)
 	stwx	r2, r7, r6
-	b	beq_cont.7912
-beq_else.7911:
+	b	beq_cont.7871
+beq_else.7870:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.7913
+	bne	cr7, beq_else.7872
 	lwz	r2, 20(r3)
 	lwz	r5, 8(r3)
 	mflr	r31
@@ -4278,8 +4731,8 @@ beq_else.7911:
 	slwi	r6, r5, 2
 	lwz	r7, 16(r3)
 	stwx	r2, r7, r6
-	b	beq_cont.7914
-beq_else.7913:
+	b	beq_cont.7873
+beq_else.7872:
 	lwz	r2, 20(r3)
 	lwz	r5, 8(r3)
 	mflr	r31
@@ -4293,15 +4746,15 @@ beq_else.7913:
 	slwi	r6, r5, 2
 	lwz	r7, 16(r3)
 	stwx	r2, r7, r6
-beq_cont.7914:
-beq_cont.7912:
+beq_cont.7873:
+beq_cont.7871:
 	subi	r5, r5, 1
 	lwz	r2, 12(r3)
 	lwz	r30, 0(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.7910:
+bge_else.7869:
 	blr
 setup_dirvec_constants.2708:
 	lwz	r5, 8(r30)
@@ -4314,7 +4767,7 @@ setup_dirvec_constants.2708:
 setup_startp_constants.2710:
 	lwz	r6, 4(r30)
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else.7916
+	blt	cr7, bge_else.7875
 	slwi	r7, r5, 2
 	lwzx	r6, r6, r7
 	stw	r30, 0(r3)
@@ -4390,7 +4843,7 @@ setup_startp_constants.2710:
 	stfd	f0, 16(r2)
 	lwz	r5, 20(r3)
 	cmpwi	cr7, r5, 2
-	bne	cr7, beq_else.7917
+	bne	cr7, beq_else.7876
 	lwz	r5, 12(r3)
 	mflr	r31
 	mr	r2, r5
@@ -4413,12 +4866,12 @@ setup_startp_constants.2710:
 	mtlr	r31
 	lwz	r2, 16(r3)
 	stfd	f0, 24(r2)
-	b	beq_cont.7918
-beq_else.7917:
+	b	beq_cont.7877
+beq_else.7876:
 	cmpwi	cr7, r5, 2
-	bgt	cr7, ble_else.7919
-	b	ble_cont.7920
-ble_else.7919:
+	bgt	cr7, ble_else.7878
+	b	ble_cont.7879
+ble_else.7878:
 	lfd	f0, 0(r2)
 	lfd	f1, 8(r2)
 	lfd	f2, 16(r2)
@@ -4433,18 +4886,18 @@ ble_else.7919:
 	mtlr	r31
 	lwz	r2, 20(r3)
 	cmpwi	cr7, r2, 3
-	bne	cr7, beq_else.7921
+	bne	cr7, beq_else.7880
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f1, 0(r31)
 	fsub	f0, f0, f1
-	b	beq_cont.7922
-beq_else.7921:
-beq_cont.7922:
+	b	beq_cont.7881
+beq_else.7880:
+beq_cont.7881:
 	lwz	r2, 16(r3)
 	stfd	f0, 24(r2)
-ble_cont.7920:
-beq_cont.7918:
+ble_cont.7879:
+beq_cont.7877:
 	lwz	r2, 4(r3)
 	subi	r5, r2, 1
 	lwz	r2, 8(r3)
@@ -4452,7 +4905,7 @@ beq_cont.7918:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.7916:
+bge_else.7875:
 	blr
 setup_startp.2713:
 	lwz	r5, 12(r30)
@@ -4509,10 +4962,10 @@ is_rect_outside.2715:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7925
+	bne	cr7, beq_else.7884
 	li	r2, 0
-	b	beq_cont.7926
-beq_else.7925:
+	b	beq_cont.7885
+beq_else.7884:
 	lfd	f0, 8(r3)
 	mflr	r31
 	stw	r31, 36(r3)
@@ -4540,10 +4993,10 @@ beq_else.7925:
 	lwz	r31, 44(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7927
+	bne	cr7, beq_else.7886
 	li	r2, 0
-	b	beq_cont.7928
-beq_else.7927:
+	b	beq_cont.7887
+beq_else.7886:
 	lfd	f0, 0(r3)
 	mflr	r31
 	stw	r31, 44(r3)
@@ -4570,10 +5023,10 @@ beq_else.7927:
 	subi	r3, r3, 56
 	lwz	r31, 52(r3)
 	mtlr	r31
-beq_cont.7928:
-beq_cont.7926:
+beq_cont.7887:
+beq_cont.7885:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7929
+	bne	cr7, beq_else.7888
 	lwz	r2, 16(r3)
 	mflr	r31
 	stw	r31, 52(r3)
@@ -4583,13 +5036,13 @@ beq_cont.7926:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7930
+	bne	cr7, beq_else.7889
 	li	r2, 1
 	blr
-beq_else.7930:
+beq_else.7889:
 	li	r2, 0
 	blr
-beq_else.7929:
+beq_else.7888:
 	lwz	r2, 16(r3)
 	b	o_isinvert.2524
 is_plane_outside.2720:
@@ -4642,10 +5095,10 @@ is_plane_outside.2720:
 	lwz	r31, 44(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7932
+	bne	cr7, beq_else.7891
 	li	r2, 1
 	blr
-beq_else.7932:
+beq_else.7891:
 	li	r2, 0
 	blr
 is_second_outside.2725:
@@ -4667,16 +5120,16 @@ is_second_outside.2725:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 3
-	bne	cr7, beq_else.7934
+	bne	cr7, beq_else.7893
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
 	lfd	f1, 8(r3)
 	fsub	f0, f1, f0
-	b	beq_cont.7935
-beq_else.7934:
+	b	beq_cont.7894
+beq_else.7893:
 	lfd	f0, 8(r3)
-beq_cont.7935:
+beq_cont.7894:
 	lwz	r2, 0(r3)
 	stfd	f0, 16(r3)
 	mflr	r31
@@ -4705,10 +5158,10 @@ beq_cont.7935:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7936
+	bne	cr7, beq_else.7895
 	li	r2, 1
 	blr
-beq_else.7936:
+beq_else.7895:
 	li	r2, 0
 	blr
 is_outside.2730:
@@ -4757,21 +5210,21 @@ is_outside.2730:
 	lwz	r31, 60(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.7938
+	bne	cr7, beq_else.7897
 	lfd	f0, 32(r3)
 	lfd	f1, 40(r3)
 	lfd	f2, 48(r3)
 	lwz	r2, 16(r3)
 	b	is_rect_outside.2715
-beq_else.7938:
+beq_else.7897:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.7939
+	bne	cr7, beq_else.7898
 	lfd	f0, 32(r3)
 	lfd	f1, 40(r3)
 	lfd	f2, 48(r3)
 	lwz	r2, 16(r3)
 	b	is_plane_outside.2720
-beq_else.7939:
+beq_else.7898:
 	lfd	f0, 32(r3)
 	lfd	f1, 40(r3)
 	lfd	f2, 48(r3)
@@ -4782,10 +5235,10 @@ check_all_inside.2735:
 	slwi	r7, r2, 2
 	lwzx	r7, r5, r7
 	cmpwi	cr7, r7, -1
-	bne	cr7, beq_else.7940
+	bne	cr7, beq_else.7899
 	li	r2, 1
 	blr
-beq_else.7940:
+beq_else.7899:
 	slwi	r7, r7, 2
 	lwzx	r6, r6, r7
 	stfd	f2, 0(r3)
@@ -4803,7 +5256,7 @@ beq_else.7940:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7941
+	bne	cr7, beq_else.7900
 	lwz	r2, 32(r3)
 	addi	r2, r2, 1
 	lfd	f0, 16(r3)
@@ -4814,7 +5267,7 @@ beq_else.7940:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7941:
+beq_else.7900:
 	li	r2, 0
 	blr
 shadow_check_and_group.2741:
@@ -4828,10 +5281,10 @@ shadow_check_and_group.2741:
 	slwi	r13, r2, 2
 	lwzx	r13, r5, r13
 	cmpwi	cr7, r13, -1
-	bne	cr7, beq_else.7942
+	bne	cr7, beq_else.7901
 	li	r2, 0
 	blr
-beq_else.7942:
+beq_else.7901:
 	slwi	r13, r2, 2
 	lwzx	r13, r5, r13
 	stw	r12, 0(r3)
@@ -4860,10 +5313,10 @@ beq_else.7942:
 	lfd	f0, 0(r5)
 	stfd	f0, 40(r3)
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7944
+	bne	cr7, beq_else.7903
 	li	r2, 0
-	b	beq_cont.7945
-beq_else.7944:
+	b	beq_cont.7904
+beq_else.7903:
 	lis	r31, ha16(l.5439)
 	addi	r31, r31, lo16(l.5439)
 	lfd	f1, 0(r31)
@@ -4874,9 +5327,9 @@ beq_else.7944:
 	subi	r3, r3, 56
 	lwz	r31, 52(r3)
 	mtlr	r31
-beq_cont.7945:
+beq_cont.7904:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7946
+	bne	cr7, beq_else.7905
 	lwz	r2, 28(r3)
 	slwi	r2, r2, 2
 	lwz	r5, 24(r3)
@@ -4889,10 +5342,10 @@ beq_cont.7945:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7947
+	bne	cr7, beq_else.7906
 	li	r2, 0
 	blr
-beq_else.7947:
+beq_else.7906:
 	lwz	r2, 20(r3)
 	addi	r2, r2, 1
 	lwz	r5, 12(r3)
@@ -4900,7 +5353,7 @@ beq_else.7947:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7946:
+beq_else.7905:
 	lis	r31, ha16(l.5440)
 	addi	r31, r31, lo16(l.5440)
 	lfd	f0, 0(r31)
@@ -4937,7 +5390,7 @@ beq_else.7946:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7948
+	bne	cr7, beq_else.7907
 	lwz	r2, 20(r3)
 	addi	r2, r2, 1
 	lwz	r5, 12(r3)
@@ -4945,7 +5398,7 @@ beq_else.7946:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7948:
+beq_else.7907:
 	li	r2, 1
 	blr
 shadow_check_one_or_group.2744:
@@ -4954,10 +5407,10 @@ shadow_check_one_or_group.2744:
 	slwi	r8, r2, 2
 	lwzx	r8, r5, r8
 	cmpwi	cr7, r8, -1
-	bne	cr7, beq_else.7949
+	bne	cr7, beq_else.7908
 	li	r2, 0
 	blr
-beq_else.7949:
+beq_else.7908:
 	slwi	r8, r8, 2
 	lwzx	r7, r7, r8
 	li	r8, 0
@@ -4977,7 +5430,7 @@ beq_else.7949:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7950
+	bne	cr7, beq_else.7909
 	lwz	r2, 8(r3)
 	addi	r2, r2, 1
 	lwz	r5, 0(r3)
@@ -4985,7 +5438,7 @@ beq_else.7949:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7950:
+beq_else.7909:
 	li	r2, 1
 	blr
 shadow_check_one_or_matrix.2747:
@@ -4998,20 +5451,20 @@ shadow_check_one_or_matrix.2747:
 	lwzx	r11, r5, r11
 	lwz	r12, 0(r11)
 	cmpwi	cr7, r12, -1
-	bne	cr7, beq_else.7951
+	bne	cr7, beq_else.7910
 	li	r2, 0
 	blr
-beq_else.7951:
+beq_else.7910:
 	stw	r11, 0(r3)
 	stw	r8, 4(r3)
 	stw	r5, 8(r3)
 	stw	r30, 12(r3)
 	stw	r2, 16(r3)
 	cmpwi	cr7, r12, 99
-	bne	cr7, beq_else.7952
+	bne	cr7, beq_else.7911
 	li	r2, 1
-	b	beq_cont.7953
-beq_else.7952:
+	b	beq_cont.7912
+beq_else.7911:
 	stw	r7, 20(r3)
 	mflr	r31
 	mr	r5, r9
@@ -5027,10 +5480,10 @@ beq_else.7952:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7954
+	bne	cr7, beq_else.7913
 	li	r2, 0
-	b	beq_cont.7955
-beq_else.7954:
+	b	beq_cont.7914
+beq_else.7913:
 	lwz	r2, 20(r3)
 	lfd	f0, 0(r2)
 	lis	r31, ha16(l.5453)
@@ -5044,10 +5497,10 @@ beq_else.7954:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7956
+	bne	cr7, beq_else.7915
 	li	r2, 0
-	b	beq_cont.7957
-beq_else.7956:
+	b	beq_cont.7916
+beq_else.7915:
 	li	r2, 1
 	lwz	r5, 0(r3)
 	lwz	r30, 4(r3)
@@ -5061,17 +5514,17 @@ beq_else.7956:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7958
+	bne	cr7, beq_else.7917
 	li	r2, 0
-	b	beq_cont.7959
-beq_else.7958:
+	b	beq_cont.7918
+beq_else.7917:
 	li	r2, 1
-beq_cont.7959:
-beq_cont.7957:
-beq_cont.7955:
-beq_cont.7953:
+beq_cont.7918:
+beq_cont.7916:
+beq_cont.7914:
+beq_cont.7912:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7960
+	bne	cr7, beq_else.7919
 	lwz	r2, 16(r3)
 	addi	r2, r2, 1
 	lwz	r5, 8(r3)
@@ -5079,7 +5532,7 @@ beq_cont.7953:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7960:
+beq_else.7919:
 	li	r2, 1
 	lwz	r5, 0(r3)
 	lwz	r30, 4(r3)
@@ -5093,7 +5546,7 @@ beq_else.7960:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7961
+	bne	cr7, beq_else.7920
 	lwz	r2, 16(r3)
 	addi	r2, r2, 1
 	lwz	r5, 8(r3)
@@ -5101,7 +5554,7 @@ beq_else.7960:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7961:
+beq_else.7920:
 	li	r2, 1
 	blr
 solve_each_element.2750:
@@ -5117,9 +5570,9 @@ solve_each_element.2750:
 	slwi	r16, r2, 2
 	lwzx	r16, r5, r16
 	cmpwi	cr7, r16, -1
-	bne	cr7, beq_else.7962
+	bne	cr7, beq_else.7921
 	blr
-beq_else.7962:
+beq_else.7921:
 	stw	r12, 0(r3)
 	stw	r14, 4(r3)
 	stw	r13, 8(r3)
@@ -5147,7 +5600,7 @@ beq_else.7962:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7964
+	bne	cr7, beq_else.7923
 	lwz	r2, 48(r3)
 	slwi	r2, r2, 2
 	lwz	r5, 44(r3)
@@ -5160,9 +5613,9 @@ beq_else.7962:
 	lwz	r31, 52(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7965
+	bne	cr7, beq_else.7924
 	blr
-beq_else.7965:
+beq_else.7924:
 	lwz	r2, 40(r3)
 	addi	r2, r2, 1
 	lwz	r5, 32(r3)
@@ -5171,7 +5624,7 @@ beq_else.7965:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7964:
+beq_else.7923:
 	lwz	r5, 24(r3)
 	lfd	f1, 0(r5)
 	lis	r31, ha16(l.5123)
@@ -5187,9 +5640,9 @@ beq_else.7964:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7967
-	b	beq_cont.7968
-beq_else.7967:
+	bne	cr7, beq_else.7926
+	b	beq_cont.7927
+beq_else.7926:
 	lwz	r2, 20(r3)
 	lfd	f1, 0(r2)
 	lfd	f0, 56(r3)
@@ -5201,9 +5654,9 @@ beq_else.7967:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7969
-	b	beq_cont.7970
-beq_else.7969:
+	bne	cr7, beq_else.7928
+	b	beq_cont.7929
+beq_else.7928:
 	lis	r31, ha16(l.5440)
 	addi	r31, r31, lo16(l.5440)
 	lfd	f0, 0(r31)
@@ -5245,9 +5698,9 @@ beq_else.7969:
 	lwz	r31, 100(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7971
-	b	beq_cont.7972
-beq_else.7971:
+	bne	cr7, beq_else.7930
+	b	beq_cont.7931
+beq_else.7930:
 	lwz	r2, 20(r3)
 	lfd	f0, 88(r3)
 	stfd	f0, 0(r2)
@@ -5268,9 +5721,9 @@ beq_else.7971:
 	lwz	r2, 0(r3)
 	lwz	r5, 52(r3)
 	stw	r5, 0(r2)
-beq_cont.7972:
-beq_cont.7970:
-beq_cont.7968:
+beq_cont.7931:
+beq_cont.7929:
+beq_cont.7927:
 	lwz	r2, 40(r3)
 	addi	r2, r2, 1
 	lwz	r5, 32(r3)
@@ -5285,9 +5738,9 @@ solve_one_or_network.2754:
 	slwi	r9, r2, 2
 	lwzx	r9, r5, r9
 	cmpwi	cr7, r9, -1
-	bne	cr7, beq_else.7973
+	bne	cr7, beq_else.7932
 	blr
-beq_else.7973:
+beq_else.7932:
 	slwi	r9, r9, 2
 	lwzx	r8, r8, r9
 	li	r9, 0
@@ -5325,15 +5778,15 @@ trace_or_matrix.2758:
 	lwzx	r12, r5, r12
 	lwz	r13, 0(r12)
 	cmpwi	cr7, r13, -1
-	bne	cr7, beq_else.7975
+	bne	cr7, beq_else.7934
 	blr
-beq_else.7975:
+beq_else.7934:
 	stw	r6, 0(r3)
 	stw	r5, 4(r3)
 	stw	r30, 8(r3)
 	stw	r2, 12(r3)
 	cmpwi	cr7, r13, 99
-	bne	cr7, beq_else.7977
+	bne	cr7, beq_else.7936
 	li	r7, 1
 	mflr	r31
 	mr	r5, r12
@@ -5347,8 +5800,8 @@ beq_else.7975:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-	b	beq_cont.7978
-beq_else.7977:
+	b	beq_cont.7937
+beq_else.7936:
 	stw	r12, 16(r3)
 	stw	r11, 20(r3)
 	stw	r7, 24(r3)
@@ -5367,9 +5820,9 @@ beq_else.7977:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7979
-	b	beq_cont.7980
-beq_else.7979:
+	bne	cr7, beq_else.7938
+	b	beq_cont.7939
+beq_else.7938:
 	lwz	r2, 28(r3)
 	lfd	f0, 0(r2)
 	lwz	r2, 24(r3)
@@ -5382,9 +5835,9 @@ beq_else.7979:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7981
-	b	beq_cont.7982
-beq_else.7981:
+	bne	cr7, beq_else.7940
+	b	beq_cont.7941
+beq_else.7940:
 	li	r2, 1
 	lwz	r5, 16(r3)
 	lwz	r6, 0(r3)
@@ -5398,9 +5851,9 @@ beq_else.7981:
 	subi	r3, r3, 40
 	lwz	r31, 36(r3)
 	mtlr	r31
-beq_cont.7982:
-beq_cont.7980:
-beq_cont.7978:
+beq_cont.7941:
+beq_cont.7939:
+beq_cont.7937:
 	lwz	r2, 12(r3)
 	addi	r2, r2, 1
 	lwz	r5, 4(r3)
@@ -5447,10 +5900,10 @@ judge_intersection.2762:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7984
+	bne	cr7, beq_else.7943
 	li	r2, 0
 	blr
-beq_else.7984:
+beq_else.7943:
 	lis	r31, ha16(l.5477)
 	addi	r31, r31, lo16(l.5477)
 	lfd	f1, 0(r31)
@@ -5492,9 +5945,9 @@ solve_each_element_fast.2764:
 	lwz	r7, 44(r3)
 	lwzx	r6, r7, r6
 	cmpwi	cr7, r6, -1
-	bne	cr7, beq_else.7985
+	bne	cr7, beq_else.7944
 	blr
-beq_else.7985:
+beq_else.7944:
 	lwz	r8, 36(r3)
 	lwz	r30, 40(r3)
 	stw	r2, 52(r3)
@@ -5511,7 +5964,7 @@ beq_else.7985:
 	lwz	r31, 60(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7987
+	bne	cr7, beq_else.7946
 	lwz	r2, 56(r3)
 	slwi	r2, r2, 2
 	lwz	r5, 32(r3)
@@ -5524,9 +5977,9 @@ beq_else.7985:
 	lwz	r31, 60(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7988
+	bne	cr7, beq_else.7947
 	blr
-beq_else.7988:
+beq_else.7947:
 	lwz	r2, 48(r3)
 	addi	r2, r2, 1
 	lwz	r5, 44(r3)
@@ -5535,7 +5988,7 @@ beq_else.7988:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.7987:
+beq_else.7946:
 	lwz	r5, 24(r3)
 	lfd	f1, 0(r5)
 	lis	r31, ha16(l.5123)
@@ -5551,9 +6004,9 @@ beq_else.7987:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7990
-	b	beq_cont.7991
-beq_else.7990:
+	bne	cr7, beq_else.7949
+	b	beq_cont.7950
+beq_else.7949:
 	lwz	r2, 20(r3)
 	lfd	f1, 0(r2)
 	lfd	f0, 64(r3)
@@ -5565,9 +6018,9 @@ beq_else.7990:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7992
-	b	beq_cont.7993
-beq_else.7992:
+	bne	cr7, beq_else.7951
+	b	beq_cont.7952
+beq_else.7951:
 	lis	r31, ha16(l.5440)
 	addi	r31, r31, lo16(l.5440)
 	lfd	f0, 0(r31)
@@ -5607,9 +6060,9 @@ beq_else.7992:
 	lwz	r31, 108(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.7994
-	b	beq_cont.7995
-beq_else.7994:
+	bne	cr7, beq_else.7953
+	b	beq_cont.7954
+beq_else.7953:
 	lwz	r2, 20(r3)
 	lfd	f0, 96(r3)
 	stfd	f0, 0(r2)
@@ -5630,9 +6083,9 @@ beq_else.7994:
 	lwz	r2, 0(r3)
 	lwz	r5, 60(r3)
 	stw	r5, 0(r2)
-beq_cont.7995:
-beq_cont.7993:
-beq_cont.7991:
+beq_cont.7954:
+beq_cont.7952:
+beq_cont.7950:
 	lwz	r2, 48(r3)
 	addi	r2, r2, 1
 	lwz	r5, 44(r3)
@@ -5647,9 +6100,9 @@ solve_one_or_network_fast.2768:
 	slwi	r9, r2, 2
 	lwzx	r9, r5, r9
 	cmpwi	cr7, r9, -1
-	bne	cr7, beq_else.7996
+	bne	cr7, beq_else.7955
 	blr
-beq_else.7996:
+beq_else.7955:
 	slwi	r9, r9, 2
 	lwzx	r8, r8, r9
 	li	r9, 0
@@ -5686,15 +6139,15 @@ trace_or_matrix_fast.2772:
 	lwzx	r11, r5, r11
 	lwz	r12, 0(r11)
 	cmpwi	cr7, r12, -1
-	bne	cr7, beq_else.7998
+	bne	cr7, beq_else.7957
 	blr
-beq_else.7998:
+beq_else.7957:
 	stw	r6, 0(r3)
 	stw	r5, 4(r3)
 	stw	r30, 8(r3)
 	stw	r2, 12(r3)
 	cmpwi	cr7, r12, 99
-	bne	cr7, beq_else.8000
+	bne	cr7, beq_else.7959
 	li	r7, 1
 	mflr	r31
 	mr	r5, r11
@@ -5708,8 +6161,8 @@ beq_else.7998:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-	b	beq_cont.8001
-beq_else.8000:
+	b	beq_cont.7960
+beq_else.7959:
 	stw	r11, 16(r3)
 	stw	r10, 20(r3)
 	stw	r7, 24(r3)
@@ -5727,9 +6180,9 @@ beq_else.8000:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8002
-	b	beq_cont.8003
-beq_else.8002:
+	bne	cr7, beq_else.7961
+	b	beq_cont.7962
+beq_else.7961:
 	lwz	r2, 28(r3)
 	lfd	f0, 0(r2)
 	lwz	r2, 24(r3)
@@ -5742,9 +6195,9 @@ beq_else.8002:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8004
-	b	beq_cont.8005
-beq_else.8004:
+	bne	cr7, beq_else.7963
+	b	beq_cont.7964
+beq_else.7963:
 	li	r2, 1
 	lwz	r5, 16(r3)
 	lwz	r6, 0(r3)
@@ -5758,9 +6211,9 @@ beq_else.8004:
 	subi	r3, r3, 40
 	lwz	r31, 36(r3)
 	mtlr	r31
-beq_cont.8005:
-beq_cont.8003:
-beq_cont.8001:
+beq_cont.7964:
+beq_cont.7962:
+beq_cont.7960:
 	lwz	r2, 12(r3)
 	addi	r2, r2, 1
 	lwz	r5, 4(r3)
@@ -5807,10 +6260,10 @@ judge_intersection_fast.2776:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8007
+	bne	cr7, beq_else.7966
 	li	r2, 0
 	blr
-beq_else.8007:
+beq_else.7966:
 	lis	r31, ha16(l.5477)
 	addi	r31, r31, lo16(l.5477)
 	lfd	f1, 0(r31)
@@ -6003,7 +6456,7 @@ get_nvector_second.2782:
 	lwz	r31, 92(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8011
+	bne	cr7, beq_else.7970
 	lwz	r2, 0(r3)
 	lfd	f0, 64(r3)
 	stfd	f0, 0(r2)
@@ -6011,8 +6464,8 @@ get_nvector_second.2782:
 	stfd	f0, 8(r2)
 	lfd	f0, 80(r3)
 	stfd	f0, 16(r2)
-	b	beq_cont.8012
-beq_else.8011:
+	b	beq_cont.7971
+beq_else.7970:
 	lwz	r2, 4(r3)
 	mflr	r31
 	stw	r31, 92(r3)
@@ -6117,7 +6570,7 @@ beq_else.8011:
 	fadd	f0, f1, f0
 	lwz	r2, 0(r3)
 	stfd	f0, 16(r2)
-beq_cont.8012:
+beq_cont.7971:
 	lwz	r5, 4(r3)
 	mflr	r31
 	mr	r2, r5
@@ -6147,21 +6600,21 @@ get_nvector.2784:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.8013
+	bne	cr7, beq_else.7972
 	lwz	r2, 12(r3)
 	lwz	r30, 16(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.8013:
+beq_else.7972:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.8014
+	bne	cr7, beq_else.7973
 	lwz	r2, 4(r3)
 	lwz	r30, 8(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.8014:
+beq_else.7973:
 	lwz	r2, 4(r3)
 	lwz	r30, 0(r3)
 	lwz	r29, 0(r30)
@@ -6215,7 +6668,7 @@ utexture.2787:
 	stfd	f0, 16(r2)
 	lwz	r5, 12(r3)
 	cmpwi	cr7, r5, 1
-	bne	cr7, beq_else.8015
+	bne	cr7, beq_else.7974
 	lwz	r5, 0(r3)
 	lfd	f0, 0(r5)
 	lwz	r6, 8(r3)
@@ -6234,109 +6687,91 @@ utexture.2787:
 	addi	r31, r31, lo16(l.5540)
 	lfd	f1, 0(r31)
 	fmul	f1, f0, f1
-	stfd	f0, 24(r3)
-	mflr	r31
-	fmr	f0, f1
-	stw	r31, 36(r3)
-	addi	r3, r3, 40
-	bl	min_caml_floor
-	subi	r3, r3, 40
-	lwz	r31, 36(r3)
-	mtlr	r31
+	floor	f1, f1
 	lis	r31, ha16(l.5541)
 	addi	r31, r31, lo16(l.5541)
-	lfd	f1, 0(r31)
-	fmul	f0, f0, f1
-	lfd	f1, 24(r3)
-	fsub	f0, f1, f0
+	lfd	f2, 0(r31)
+	fmul	f1, f1, f2
+	fsub	f0, f0, f1
 	lis	r31, ha16(l.5532)
 	addi	r31, r31, lo16(l.5532)
 	lfd	f1, 0(r31)
 	mflr	r31
-	stw	r31, 36(r3)
-	addi	r3, r3, 40
+	stw	r31, 28(r3)
+	addi	r3, r3, 32
 	bl	min_caml_fless
-	subi	r3, r3, 40
-	lwz	r31, 36(r3)
+	subi	r3, r3, 32
+	lwz	r31, 28(r3)
 	mtlr	r31
 	lwz	r5, 0(r3)
 	lfd	f0, 16(r5)
 	lwz	r5, 8(r3)
-	stw	r2, 32(r3)
-	stfd	f0, 40(r3)
+	stw	r2, 24(r3)
+	stfd	f0, 32(r3)
 	mflr	r31
 	mr	r2, r5
-	stw	r31, 52(r3)
-	addi	r3, r3, 56
+	stw	r31, 44(r3)
+	addi	r3, r3, 48
 	bl	o_param_z.2540
-	subi	r3, r3, 56
-	lwz	r31, 52(r3)
+	subi	r3, r3, 48
+	lwz	r31, 44(r3)
 	mtlr	r31
-	lfd	f1, 40(r3)
+	lfd	f1, 32(r3)
 	fsub	f0, f1, f0
 	lis	r31, ha16(l.5540)
 	addi	r31, r31, lo16(l.5540)
 	lfd	f1, 0(r31)
 	fmul	f1, f0, f1
-	stfd	f0, 48(r3)
-	mflr	r31
-	fmr	f0, f1
-	stw	r31, 60(r3)
-	addi	r3, r3, 64
-	bl	min_caml_floor
-	subi	r3, r3, 64
-	lwz	r31, 60(r3)
-	mtlr	r31
+	floor	f1, f1
 	lis	r31, ha16(l.5541)
 	addi	r31, r31, lo16(l.5541)
-	lfd	f1, 0(r31)
-	fmul	f0, f0, f1
-	lfd	f1, 48(r3)
-	fsub	f0, f1, f0
+	lfd	f2, 0(r31)
+	fmul	f1, f1, f2
+	fsub	f0, f0, f1
 	lis	r31, ha16(l.5532)
 	addi	r31, r31, lo16(l.5532)
 	lfd	f1, 0(r31)
 	mflr	r31
-	stw	r31, 60(r3)
-	addi	r3, r3, 64
+	stw	r31, 44(r3)
+	addi	r3, r3, 48
 	bl	min_caml_fless
-	subi	r3, r3, 64
-	lwz	r31, 60(r3)
+	subi	r3, r3, 48
+	lwz	r31, 44(r3)
 	mtlr	r31
-	lwz	r5, 32(r3)
+	lwz	r5, 24(r3)
 	cmpwi	cr7, r5, 0
-	bne	cr7, beq_else.8017
+	bne	cr7, beq_else.7976
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8019
+	bne	cr7, beq_else.7978
 	lis	r31, ha16(l.5527)
 	addi	r31, r31, lo16(l.5527)
 	lfd	f0, 0(r31)
-	b	beq_cont.8020
-beq_else.8019:
+	b	beq_cont.7979
+beq_else.7978:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
-beq_cont.8020:
-	b	beq_cont.8018
-beq_else.8017:
+beq_cont.7979:
+	b	beq_cont.7977
+beq_else.7976:
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8021
+	bne	cr7, beq_else.7980
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
-	b	beq_cont.8022
-beq_else.8021:
+	b	beq_cont.7981
+beq_else.7980:
 	lis	r31, ha16(l.5527)
 	addi	r31, r31, lo16(l.5527)
 	lfd	f0, 0(r31)
-beq_cont.8022:
-beq_cont.8018:
+beq_cont.7981:
+beq_cont.7977:
 	lwz	r2, 4(r3)
 	stfd	f0, 8(r2)
 	blr
-beq_else.8015:
+beq_else.7974:
 	cmpwi	cr7, r5, 2
-	bne	cr7, beq_else.8024
+	bne	cr7, beq_else.7983
 	lwz	r5, 0(r3)
 	lfd	f0, 8(r5)
 	lis	r31, ha16(l.5536)
@@ -6344,18 +6779,18 @@ beq_else.8015:
 	lfd	f1, 0(r31)
 	fmul	f0, f0, f1
 	mflr	r31
-	stw	r31, 60(r3)
-	addi	r3, r3, 64
+	stw	r31, 44(r3)
+	addi	r3, r3, 48
 	bl	min_caml_sin
-	subi	r3, r3, 64
-	lwz	r31, 60(r3)
+	subi	r3, r3, 48
+	lwz	r31, 44(r3)
 	mtlr	r31
 	mflr	r31
-	stw	r31, 60(r3)
-	addi	r3, r3, 64
+	stw	r31, 44(r3)
+	addi	r3, r3, 48
 	bl	min_caml_fsqr
-	subi	r3, r3, 64
-	lwz	r31, 60(r3)
+	subi	r3, r3, 48
+	lwz	r31, 44(r3)
 	mtlr	r31
 	lis	r31, ha16(l.5527)
 	addi	r31, r31, lo16(l.5527)
@@ -6373,97 +6808,83 @@ beq_else.8015:
 	fmul	f0, f1, f0
 	stfd	f0, 8(r2)
 	blr
-beq_else.8024:
+beq_else.7983:
 	cmpwi	cr7, r5, 3
-	bne	cr7, beq_else.8026
+	bne	cr7, beq_else.7985
 	lwz	r5, 0(r3)
 	lfd	f0, 0(r5)
 	lwz	r6, 8(r3)
-	stfd	f0, 56(r3)
+	stfd	f0, 40(r3)
 	mflr	r31
 	mr	r2, r6
+	stw	r31, 52(r3)
+	addi	r3, r3, 56
+	bl	o_param_x.2536
+	subi	r3, r3, 56
+	lwz	r31, 52(r3)
+	mtlr	r31
+	lfd	f1, 40(r3)
+	fsub	f0, f1, f0
+	lwz	r2, 0(r3)
+	lfd	f1, 16(r2)
+	lwz	r2, 8(r3)
+	stfd	f0, 48(r3)
+	stfd	f1, 56(r3)
+	mflr	r31
 	stw	r31, 68(r3)
 	addi	r3, r3, 72
-	bl	o_param_x.2536
+	bl	o_param_z.2540
 	subi	r3, r3, 72
 	lwz	r31, 68(r3)
 	mtlr	r31
 	lfd	f1, 56(r3)
 	fsub	f0, f1, f0
-	lwz	r2, 0(r3)
-	lfd	f1, 16(r2)
-	lwz	r2, 8(r3)
+	lfd	f1, 48(r3)
 	stfd	f0, 64(r3)
-	stfd	f1, 72(r3)
 	mflr	r31
+	fmr	f0, f1
+	stw	r31, 76(r3)
+	addi	r3, r3, 80
+	bl	min_caml_fsqr
+	subi	r3, r3, 80
+	lwz	r31, 76(r3)
+	mtlr	r31
+	lfd	f1, 64(r3)
+	stfd	f0, 72(r3)
+	mflr	r31
+	fmr	f0, f1
 	stw	r31, 84(r3)
 	addi	r3, r3, 88
-	bl	o_param_z.2540
+	bl	min_caml_fsqr
 	subi	r3, r3, 88
 	lwz	r31, 84(r3)
 	mtlr	r31
 	lfd	f1, 72(r3)
-	fsub	f0, f1, f0
-	lfd	f1, 64(r3)
-	stfd	f0, 80(r3)
-	mflr	r31
-	fmr	f0, f1
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
-	bl	min_caml_fsqr
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
-	mtlr	r31
-	lfd	f1, 80(r3)
-	stfd	f0, 88(r3)
-	mflr	r31
-	fmr	f0, f1
-	stw	r31, 100(r3)
-	addi	r3, r3, 104
-	bl	min_caml_fsqr
-	subi	r3, r3, 104
-	lwz	r31, 100(r3)
-	mtlr	r31
-	lfd	f1, 88(r3)
 	fadd	f0, f1, f0
-	mflr	r31
-	stw	r31, 100(r3)
-	addi	r3, r3, 104
-	bl	min_caml_sqrt
-	subi	r3, r3, 104
-	lwz	r31, 100(r3)
-	mtlr	r31
 	lis	r31, ha16(l.5532)
 	addi	r31, r31, lo16(l.5532)
 	lfd	f1, 0(r31)
 	fdiv	f0, f0, f1
-	stfd	f0, 96(r3)
-	mflr	r31
-	stw	r31, 108(r3)
-	addi	r3, r3, 112
-	bl	min_caml_floor
-	subi	r3, r3, 112
-	lwz	r31, 108(r3)
-	mtlr	r31
-	lfd	f1, 96(r3)
-	fsub	f0, f1, f0
+	fsqrt	f0, f0
+	floor	f1, f0
+	fsub	f0, f0, f1
 	lis	r31, ha16(l.5523)
 	addi	r31, r31, lo16(l.5523)
 	lfd	f1, 0(r31)
 	fmul	f0, f0, f1
 	mflr	r31
-	stw	r31, 108(r3)
-	addi	r3, r3, 112
+	stw	r31, 84(r3)
+	addi	r3, r3, 88
 	bl	min_caml_cos
-	subi	r3, r3, 112
-	lwz	r31, 108(r3)
+	subi	r3, r3, 88
+	lwz	r31, 84(r3)
 	mtlr	r31
 	mflr	r31
-	stw	r31, 108(r3)
-	addi	r3, r3, 112
+	stw	r31, 84(r3)
+	addi	r3, r3, 88
 	bl	min_caml_fsqr
-	subi	r3, r3, 112
-	lwz	r31, 108(r3)
+	subi	r3, r3, 88
+	lwz	r31, 84(r3)
 	mtlr	r31
 	lis	r31, ha16(l.5527)
 	addi	r31, r31, lo16(l.5527)
@@ -6481,18 +6902,45 @@ beq_else.8024:
 	fmul	f0, f0, f1
 	stfd	f0, 16(r2)
 	blr
-beq_else.8026:
+beq_else.7985:
 	cmpwi	cr7, r5, 4
-	bne	cr7, beq_else.8028
+	bne	cr7, beq_else.7987
 	lwz	r5, 0(r3)
 	lfd	f0, 0(r5)
 	lwz	r6, 8(r3)
-	stfd	f0, 104(r3)
+	stfd	f0, 80(r3)
 	mflr	r31
 	mr	r2, r6
+	stw	r31, 92(r3)
+	addi	r3, r3, 96
+	bl	o_param_x.2536
+	subi	r3, r3, 96
+	lwz	r31, 92(r3)
+	mtlr	r31
+	lfd	f1, 80(r3)
+	fsub	f0, f1, f0
+	lwz	r2, 8(r3)
+	stfd	f0, 88(r3)
+	mflr	r31
+	stw	r31, 100(r3)
+	addi	r3, r3, 104
+	bl	o_param_a.2528
+	subi	r3, r3, 104
+	lwz	r31, 100(r3)
+	mtlr	r31
+	fsqrt	f0, f0
+	lfd	f1, 88(r3)
+	fmul	f0, f1, f0
+	lwz	r2, 0(r3)
+	lfd	f1, 16(r2)
+	lwz	r5, 8(r3)
+	stfd	f0, 96(r3)
+	stfd	f1, 104(r3)
+	mflr	r31
+	mr	r2, r5
 	stw	r31, 116(r3)
 	addi	r3, r3, 120
-	bl	o_param_x.2536
+	bl	o_param_z.2540
 	subi	r3, r3, 120
 	lwz	r31, 116(r3)
 	mtlr	r31
@@ -6503,207 +6951,154 @@ beq_else.8026:
 	mflr	r31
 	stw	r31, 124(r3)
 	addi	r3, r3, 128
-	bl	o_param_a.2528
+	bl	o_param_c.2532
 	subi	r3, r3, 128
 	lwz	r31, 124(r3)
 	mtlr	r31
-	mflr	r31
-	stw	r31, 124(r3)
-	addi	r3, r3, 128
-	bl	min_caml_sqrt
-	subi	r3, r3, 128
-	lwz	r31, 124(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lfd	f1, 112(r3)
 	fmul	f0, f1, f0
-	lwz	r2, 0(r3)
-	lfd	f1, 16(r2)
-	lwz	r5, 8(r3)
+	lfd	f1, 96(r3)
 	stfd	f0, 120(r3)
-	stfd	f1, 128(r3)
 	mflr	r31
-	mr	r2, r5
+	fmr	f0, f1
+	stw	r31, 132(r3)
+	addi	r3, r3, 136
+	bl	min_caml_fsqr
+	subi	r3, r3, 136
+	lwz	r31, 132(r3)
+	mtlr	r31
+	lfd	f1, 120(r3)
+	stfd	f0, 128(r3)
+	mflr	r31
+	fmr	f0, f1
 	stw	r31, 140(r3)
 	addi	r3, r3, 144
-	bl	o_param_z.2540
+	bl	min_caml_fsqr
 	subi	r3, r3, 144
 	lwz	r31, 140(r3)
 	mtlr	r31
 	lfd	f1, 128(r3)
-	fsub	f0, f1, f0
-	lwz	r2, 8(r3)
+	fadd	f0, f1, f0
+	lfd	f1, 96(r3)
 	stfd	f0, 136(r3)
 	mflr	r31
+	fmr	f0, f1
 	stw	r31, 148(r3)
 	addi	r3, r3, 152
-	bl	o_param_c.2532
+	bl	min_caml_fabs
 	subi	r3, r3, 152
 	lwz	r31, 148(r3)
 	mtlr	r31
+	lis	r31, ha16(l.5520)
+	addi	r31, r31, lo16(l.5520)
+	lfd	f1, 0(r31)
 	mflr	r31
 	stw	r31, 148(r3)
 	addi	r3, r3, 152
-	bl	min_caml_sqrt
+	bl	min_caml_fless
 	subi	r3, r3, 152
 	lwz	r31, 148(r3)
 	mtlr	r31
-	lfd	f1, 136(r3)
-	fmul	f0, f1, f0
+	cmpwi	cr7, r2, 0
+	bne	cr7, beq_else.7988
+	lfd	f0, 96(r3)
 	lfd	f1, 120(r3)
-	stfd	f0, 144(r3)
+	fdiv	f0, f1, f0
 	mflr	r31
-	fmr	f0, f1
-	stw	r31, 156(r3)
-	addi	r3, r3, 160
-	bl	min_caml_fsqr
-	subi	r3, r3, 160
-	lwz	r31, 156(r3)
+	stw	r31, 148(r3)
+	addi	r3, r3, 152
+	bl	min_caml_fabs
+	subi	r3, r3, 152
+	lwz	r31, 148(r3)
 	mtlr	r31
-	lfd	f1, 144(r3)
-	stfd	f0, 152(r3)
 	mflr	r31
-	fmr	f0, f1
+	stw	r31, 148(r3)
+	addi	r3, r3, 152
+	bl	min_caml_atan
+	subi	r3, r3, 152
+	lwz	r31, 148(r3)
+	mtlr	r31
+	lis	r31, ha16(l.5522)
+	addi	r31, r31, lo16(l.5522)
+	lfd	f1, 0(r31)
+	fmul	f0, f0, f1
+	lis	r31, ha16(l.5523)
+	addi	r31, r31, lo16(l.5523)
+	lfd	f1, 0(r31)
+	fdiv	f0, f0, f1
+	b	beq_cont.7989
+beq_else.7988:
+	lis	r31, ha16(l.5521)
+	addi	r31, r31, lo16(l.5521)
+	lfd	f0, 0(r31)
+beq_cont.7989:
+	floor	f1, f0
+	fsub	f0, f0, f1
+	lwz	r2, 0(r3)
+	lfd	f1, 8(r2)
+	lwz	r2, 8(r3)
+	stfd	f0, 144(r3)
+	stfd	f1, 152(r3)
+	mflr	r31
 	stw	r31, 164(r3)
 	addi	r3, r3, 168
-	bl	min_caml_fsqr
+	bl	o_param_y.2538
 	subi	r3, r3, 168
 	lwz	r31, 164(r3)
 	mtlr	r31
 	lfd	f1, 152(r3)
-	fadd	f0, f1, f0
-	lfd	f1, 120(r3)
+	fsub	f0, f1, f0
+	lwz	r2, 8(r3)
 	stfd	f0, 160(r3)
 	mflr	r31
-	fmr	f0, f1
 	stw	r31, 172(r3)
 	addi	r3, r3, 176
-	bl	min_caml_fabs
+	bl	o_param_b.2530
 	subi	r3, r3, 176
 	lwz	r31, 172(r3)
 	mtlr	r31
-	lis	r31, ha16(l.5520)
-	addi	r31, r31, lo16(l.5520)
-	lfd	f1, 0(r31)
-	mflr	r31
-	stw	r31, 172(r3)
-	addi	r3, r3, 176
-	bl	min_caml_fless
-	subi	r3, r3, 176
-	lwz	r31, 172(r3)
-	mtlr	r31
-	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8029
-	lfd	f0, 120(r3)
-	lfd	f1, 144(r3)
-	fdiv	f0, f1, f0
-	mflr	r31
-	stw	r31, 172(r3)
-	addi	r3, r3, 176
-	bl	min_caml_fabs
-	subi	r3, r3, 176
-	lwz	r31, 172(r3)
-	mtlr	r31
-	mflr	r31
-	stw	r31, 172(r3)
-	addi	r3, r3, 176
-	bl	min_caml_atan
-	subi	r3, r3, 176
-	lwz	r31, 172(r3)
-	mtlr	r31
-	lis	r31, ha16(l.5522)
-	addi	r31, r31, lo16(l.5522)
-	lfd	f1, 0(r31)
-	fmul	f0, f0, f1
-	lis	r31, ha16(l.5523)
-	addi	r31, r31, lo16(l.5523)
-	lfd	f1, 0(r31)
-	fdiv	f0, f0, f1
-	b	beq_cont.8030
-beq_else.8029:
-	lis	r31, ha16(l.5521)
-	addi	r31, r31, lo16(l.5521)
-	lfd	f0, 0(r31)
-beq_cont.8030:
+	fsqrt	f0, f0
+	lfd	f1, 160(r3)
+	fmul	f0, f1, f0
+	lfd	f1, 136(r3)
 	stfd	f0, 168(r3)
 	mflr	r31
+	fmr	f0, f1
 	stw	r31, 180(r3)
 	addi	r3, r3, 184
-	bl	min_caml_floor
+	bl	min_caml_fabs
 	subi	r3, r3, 184
 	lwz	r31, 180(r3)
 	mtlr	r31
-	lfd	f1, 168(r3)
-	fsub	f0, f1, f0
-	lwz	r2, 0(r3)
-	lfd	f1, 8(r2)
-	lwz	r2, 8(r3)
-	stfd	f0, 176(r3)
-	stfd	f1, 184(r3)
-	mflr	r31
-	stw	r31, 196(r3)
-	addi	r3, r3, 200
-	bl	o_param_y.2538
-	subi	r3, r3, 200
-	lwz	r31, 196(r3)
-	mtlr	r31
-	lfd	f1, 184(r3)
-	fsub	f0, f1, f0
-	lwz	r2, 8(r3)
-	stfd	f0, 192(r3)
-	mflr	r31
-	stw	r31, 204(r3)
-	addi	r3, r3, 208
-	bl	o_param_b.2530
-	subi	r3, r3, 208
-	lwz	r31, 204(r3)
-	mtlr	r31
-	mflr	r31
-	stw	r31, 204(r3)
-	addi	r3, r3, 208
-	bl	min_caml_sqrt
-	subi	r3, r3, 208
-	lwz	r31, 204(r3)
-	mtlr	r31
-	lfd	f1, 192(r3)
-	fmul	f0, f1, f0
-	lfd	f1, 160(r3)
-	stfd	f0, 200(r3)
-	mflr	r31
-	fmr	f0, f1
-	stw	r31, 212(r3)
-	addi	r3, r3, 216
-	bl	min_caml_fabs
-	subi	r3, r3, 216
-	lwz	r31, 212(r3)
-	mtlr	r31
 	lis	r31, ha16(l.5520)
 	addi	r31, r31, lo16(l.5520)
 	lfd	f1, 0(r31)
 	mflr	r31
-	stw	r31, 212(r3)
-	addi	r3, r3, 216
+	stw	r31, 180(r3)
+	addi	r3, r3, 184
 	bl	min_caml_fless
-	subi	r3, r3, 216
-	lwz	r31, 212(r3)
+	subi	r3, r3, 184
+	lwz	r31, 180(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8031
-	lfd	f0, 160(r3)
-	lfd	f1, 200(r3)
+	bne	cr7, beq_else.7990
+	lfd	f0, 136(r3)
+	lfd	f1, 168(r3)
 	fdiv	f0, f1, f0
 	mflr	r31
-	stw	r31, 212(r3)
-	addi	r3, r3, 216
+	stw	r31, 180(r3)
+	addi	r3, r3, 184
 	bl	min_caml_fabs
-	subi	r3, r3, 216
-	lwz	r31, 212(r3)
+	subi	r3, r3, 184
+	lwz	r31, 180(r3)
 	mtlr	r31
 	mflr	r31
-	stw	r31, 212(r3)
-	addi	r3, r3, 216
+	stw	r31, 180(r3)
+	addi	r3, r3, 184
 	bl	min_caml_atan
-	subi	r3, r3, 216
-	lwz	r31, 212(r3)
+	subi	r3, r3, 184
+	lwz	r31, 180(r3)
 	mtlr	r31
 	lis	r31, ha16(l.5522)
 	addi	r31, r31, lo16(l.5522)
@@ -6713,75 +7108,67 @@ beq_cont.8030:
 	addi	r31, r31, lo16(l.5523)
 	lfd	f1, 0(r31)
 	fdiv	f0, f0, f1
-	b	beq_cont.8032
-beq_else.8031:
+	b	beq_cont.7991
+beq_else.7990:
 	lis	r31, ha16(l.5521)
 	addi	r31, r31, lo16(l.5521)
 	lfd	f0, 0(r31)
-beq_cont.8032:
-	stfd	f0, 208(r3)
-	mflr	r31
-	stw	r31, 220(r3)
-	addi	r3, r3, 224
-	bl	min_caml_floor
-	subi	r3, r3, 224
-	lwz	r31, 220(r3)
-	mtlr	r31
-	lfd	f1, 208(r3)
-	fsub	f0, f1, f0
+beq_cont.7991:
+	floor	f1, f0
+	fsub	f0, f0, f1
 	lis	r31, ha16(l.5525)
 	addi	r31, r31, lo16(l.5525)
 	lfd	f1, 0(r31)
 	lis	r31, ha16(l.5526)
 	addi	r31, r31, lo16(l.5526)
 	lfd	f2, 0(r31)
-	lfd	f3, 176(r3)
+	lfd	f3, 144(r3)
 	fsub	f2, f2, f3
-	stfd	f0, 216(r3)
-	stfd	f1, 224(r3)
+	stfd	f0, 176(r3)
+	stfd	f1, 184(r3)
 	mflr	r31
 	fmr	f0, f2
-	stw	r31, 236(r3)
-	addi	r3, r3, 240
+	stw	r31, 196(r3)
+	addi	r3, r3, 200
 	bl	min_caml_fsqr
-	subi	r3, r3, 240
-	lwz	r31, 236(r3)
+	subi	r3, r3, 200
+	lwz	r31, 196(r3)
 	mtlr	r31
-	lfd	f1, 224(r3)
+	lfd	f1, 184(r3)
 	fsub	f0, f1, f0
 	lis	r31, ha16(l.5526)
 	addi	r31, r31, lo16(l.5526)
 	lfd	f1, 0(r31)
-	lfd	f2, 216(r3)
+	lfd	f2, 176(r3)
 	fsub	f1, f1, f2
-	stfd	f0, 232(r3)
+	stfd	f0, 192(r3)
 	mflr	r31
 	fmr	f0, f1
-	stw	r31, 244(r3)
-	addi	r3, r3, 248
+	stw	r31, 204(r3)
+	addi	r3, r3, 208
 	bl	min_caml_fsqr
-	subi	r3, r3, 248
-	lwz	r31, 244(r3)
+	subi	r3, r3, 208
+	lwz	r31, 204(r3)
 	mtlr	r31
-	lfd	f1, 232(r3)
+	lfd	f1, 192(r3)
 	fsub	f0, f1, f0
-	stfd	f0, 240(r3)
+	stfd	f0, 200(r3)
 	mflr	r31
-	stw	r31, 252(r3)
-	addi	r3, r3, 256
+	stw	r31, 212(r3)
+	addi	r3, r3, 216
 	bl	min_caml_fisneg
-	subi	r3, r3, 256
-	lwz	r31, 252(r3)
+	subi	r3, r3, 216
+	lwz	r31, 212(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8033
-	lfd	f0, 240(r3)
-	b	beq_cont.8034
-beq_else.8033:
+	bne	cr7, beq_else.7992
+	lfd	f0, 200(r3)
+	b	beq_cont.7993
+beq_else.7992:
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
-beq_cont.8034:
+beq_cont.7993:
 	lis	r31, ha16(l.5527)
 	addi	r31, r31, lo16(l.5527)
 	lfd	f1, 0(r31)
@@ -6793,7 +7180,7 @@ beq_cont.8034:
 	lwz	r2, 4(r3)
 	stfd	f0, 16(r2)
 	blr
-beq_else.8028:
+beq_else.7987:
 	blr
 add_light.2790:
 	lwz	r2, 8(r30)
@@ -6811,9 +7198,9 @@ add_light.2790:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8037
-	b	beq_cont.8038
-beq_else.8037:
+	bne	cr7, beq_else.7996
+	b	beq_cont.7997
+beq_else.7996:
 	lfd	f0, 16(r3)
 	lwz	r2, 28(r3)
 	lwz	r5, 24(r3)
@@ -6824,7 +7211,7 @@ beq_else.8037:
 	subi	r3, r3, 40
 	lwz	r31, 36(r3)
 	mtlr	r31
-beq_cont.8038:
+beq_cont.7997:
 	lfd	f0, 8(r3)
 	mflr	r31
 	stw	r31, 36(r3)
@@ -6834,9 +7221,9 @@ beq_cont.8038:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8039
+	bne	cr7, beq_else.7998
 	blr
-beq_else.8039:
+beq_else.7998:
 	lfd	f0, 8(r3)
 	mflr	r31
 	stw	r31, 36(r3)
@@ -6875,7 +7262,7 @@ trace_reflections.2794:
 	lwz	r12, 8(r30)
 	lwz	r13, 4(r30)
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8042
+	blt	cr7, bge_else.8001
 	slwi	r14, r2, 2
 	lwzx	r7, r7, r14
 	stw	r30, 0(r3)
@@ -6911,9 +7298,9 @@ trace_reflections.2794:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8043
-	b	beq_cont.8044
-beq_else.8043:
+	bne	cr7, beq_else.8002
+	b	beq_cont.8003
+beq_else.8002:
 	lwz	r2, 52(r3)
 	lwz	r2, 0(r2)
 	li	r5, 4
@@ -6933,7 +7320,7 @@ beq_else.8043:
 	mtlr	r31
 	lwz	r5, 64(r3)
 	cmpw	cr7, r5, r2
-	bne	cr7, beq_else.8045
+	bne	cr7, beq_else.8004
 	li	r2, 0
 	lwz	r5, 40(r3)
 	lwz	r5, 0(r5)
@@ -6948,7 +7335,7 @@ beq_else.8043:
 	lwz	r31, 68(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8047
+	bne	cr7, beq_else.8006
 	lwz	r2, 60(r3)
 	mflr	r31
 	stw	r31, 68(r3)
@@ -7012,13 +7399,13 @@ beq_else.8043:
 	subi	r3, r3, 104
 	lwz	r31, 100(r3)
 	mtlr	r31
-	b	beq_cont.8048
-beq_else.8047:
-beq_cont.8048:
-	b	beq_cont.8046
-beq_else.8045:
-beq_cont.8046:
-beq_cont.8044:
+	b	beq_cont.8007
+beq_else.8006:
+beq_cont.8007:
+	b	beq_cont.8005
+beq_else.8004:
+beq_cont.8005:
+beq_cont.8003:
 	lwz	r2, 4(r3)
 	subi	r2, r2, 1
 	lfd	f0, 24(r3)
@@ -7028,7 +7415,7 @@ beq_cont.8044:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8042:
+bge_else.8001:
 	blr
 trace_ray.2799:
 	lwz	r7, 80(r30)
@@ -7052,7 +7439,7 @@ trace_ray.2799:
 	lwz	r25, 8(r30)
 	lwz	r26, 4(r30)
 	cmpwi	cr7, r2, 4
-	bgt	cr7, ble_else.8051
+	bgt	cr7, ble_else.8010
 	stw	r30, 0(r3)
 	stfd	f1, 8(r3)
 	stw	r9, 16(r3)
@@ -7101,16 +7488,16 @@ trace_ray.2799:
 	lwz	r31, 124(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8054
+	bne	cr7, beq_else.8013
 	li	r2, -1
 	lwz	r5, 108(r3)
 	slwi	r6, r5, 2
 	lwz	r7, 120(r3)
 	stwx	r2, r7, r6
 	cmpwi	cr7, r5, 0
-	bne	cr7, beq_else.8055
+	bne	cr7, beq_else.8014
 	blr
-beq_else.8055:
+beq_else.8014:
 	lwz	r2, 112(r3)
 	lwz	r5, 104(r3)
 	mflr	r31
@@ -7136,9 +7523,9 @@ beq_else.8055:
 	lwz	r31, 140(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8058
+	bne	cr7, beq_else.8017
 	blr
-beq_else.8058:
+beq_else.8017:
 	lfd	f0, 128(r3)
 	mflr	r31
 	stw	r31, 140(r3)
@@ -7165,7 +7552,7 @@ beq_else.8058:
 	fadd	f0, f1, f0
 	stfd	f0, 16(r2)
 	blr
-beq_else.8054:
+beq_else.8013:
 	lwz	r2, 80(r3)
 	lwz	r2, 0(r2)
 	slwi	r5, r2, 2
@@ -7286,7 +7673,7 @@ beq_else.8054:
 	lwz	r31, 164(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8062
+	bne	cr7, beq_else.8021
 	li	r2, 1
 	lwz	r5, 108(r3)
 	slwi	r6, r5, 2
@@ -7351,14 +7738,14 @@ beq_else.8054:
 	subi	r3, r3, 176
 	lwz	r31, 172(r3)
 	mtlr	r31
-	b	beq_cont.8063
-beq_else.8062:
+	b	beq_cont.8022
+beq_else.8021:
 	li	r2, 0
 	lwz	r5, 108(r3)
 	slwi	r6, r5, 2
 	lwz	r7, 160(r3)
 	stwx	r2, r7, r6
-beq_cont.8063:
+beq_cont.8022:
 	lis	r31, ha16(l.5565)
 	addi	r31, r31, lo16(l.5565)
 	lfd	f0, 0(r31)
@@ -7408,7 +7795,7 @@ beq_cont.8063:
 	lwz	r31, 188(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8064
+	bne	cr7, beq_else.8023
 	lwz	r2, 44(r3)
 	lwz	r5, 104(r3)
 	mflr	r31
@@ -7457,9 +7844,9 @@ beq_cont.8063:
 	subi	r3, r3, 200
 	lwz	r31, 196(r3)
 	mtlr	r31
-	b	beq_cont.8065
-beq_else.8064:
-beq_cont.8065:
+	b	beq_cont.8024
+beq_else.8023:
+beq_cont.8024:
 	lwz	r2, 64(r3)
 	lwz	r30, 28(r3)
 	mflr	r31
@@ -7499,23 +7886,23 @@ beq_cont.8065:
 	lwz	r31, 196(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8066
+	bne	cr7, beq_else.8025
 	blr
-beq_else.8066:
+beq_else.8025:
 	lwz	r2, 108(r3)
 	cmpwi	cr7, r2, 4
-	blt	cr7, bge_else.8068
-	b	bge_cont.8069
-bge_else.8068:
+	blt	cr7, bge_else.8027
+	b	bge_cont.8028
+bge_else.8027:
 	addi	r5, r2, 1
 	li	r6, -1
 	slwi	r5, r5, 2
 	lwz	r7, 120(r3)
 	stwx	r6, r7, r5
-bge_cont.8069:
+bge_cont.8028:
 	lwz	r5, 144(r3)
 	cmpwi	cr7, r5, 2
-	bne	cr7, beq_else.8070
+	bne	cr7, beq_else.8029
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
@@ -7545,9 +7932,9 @@ bge_cont.8069:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.8070:
+beq_else.8029:
 	blr
-ble_else.8051:
+ble_else.8010:
 	blr
 trace_diffuse_ray.2805:
 	lwz	r5, 48(r30)
@@ -7586,9 +7973,9 @@ trace_diffuse_ray.2805:
 	lwz	r31, 60(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8073
+	bne	cr7, beq_else.8032
 	blr
-beq_else.8073:
+beq_else.8032:
 	lwz	r2, 52(r3)
 	lwz	r2, 0(r2)
 	slwi	r2, r2, 2
@@ -7642,7 +8029,7 @@ beq_else.8073:
 	lwz	r31, 60(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8075
+	bne	cr7, beq_else.8034
 	lwz	r2, 20(r3)
 	lwz	r5, 16(r3)
 	mflr	r31
@@ -7668,14 +8055,14 @@ beq_else.8073:
 	lwz	r31, 76(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8077
+	bne	cr7, beq_else.8036
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
-	b	beq_cont.8078
-beq_else.8077:
+	b	beq_cont.8037
+beq_else.8036:
 	lfd	f0, 64(r3)
-beq_cont.8078:
+beq_cont.8037:
 	lfd	f1, 8(r3)
 	fmul	f0, f1, f0
 	lwz	r2, 56(r3)
@@ -7692,12 +8079,12 @@ beq_cont.8078:
 	lwz	r2, 4(r3)
 	lwz	r5, 0(r3)
 	b	vecaccum.2501
-beq_else.8075:
+beq_else.8034:
 	blr
 iter_trace_diffuse_rays.2808:
 	lwz	r8, 4(r30)
 	cmpwi	cr7, r7, 0
-	blt	cr7, bge_else.8080
+	blt	cr7, bge_else.8039
 	slwi	r9, r7, 2
 	lwzx	r9, r2, r9
 	stw	r6, 0(r3)
@@ -7731,7 +8118,7 @@ iter_trace_diffuse_rays.2808:
 	lwz	r31, 36(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8081
+	bne	cr7, beq_else.8040
 	lwz	r2, 16(r3)
 	slwi	r5, r2, 2
 	lwz	r6, 12(r3)
@@ -7752,8 +8139,8 @@ iter_trace_diffuse_rays.2808:
 	subi	r3, r3, 40
 	lwz	r31, 36(r3)
 	mtlr	r31
-	b	beq_cont.8082
-beq_else.8081:
+	b	beq_cont.8041
+beq_else.8040:
 	lwz	r2, 16(r3)
 	addi	r5, r2, 1
 	slwi	r5, r5, 2
@@ -7775,7 +8162,7 @@ beq_else.8081:
 	subi	r3, r3, 40
 	lwz	r31, 36(r3)
 	mtlr	r31
-beq_cont.8082:
+beq_cont.8041:
 	lwz	r2, 16(r3)
 	subi	r7, r2, 2
 	lwz	r2, 12(r3)
@@ -7785,7 +8172,7 @@ beq_cont.8082:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8080:
+bge_else.8039:
 	blr
 trace_diffuse_rays.2813:
 	lwz	r7, 8(r30)
@@ -7822,9 +8209,9 @@ trace_diffuse_ray_80percent.2817:
 	stw	r8, 12(r3)
 	stw	r2, 16(r3)
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8084
-	b	beq_cont.8085
-beq_else.8084:
+	bne	cr7, beq_else.8043
+	b	beq_cont.8044
+beq_else.8043:
 	lwz	r9, 0(r8)
 	mflr	r31
 	mr	r2, r9
@@ -7837,12 +8224,12 @@ beq_else.8084:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-beq_cont.8085:
+beq_cont.8044:
 	lwz	r2, 16(r3)
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.8086
-	b	beq_cont.8087
-beq_else.8086:
+	bne	cr7, beq_else.8045
+	b	beq_cont.8046
+beq_else.8045:
 	lwz	r5, 12(r3)
 	lwz	r6, 4(r5)
 	lwz	r7, 4(r3)
@@ -7860,12 +8247,12 @@ beq_else.8086:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-beq_cont.8087:
+beq_cont.8046:
 	lwz	r2, 16(r3)
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.8088
-	b	beq_cont.8089
-beq_else.8088:
+	bne	cr7, beq_else.8047
+	b	beq_cont.8048
+beq_else.8047:
 	lwz	r5, 12(r3)
 	lwz	r6, 8(r5)
 	lwz	r7, 4(r3)
@@ -7883,12 +8270,12 @@ beq_else.8088:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-beq_cont.8089:
+beq_cont.8048:
 	lwz	r2, 16(r3)
 	cmpwi	cr7, r2, 3
-	bne	cr7, beq_else.8090
-	b	beq_cont.8091
-beq_else.8090:
+	bne	cr7, beq_else.8049
+	b	beq_cont.8050
+beq_else.8049:
 	lwz	r5, 12(r3)
 	lwz	r6, 12(r5)
 	lwz	r7, 4(r3)
@@ -7906,12 +8293,12 @@ beq_else.8090:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-beq_cont.8091:
+beq_cont.8050:
 	lwz	r2, 16(r3)
 	cmpwi	cr7, r2, 4
-	bne	cr7, beq_else.8092
+	bne	cr7, beq_else.8051
 	blr
-beq_else.8092:
+beq_else.8051:
 	lwz	r2, 12(r3)
 	lwz	r2, 16(r2)
 	lwz	r5, 4(r3)
@@ -8175,7 +8562,7 @@ calc_diffuse_using_5points.2824:
 do_without_neighbors.2830:
 	lwz	r6, 4(r30)
 	cmpwi	cr7, r5, 4
-	bgt	cr7, ble_else.8094
+	bgt	cr7, ble_else.8053
 	stw	r30, 0(r3)
 	stw	r6, 4(r3)
 	stw	r2, 8(r3)
@@ -8191,7 +8578,7 @@ do_without_neighbors.2830:
 	slwi	r6, r5, 2
 	lwzx	r2, r2, r6
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8095
+	blt	cr7, bge_else.8054
 	lwz	r2, 8(r3)
 	mflr	r31
 	stw	r31, 20(r3)
@@ -8204,9 +8591,9 @@ do_without_neighbors.2830:
 	slwi	r6, r5, 2
 	lwzx	r2, r2, r6
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8096
-	b	beq_cont.8097
-beq_else.8096:
+	bne	cr7, beq_else.8055
+	b	beq_cont.8056
+beq_else.8055:
 	lwz	r2, 8(r3)
 	lwz	r30, 4(r3)
 	mflr	r31
@@ -8218,7 +8605,7 @@ beq_else.8096:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-beq_cont.8097:
+beq_cont.8056:
 	lwz	r2, 12(r3)
 	addi	r5, r2, 1
 	lwz	r2, 8(r3)
@@ -8226,36 +8613,36 @@ beq_cont.8097:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8095:
+bge_else.8054:
 	blr
-ble_else.8094:
+ble_else.8053:
 	blr
 neighbors_exist.2833:
 	lwz	r6, 4(r30)
 	lwz	r7, 4(r6)
 	addi	r8, r5, 1
 	cmpw	cr7, r7, r8
-	bgt	cr7, ble_else.8100
+	bgt	cr7, ble_else.8059
 	li	r2, 0
 	blr
-ble_else.8100:
+ble_else.8059:
 	cmpwi	cr7, r5, 0
-	bgt	cr7, ble_else.8101
+	bgt	cr7, ble_else.8060
 	li	r2, 0
 	blr
-ble_else.8101:
+ble_else.8060:
 	lwz	r5, 0(r6)
 	addi	r6, r2, 1
 	cmpw	cr7, r5, r6
-	bgt	cr7, ble_else.8102
+	bgt	cr7, ble_else.8061
 	li	r2, 0
 	blr
-ble_else.8102:
+ble_else.8061:
 	cmpwi	cr7, r2, 0
-	bgt	cr7, ble_else.8103
+	bgt	cr7, ble_else.8062
 	li	r2, 0
 	blr
-ble_else.8103:
+ble_else.8062:
 	li	r2, 1
 	blr
 get_surface_id.2837:
@@ -8305,7 +8692,7 @@ neighbors_are_available.2840:
 	mtlr	r31
 	lwz	r5, 20(r3)
 	cmpw	cr7, r2, r5
-	bne	cr7, beq_else.8104
+	bne	cr7, beq_else.8063
 	lwz	r2, 16(r3)
 	slwi	r6, r2, 2
 	lwz	r7, 4(r3)
@@ -8322,7 +8709,7 @@ neighbors_are_available.2840:
 	mtlr	r31
 	lwz	r5, 20(r3)
 	cmpw	cr7, r2, r5
-	bne	cr7, beq_else.8105
+	bne	cr7, beq_else.8064
 	lwz	r2, 16(r3)
 	subi	r6, r2, 1
 	slwi	r6, r6, 2
@@ -8340,7 +8727,7 @@ neighbors_are_available.2840:
 	mtlr	r31
 	lwz	r5, 20(r3)
 	cmpw	cr7, r2, r5
-	bne	cr7, beq_else.8106
+	bne	cr7, beq_else.8065
 	lwz	r2, 16(r3)
 	addi	r2, r2, 1
 	slwi	r2, r2, 2
@@ -8357,19 +8744,19 @@ neighbors_are_available.2840:
 	mtlr	r31
 	lwz	r5, 20(r3)
 	cmpw	cr7, r2, r5
-	bne	cr7, beq_else.8107
+	bne	cr7, beq_else.8066
 	li	r2, 1
 	blr
-beq_else.8107:
+beq_else.8066:
 	li	r2, 0
 	blr
-beq_else.8106:
+beq_else.8065:
 	li	r2, 0
 	blr
-beq_else.8105:
+beq_else.8064:
 	li	r2, 0
 	blr
-beq_else.8104:
+beq_else.8063:
 	li	r2, 0
 	blr
 try_exploit_neighbors.2846:
@@ -8378,7 +8765,7 @@ try_exploit_neighbors.2846:
 	slwi	r12, r2, 2
 	lwzx	r12, r7, r12
 	cmpwi	cr7, r9, 4
-	bgt	cr7, ble_else.8108
+	bgt	cr7, ble_else.8067
 	stw	r5, 0(r3)
 	stw	r30, 4(r3)
 	stw	r11, 8(r3)
@@ -8399,7 +8786,7 @@ try_exploit_neighbors.2846:
 	lwz	r31, 44(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8109
+	blt	cr7, bge_else.8068
 	lwz	r2, 36(r3)
 	lwz	r5, 32(r3)
 	lwz	r6, 28(r3)
@@ -8413,7 +8800,7 @@ try_exploit_neighbors.2846:
 	lwz	r31, 44(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8110
+	bne	cr7, beq_else.8069
 	lwz	r2, 36(r3)
 	slwi	r2, r2, 2
 	lwz	r5, 28(r3)
@@ -8423,7 +8810,7 @@ try_exploit_neighbors.2846:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.8110:
+beq_else.8069:
 	lwz	r2, 12(r3)
 	mflr	r31
 	stw	r31, 44(r3)
@@ -8436,9 +8823,9 @@ beq_else.8110:
 	slwi	r5, r8, 2
 	lwzx	r2, r2, r5
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8111
-	b	beq_cont.8112
-beq_else.8111:
+	bne	cr7, beq_else.8070
+	b	beq_cont.8071
+beq_else.8070:
 	lwz	r2, 36(r3)
 	lwz	r5, 32(r3)
 	lwz	r6, 28(r3)
@@ -8453,7 +8840,7 @@ beq_else.8111:
 	subi	r3, r3, 48
 	lwz	r31, 44(r3)
 	mtlr	r31
-beq_cont.8112:
+beq_cont.8071:
 	lwz	r2, 20(r3)
 	addi	r9, r2, 1
 	lwz	r2, 36(r3)
@@ -8465,9 +8852,9 @@ beq_cont.8112:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8109:
+bge_else.8068:
 	blr
-ble_else.8108:
+ble_else.8067:
 	blr
 write_ppm_header.2853:
 	lwz	r2, 4(r30)
@@ -8543,25 +8930,19 @@ write_ppm_header.2853:
 	li	r2, 10
 	b	min_caml_print_char
 write_rgb_element.2855:
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_int_of_float
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
+	ftoi	r2, f0
 	cmpwi	cr7, r2, 255
-	bgt	cr7, ble_else.8115
+	bgt	cr7, ble_else.8074
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8117
-	b	bge_cont.8118
-bge_else.8117:
+	blt	cr7, bge_else.8076
+	b	bge_cont.8077
+bge_else.8076:
 	li	r2, 0
-bge_cont.8118:
-	b	ble_cont.8116
-ble_else.8115:
+bge_cont.8077:
+	b	ble_cont.8075
+ble_else.8074:
 	li	r2, 255
-ble_cont.8116:
+ble_cont.8075:
 	b	min_caml_print_int
 write_rgb.2857:
 	lwz	r2, 4(r30)
@@ -8615,7 +8996,7 @@ pretrace_diffuse_rays.2859:
 	lwz	r7, 8(r30)
 	lwz	r8, 4(r30)
 	cmpwi	cr7, r5, 4
-	bgt	cr7, ble_else.8119
+	bgt	cr7, ble_else.8078
 	stw	r30, 0(r3)
 	stw	r6, 4(r3)
 	stw	r7, 8(r3)
@@ -8630,7 +9011,7 @@ pretrace_diffuse_rays.2859:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8120
+	blt	cr7, bge_else.8079
 	lwz	r2, 20(r3)
 	mflr	r31
 	stw	r31, 28(r3)
@@ -8643,9 +9024,9 @@ pretrace_diffuse_rays.2859:
 	slwi	r6, r5, 2
 	lwzx	r2, r2, r6
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8121
-	b	beq_cont.8122
-beq_else.8121:
+	bne	cr7, beq_else.8080
+	b	beq_cont.8081
+beq_else.8080:
 	lwz	r2, 20(r3)
 	mflr	r31
 	stw	r31, 28(r3)
@@ -8725,7 +9106,7 @@ beq_else.8121:
 	subi	r3, r3, 40
 	lwz	r31, 36(r3)
 	mtlr	r31
-beq_cont.8122:
+beq_cont.8081:
 	lwz	r2, 16(r3)
 	addi	r5, r2, 1
 	lwz	r2, 20(r3)
@@ -8733,9 +9114,9 @@ beq_cont.8122:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8120:
+bge_else.8079:
 	blr
-ble_else.8119:
+ble_else.8078:
 	blr
 pretrace_pixels.2862:
 	lwz	r7, 36(r30)
@@ -8748,178 +9129,162 @@ pretrace_pixels.2862:
 	lwz	r14, 8(r30)
 	lwz	r15, 4(r30)
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else.8125
+	blt	cr7, bge_else.8084
 	lfd	f3, 0(r11)
 	lwz	r11, 0(r15)
 	sub	r11, r5, r11
-	stw	r30, 0(r3)
-	stw	r14, 4(r3)
-	stw	r6, 8(r3)
-	stw	r8, 12(r3)
-	stw	r2, 16(r3)
-	stw	r5, 20(r3)
-	stw	r7, 24(r3)
-	stw	r9, 28(r3)
-	stw	r12, 32(r3)
-	stfd	f2, 40(r3)
-	stfd	f1, 48(r3)
-	stw	r13, 56(r3)
-	stfd	f0, 64(r3)
-	stw	r10, 72(r3)
-	stfd	f3, 80(r3)
+	itof	f4, r11
+	fmul	f3, f3, f4
+	lfd	f4, 0(r10)
+	fmul	f4, f3, f4
+	fadd	f4, f4, f0
+	stfd	f4, 0(r13)
+	lfd	f4, 8(r10)
+	fmul	f4, f3, f4
+	fadd	f4, f4, f1
+	stfd	f4, 8(r13)
+	lfd	f4, 16(r10)
+	fmul	f3, f3, f4
+	fadd	f3, f3, f2
+	stfd	f3, 16(r13)
+	li	r10, 0
+	stfd	f2, 0(r3)
+	stfd	f1, 8(r3)
+	stfd	f0, 16(r3)
+	stw	r30, 24(r3)
+	stw	r14, 28(r3)
+	stw	r6, 32(r3)
+	stw	r13, 36(r3)
+	stw	r8, 40(r3)
+	stw	r2, 44(r3)
+	stw	r5, 48(r3)
+	stw	r7, 52(r3)
+	stw	r9, 56(r3)
+	stw	r12, 60(r3)
 	mflr	r31
-	mr	r2, r11
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
-	bl	min_caml_float_of_int
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
-	mtlr	r31
-	lfd	f1, 80(r3)
-	fmul	f0, f1, f0
-	lwz	r2, 72(r3)
-	lfd	f1, 0(r2)
-	fmul	f1, f0, f1
-	lfd	f2, 64(r3)
-	fadd	f1, f1, f2
-	lwz	r5, 56(r3)
-	stfd	f1, 0(r5)
-	lfd	f1, 8(r2)
-	fmul	f1, f0, f1
-	lfd	f3, 48(r3)
-	fadd	f1, f1, f3
-	stfd	f1, 8(r5)
-	lfd	f1, 16(r2)
-	fmul	f0, f0, f1
-	lfd	f1, 40(r3)
-	fadd	f0, f0, f1
-	stfd	f0, 16(r5)
-	li	r2, 0
-	mflr	r31
-	mr	r29, r5
-	mr	r5, r2
-	mr	r2, r29
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	mr	r5, r10
+	mr	r2, r13
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	bl	vecunit_sgn.2490
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
-	lwz	r2, 32(r3)
+	lwz	r2, 60(r3)
 	mflr	r31
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	bl	vecbzero.2480
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
-	lwz	r2, 28(r3)
-	lwz	r5, 24(r3)
+	lwz	r2, 56(r3)
+	lwz	r5, 52(r3)
 	mflr	r31
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	bl	veccpy.2482
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
 	li	r2, 0
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
 	lfd	f0, 0(r31)
-	lwz	r5, 20(r3)
+	lwz	r5, 48(r3)
 	slwi	r6, r5, 2
-	lwz	r7, 16(r3)
+	lwz	r7, 44(r3)
 	lwzx	r6, r7, r6
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f1, 0(r31)
-	lwz	r8, 56(r3)
-	lwz	r30, 12(r3)
+	lwz	r8, 36(r3)
+	lwz	r30, 40(r3)
 	mflr	r31
 	mr	r5, r8
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
-	lwz	r2, 20(r3)
+	lwz	r2, 48(r3)
 	slwi	r5, r2, 2
-	lwz	r6, 16(r3)
+	lwz	r6, 44(r3)
 	lwzx	r5, r6, r5
 	mflr	r31
 	mr	r2, r5
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	bl	p_rgb.2560
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
-	lwz	r5, 32(r3)
+	lwz	r5, 60(r3)
 	mflr	r31
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	bl	veccpy.2482
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
-	lwz	r2, 20(r3)
+	lwz	r2, 48(r3)
 	slwi	r5, r2, 2
-	lwz	r6, 16(r3)
+	lwz	r6, 44(r3)
 	lwzx	r5, r6, r5
-	lwz	r7, 8(r3)
+	lwz	r7, 32(r3)
 	mflr	r31
 	mr	r2, r5
 	mr	r5, r7
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	bl	p_set_group_id.2574
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
-	lwz	r2, 20(r3)
+	lwz	r2, 48(r3)
 	slwi	r5, r2, 2
-	lwz	r6, 16(r3)
+	lwz	r6, 44(r3)
 	lwzx	r5, r6, r5
 	li	r7, 0
-	lwz	r30, 4(r3)
+	lwz	r30, 28(r3)
 	mflr	r31
 	mr	r2, r5
 	mr	r5, r7
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mtlr	r31
-	lwz	r2, 20(r3)
+	lwz	r2, 48(r3)
 	subi	r2, r2, 1
 	li	r5, 1
-	lwz	r6, 8(r3)
-	stw	r2, 88(r3)
+	lwz	r6, 32(r3)
+	stw	r2, 64(r3)
 	mflr	r31
 	mr	r2, r6
-	stw	r31, 92(r3)
-	addi	r3, r3, 96
+	stw	r31, 68(r3)
+	addi	r3, r3, 72
 	bl	add_mod5.2469
-	subi	r3, r3, 96
-	lwz	r31, 92(r3)
+	subi	r3, r3, 72
+	lwz	r31, 68(r3)
 	mr	r6, r2
 	mtlr	r31
-	lfd	f0, 64(r3)
-	lfd	f1, 48(r3)
-	lfd	f2, 40(r3)
-	lwz	r2, 16(r3)
-	lwz	r5, 88(r3)
-	lwz	r30, 0(r3)
+	lfd	f0, 16(r3)
+	lfd	f1, 8(r3)
+	lfd	f2, 0(r3)
+	lwz	r2, 44(r3)
+	lwz	r5, 64(r3)
+	lwz	r30, 24(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8125:
+bge_else.8084:
 	blr
 pretrace_line.2869:
 	lwz	r7, 24(r30)
@@ -8931,43 +9296,23 @@ pretrace_line.2869:
 	lfd	f0, 0(r9)
 	lwz	r9, 4(r12)
 	sub	r5, r5, r9
-	stw	r6, 0(r3)
-	stw	r2, 4(r3)
-	stw	r10, 8(r3)
-	stw	r11, 12(r3)
-	stw	r7, 16(r3)
-	stw	r8, 20(r3)
-	stfd	f0, 24(r3)
-	mflr	r31
-	mr	r2, r5
-	stw	r31, 36(r3)
-	addi	r3, r3, 40
-	bl	min_caml_float_of_int
-	subi	r3, r3, 40
-	lwz	r31, 36(r3)
-	mtlr	r31
-	lfd	f1, 24(r3)
-	fmul	f0, f1, f0
-	lwz	r2, 20(r3)
-	lfd	f1, 0(r2)
+	itof	f1, r5
+	fmul	f0, f0, f1
+	lfd	f1, 0(r8)
 	fmul	f1, f0, f1
-	lwz	r5, 16(r3)
-	lfd	f2, 0(r5)
+	lfd	f2, 0(r7)
 	fadd	f1, f1, f2
-	lfd	f2, 8(r2)
+	lfd	f2, 8(r8)
 	fmul	f2, f0, f2
-	lfd	f3, 8(r5)
+	lfd	f3, 8(r7)
 	fadd	f2, f2, f3
-	lfd	f3, 16(r2)
+	lfd	f3, 16(r8)
 	fmul	f0, f0, f3
-	lfd	f3, 16(r5)
+	lfd	f3, 16(r7)
 	fadd	f0, f0, f3
-	lwz	r2, 12(r3)
-	lwz	r2, 0(r2)
-	subi	r5, r2, 1
-	lwz	r2, 4(r3)
-	lwz	r6, 0(r3)
-	lwz	r30, 8(r3)
+	lwz	r5, 0(r11)
+	subi	r5, r5, 1
+	mr	r30, r10
 	fmr	f31, f2
 	fmr	f2, f0
 	fmr	f0, f1
@@ -8984,9 +9329,9 @@ scan_pixel.2873:
 	lwz	r14, 4(r30)
 	lwz	r13, 0(r13)
 	cmpw	cr7, r13, r2
-	bgt	cr7, ble_else.8130
+	bgt	cr7, ble_else.8086
 	blr
-ble_else.8130:
+ble_else.8086:
 	slwi	r13, r2, 2
 	lwzx	r13, r7, r13
 	stw	r30, 0(r3)
@@ -9031,7 +9376,7 @@ ble_else.8130:
 	lwz	r31, 44(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8132
+	bne	cr7, beq_else.8088
 	lwz	r2, 32(r3)
 	slwi	r5, r2, 2
 	lwz	r6, 20(r3)
@@ -9049,8 +9394,8 @@ ble_else.8130:
 	subi	r3, r3, 48
 	lwz	r31, 44(r3)
 	mtlr	r31
-	b	beq_cont.8133
-beq_else.8132:
+	b	beq_cont.8089
+beq_else.8088:
 	li	r9, 0
 	lwz	r2, 32(r3)
 	lwz	r5, 28(r3)
@@ -9067,7 +9412,7 @@ beq_else.8132:
 	subi	r3, r3, 48
 	lwz	r31, 44(r3)
 	mtlr	r31
-beq_cont.8133:
+beq_cont.8089:
 	lwz	r30, 4(r3)
 	mflr	r31
 	stw	r31, 44(r3)
@@ -9094,9 +9439,9 @@ scan_line.2879:
 	lwz	r11, 4(r30)
 	lwz	r12, 4(r11)
 	cmpw	cr7, r12, r2
-	bgt	cr7, ble_else.8134
+	bgt	cr7, ble_else.8090
 	blr
-ble_else.8134:
+ble_else.8090:
 	lwz	r11, 4(r11)
 	subi	r11, r11, 1
 	stw	r30, 0(r3)
@@ -9107,9 +9452,9 @@ ble_else.8134:
 	stw	r2, 20(r3)
 	stw	r9, 24(r3)
 	cmpw	cr7, r11, r2
-	bgt	cr7, ble_else.8136
-	b	ble_cont.8137
-ble_else.8136:
+	bgt	cr7, ble_else.8092
+	b	ble_cont.8093
+ble_else.8092:
 	addi	r11, r2, 1
 	mflr	r31
 	mr	r6, r8
@@ -9124,7 +9469,7 @@ ble_else.8136:
 	subi	r3, r3, 32
 	lwz	r31, 28(r3)
 	mtlr	r31
-ble_cont.8137:
+ble_cont.8093:
 	li	r2, 0
 	lwz	r5, 20(r3)
 	lwz	r6, 16(r3)
@@ -9340,7 +9685,7 @@ create_pixel.2887:
 	blr
 init_line_elements.2889:
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else.8138
+	blt	cr7, bge_else.8094
 	stw	r2, 0(r3)
 	stw	r5, 4(r3)
 	mflr	r31
@@ -9357,7 +9702,7 @@ init_line_elements.2889:
 	subi	r5, r5, 1
 	mr	r2, r7
 	b	init_line_elements.2889
-bge_else.8138:
+bge_else.8094:
 	blr
 create_pixelline.2892:
 	lwz	r2, 4(r30)
@@ -9412,28 +9757,22 @@ adjust_position.2896:
 	addi	r31, r31, lo16(l.5568)
 	lfd	f2, 0(r31)
 	fadd	f0, f0, f2
-	stfd	f1, 0(r3)
-	mflr	r31
-	stw	r31, 12(r3)
-	addi	r3, r3, 16
-	bl	min_caml_sqrt
-	subi	r3, r3, 16
-	lwz	r31, 12(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lis	r31, ha16(l.5124)
 	addi	r31, r31, lo16(l.5124)
-	lfd	f1, 0(r31)
-	fdiv	f1, f1, f0
-	stfd	f0, 8(r3)
+	lfd	f2, 0(r31)
+	fdiv	f2, f2, f0
+	stfd	f0, 0(r3)
+	stfd	f1, 8(r3)
 	mflr	r31
-	fmr	f0, f1
+	fmr	f0, f2
 	stw	r31, 20(r3)
 	addi	r3, r3, 24
 	bl	min_caml_atan
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-	lfd	f1, 0(r3)
+	lfd	f1, 8(r3)
 	fmul	f0, f0, f1
 	mflr	r31
 	stw	r31, 20(r3)
@@ -9442,13 +9781,13 @@ adjust_position.2896:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-	lfd	f1, 8(r3)
+	lfd	f1, 0(r3)
 	fmul	f0, f0, f1
 	blr
 calc_dirvec.2899:
 	lwz	r7, 4(r30)
 	cmpwi	cr7, r2, 5
-	blt	cr7, bge_else.8139
+	blt	cr7, bge_else.8095
 	stw	r6, 0(r3)
 	stw	r7, 4(r3)
 	stw	r5, 8(r3)
@@ -9477,13 +9816,7 @@ calc_dirvec.2899:
 	addi	r31, r31, lo16(l.5124)
 	lfd	f1, 0(r31)
 	fadd	f0, f0, f1
-	mflr	r31
-	stw	r31, 44(r3)
-	addi	r3, r3, 48
-	bl	min_caml_sqrt
-	subi	r3, r3, 48
-	lwz	r31, 44(r3)
-	mtlr	r31
+	fsqrt	f0, f0
 	lfd	f1, 16(r3)
 	fdiv	f1, f1, f0
 	lfd	f2, 24(r3)
@@ -9718,7 +10051,7 @@ calc_dirvec.2899:
 	lfd	f2, 56(r3)
 	lwz	r2, 128(r3)
 	b	vecset.2472
-bge_else.8139:
+bge_else.8095:
 	stfd	f2, 136(r3)
 	stw	r6, 0(r3)
 	stw	r5, 8(r3)
@@ -9760,56 +10093,46 @@ bge_else.8139:
 calc_dirvecs.2907:
 	lwz	r7, 4(r30)
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8147
-	stw	r30, 0(r3)
-	stw	r2, 4(r3)
-	stfd	f0, 8(r3)
-	stw	r6, 16(r3)
-	stw	r5, 20(r3)
-	stw	r7, 24(r3)
-	mflr	r31
-	stw	r31, 28(r3)
-	addi	r3, r3, 32
-	bl	min_caml_float_of_int
-	subi	r3, r3, 32
-	lwz	r31, 28(r3)
-	mtlr	r31
+	blt	cr7, bge_else.8103
+	itof	f1, r2
 	lis	r31, ha16(l.5680)
 	addi	r31, r31, lo16(l.5680)
-	lfd	f1, 0(r31)
-	fmul	f0, f0, f1
+	lfd	f2, 0(r31)
+	fmul	f1, f1, f2
 	lis	r31, ha16(l.5681)
 	addi	r31, r31, lo16(l.5681)
-	lfd	f1, 0(r31)
-	fsub	f2, f0, f1
-	li	r2, 0
-	lis	r31, ha16(l.5123)
-	addi	r31, r31, lo16(l.5123)
-	lfd	f0, 0(r31)
+	lfd	f2, 0(r31)
+	fsub	f2, f1, f2
+	li	r8, 0
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f1, 0(r31)
-	lfd	f3, 8(r3)
-	lwz	r5, 20(r3)
-	lwz	r6, 16(r3)
-	lwz	r30, 24(r3)
+	lis	r31, ha16(l.5123)
+	addi	r31, r31, lo16(l.5123)
+	lfd	f3, 0(r31)
+	stw	r30, 0(r3)
+	stfd	f0, 8(r3)
+	stw	r5, 16(r3)
+	stw	r7, 20(r3)
+	stw	r6, 24(r3)
+	stw	r2, 28(r3)
 	mflr	r31
-	stw	r31, 28(r3)
-	addi	r3, r3, 32
+	mr	r2, r8
+	mr	r30, r7
+	fmr	f31, f3
+	fmr	f3, f0
+	fmr	f0, f1
+	fmr	f1, f31
+	stw	r31, 36(r3)
+	addi	r3, r3, 40
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 32
-	lwz	r31, 28(r3)
+	subi	r3, r3, 40
+	lwz	r31, 36(r3)
 	mtlr	r31
-	lwz	r2, 4(r3)
-	mflr	r31
-	stw	r31, 28(r3)
-	addi	r3, r3, 32
-	bl	min_caml_float_of_int
-	subi	r3, r3, 32
-	lwz	r31, 28(r3)
-	mtlr	r31
+	lwz	r2, 28(r3)
+	itof	f0, r2
 	lis	r31, ha16(l.5680)
 	addi	r31, r31, lo16(l.5680)
 	lfd	f1, 0(r31)
@@ -9818,33 +10141,35 @@ calc_dirvecs.2907:
 	addi	r31, r31, lo16(l.5568)
 	lfd	f1, 0(r31)
 	fadd	f2, f0, f1
-	li	r2, 0
+	li	r5, 0
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f0, 0(r31)
 	lis	r31, ha16(l.5123)
 	addi	r31, r31, lo16(l.5123)
 	lfd	f1, 0(r31)
-	lwz	r5, 16(r3)
-	addi	r6, r5, 2
+	lwz	r6, 24(r3)
+	addi	r7, r6, 2
 	lfd	f3, 8(r3)
-	lwz	r7, 20(r3)
-	lwz	r30, 24(r3)
+	lwz	r8, 16(r3)
+	lwz	r30, 20(r3)
 	mflr	r31
-	mr	r5, r7
-	stw	r31, 28(r3)
-	addi	r3, r3, 32
+	mr	r6, r7
+	mr	r2, r5
+	mr	r5, r8
+	stw	r31, 36(r3)
+	addi	r3, r3, 40
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 32
-	lwz	r31, 28(r3)
+	subi	r3, r3, 40
+	lwz	r31, 36(r3)
 	mtlr	r31
-	lwz	r2, 4(r3)
+	lwz	r2, 28(r3)
 	subi	r2, r2, 1
 	li	r5, 1
-	lwz	r6, 20(r3)
-	stw	r2, 28(r3)
+	lwz	r6, 16(r3)
+	stw	r2, 32(r3)
 	mflr	r31
 	mr	r2, r6
 	stw	r31, 36(r3)
@@ -9855,30 +10180,19 @@ calc_dirvecs.2907:
 	mr	r5, r2
 	mtlr	r31
 	lfd	f0, 8(r3)
-	lwz	r2, 28(r3)
-	lwz	r6, 16(r3)
+	lwz	r2, 32(r3)
+	lwz	r6, 24(r3)
 	lwz	r30, 0(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8147:
+bge_else.8103:
 	blr
 calc_dirvec_rows.2912:
 	lwz	r7, 4(r30)
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8149
-	stw	r30, 0(r3)
-	stw	r2, 4(r3)
-	stw	r6, 8(r3)
-	stw	r5, 12(r3)
-	stw	r7, 16(r3)
-	mflr	r31
-	stw	r31, 20(r3)
-	addi	r3, r3, 24
-	bl	min_caml_float_of_int
-	subi	r3, r3, 24
-	lwz	r31, 20(r3)
-	mtlr	r31
+	blt	cr7, bge_else.8106
+	itof	f0, r2
 	lis	r31, ha16(l.5680)
 	addi	r31, r31, lo16(l.5680)
 	lfd	f1, 0(r31)
@@ -9887,11 +10201,14 @@ calc_dirvec_rows.2912:
 	addi	r31, r31, lo16(l.5681)
 	lfd	f1, 0(r31)
 	fsub	f0, f0, f1
-	li	r2, 4
-	lwz	r5, 12(r3)
-	lwz	r6, 8(r3)
-	lwz	r30, 16(r3)
+	li	r8, 4
+	stw	r30, 0(r3)
+	stw	r6, 4(r3)
+	stw	r5, 8(r3)
+	stw	r2, 12(r3)
 	mflr	r31
+	mr	r2, r8
+	mr	r30, r7
 	stw	r31, 20(r3)
 	addi	r3, r3, 24
 	lwz	r31, 0(r30)
@@ -9900,28 +10217,28 @@ calc_dirvec_rows.2912:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-	lwz	r2, 4(r3)
+	lwz	r2, 12(r3)
 	subi	r2, r2, 1
 	li	r5, 2
-	lwz	r6, 12(r3)
-	stw	r2, 20(r3)
+	lwz	r6, 8(r3)
+	stw	r2, 16(r3)
 	mflr	r31
 	mr	r2, r6
-	stw	r31, 28(r3)
-	addi	r3, r3, 32
+	stw	r31, 20(r3)
+	addi	r3, r3, 24
 	bl	add_mod5.2469
-	subi	r3, r3, 32
-	lwz	r31, 28(r3)
+	subi	r3, r3, 24
+	lwz	r31, 20(r3)
 	mr	r5, r2
 	mtlr	r31
-	lwz	r2, 8(r3)
+	lwz	r2, 4(r3)
 	addi	r6, r2, 4
-	lwz	r2, 20(r3)
+	lwz	r2, 16(r3)
 	lwz	r30, 0(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8149:
+bge_else.8106:
 	blr
 create_dirvec.2916:
 	lwz	r2, 4(r30)
@@ -9959,7 +10276,7 @@ create_dirvec.2916:
 create_dirvec_elements.2918:
 	lwz	r6, 4(r30)
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else.8151
+	blt	cr7, bge_else.8108
 	stw	r30, 0(r3)
 	stw	r2, 4(r3)
 	stw	r5, 8(r3)
@@ -9983,14 +10300,14 @@ create_dirvec_elements.2918:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8151:
+bge_else.8108:
 	blr
 create_dirvecs.2921:
 	lwz	r5, 12(r30)
 	lwz	r6, 8(r30)
 	lwz	r7, 4(r30)
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8153
+	blt	cr7, bge_else.8110
 	li	r8, 120
 	stw	r30, 0(r3)
 	stw	r6, 4(r3)
@@ -10040,12 +10357,12 @@ create_dirvecs.2921:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8153:
+bge_else.8110:
 	blr
 init_dirvec_constants.2923:
 	lwz	r6, 4(r30)
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else.8155
+	blt	cr7, bge_else.8112
 	slwi	r7, r5, 2
 	lwzx	r7, r2, r7
 	stw	r2, 0(r3)
@@ -10069,13 +10386,13 @@ init_dirvec_constants.2923:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8155:
+bge_else.8112:
 	blr
 init_vecset_constants.2926:
 	lwz	r5, 8(r30)
 	lwz	r6, 4(r30)
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8157
+	blt	cr7, bge_else.8114
 	slwi	r7, r2, 2
 	lwzx	r6, r6, r7
 	li	r7, 119
@@ -10099,7 +10416,7 @@ init_vecset_constants.2926:
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-bge_else.8157:
+bge_else.8114:
 	blr
 init_dirvecs.2928:
 	lwz	r2, 12(r30)
@@ -10459,7 +10776,7 @@ setup_reflections.2943:
 	lwz	r6, 8(r30)
 	lwz	r7, 4(r30)
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else.8165
+	blt	cr7, bge_else.8122
 	slwi	r8, r2, 2
 	lwzx	r7, r7, r8
 	stw	r5, 0(r3)
@@ -10475,7 +10792,7 @@ setup_reflections.2943:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.8166
+	bne	cr7, beq_else.8123
 	lwz	r2, 12(r3)
 	mflr	r31
 	stw	r31, 20(r3)
@@ -10495,9 +10812,9 @@ setup_reflections.2943:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else.8167
+	bne	cr7, beq_else.8124
 	blr
-beq_else.8167:
+beq_else.8124:
 	lwz	r2, 12(r3)
 	mflr	r31
 	stw	r31, 20(r3)
@@ -10507,27 +10824,27 @@ beq_else.8167:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else.8169
+	bne	cr7, beq_else.8126
 	lwz	r2, 4(r3)
 	lwz	r5, 12(r3)
 	lwz	r30, 8(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.8169:
+beq_else.8126:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else.8170
+	bne	cr7, beq_else.8127
 	lwz	r2, 4(r3)
 	lwz	r5, 12(r3)
 	lwz	r30, 0(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-beq_else.8170:
+beq_else.8127:
 	blr
-beq_else.8166:
+beq_else.8123:
 	blr
-bge_else.8165:
+bge_else.8122:
 	blr
 rt.2945:
 	lwz	r6, 56(r30)
@@ -10543,7 +10860,7 @@ rt.2945:
 	lwz	r16, 16(r30)
 	lwz	r17, 12(r30)
 	lwz	r18, 8(r30)
-	lwz	r19, 4(r30)
+	lwz	r30, 4(r30)
 	stw	r2, 0(r17)
 	stw	r5, 4(r17)
 	li	r17, 2
@@ -10555,6 +10872,9 @@ rt.2945:
 	lis	r31, ha16(l.5714)
 	addi	r31, r31, lo16(l.5714)
 	lfd	f0, 0(r31)
+	itof	f1, r2
+	fdiv	f0, f0, f1
+	stfd	f0, 0(r9)
 	stw	r10, 0(r3)
 	stw	r12, 4(r3)
 	stw	r7, 8(r3)
@@ -10565,151 +10885,132 @@ rt.2945:
 	stw	r16, 28(r3)
 	stw	r6, 32(r3)
 	stw	r11, 36(r3)
-	stw	r19, 40(r3)
-	stw	r9, 44(r3)
-	stfd	f0, 48(r3)
+	stw	r30, 40(r3)
 	mflr	r31
-	stw	r31, 60(r3)
-	addi	r3, r3, 64
-	bl	min_caml_float_of_int
-	subi	r3, r3, 64
-	lwz	r31, 60(r3)
-	mtlr	r31
-	lfd	f1, 48(r3)
-	fdiv	f0, f1, f0
-	lwz	r2, 44(r3)
-	stfd	f0, 0(r2)
-	lwz	r30, 40(r3)
-	mflr	r31
-	stw	r31, 60(r3)
-	addi	r3, r3, 64
+	stw	r31, 44(r3)
+	addi	r3, r3, 48
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 64
-	lwz	r31, 60(r3)
+	subi	r3, r3, 48
+	lwz	r31, 44(r3)
 	mtlr	r31
 	lwz	r30, 40(r3)
-	stw	r2, 56(r3)
+	stw	r2, 44(r3)
 	mflr	r31
-	stw	r31, 60(r3)
-	addi	r3, r3, 64
+	stw	r31, 52(r3)
+	addi	r3, r3, 56
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 64
-	lwz	r31, 60(r3)
+	subi	r3, r3, 56
+	lwz	r31, 52(r3)
 	mtlr	r31
 	lwz	r30, 40(r3)
-	stw	r2, 60(r3)
+	stw	r2, 48(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 52(r3)
+	addi	r3, r3, 56
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 56
+	lwz	r31, 52(r3)
 	mtlr	r31
 	lwz	r30, 36(r3)
-	stw	r2, 64(r3)
+	stw	r2, 52(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	lwz	r30, 32(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	lwz	r30, 28(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	lwz	r2, 24(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	bl	d_vec.2579
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	lwz	r5, 20(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	bl	veccpy.2482
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	lwz	r2, 24(r3)
 	lwz	r30, 16(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	lwz	r2, 12(r3)
 	lwz	r2, 0(r2)
 	subi	r2, r2, 1
 	lwz	r30, 8(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	li	r5, 0
 	li	r6, 0
-	lwz	r2, 60(r3)
+	lwz	r2, 48(r3)
 	lwz	r30, 4(r3)
 	mflr	r31
-	stw	r31, 68(r3)
-	addi	r3, r3, 72
+	stw	r31, 60(r3)
+	addi	r3, r3, 64
 	lwz	r31, 0(r30)
 	mtctr	r31
 	bctrl
-	subi	r3, r3, 72
-	lwz	r31, 68(r3)
+	subi	r3, r3, 64
+	lwz	r31, 60(r3)
 	mtlr	r31
 	li	r2, 0
 	li	r8, 2
-	lwz	r5, 56(r3)
-	lwz	r6, 60(r3)
-	lwz	r7, 64(r3)
+	lwz	r5, 44(r3)
+	lwz	r6, 48(r3)
+	lwz	r7, 52(r3)
 	lwz	r30, 0(r3)
 	lwz	r29, 0(r30)
 	mtctr	r29
 	bctr
-_min_caml_start: # main entry point
-	mflr	r0
-	stmw	r30, -8(r1)
-	stw	r0, 8(r1)
-	stwu	r1, -96(r1)
-#	main program starts
+_min_caml_start:
 	li	r2, 1
 	li	r5, 0
 	mflr	r31
@@ -11894,9 +12195,4 @@ _min_caml_start: # main entry point
 	subi	r3, r3, 152
 	lwz	r31, 148(r3)
 	mtlr	r31
-#	main program ends
-	lwz	r1, 0(r1)
-	lwz	r0, 8(r1)
-	mtlr	r0
-	lmw	r30, -8(r1)
 	blr

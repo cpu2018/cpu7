@@ -64,6 +64,7 @@ let getpos () = {
 %left EQUAL LESS_GREATER LESS GREATER LESS_EQUAL GREATER_EQUAL
 %left PLUS MINUS PLUS_DOT MINUS_DOT
 %left AST_DOT SLASH_DOT AST SLASH
+%left FTOI ITOF
 %right prec_unary_minus
 %left prec_app
 %left DOT

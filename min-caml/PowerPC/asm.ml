@@ -83,7 +83,7 @@ let rec remove_and_uniq xs = function
 let fv_id_or_imm = function V(x) -> [x] | _ -> []
 let rec fv_exp = function
 	| Nop | Li(_) | FLi(_) | SetL(_) | Comment(_) | Restore(_) -> []
-	| Mr(x) | Neg(x) | FMr(x) | FNeg(x) | Save(x, _) -> [x]
+	| Mr(x) | Neg(x) | FMr(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) | Save(x, _) -> [x]
 	| Add(x, y') | Sub(x, y') | Mul(x, y')| Div(x, y') | Slw(x, y') | Srw(x, y') | Lfd(x, y') | Lwz(x, y') -> x :: fv_id_or_imm y'
 	| Stw(x, y, z') | Stfd(x, y, z') -> x :: y :: fv_id_or_imm z'
 	| FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) -> [x; y]
@@ -110,7 +110,7 @@ let align i = (if i mod 8 = 0 then i else i + 4)
 
 let rec print_indent depth =
 	if depth = 0 then ()
-	else (print_string ".	 "; print_indent (depth - 1))
+	else (print_string ".   "; print_indent (depth - 1))
 
 let print_id_or_imm = function
 	| V idt -> Id.print_t idt
@@ -208,6 +208,18 @@ and print_exp depth expr =
 		print_string "FDiv "; print_newline ();
 		print_indent (depth + 1); Id.print_t x; print_newline ();
 		print_indent (depth + 1); Id.print_t y
+	| Floor x -> 
+		print_string "Floor "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
+	| Sqrt x -> 
+		print_string "Sqrt "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
+	| FtoI x -> 
+		print_string "FtoI "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
+	| ItoF x -> 
+		print_string "ItoF "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
 	| Lfd (idt, idim) -> 
 		print_string "Lfd "; print_newline ();
 		print_indent (depth + 1); Id.print_t idt; print_newline ();
