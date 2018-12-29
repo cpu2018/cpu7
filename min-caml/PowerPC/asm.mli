@@ -45,6 +45,8 @@ and exp =
 	| CallDir of Id.l * Id.t list * Id.t list
 	| Save of Id.t * Id.t (* レジスタ変数の値をスタック変数へ保存 *)
 	| Restore of Id.t (* スタック変数から値を復元 *)
+	| Read_I
+	| Read_F
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
 type prog = Prog of (Id.l * float) list * fundef list * t
 

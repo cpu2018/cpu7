@@ -52,6 +52,8 @@ let getpos () = {
 %token EOF
 %token SFTL
 %token SFTR
+%token READINT
+%token READFLOAT
 
 /* (* 優先順位とassociativityの定義（低い方から高い方へ） (caml2html: parser_prior) *) */
 %nonassoc IN
@@ -64,7 +66,7 @@ let getpos () = {
 %left EQUAL LESS_GREATER LESS GREATER LESS_EQUAL GREATER_EQUAL
 %left PLUS MINUS PLUS_DOT MINUS_DOT
 %left AST_DOT SLASH_DOT AST SLASH
-%left FTOI ITOF
+%left FTOI ITOF READINT READFLOAT
 %right prec_unary_minus
 %left prec_app
 %left DOT
@@ -178,6 +180,10 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
 | ARRAY_CREATE simple_exp simple_exp
     %prec prec_app
     { Array($2, $3) }
+| READINT simple_exp
+	{ Read_I $2 }
+| READFLOAT simple_exp
+	{ Read_F $2 }
 | error
     { failwith
         (Printf.sprintf "parse error near line %d-%d characters %d-%d"

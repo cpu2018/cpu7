@@ -41,6 +41,8 @@ type token =
   | EOF
   | SFTL
   | SFTR
+  | READINT
+  | READFLOAT
 
 val exp :
   (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> Syntax.t

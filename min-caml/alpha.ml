@@ -50,6 +50,8 @@ let rec g env = function (* α変換ルーチン本体 (caml2html: alpha_g) *)
  	| Put(x, y, z) -> Put(find x env, find y env, find z env)
  	| ExtArray(x) -> ExtArray(x)
  	| ExtFunApp(x, ys) -> ExtFunApp(x, List.map (fun y -> find y env) ys)
+ 	| Read_I(x) -> Read_I(find x env)
+ 	| Read_F(x) -> Read_F(find x env)
 
 let f print_flag t = 
 	let alpha_t = g M.empty t in

@@ -105,6 +105,10 @@ rule token = parse
 	{ SFTL }
 | ">>"
 	{ SFTR }
+| "read_int"
+	{ READINT }
+| "read_float"
+	{ READFLOAT }
 | lower (digit|lower|upper|'_')* (* 他の「予約語」より後でないといけない *)
     { IDENT(Lexing.lexeme lexbuf) }
 | _
