@@ -67,9 +67,17 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 		 ("-nofloatvalue", Arg.Unit(fun () -> float_value_flag := 0), "unable to add float value library");
 		 ("-nofloat", Arg.Unit(fun () -> float_flag := 0), "unable to add float library");
 		 ("-nosca", Arg.Unit(fun () -> sca_flag := 0), "unable to add sca library");
-		 ("-noarray", Arg.Unit(fun () -> array_flag := 1), "unable to add array library");
+		 ("-noarray", Arg.Unit(fun () -> array_flag := 0), "unable to add array library");
 		 ("-noread", Arg.Unit(fun () -> read_flag := 0), "unable to add read library");
 		 ("-noprint", Arg.Unit(fun () -> print_flag := 0), "unable to add print library");
+		 ("-nolib", Arg.Unit(fun () -> 
+		 	float_value_flag := 0;
+		 	float_flag := 0;
+		 	sca_flag := 0;
+		 	array_flag := 0;
+		 	read_flag := 0;
+		 	print_flag := 0;
+			), "unable to add any library");
 		 ("-parser", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
 		 ("-parsing", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
 		 ("-fun", Arg.Unit(fun () -> fun_flag := 1), "dump code after fun2letrec");

@@ -1,7 +1,10 @@
 open Asm
 
+(*
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"
+*)
+external getfloat : float -> int32 = "getfloat"
 
 (* let ic = Printf.open_in "mylib.s"*)
 
@@ -282,13 +285,23 @@ let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
 let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (Prog(data, fundefs, e)) =
 	Format.eprintf "generating assembly...@.";
 	if data <> [] then
-		(Printf.fprintf oc "\t.data\n\t.literal8\n";
+		(
+		 (*
+		 Printf.fprintf oc "\t.data\n\t.literal8\n";
+		 *)
+		 Printf.fprintf oc "\t.data\n";
 		 List.iter
 			 (fun (Id.L(x), d) ->
+			 	 (*
 				 Printf.fprintf oc "\t.align 3\n";
 				 Printf.fprintf oc "%s:\t # %f\n" x d;
+				 *)
+				 Printf.fprintf oc "%s:\t # %f\n" x d;
+				 Printf.fprintf oc "\t%ld\n" (getfloat d))
+				 (*
 				 Printf.fprintf oc "\t.long\t%ld\n" (gethi d);
 				 Printf.fprintf oc "\t.long\t%ld\n" (getlo d))
+				 *)
 			 data);
 	(if float_value_flag = 1 then Lib_float_value.print_external_methods oc);
 	Printf.fprintf oc "\t.text\n";
