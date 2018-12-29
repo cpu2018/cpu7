@@ -1,9 +1,58 @@
 	.data
-	.literal8
-	.align 3
 l.3:	 # 10000000.000000
-	.long	0
-	.long	1097011920
+	1259902592
+	.data
+#	--- lib_float ---
+lzero:	# 0.000000
+	0
+lhalf:	# 0.500000
+	1056964608
+#	--- lib_sc ---
+lsc.179:	 # 4.000000
+	1082130432
+lsc.166:	 # 3.141593
+	1078530011
+lsc.165:	 # 720.000000
+	1144258560
+lsc.164:	 # 24.000000
+	1103101952
+lsc.163:	 # 1.000000
+	1065353216
+lsc.162:	 # 5040.000000
+	1167949824
+lsc.161:	 # 120.000000
+	1123024896
+lsc.160:	 # 3.000000
+	1077936128
+lsc.156:	 # 2.000000
+	1073741824
+#	--- lib_atan ---
+latan.96:	 # 4.000000
+	1082130432
+latan.95:	 # 0.000000
+	0
+latan.94:	 # 1.000000
+	1065353216
+latan.93:	 # 2.000000
+	1073741824
+latan.92:	 # 2.437500
+	1075576832
+latan.91:	 # 0.437500
+	1054867456
+latan.90:	 # 3.141593
+	1078530011
+latan.89:	 # 0.060035
+	1031137221
+latan.88:	 # 0.089764
+	1035458158
+latan.87:	 # 0.111111
+	1038323256
+latan.86:	 # -0.142857
+	-1106097883
+latan.85:	 # 0.200000
+	1045220557
+latan.84:	 # 0.333333
+	1051372202
 	.text
 	.globl _min_caml_start
 	.align 2
@@ -548,6 +597,32 @@ ble_else_atan_4:
 ble_else_atan_1:
 	lfd	f0, 0(r3)
 	b	kernel_atan.35
+min_caml_create_array:	
+	mr	r6, r2
+	mr	r2, r4
+create_array_loop:
+	cmpwi	cr7, r6, 0
+	bne	cr7, create_array_cont
+	b	create_array_exit
+create_array_exit:
+	blr
+create_array_cont:
+	stw	r5, 0(r4)
+	subi  	r6, r6, 1
+	addi	r4, r4, 4
+	b	create_array_loop
+min_caml_create_float_array:
+	mr	r5, r2
+	mr	r2, r4
+create_float_array_loop:
+	cmpwi	cr7, r5, 0
+	bne	cr7, create_float_array_cont
+	blr
+create_float_array_cont:
+	stfd	f0, 0(r4)
+	subi	r5, r5, 1
+	addi	r4, r4, 8
+	b	create_float_array_loop
 div10:
 	slwi	r5, r2, 7
 	slwi	r6, r2, 6
@@ -601,32 +676,6 @@ min_caml_print_int:
 	lwz	r31, 4(r3)
 	mtlr	r31
 	blr
-min_caml_create_array:	
-	mr	r6, r2
-	mr	r2, r4
-create_array_loop:
-	cmpwi	cr7, r6, 0
-	bne	cr7, create_array_cont
-	b	create_array_exit
-create_array_exit:
-	blr
-create_array_cont:
-	stw	r5, 0(r4)
-	subi  	r6, r6, 1
-	addi	r4, r4, 4
-	b	create_array_loop
-min_caml_create_float_array:
-	mr	r5, r2
-	mr	r2, r4
-create_float_array_loop:
-	cmpwi	cr7, r5, 0
-	bne	cr7, create_float_array_cont
-	blr
-create_float_array_cont:
-	stfd	f0, 0(r4)
-	subi	r5, r5, 1
-	addi	r4, r4, 8
-	b	create_float_array_loop
 _min_caml_start:
 	lis	r31, ha16(l.3)
 	addi	r31, r31, lo16(l.3)

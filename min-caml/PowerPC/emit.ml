@@ -284,12 +284,12 @@ let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
 
 let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (Prog(data, fundefs, e)) =
 	Format.eprintf "generating assembly...@.";
+	(if float_value_flag = 1 then Lib_float_value.print_external_methods oc);
 	if data <> [] then
 		(
 		 (*
 		 Printf.fprintf oc "\t.data\n\t.literal8\n";
 		 *)
-		 Printf.fprintf oc "\t.data\n";
 		 List.iter
 			 (fun (Id.L(x), d) ->
 			 	 (*
@@ -303,7 +303,6 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 				 Printf.fprintf oc "\t.long\t%ld\n" (getlo d))
 				 *)
 			 data);
-	(if float_value_flag = 1 then Lib_float_value.print_external_methods oc);
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
