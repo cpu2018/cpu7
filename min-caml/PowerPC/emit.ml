@@ -296,7 +296,7 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 				 Printf.fprintf oc "\t.align 3\n";
 				 Printf.fprintf oc "%s:\t # %f\n" x d;
 				 *)
-				 Printf.fprintf oc "%s:\t # %f\n" x d;
+				 Printf.fprintf oc "%s:\n" x;
 				 Printf.fprintf oc "\t%ld\n" (getfloat d))
 				 (*
 				 Printf.fprintf oc "\t.long\t%ld\n" (gethi d);

@@ -1,133 +1,119 @@
 	.data
-	.literal8
-	.align 3
+#	--- lib_float ---
+lzero:	# 0.000000
+	0
+lhalf:	# 0.500000
+	1056964608
+#	--- lib_sc ---
+lsc.179:	 # 4.000000
+	1082130432
+lsc.166:	 # 3.141593
+	1078530011
+lsc.165:	 # 720.000000
+	1144258560
+lsc.164:	 # 24.000000
+	1103101952
+lsc.163:	 # 1.000000
+	1065353216
+lsc.162:	 # 5040.000000
+	1167949824
+lsc.161:	 # 120.000000
+	1123024896
+lsc.160:	 # 3.000000
+	1077936128
+lsc.156:	 # 2.000000
+	1073741824
+#	--- lib_atan ---
+latan.96:	 # 4.000000
+	1082130432
+latan.95:	 # 0.000000
+	0
+latan.94:	 # 1.000000
+	1065353216
+latan.93:	 # 2.000000
+	1073741824
+latan.92:	 # 2.437500
+	1075576832
+latan.91:	 # 0.437500
+	1054867456
+latan.90:	 # 3.141593
+	1078530011
+latan.89:	 # 0.060035
+	1031137221
+latan.88:	 # 0.089764
+	1035458158
+latan.87:	 # 0.111111
+	1038323256
+latan.86:	 # -0.142857
+	-1106097883
+latan.85:	 # 0.200000
+	1045220557
+latan.84:	 # 0.333333
+	1051372202
 l.5714:	 # 128.000000
-	.long	0
-	.long	1080033280
-	.align 3
+	1124073472
 l.5681:	 # 0.900000
-	.long	-858993459
-	.long	1072483532
-	.align 3
+	1063675494
 l.5680:	 # 0.200000
-	.long	-1717986918
-	.long	1070176665
-	.align 3
+	1045220557
 l.5586:	 # 150.000000
-	.long	0
-	.long	1080213504
-	.align 3
+	1125515264
 l.5584:	 # -150.000000
-	.long	0
-	.long	-1067270144
-	.align 3
+	-1021968384
 l.5568:	 # 0.100000
-	.long	-1717986918
-	.long	1069128089
-	.align 3
+	1036831949
 l.5565:	 # -2.000000
-	.long	0
-	.long	-1073741824
-	.align 3
+	-1073741824
 l.5563:	 # 0.003906
-	.long	0
-	.long	1064304640
-	.align 3
+	998244352
 l.5541:	 # 20.000000
-	.long	0
-	.long	1077149696
-	.align 3
+	1101004800
 l.5540:	 # 0.050000
-	.long	-1717986918
-	.long	1068079513
-	.align 3
+	1028443341
 l.5536:	 # 0.250000
-	.long	0
-	.long	1070596096
-	.align 3
+	1048576000
 l.5532:	 # 10.000000
-	.long	0
-	.long	1076101120
-	.align 3
+	1092616192
 l.5528:	 # 0.300000
-	.long	858993459
-	.long	1070805811
-	.align 3
+	1050253722
 l.5527:	 # 255.000000
-	.long	0
-	.long	1081073664
-	.align 3
+	1132396544
 l.5526:	 # 0.500000
-	.long	0
-	.long	1071644672
-	.align 3
+	1056964608
 l.5525:	 # 0.150000
-	.long	858993459
-	.long	1069757235
-	.align 3
+	1041865114
 l.5523:	 # 3.141593
-	.long	1518260631
-	.long	1074340347
-	.align 3
+	1078530011
 l.5522:	 # 30.000000
-	.long	0
-	.long	1077805056
-	.align 3
+	1106247680
 l.5521:	 # 15.000000
-	.long	0
-	.long	1076756480
-	.align 3
+	1097859072
 l.5520:	 # 0.000100
-	.long	-350469331
-	.long	1058682594
-	.align 3
+	953267991
 l.5477:	 # 100000000.000000
-	.long	0
-	.long	1100470148
-	.align 3
+	1287568416
 l.5473:	 # 1000000000.000000
-	.long	0
-	.long	1104006501
-	.align 3
+	1315859240
 l.5453:	 # -0.100000
-	.long	-1717986918
-	.long	-1078355559
-	.align 3
+	-1110651699
 l.5440:	 # 0.010000
-	.long	1202590843
-	.long	1065646817
-	.align 3
+	1008981770
 l.5439:	 # -0.200000
-	.long	-1717986918
-	.long	-1077306983
-	.align 3
+	-1102263091
 l.5248:	 # 2.000000
-	.long	0
-	.long	1073741824
-	.align 3
+	1073741824
 l.5214:	 # -200.000000
-	.long	0
-	.long	-1066860544
-	.align 3
+	-1018691584
 l.5212:	 # 200.000000
-	.long	0
-	.long	1080623104
-	.align 3
+	1128792064
 l.5208:	 # 0.017453
-	.long	-1433277178
-	.long	1066524486
-	.align 3
+	1016003125
 l.5125:	 # -1.000000
-	.long	0
-	.long	-1074790400
-	.align 3
+	-1082130432
 l.5124:	 # 1.000000
-	.long	0
-	.long	1072693248
-	.align 3
+	1065353216
 l.5123:	 # 0.000000
-	.long	0
-	.long	0
+	0
 	.text
 	.globl _min_caml_start
 	.align 2
@@ -672,6 +658,32 @@ ble_else_atan_4:
 ble_else_atan_1:
 	lfd	f0, 0(r3)
 	b	kernel_atan.35
+min_caml_create_array:	
+	mr	r6, r2
+	mr	r2, r4
+create_array_loop:
+	cmpwi	cr7, r6, 0
+	bne	cr7, create_array_cont
+	b	create_array_exit
+create_array_exit:
+	blr
+create_array_cont:
+	stw	r5, 0(r4)
+	subi  	r6, r6, 1
+	addi	r4, r4, 4
+	b	create_array_loop
+min_caml_create_float_array:
+	mr	r5, r2
+	mr	r2, r4
+create_float_array_loop:
+	cmpwi	cr7, r5, 0
+	bne	cr7, create_float_array_cont
+	blr
+create_float_array_cont:
+	stfd	f0, 0(r4)
+	subi	r5, r5, 1
+	addi	r4, r4, 8
+	b	create_float_array_loop
 div10:
 	slwi	r5, r2, 7
 	slwi	r6, r2, 6
@@ -725,32 +737,6 @@ min_caml_print_int:
 	lwz	r31, 4(r3)
 	mtlr	r31
 	blr
-min_caml_create_array:	
-	mr	r6, r2
-	mr	r2, r4
-create_array_loop:
-	cmpwi	cr7, r6, 0
-	bne	cr7, create_array_cont
-	b	create_array_exit
-create_array_exit:
-	blr
-create_array_cont:
-	stw	r5, 0(r4)
-	subi  	r6, r6, 1
-	addi	r4, r4, 4
-	b	create_array_loop
-min_caml_create_float_array:
-	mr	r5, r2
-	mr	r2, r4
-create_float_array_loop:
-	cmpwi	cr7, r5, 0
-	bne	cr7, create_float_array_cont
-	blr
-create_float_array_cont:
-	stfd	f0, 0(r4)
-	subi	r5, r5, 1
-	addi	r4, r4, 8
-	b	create_float_array_loop
 xor.2461:
 	cmpwi	cr7, r2, 0
 	bne	cr7, beq_else.7731
