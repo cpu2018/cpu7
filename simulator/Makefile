@@ -1,5 +1,7 @@
 CC = gcc
+CPP = g++
 CFLAGS = -Wall -O2
+CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
 SIMU_SOURCE = simu.c
 ML_TESTS = \
@@ -13,7 +15,10 @@ MIN_CAML = min-caml-int # シミュレータでfloatの実装が完成したら�
 
 .PHONY: all clean rm_binary
 
-all: assembler simulator do_casm do_asm
+all: converter assembler simulator do_casm do_asm
+
+converter: $(CONV_SOURCE)
+	$(CPP) $(CFLAGS) -o $@ $^
 
 assembler: $(AS_SOURCE)
 	$(CC) $(CFLAGS) -o $@ $^
