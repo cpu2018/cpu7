@@ -279,7 +279,7 @@ let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
 	stackmap := [];
 	g oc (Tail, e)
 
-let f oc (Prog(data, fundefs, e)) =
+let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (Prog(data, fundefs, e)) =
 	Format.eprintf "generating assembly...@.";
 	if data <> [] then
 		(Printf.fprintf oc "\t.data\n\t.literal8\n";
@@ -290,17 +290,16 @@ let f oc (Prog(data, fundefs, e)) =
 				 Printf.fprintf oc "\t.long\t%ld\n" (gethi d);
 				 Printf.fprintf oc "\t.long\t%ld\n" (getlo d))
 			 data);
-	(*
-	Lib_float_value.print_external_methods oc;
-	*)
+	(if float_value_flag = 1 then Lib_float_value.print_external_methods oc);
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
-	Lib_float.print_external_methods oc;
-	Lib_sc.print_external_methods oc;
-	Lib_atan.print_external_methods oc;
-	Lib_print_int.print_external_methods oc;
-	Lib_create_array.print_external_methods oc;
+	(if float_flag = 1 then Lib_float.print_external_methods oc);
+	(if sca_flag = 1 then Lib_sc.print_external_methods oc);
+	(if sca_flag = 1 then Lib_atan.print_external_methods oc);
+	(if array_flag = 1 then Lib_create_array.print_external_methods oc);
+	(if read_flag = 1 then Lib_read.print_external_methods oc);
+	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	(*Printf.fprintf oc "_min_caml_start: # main entry point\n";*)
 	Printf.fprintf oc "_min_caml_start:\n";
