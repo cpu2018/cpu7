@@ -43,6 +43,14 @@ type token =
   | SFTR
   | READINT
   | READFLOAT
+  | FABS
+  | FSQR
+  | FISZERO
+  | FISPOS
+  | FISNEG
+  | FHALF
+  | FNEG
+  | FLESS
 
 val exp :
   (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> Syntax.t

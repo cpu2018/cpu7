@@ -36,7 +36,6 @@ fun2letrec.ml \
 typing.mli typing.ml \
 kNormal.mli kNormal.ml \
 alpha.mli alpha.ml \
-comSubexpElim.mli comSubexpElim.ml \
 beta.mli beta.ml \
 assoc.mli assoc.ml \
 inline.mli inline.ml \
@@ -49,6 +48,7 @@ simm.mli simm.ml \
 regAlloc.mli regAlloc.ml \
 emit.mli emit.ml \
 main.mli main.ml
+#comSubexpElim.mli comSubexpElim.ml \
 
 # ↓ テストプログラムが増えたら、これも増やす
 TESTS = print fun3
