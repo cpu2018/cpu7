@@ -47,6 +47,8 @@ latan.85:
 	1045220557
 latan.84:
 	1051372202
+l.3:
+	1065353216
 	.text
 	.globl _min_caml_start
 	.align 2
@@ -671,34 +673,8 @@ min_caml_print_int:
 	mtlr	r31
 	blr
 _min_caml_start:
-	li	r2, 3
-	li	r5, 4
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_create_array
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	li	r5, 5
-	stw	r5, 8(r2)
-	lwz	r5, 4(r2)
-	stw	r2, 0(r3)
-	mflr	r31
-	mr	r2, r5
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_int
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	lwz	r2, 0(r3)
-	lwz	r2, 8(r2)
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_int
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
+	lis	r31, ha16(l.3)
+	addi	r31, r31, lo16(l.3)
+	lfd	f0, 0(r31)
+	ftoi	r2, f0
 	blr
