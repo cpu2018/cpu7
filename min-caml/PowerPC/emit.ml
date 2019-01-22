@@ -308,9 +308,6 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
-	(*
-	(if float_flag = 1 then Lib_float.print_external_methods oc);
-	*)
 	(if sca_flag = 1 then Lib_sc.print_external_methods oc);
 	(if sca_flag = 1 then Lib_atan.print_external_methods oc);
 	(if array_flag = 1 then Lib_create_array.print_external_methods oc);

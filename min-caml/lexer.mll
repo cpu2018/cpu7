@@ -111,6 +111,8 @@ rule token = parse
 	{ READFLOAT }
 | "fabs"
 	{ FABS }
+| "fsqr"
+	{ FSQR }
 | "fiszero"
 	{ FISZERO }
 | "fispos"
