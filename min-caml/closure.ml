@@ -31,6 +31,8 @@ type t = (* クロージャ変換後の式 (caml2html: closure_t) *)
 	| Get of Id.t * Id.t
 	| Put of Id.t * Id.t * Id.t
 	| ExtArray of Id.l
+	| Read_I of Id.t
+	| Read_F of Id.t
 	| WildCard
 type fundef = { name : Id.l * Type.t;
 				args : (Id.t * Type.t) list;
@@ -41,7 +43,7 @@ type prog = Prog of fundef list * t
 (* Closure.t -> fvの集合*)
 let rec fv = function
 	| Unit | Int(_) | Float(_) | ExtArray(_) -> S.empty
-	| Neg(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) -> S.singleton x
+	| Neg(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) | Read_I(x) | Read_F(x) -> S.singleton x
 	| Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | ShiftIL(x, y) | ShiftIR(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
 	| IfEq(x, y, e1, e2)| IfLE(x, y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
 	| Let((x, t), e1, e2) -> S.union (fv e1) (S.remove x (fv e2))
@@ -118,6 +120,8 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
 	| KNormal.Put(x, y, z) -> Put(x, y, z)
 	| KNormal.ExtArray(x) -> ExtArray(Id.L(x))
 	| KNormal.ExtFunApp(x, ys) -> AppDir(Id.L("min_caml_" ^ x), ys)
+	| KNormal.Read_I(x) -> Read_I(x)
+	| KNormal.Read_F(x) -> Read_F(x)
 
 (* ここからデバッグ用print関数 *)
 
@@ -250,6 +254,8 @@ let rec print_closure depth expr =
 								print_t (depth + 1)	z
 	| ExtArray x 			 -> print_string "<EXTARRAY> " ; 
 								Id.print_l x
+	| Read_I x		 -> print_string "<Read_I> "; Id.print_t x
+	| Read_F x		 -> print_string "<Read_F> "; Id.print_t x
 	| WildCard				 -> ()
 
 and print_code depth expr = print_closure depth expr; is_already_newline newline_flag

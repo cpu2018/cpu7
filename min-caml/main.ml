@@ -13,6 +13,13 @@ let flattening_flag = ref 0
 let virtual_flag = ref 0
 let simm_flag = ref 0
 let regalloc_flag = ref 0
+let float_value_flag = ref 1
+let float_flag = ref 1
+let sca_flag = ref 1
+let array_flag = ref 1
+let read_flag = ref 1
+let print_flag = ref 1
+
 
 let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 	Format.eprintf "iteration %d@." n;
@@ -30,7 +37,7 @@ let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2html: main_lexbuf) *)
 	Id.counter := 0;
 	Typing.extenv := M.empty;
-	Emit.f outchan
+	Emit.f outchan !float_value_flag !float_flag !sca_flag !array_flag !read_flag !print_flag 
 		(RegAlloc.f !regalloc_flag
 			(Simm.f !simm_flag
 				(Virtual.f !virtual_flag
@@ -57,6 +64,20 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 	Arg.parse
 		[("-inline_size", Arg.Int(fun i -> Inline.threshold := i), "maximum size of functions inlined");
 		 ("-iter", Arg.Int(fun i -> limit := i), "maximum number of optimizations iterated");
+		 ("-nofloatvalue", Arg.Unit(fun () -> float_value_flag := 0), "unable to add float value library");
+		 ("-nofloat", Arg.Unit(fun () -> float_flag := 0), "unable to add float library");
+		 ("-nosca", Arg.Unit(fun () -> sca_flag := 0), "unable to add sca library");
+		 ("-noarray", Arg.Unit(fun () -> array_flag := 0), "unable to add array library");
+		 ("-noread", Arg.Unit(fun () -> read_flag := 0), "unable to add read library");
+		 ("-noprint", Arg.Unit(fun () -> print_flag := 0), "unable to add print library");
+		 ("-nolib", Arg.Unit(fun () -> 
+		 	float_value_flag := 0;
+		 	float_flag := 0;
+		 	sca_flag := 0;
+		 	array_flag := 0;
+		 	read_flag := 0;
+		 	print_flag := 0;
+			), "unable to add any library");
 		 ("-parser", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
 		 ("-parsing", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
 		 ("-fun", Arg.Unit(fun () -> fun_flag := 1), "dump code after fun2letrec");

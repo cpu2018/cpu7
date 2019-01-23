@@ -61,6 +61,8 @@ let rec deref_term = function
 	| Put(e1, e2, e3) -> Put(deref_term e1, deref_term e2, deref_term e3)
 	| ShiftIL(e1, e2) -> ShiftIL(deref_term e1, deref_term e2)
 	| ShiftIR(e1, e2) -> ShiftIR(deref_term e1, deref_term e2)
+	| Read_I(e) -> Read_I(deref_term e)
+	| Read_F(e) -> Read_F(deref_term e)
 	| e -> e (* Unit, Bool, Int, Float はそのまま(最終形態) *)
 
 let rec occur r1 = function (* occur check (caml2html: typing_occur) *)
@@ -335,6 +337,26 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 					print_string "actual   : "; Type.print_type t2; print_newline ();
 					raise (Error (deref_typ t1, deref_typ t2, errpos e2))));
 			Type.Unit
+	| Read_I(e) ->
+			(try
+				unify Type.Unit (g env e)
+			with
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Int
+	| Read_F(e) ->
+			(try
+				unify Type.Unit (g env e)
+			with
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Float
 
 (* int -> Syntax.t -> unit *)
 let f print_flag e =

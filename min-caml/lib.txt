@@ -14,14 +14,12 @@ min_caml_
 	fsqr				2乗の演算、実装済み
 	fabs				絶対値の演算、実装済み
 	floor				FPU
-	sin					範囲指定がまだ
-	cos					範囲指定がまだ
-	atan				範囲指定がまだ
-	read_float			未実装
-	read_int			未実装
+	sin					実装済
+	cos					実装済
+	atan				実装済
+	read_float			実装済
+	read_int			実装済
 	print_int			実装済み(0~255のみ対応)
 	print_char			実装済み(0~255のみ対応)
-	create_array		まだライブラリをコピーしただけ
-	create_float_array	まだライブラリをコピーしただけ
-
-sin cos atan以外はclosureじゃないので、closureとして作りなおす必要があるかも
+	create_array		ライブラリをコピーしただけ
+	create_float_array	ライブラリをコピーしただけ

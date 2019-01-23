@@ -34,6 +34,8 @@ type t = (* MinCamlの構文を表現するデータ型 (caml2html: syntax_t) *)
 	| Put of t * t * t
 	| ShiftIL of t * t
 	| ShiftIR of t * t
+	| Read_I of t
+	| Read_F of t
 and fundef = { name : (Id.t * Type.t) * pos; args : (Id.t * Type.t) list; body : t }
 and pos = {ls : int; le: int; chs : int; che : int}
 
@@ -54,6 +56,8 @@ let rec errpos e =
 	| Fun (_, _, pos)
 		-> pos
 	| ShiftIL (t, _) | ShiftIR (t, _)
+		-> errpos t
+	| Read_I t | Read_F t
 		-> errpos t
 
 let print_pos {ls = ls; le = le; chs = chs; che = che} =
@@ -188,5 +192,9 @@ let rec print_syntax depth expr =
 	| ShiftIR (x, y)     	 -> print_string "<SHIFT_INT_RIGHT> "; print_newline ();
 								print_code (depth + 1)  x;
 								print_code (depth + 1)  y
+	| Read_I x      -> print_string "<Read_Int> "	; print_newline ();
+					print_code (depth + 1) x
+	| Read_F x      -> print_string "<Read_Float> "	; print_newline ();
+					print_code (depth + 1) x
 
 and print_code depth expr = print_syntax depth expr; is_already_newline newline_flag

@@ -1,6 +1,6 @@
-let rec reverse_flag flag = if flag = 0 then 1 else 0
+let rec reverse_flag flag = if flag then false else flag
 in
-let rec add_flag x flag = if flag = 0 then -. x else x
+let rec add_flag x flag = if flag then x else -. x
 in
 let rec while1 x p = if x >= p then p *. 2.0 else p
 in
@@ -50,7 +50,7 @@ let rec min_caml_sin x =
 in
 let rec min_caml_cos x =
 	let pi = 3.1415927410125732421875 in
-	let flag = 1 in
+	let flag = true in
 	let x = fabs x in
 	let x = reduction_2pi x pi in
 	let (x, flag) = 

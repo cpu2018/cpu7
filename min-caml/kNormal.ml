@@ -32,6 +32,8 @@ type t = (* K正規化後の式 (caml2html: knormal_t) *)
 	| Put of Id.t * Id.t * Id.t
 	| ExtArray of Id.t
 	| ExtFunApp of Id.t * Id.t list
+	| Read_I of Id.t
+	| Read_F of Id.t
 and fundef = { name : Id.t * Type.t; args : (Id.t * Type.t) list; body : t }
 
 let dummy_pos = {Syntax.ls = 0; Syntax.le = 0; Syntax.chs = 0; Syntax.che = 0}
@@ -40,7 +42,7 @@ let dummy_pos = {Syntax.ls = 0; Syntax.le = 0; Syntax.chs = 0; Syntax.che = 0}
 (* 自由変数の集合を保持する *)
 let rec fv = function (* 式に出現する（自由な ）変数 (free variant) (caml2html: knormal_fv) *)
 	| Unit | Int(_) | Float(_) | ExtArray(_) -> S.empty
-	| Neg(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) -> S.singleton x (* 要素が1個の集合を作る *)
+	| Neg(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) | Read_I(x) | Read_F(x) -> S.singleton x (* 要素が1個の集合を作る *)
 	| Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | ShiftIL(x, y) | ShiftIR(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
 	| IfEq(x, y, e1, e2) | IfLE(x, y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
 	| Let((x, t), e1, e2) -> S.union (fv e1) (S.remove x (fv e2)) (* 和集合 *)
@@ -236,6 +238,12 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 				(fun x -> insert_let (g env e2)
 						(fun y -> insert_let (g env e3)
 								(fun z -> Put(x, y, z), Type.Unit)))
+	| Syntax.Read_I(e) ->
+			insert_let (g env e)
+				(fun x -> Read_I(x), Type.Unit)
+	| Syntax.Read_F(e) ->
+			insert_let (g env e)
+				(fun x -> Read_F(x), Type.Unit)
 
 (* ここからデバッグ用print関数 *)
 
@@ -361,6 +369,8 @@ let rec print_kNormal depth expr =
 								print_indent (depth + 1); print_string "<ARGS> ";
 								List.iter (fun y -> Id.print_t y; print_string ", ") ys;
 								print_string "</ARGS> "
+	| Read_I x      -> print_string "<Read_I> "; Id.print_t x
+	| Read_F x      -> print_string "<Read_F> "; Id.print_t x
 
 and print_code depth expr = print_kNormal depth expr; is_already_newline newline_flag
 

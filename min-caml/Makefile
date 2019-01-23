@@ -19,12 +19,14 @@ $(RESULT): debug-code top
 clean:: nobackup
 
 # ↓ もし実装を改造したら、それに合わせて変える
-SOURCES = float.c \
+SOURCES = my_float.c \
+lib_float_value.ml \
 lib_float.ml \
 lib_sc.ml \
 lib_atan.ml \
-lib_print_int.ml \
 lib_create_array.ml \
+lib_read.ml \
+lib_print_int.ml \
 type.ml \
 id.ml \
 m.ml s.ml \
@@ -34,7 +36,6 @@ fun2letrec.ml \
 typing.mli typing.ml \
 kNormal.mli kNormal.ml \
 alpha.mli alpha.ml \
-comSubexpElim.mli comSubexpElim.ml \
 beta.mli beta.ml \
 assoc.mli assoc.ml \
 inline.mli inline.ml \
@@ -47,6 +48,7 @@ simm.mli simm.ml \
 regAlloc.mli regAlloc.ml \
 emit.mli emit.ml \
 main.mli main.ml
+#comSubexpElim.mli comSubexpElim.ml \
 
 # ↓ テストプログラムが増えたら、これも増やす
 TESTS = print fun3

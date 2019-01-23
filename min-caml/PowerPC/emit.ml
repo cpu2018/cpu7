@@ -1,7 +1,10 @@
 open Asm
 
+(*
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"
+*)
+external getfloat : float -> int32 = "getfloat"
 
 (* let ic = Printf.open_in "mylib.s"*)
 
@@ -112,6 +115,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| NonTail(x), Sqrt(y) -> Printf.fprintf oc "\tfsqrt\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), FtoI(y) -> Printf.fprintf oc "\tftoi\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), ItoF(y) -> Printf.fprintf oc "\titof\t%s, %s\n" (reg x) (reg y)
+	| NonTail(x), Read_I -> Printf.fprintf oc "\tread\t%s\n" (reg x)
+	| NonTail(x), Read_F -> Printf.fprintf oc "\tread\t%s\n" (reg x)
 	| NonTail(x), Lfd(y, V(z)) -> Printf.fprintf oc "\tlfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Lfd(y, C(z)) -> Printf.fprintf oc "\tlfd\t%s, %d(%s)\n" (reg x) z (reg y)
 	| NonTail(_), Stfd(x, y, V(z)) -> Printf.fprintf oc "\tstfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
@@ -279,28 +284,35 @@ let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
 	stackmap := [];
 	g oc (Tail, e)
 
-let f oc (Prog(data, fundefs, e)) =
+let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (Prog(data, fundefs, e)) =
 	Format.eprintf "generating assembly...@.";
+	(if float_value_flag = 1 then Lib_float_value.print_external_methods oc);
 	if data <> [] then
-		(Printf.fprintf oc "\t.data\n\t.literal8\n";
+		(
+		 (*
+		 Printf.fprintf oc "\t.data\n\t.literal8\n";
+		 *)
 		 List.iter
 			 (fun (Id.L(x), d) ->
+			 	 (*
 				 Printf.fprintf oc "\t.align 3\n";
 				 Printf.fprintf oc "%s:\t # %f\n" x d;
+				 *)
+				 Printf.fprintf oc "%s:\n" x;
+				 Printf.fprintf oc "\t%ld\n" (getfloat d))
+				 (*
 				 Printf.fprintf oc "\t.long\t%ld\n" (gethi d);
 				 Printf.fprintf oc "\t.long\t%ld\n" (getlo d))
+				 *)
 			 data);
-	(*
-	Lib_float_value.print_external_methods oc;
-	*)
 	Printf.fprintf oc "\t.text\n";
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "\t.align 2\n";
-	Lib_float.print_external_methods oc;
-	Lib_sc.print_external_methods oc;
-	Lib_atan.print_external_methods oc;
-	Lib_print_int.print_external_methods oc;
-	Lib_create_array.print_external_methods oc;
+	(if sca_flag = 1 then Lib_sc.print_external_methods oc);
+	(if sca_flag = 1 then Lib_atan.print_external_methods oc);
+	(if array_flag = 1 then Lib_create_array.print_external_methods oc);
+	(if read_flag = 1 then Lib_read.print_external_methods oc);
+	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	(*Printf.fprintf oc "_min_caml_start: # main entry point\n";*)
 	Printf.fprintf oc "_min_caml_start:\n";

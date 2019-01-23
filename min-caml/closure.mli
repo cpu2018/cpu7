@@ -31,6 +31,8 @@ type t =
 	| Get of Id.t * Id.t
 	| Put of Id.t * Id.t * Id.t
 	| ExtArray of Id.l
+	| Read_I of Id.t
+	| Read_F of Id.t
 	| WildCard
 type fundef = { name : Id.l * Type.t;
 				args : (Id.t * Type.t) list;

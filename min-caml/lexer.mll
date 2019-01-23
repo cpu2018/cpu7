@@ -91,7 +91,7 @@ rule token = parse
     { COMMA }
 | '_'
     { IDENT(Id.gentmp Type.Unit) }
-| "Array.create" | "Array.make" | "create_array"(* [XX] ad hoc *)
+| "Array.create" | "Array.make" | "create_array" | "create_float_array" (* [XX] ad hoc *)
     { ARRAY_CREATE }
 | '.'
     { DOT }
@@ -105,6 +105,26 @@ rule token = parse
 	{ SFTL }
 | ">>"
 	{ SFTR }
+| "read_int"
+	{ READINT }
+| "read_float"
+	{ READFLOAT }
+| "fabs"
+	{ FABS }
+| "fsqr"
+	{ FSQR }
+| "fiszero"
+	{ FISZERO }
+| "fispos"
+	{ FISPOS }
+| "fisneg"
+	{ FISNEG }
+| "fhalf"
+	{ FHALF }
+| "fneg"
+	{ FNEG }
+| "fless"
+	{ FLESS }
 | lower (digit|lower|upper|'_')* (* 他の「予約語」より後でないといけない *)
     { IDENT(Lexing.lexeme lexbuf) }
 | _
