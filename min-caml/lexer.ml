@@ -6,7 +6,7 @@ open Type
 
 # 8 "lexer.ml"
 let __ocaml_lex_tables = {
-  Lexing.lex_base = 
+  Lexing.lex_base =
    "\000\000\208\255\075\000\212\255\213\255\215\255\160\000\019\000\
     \217\255\218\255\235\000\054\001\129\001\002\000\013\000\232\255\
     \204\001\023\002\020\000\021\000\243\255\022\000\023\000\100\002\
@@ -24,7 +24,7 @@ let __ocaml_lex_tables = {
     \110\018\185\018\004\019\079\019\154\019\229\019\048\020\123\020\
     \198\020\099\020\251\255\252\255\253\255\030\000\035\000\255\255\
     \254\255";
-  Lexing.lex_backtrk = 
+  Lexing.lex_backtrk =
    "\255\255\255\255\046\000\255\255\255\255\255\255\046\000\047\000\
     \255\255\255\255\046\000\046\000\046\000\028\000\027\000\255\255\
     \046\000\046\000\014\000\013\000\255\255\011\000\010\000\008\000\
@@ -42,7 +42,7 @@ let __ocaml_lex_tables = {
     \046\000\046\000\046\000\046\000\046\000\046\000\046\000\046\000\
     \039\000\255\255\255\255\255\255\255\255\004\000\004\000\255\255\
     \255\255";
-  Lexing.lex_default = 
+  Lexing.lex_default =
    "\001\000\000\000\255\255\000\000\000\000\000\000\255\255\255\255\
     \000\000\000\000\255\255\255\255\255\255\255\255\255\255\000\000\
     \255\255\255\255\255\255\255\255\000\000\255\255\255\255\255\255\
@@ -60,7 +60,7 @@ let __ocaml_lex_tables = {
     \255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\
     \255\255\122\000\000\000\000\000\000\000\255\255\255\255\000\000\
     \000\000";
-  Lexing.lex_trans = 
+  Lexing.lex_trans =
    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
     \000\000\029\000\030\000\029\000\000\000\030\000\000\000\000\000\
     \000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
@@ -758,7 +758,7 @@ let __ocaml_lex_tables = {
     \000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
     \000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
     \000\000\000\000\000\000\000\000\000\000\000\000\000\000";
-  Lexing.lex_check = 
+  Lexing.lex_check =
    "\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\
     \255\255\000\000\000\000\029\000\255\255\000\000\255\255\255\255\
     \255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\
@@ -1456,22 +1456,22 @@ let __ocaml_lex_tables = {
     \255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\
     \255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\
     \255\255\255\255\255\255\255\255\255\255\255\255\255\255";
-  Lexing.lex_base_code = 
+  Lexing.lex_base_code =
    "";
-  Lexing.lex_backtrk_code = 
+  Lexing.lex_backtrk_code =
    "";
-  Lexing.lex_default_code = 
+  Lexing.lex_default_code =
    "";
-  Lexing.lex_trans_code = 
+  Lexing.lex_trans_code =
    "";
-  Lexing.lex_check_code = 
+  Lexing.lex_check_code =
    "";
-  Lexing.lex_code = 
+  Lexing.lex_code =
    "";
 }
 
 let rec token lexbuf =
-    __ocaml_lex_token_rec lexbuf 0
+   __ocaml_lex_token_rec lexbuf 0
 and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
@@ -1719,11 +1719,11 @@ and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
            (Lexing.lexeme_end lexbuf)) )
 # 1721 "lexer.ml"
 
-  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; 
+  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf;
       __ocaml_lex_token_rec lexbuf __ocaml_lex_state
 
 and comment lexbuf =
-    __ocaml_lex_comment_rec lexbuf 121
+   __ocaml_lex_comment_rec lexbuf 121
 and __ocaml_lex_comment_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
@@ -1752,7 +1752,7 @@ and __ocaml_lex_comment_rec lexbuf __ocaml_lex_state =
     ( comment lexbuf )
 # 1754 "lexer.ml"
 
-  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; 
+  | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf;
       __ocaml_lex_comment_rec lexbuf __ocaml_lex_state
 
 ;;
