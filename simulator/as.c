@@ -1426,6 +1426,7 @@ int main(int argc,char **argv){
     }
     else if((state==1)&&(ch == 'g')){
       state=6;/*.globlの読み込み*/
+      printf("baaaaaa\n");
     }
     else if((state==2)&&(ch=='\n')){
       state=3;/*セクションの読み込み終わり、ラベルの読み込み*/
@@ -1626,11 +1627,14 @@ int main(int argc,char **argv){
       i+=1;
       state=8;
       labelnum+=1;
+      printf("aaaa\n");
     }
+    //printf("%d\n",state);
   }
   labelnum+=1;
 
 
+  //printf("aaaaaa\n");
 
 
   char* output_file = malloc((strlen(argv[1]) - 2) * sizeof(char));
