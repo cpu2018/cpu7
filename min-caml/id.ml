@@ -16,7 +16,7 @@ let genid s =
 		Printf.sprintf "%s" s
 	else
 		(incr counter; (* カウンターをインクリメント *)
-		Printf.sprintf "%s.%d" s !counter)
+		Printf.sprintf "%s%d" s !counter)
 
 let gen_fun_name () = 
 	incr counter;

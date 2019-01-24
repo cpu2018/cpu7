@@ -305,8 +305,11 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 				 Printf.fprintf oc "\t.long\t%ld\n" (getlo d))
 				 *)
 			 data);
+	(*
 	Printf.fprintf oc "\t.text\n";
+	*)
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
+	(*
 	Printf.fprintf oc "\t.align 2\n";
 	(if sca_flag = 1 then Lib_sc.print_external_methods oc);
 	(if sca_flag = 1 then Lib_atan.print_external_methods oc);
@@ -314,7 +317,8 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	(if read_flag = 1 then Lib_read.print_external_methods oc);
 	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
 	List.iter (fun fundef -> h oc fundef) fundefs;
-	(*Printf.fprintf oc "_min_caml_start: # main entry point\n";*)
+	Printf.fprintf oc "_min_caml_start: # main entry point\n";
+	*)
 	Printf.fprintf oc "_min_caml_start:\n";
 	(*
 	Printf.fprintf oc "\tmflr\tr0\n";
@@ -334,4 +338,10 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "\tmtlr\tr0\n";
 	Printf.fprintf oc "\tlmw\tr30, -8(r1)\n";
 	*)
-	Printf.fprintf oc "\tblr\n"
+	Printf.fprintf oc "\tblr\n";
+	(if sca_flag = 1 then Lib_sc.print_external_methods oc);
+	(if sca_flag = 1 then Lib_atan.print_external_methods oc);
+	(if array_flag = 1 then Lib_create_array.print_external_methods oc);
+	(if read_flag = 1 then Lib_read.print_external_methods oc);
+	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
+	List.iter (fun fundef -> h oc fundef) fundefs
