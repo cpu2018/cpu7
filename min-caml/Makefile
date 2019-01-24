@@ -21,7 +21,6 @@ clean:: nobackup
 # ↓ もし実装を改造したら、それに合わせて変える
 SOURCES = my_float.c \
 lib_float_value.ml \
-lib_float.ml \
 lib_sc.ml \
 lib_atan.ml \
 lib_create_array.ml \
