@@ -271,8 +271,7 @@ void change_arg_label(char *arg,char *x,label *list,int lnum,label la,unsigned i
   int rel = (int) addr1 - (int) addr2;
 
   change_ibit_f(rel,x,32);
-  //printf("x %s\n",x);
-  //printf("addr %d %d %d\n",addr1,addr2,rel);
+
 }
 
 
@@ -352,11 +351,13 @@ void change_arg_mem(char *arg,char *x){
 
 void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp){
   for(int k=0;k<N;k++){
+    printf("%d 回\n",k);
     char code[33]={'\0'};
     char ans[33]={'\0'};
     char name[10]={'\0'};
     unsigned int addr = (la.meirei[k]).addr;
     strcpy(name,(la.meirei[k]).name);
+    printf("%s\n",name);
     if(strcmp(name,"cmpwi")==0){
       change_arg((la.meirei[k]).arg1,code,list,flist,lnum,fnum,la,addr);
       char s1[7] = "001011";
@@ -926,12 +927,12 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       char s2[25]={'\0'};
       change_arg((la.meirei[k]).arg1,code,list,flist,lnum,fnum,la,addr);
       strncpy(s2,code+8,24);
-      printf("%s\n",code);
+      //printf("%s\n",code);
       clean_code(code);
       strcat(ans,s1);
       strcat(ans,s2);
       strcat(ans,"00");
-      printf("%s\n",ans);
+      //printf("%s\n",ans);
       char nans[5]={'\0'};
       change_bit_char_list(ans,nans);
       fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);                   
@@ -1328,7 +1329,7 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       strcat(ans,"000000");
       strcat(ans,s4);
       strcat(ans,"0");
-      printf("%s\n",ans);
+      //printf("%s\n",ans);
       char nans[5]={'\0'};
       change_bit_char_list(ans,nans);
       fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);
@@ -1351,7 +1352,7 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       strcat(ans,s3);
       strcat(ans,s2);
       strcat(ans,s4);
-      printf("%s\n",ans);
+      //printf("%s\n",ans);
       char nans[5]={'\0'};
       change_bit_char_list(ans,nans);
       fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);
@@ -1375,7 +1376,7 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       strcat(ans,s2);
       strcat(ans,s4);
       strcat(ans,"01101111000");
-      printf("%s\n",ans);
+      //printf("%s\n",ans);
       char nans[5]={'\0'};
       change_bit_char_list(ans,nans);
       fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);
@@ -1386,6 +1387,7 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
 
 void write_ins(label *llist,int lnum,fdata *flist,int fnum,FILE *fp){
   for(int i=0;i<(lnum);i++){
+    //printf("%dの長さ\n",lnum);
     sub_write_ins(llist[i],llist,lnum,flist,fnum,fp);
   }
 }
@@ -1495,6 +1497,21 @@ int main(int argc,char **argv){
       buf[i]=ch;
       i+=1;
     }
+    else if((state==9)&&(ch==':')){
+      strcpy(((label_list[labelnum]).meirei[insnum]).name,"mr");
+      strcpy(((label_list[labelnum]).meirei[insnum]).arg1,"r3");
+      strcpy(((label_list[labelnum]).meirei[insnum]).arg2,"r3");
+      addr+=4;     
+      labelnum+=1;
+      strcpy(label_list[labelnum].name,buf);
+      clean_buf(buf);
+      i=0;
+      label_list[labelnum].addr=addr;
+      state=8;
+    }
+
+
+      
     else if((state==9)&&((ch==' ')||(ch=='\t'))&&(j==0)){
       //printf("%d\n",insnum);
     }

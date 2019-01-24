@@ -1,6 +1,6 @@
 CC = gcc
 CPP = g++
-CFLAGS = -Wall -std=c99 -O2
+CFLAGS = -Wall -lm -std=c99 -O2
 CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
 SIMU_SOURCE = simu.c
