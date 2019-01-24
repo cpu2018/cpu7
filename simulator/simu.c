@@ -1965,7 +1965,7 @@ void exec(CPU *cpu,label *labellist,code *codelist){
   printf("ブレークポイントを入れますか? y or n\n");
   char r[2]={'\0'};
   char q[2]={'\0'};
-  int addrx;
+  int addrx=-1;
   char name[20]={'\0'};
   scanf("%s",r);
   int check=0;
