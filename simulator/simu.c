@@ -21,7 +21,7 @@ typedef struct cpu{
 } CPU;
 
 typedef struct l{
-  char name[20];
+  char name[30];
   int addr;
 } label;
 
@@ -2165,15 +2165,6 @@ void exec(CPU *cpu,label *labellist,code *codelist){
 
 
 int main(int argc,char **argv){
-  char u[33]="11000001000000000000000000000001";
-  float u2=change_float(u);
-  printf("aaaaa%f\n",u2);
-  
-  char ans[33]={'\0'};
-  char x1[33]="00111111100110101110000101000111";
-  char ovf[2]={'\0'};
-  fpu_fsqrt(x1,ans,ovf);
-  printf("%s\n",ans);
   //printf("%d -> %d\n",b_to_i(x1,0,31),b_to_i(ans,0,31));
   FILE *file2;
   file2=fopen(argv[2],"r");
@@ -2181,18 +2172,21 @@ int main(int argc,char **argv){
   int state=0;/*命令にたどり着いていない状態*/
   int lnum=0;
   int cnum=0;
-  label labellist[30];
+  label labellist[100];
   code codelist[1000];
   char ch;
   int z=0;/*bufの位置*/
   char buf[256];
-  for(int y=0;y<30;y++){
+  for(int y=0;y<100;y++){
     init_label(&(labellist[y]));
   }
+  
   for(int y=0;y<1000;y++){
     init_code(&(codelist[y]));
   }
+  //printf("aaa\n");
   while((ch=fgetc(file2))!=EOF){
+    //printf("%c",ch);
     if((state==0)&&(ch=='.')){
       state=1;
     }
@@ -2238,6 +2232,7 @@ int main(int argc,char **argv){
     }
     else if((state==5)&&(ch==':')){
       state=4;
+      //printf("cnum %d lnum %d z %d\n",cnum,lnum,z);
     }
     else if(state==5){
       buf[z]=ch;
@@ -2245,7 +2240,7 @@ int main(int argc,char **argv){
     }
   }
   fclose(file2);
-    
+  //printf("kkkkkk\n");
 
   /*int u=0;
   int t=1;
@@ -2266,6 +2261,7 @@ int main(int argc,char **argv){
   fread(memory,sizeof(unsigned char),size,file);
   int x=0;
   int y=0;
+  //printf("ここ\n");
   for(int m=0;m<size;m++){
     r(memory[x],cpu.memory,y);
     x+=1;
@@ -2276,6 +2272,7 @@ int main(int argc,char **argv){
   zero_cpu(&cpu);
   //print_cpu(&cpu);
   //print_reg(&cpu);
+  printf("実行します\n");
   exec(&cpu,labellist,codelist);
   //print_reg(&cpu);
   
