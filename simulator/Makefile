@@ -1,11 +1,12 @@
 CC = gcc
 CPP = g++
-CFLAGS = -Wall -O2 -lm
+CFLAGS = -Wall -O2
 CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
 SIMU_SOURCE = simu.c
 ML_TESTS = \
-float2
+float2 \
+minrt
 ASM_TESTS = 
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
@@ -20,7 +21,7 @@ assembler: $(AS_SOURCE)
 	$(CC) $(CFLAGS) -o $@ $^
 
 simulator: $(SIMU_SOURCE)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 do_casm: $(ML_TESTS:%.ml=%)
 

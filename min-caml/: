@@ -101,24 +101,20 @@ let rec g env = function
 		let t = Type.gentyp () in
 		extenv := M.add x t !extenv;
 		t
-	| MakeCls ((x, Type.Fun (args, ret)), {entry = Id.L(entry); actual_fv = fvs}, e) -> 
-		let env' = M.add x t env in
-		(try
-			unify t (Type.Fun (List.map s, ))
-		with Unify (t1, t2) -> raise Error);
-		g env e
+	| MakeCls ((x, t), {entry = Id.L(entry); actual_fv = fvs}, e) -> 
+		
 	| AppCls (x, xs) -> 
 		let t = Type.gentyp () in
 		(try
-			unify (g env x) (Type.Fun (List.map (g env) xs, t))
+			unify (g env x) (Type.Fun())
 		with Unify (t1, t2) -> raise Error);
-		t
+
 	| AppDir (Id.L(x), xs) -> 
 		let t = Type.gentyp () in
 		(try 
 			unify (g env x) (Type.Fun (List.map (g env) xs, t))
 		with Unify (t1, t2) -> raise Error);
-		t
+		
 	| Tuple xs -> Type.Tuple(List.map (g env) xs)
 	| LetTuple (xs, tuple, e) -> 
 		(try
@@ -157,10 +153,9 @@ let rec g env = function
 let rec h env {name = (Id.L(x), t); args = args; formal_fv = fvs; body = e} =
 	
 
-let rec f print_flag Prog (fundefs, t) =
+let rec f print_flag Prog (fundef_list, t) =
 	extenv := M.empty;
 	(try 
-		List.map fundefs 
 		unify Type.Unit (g M.empty t) 
 	with Unify _ -> failwith "top level does not have type unit");
 	(if print_flag = 1 then 

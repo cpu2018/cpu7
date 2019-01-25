@@ -216,11 +216,11 @@ let rec print_closure depth expr =
 								*)
 								print_code depth e2
 	| Var x 			 	 -> print_string "<VAR> "		 ; Id.print_t x
-	| MakeCls ((f, t), {entry = entry; actual_fv = fv_list}, exp)
-							 -> print_string "<MakeCls>";
-							 	Id.print_t f; print_string " ------ Type : "; Type.print_code t;
+	| MakeCls ((x, t), {entry = entry; actual_fv = fv_list}, exp)
+							 -> print_string "<MakeCls> ";
+							 	Id.print_t x; print_string " ------ Type : "; Type.print_code t;
 								print_indent (depth + 1); print_string "<CLOSURE> "; print_newline ();
-								print_indent (depth + 2); print_string "entry : "; 
+								print_indent (depth + 2); print_string "entry (fun label) : "; 
 								Id.print_l entry; print_newline ();
 								print_indent (depth + 2); print_string "actual_fv : ";
 								print_id_list fv_list; print_newline ();
