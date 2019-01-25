@@ -370,7 +370,7 @@ let f print_flag e =
 	with Unify _ -> failwith "top level does not have type unit");
 	(if print_flag = 1 
 	 then (print_string "<dump Syntax.t>\n=================================================================================================\n"; 
-	       (Syntax.print_code 0 e); 
+	 	   (Syntax.print_code 0 e); 
 		   print_string "=================================================================================================\n\n") 
 	 else ());
 	extenv := M.map deref_typ !extenv;
