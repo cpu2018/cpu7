@@ -11,4 +11,9 @@ let j = fispos a in
 let k = fless a a in
 let l = create_array 3 4 in
 let m = create_float_array 3 a in
-()
+print_int (int_of_float m.(1));
+print_int (int_of_float b);
+print_int (int_of_float c);
+print_int (int_of_float d);
+print_int (int_of_float e);
+print_int (int_of_float f)
