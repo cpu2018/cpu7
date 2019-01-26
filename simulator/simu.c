@@ -5,6 +5,8 @@
 #define R 32
 #define M 10000
 
+static char output[100]={'\0'};
+
 union IntAndFloat {
   int ival;
   float fval;
@@ -1048,6 +1050,12 @@ void srw(CPU *cpu,int *a){
   *a+=4;
 }
 
+void print_memory(CPU cpu){
+  for(int i=0;i<M;i++){
+    printf("addr %d code %s\n",i,cpu.memory[i]);
+  }
+}
+
 void print_reg(CPU *cpu){
   for(int i=0;i<32;i++){
     printf("reg %d value %d code %s\n",i,change_ibit_f(32,(cpu->reg)[i]),(cpu->reg)[i]);
@@ -1123,7 +1131,7 @@ void and(char ans[33],char s1[33],char s2[33]){
   }
 }
       
-  
+static int i=0; 
 
 void out(CPU *cpu,int *a){
   int addr = *a;
@@ -1132,8 +1140,10 @@ void out(CPU *cpu,int *a){
   int ra = change_ibit(5,code_6_10);
 
   int value = change_ibit_f(R,(cpu->reg)[ra]);
-  printf("レジスタ%dをoutした %c\n",ra,value);
+  //printf("レジスタ%dをoutした %c\n",ra,value);
   *a+=4;
+  output[i]=value;
+  i+=1;
 }
 
 void cmpi(CPU *cpu,int *a){
@@ -1230,7 +1240,9 @@ void bne(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
-  cr = (cr - 2)/4;
+  //printf("%d\n",cr);
+  //printf("%s\n",(cpu->cr)[cr]);
+  //cr = (cr - 2)/4;/*消した*/
   if(strcmp((cpu->cr)[cr],"0100")==0){
     *a+=4;
   }
@@ -1459,6 +1471,8 @@ void stw(CPU *cpu,int *a){
 
   int addr2 = b+d;
 
+  //printf("%s\n",(cpu->reg)[rs]);
+
 
   strncpy((cpu->memory)[addr2],(cpu->reg)[rs]/*+32*/,8);
   strncpy((cpu->memory)[addr2+1],(cpu->reg)[rs]/*+40*/+8,8);
@@ -1466,6 +1480,7 @@ void stw(CPU *cpu,int *a){
   strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]/*+56*/+24,8);
 
   *a+=4;
+  //printf("stwを実行\n");
   //printf("stw reg%d %d(reg%d)を実行\n",rs,d,ra);
 }
 
@@ -1479,6 +1494,7 @@ void mflr(CPU *cpu,int *a){
   strcpy((cpu->reg)[rd],cpu->lr);
 
   *a+=4;
+  //printf("mflr\n");
   //printf("mflr reg%dを実行\n",rd);
 }
 
@@ -1551,8 +1567,10 @@ void bl(CPU *cpu,int *a){
   char code_6_29[25]={'\0'};
   read_i_j(cpu,addr,code_6_29,6,29);
   int target = change_ibit_f(24,code_6_29) * 4;
+  //printf("target %d\n",target);
   change_int((cpu->lr),32,addr+4);
   *a=target+*a;
+  //printf("%d\n",*a);
   //printf("blを実行\n");
 }
 
@@ -1700,7 +1718,7 @@ void rlwinm(CPU *cpu,int *a){
   make_mask(mask,mb,me);
   char ra_c[33]={'\0'};
   and(ra_c,rc,mask);
-  //printf("mask = %s\n", mask);
+  //printf("n %d\n",n);
   strcpy((cpu->reg)[ra],ra_c);
   *a+=4;
   //printf("rlwinm r%d r%d %d %d %dを実行\n",ra,rs,sh,mb,me);
@@ -1965,6 +1983,7 @@ void exec(CPU *cpu,label *labellist,code *codelist){
   printf("ブレークポイントを入れますか? y or n\n");
   char r[2]={'\0'};
   char q[2]={'\0'};
+  char g[2]={'\0'};
   int addrx=-1;
   char name[20]={'\0'};
   scanf("%s",r);
@@ -1973,9 +1992,11 @@ void exec(CPU *cpu,label *labellist,code *codelist){
     printf("ラベル名を入力してください\n");
     scanf("%s",name);
   }
-  for(int i=0;i<30;i++){
+  for(int i=0;i<100;i++){
+    
     if(strcmp(name,(labellist[i]).name)==0){
       addrx=(labellist[i]).addr;
+      
     }
   }
     
@@ -1994,7 +2015,16 @@ void exec(CPU *cpu,label *labellist,code *codelist){
         printf("%s\n",(codelist[(addr-iaddr)/4]).name);
         //print_reg(cpu);
       }
+      printf("bでメモリの表示\n");
+      scanf("%s",g);
+      if(g[0]=='b'){
+        print_memory(*cpu);
+      }
     }
+    /*for(int p=0;p<1000;p++){
+      printf("%d %s\n",addr+p*4,codelist[(addr+p*4-iaddr)/4].name);
+      }*/
+    //print_memory(*cpu);
     char code_0_5[7]={'\0'};
     char code_22_30[10]={'\0'};
     char code_21_30[11]={'\0'};
@@ -2009,6 +2039,7 @@ void exec(CPU *cpu,label *labellist,code *codelist){
     read_i_j(cpu,addr,code_30,30,30);
     read_i_j(cpu,addr,code_31,31,31);
     read_i_j(cpu,addr,code_26_30,26,30);
+    //printf("%d\n",addr);
     //printf("%s\n",code_0_5);
     if(strcmp(code_0_5,"011111")==0){
       if(strcmp(code_22_30,"100001010")==0){
@@ -2025,6 +2056,7 @@ void exec(CPU *cpu,label *labellist,code *codelist){
         mr(cpu,&addr);
       }
       else if(strcmp(code_21_30,"0101010011")==0){
+        //printf("aaaaaaaa\n");
         mflr(cpu,&addr);
       }
       else if(strcmp(code_21_30,"0111010011")==0){
@@ -2159,6 +2191,9 @@ void exec(CPU *cpu,label *labellist,code *codelist){
       if(q[0]=='a'){
         print_reg(cpu);
       }
+      if(g[0]=='b'){
+        print_memory(*cpu);
+      }
     }
   }
 }
@@ -2273,9 +2308,10 @@ int main(int argc,char **argv){
   //print_cpu(&cpu);
   //print_reg(&cpu);
   printf("実行します\n");
+  //print_memory(cpu);
   exec(&cpu,labellist,codelist);
   //print_reg(&cpu);
-  
+  printf("%s\n",output);
   return 0;
 }
 

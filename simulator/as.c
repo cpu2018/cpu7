@@ -42,6 +42,34 @@ void clean_buf_2(char buf[N][33]){
   }
 }
 
+/*int型のpowでnのm乗*/
+int pow22(int n,int m){
+  int ans = 1;
+  for(int i=1;i<m+1;i++){
+    ans*=n;
+  }
+  return ans;
+}
+
+
+int b_to_i(char *s,int b,int e){
+  int ans=0;
+  for(int i=b;i<e+1;i++){
+    if(s[i] == '1'){
+      ans += pow22(2,e-i);
+    }
+  }
+  return ans;
+}
+
+void i_to_b(char *g,int i_g,int b){
+  for(int i=0;i<b;i++){
+    int r = i_g % 2;
+    g[b-i-1] = r + 48;
+    i_g = i_g / 2;
+  }
+}
+
 long pow_int(int k,int i){
   long l=1;
   for(int j=0;j<i;j++){
@@ -146,7 +174,7 @@ void change_ibit_f(int l,char *s,int i){
 
 unsigned int search(label labellist[LABELNUM],char *s){
   for(int i=0;i<LABELNUM;i++){
-    printf("name %s %s %d\n",s,labellist[i].name,labellist[i].addr);
+    //printf("name %s %s %d\n",s,labellist[i].name,labellist[i].addr);
     if(strcmp(labellist[i].name,s)==0){
       return labellist[i].addr;
     }
@@ -184,7 +212,7 @@ void write_start(label *list,int num,char *start,FILE *fp){
   char code1[7]="010010";
   char code2[25]={'\0'};
   unsigned int addr = search(list,start);
-  printf("start %s addr %d\n",start,addr);
+  //printf("start %s addr %d\n",start,addr);
   int rel = (int) addr/4;
   change_ibit_f(rel,code2,24);
   strcat(code,code1);
@@ -272,7 +300,7 @@ void change_arg_label(char *arg,char *x,label *list,int lnum,label la,unsigned i
 
   int rel = (int) addr1 - (int) addr2;
 
-  change_ibit_f(rel,x,32);
+  change_ibit_f(rel/4,x,32);/*変更*/
 
 }
 
@@ -359,6 +387,7 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
     char name[10]={'\0'};
     unsigned int addr = (la.meirei[k]).addr;
     strcpy(name,(la.meirei[k]).name);
+    //printf("addr %d name %s\n",(int) addr,name);
     //printf("%s\n",name);
     if(strcmp(name,"cmpwi")==0){
       change_arg((la.meirei[k]).arg1,code,list,flist,lnum,fnum,la,addr);
@@ -583,6 +612,26 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       clean_code(code);
       char s4[17]={'\0'};
       change_arg_reverse((la.meirei[k]).arg3,code);
+      strncpy(s4,code+16,16);
+      clean_code(code);
+      strcat(ans,s1);
+      strcat(ans,s2);
+      strcat(ans,s3);
+      strcat(ans,s4);
+      char nans[5]={'\0'};
+      change_bit_char_list(ans,nans);
+      fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);
+    }
+    else if(strcmp(name,"stfd")==0){
+      char s1[7]="110110";
+      char s2[6]={'\0'};
+      change_arg((la.meirei[k]).arg1,code,list,flist,lnum,fnum,la,addr);
+      strncpy(s2,code+27,5);
+      clean_code(code);
+      char s3[6]={'\0'};
+      char s4[17]={'\0'};
+      change_arg_mem((la.meirei[k]).arg2,code);
+      strncpy(s3,code+11,5);
       strncpy(s4,code+16,16);
       clean_code(code);
       strcat(ans,s1);
@@ -984,9 +1033,18 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       change_arg((la.meirei[k]).arg1,code,list,flist,lnum,fnum,la,addr);
       strncpy(s3,code+27,5);
       clean_code(code);
+      char s4_sub[6]={'\0'};
       char s4[6]={'\0'};
       change_arg((la.meirei[k]).arg3,code,list,flist,lnum,fnum,la,addr);
-      strncpy(s4,code+27,5);
+      strncpy(s4_sub,code+27,5);
+      int x = b_to_i(s4_sub,0,4);
+      int y = 32 - x;
+      //printf("%d\n",y);
+      i_to_b(s4,y,5);
+
+      //printf("s4 %s\n",s4);
+
+      
       clean_code(code);
       char s5[6]={'\0'};
       strcpy(s5,s4);
@@ -1430,7 +1488,7 @@ int main(int argc,char **argv){
     }
     else if((state==1)&&(ch == 'g')){
       state=6;/*.globlの読み込み*/
-      printf("baaaaaa\n");
+      //printf("baaaaaa\n");
     }
     else if((state==2)&&(ch=='\n')){
       state=3;/*セクションの読み込み終わり、ラベルの読み込み*/
@@ -1487,7 +1545,7 @@ int main(int argc,char **argv){
       clean_buf(buf);
       i=0;
       label_list[labelnum].addr = addr;
-      printf("addr %d\n",addr);
+      //printf("addr %d\n",addr);
       //labelnum+=1;
     }
     else if((state==8)&&((ch==' ')&&(ch=='\t'))){
@@ -1521,7 +1579,7 @@ int main(int argc,char **argv){
       i=0;
       buf[i]=ch;
       i+=1;
-      printf("%s\n",buf);
+      //printf("%s\n",buf);
     }
     else if((state==9)&&(j==1)&&((ch==' ')||(ch=='\t')||(ch==','))){
       j=2;/*命令読み込み終わり*/
@@ -1645,7 +1703,7 @@ int main(int argc,char **argv){
       i+=1;
       state=8;
       labelnum+=1;
-      printf("aaaa\n");
+      //printf("aaaa\n");
     }
     //printf("%d\n",state);
   }
