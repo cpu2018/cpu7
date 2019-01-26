@@ -47,14 +47,21 @@ latan86:
 	1051372202
 	.globl _min_caml_start
 _min_caml_start:
-	li	r2, 1
-	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else5
-	li	r2, 1
-	b	beq_cont6
-beq_else5:
-	li	r2, 0
-beq_cont6:
+	li	r2, 10
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	fib10
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	mflr	r31
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	min_caml_print_int
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
 	blr
 reverse_flag55:
 	cmpwi	cr7, r2, 0
@@ -618,4 +625,33 @@ min_caml_print_int:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
+	blr
+fib10:
+	cmpwi	cr7, r2, 1
+	bgt	cr7, ble_else20
+	blr
+ble_else20:
+	subi	r5, r2, 1
+	stw	r2, 0(r3)
+	mflr	r31
+	mr	r2, r5
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	fib10
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mtlr	r31
+	lwz	r5, 0(r3)
+	subi	r5, r5, 2
+	stw	r2, 4(r3)
+	mflr	r31
+	mr	r2, r5
+	stw	r31, 12(r3)
+	addi	r3, r3, 16
+	bl	fib10
+	subi	r3, r3, 16
+	lwz	r31, 12(r3)
+	mtlr	r31
+	lwz	r5, 4(r3)
+	add	r2, r5, r2
 	blr

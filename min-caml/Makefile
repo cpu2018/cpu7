@@ -41,6 +41,7 @@ inline.mli inline.ml \
 constFold.mli constFold.ml \
 elim.mli elim.ml \
 closure.mli closure.ml \
+cls_typ.ml \
 asm.mli asm.ml \
 virtual.mli virtual.ml \
 simm.mli simm.ml \

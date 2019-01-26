@@ -262,9 +262,21 @@ and print_code depth expr = print_closure depth expr; is_already_newline newline
 
 let print_fundef depth {name = (name_l, name_type); args = arg_list; formal_fv = fv_list; body = exp} =
 	print_indent depth; print_string "fundef = {"; print_newline ();
-	print_indent (depth + 1); print_string "name = "; Id.print_l name_l; print_newline ();
-	print_indent (depth + 1); print_string "args = "; List.iter (fun tuple -> print_t_tuple tuple) arg_list; print_newline ();
-	print_indent (depth + 1); print_string "formal_fv = "; List.iter (fun tuple -> print_t_tuple tuple) fv_list; print_newline ();
+	print_indent (depth + 1); print_string "name = "; Id.print_l name_l; print_string " ------ Type : "; Type.print_code name_type;
+	print_indent (depth + 1); print_string "args = "; 
+		List.iter (fun (n, t) -> print_newline ();
+								 print_indent (depth + 2);
+								 print_t_tuple (n, t);
+								 print_string " ------ Type : "; 
+								 Type.print_code t) arg_list; 
+	print_newline ();
+	print_indent (depth + 1); print_string "formal_fv = "; 
+		List.iter (fun (n, t) -> print_newline ();
+								 print_indent (depth + 2);
+								 print_t_tuple (n, t); 
+								 print_string " ------ Type : "; 
+								 Type.print_code t) fv_list;
+	print_newline ();
 	print_indent (depth + 1); print_string "body = "; print_newline (); print_code (depth + 2) exp;
 	print_indent depth; print_string "}"; print_newline ()
 

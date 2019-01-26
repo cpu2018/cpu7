@@ -9,6 +9,7 @@ let beta_flag = ref 0
 let inline_flag = ref 0
 let before_cls_flag = ref 0
 let cls_flag = ref 0
+let cls_typ_flag = ref 0
 let flattening_flag = ref 0
 let virtual_flag = ref 0
 let simm_flag = ref 0
@@ -41,13 +42,14 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 		(RegAlloc.f !regalloc_flag
 			(Simm.f !simm_flag
 				(Virtual.f !virtual_flag
+				(Cls_typ.f !cls_typ_flag
 					(Closure.f !before_cls_flag !cls_flag
 						(iter !limit
 							(Alpha.f !alpha_flag
 								(KNormal.f !kNormal_flag
 									(Typing.f !syntax_flag
 											(Parser.exp Lexer.token l)))))))))
-
+)
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 
 let file f = (* ファイルをコンパイルしてファイルに出力する (caml2html: main_file) *)
@@ -90,6 +92,7 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 		 ("-inline", Arg.Unit(fun () -> inline_flag := 1), "dump code after inline");
 		 ("-before_cls", Arg.Unit(fun () -> before_cls_flag := 1), "dump code before closure");
 		 ("-cls", Arg.Unit(fun () -> cls_flag := 1), "dump code after closure");
+		 ("-clstyp", Arg.Unit(fun () -> cls_typ_flag := 1), "dump code after closure");
 		 ("-flatten", Arg.Unit(fun () -> flattening_flag := 1), "dump code after flattening");
 		 ("-flattening", Arg.Unit(fun () -> flattening_flag := 1), "dump code after flattening");
 		 ("-virtual", Arg.Unit(fun () -> virtual_flag := 1), "dump code after virtual");
