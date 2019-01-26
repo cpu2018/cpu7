@@ -146,6 +146,7 @@ void change_ibit_f(int l,char *s,int i){
 
 unsigned int search(label labellist[LABELNUM],char *s){
   for(int i=0;i<LABELNUM;i++){
+    printf("name %s %s %d\n",s,labellist[i].name,labellist[i].addr);
     if(strcmp(labellist[i].name,s)==0){
       return labellist[i].addr;
     }
@@ -183,6 +184,7 @@ void write_start(label *list,int num,char *start,FILE *fp){
   char code1[7]="010010";
   char code2[25]={'\0'};
   unsigned int addr = search(list,start);
+  printf("start %s addr %d\n",start,addr);
   int rel = (int) addr/4;
   change_ibit_f(rel,code2,24);
   strcat(code,code1);
@@ -351,13 +353,13 @@ void change_arg_mem(char *arg,char *x){
 
 void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp){
   for(int k=0;k<N;k++){
-    printf("%d 回\n",k);
+    //printf("%d 回\n",k);
     char code[33]={'\0'};
     char ans[33]={'\0'};
     char name[10]={'\0'};
     unsigned int addr = (la.meirei[k]).addr;
     strcpy(name,(la.meirei[k]).name);
-    printf("%s\n",name);
+    //printf("%s\n",name);
     if(strcmp(name,"cmpwi")==0){
       change_arg((la.meirei[k]).arg1,code,list,flist,lnum,fnum,la,addr);
       char s1[7] = "001011";
@@ -1480,6 +1482,7 @@ int main(int argc,char **argv){
       i+=1;
     }
     else if((state==8)&&(ch==':')){
+      //printf("%s\n",buf);
       strcpy(label_list[labelnum].name,buf);
       clean_buf(buf);
       i=0;
@@ -1497,21 +1500,17 @@ int main(int argc,char **argv){
       buf[i]=ch;
       i+=1;
     }
-    else if((state==9)&&(ch==':')){
-      strcpy(((label_list[labelnum]).meirei[insnum]).name,"mr");
-      strcpy(((label_list[labelnum]).meirei[insnum]).arg1,"r3");
-      strcpy(((label_list[labelnum]).meirei[insnum]).arg2,"r3");
-      addr+=4;     
+    else if((state==9)&&(ch==':')){    
       labelnum+=1;
+      //printf("%c %s\n",ch,buf);
       strcpy(label_list[labelnum].name,buf);
       clean_buf(buf);
       i=0;
       label_list[labelnum].addr=addr;
       state=8;
-    }
-
-
-      
+      //printf("%d j\n",j);
+      j=0;
+    }     
     else if((state==9)&&((ch==' ')||(ch=='\t'))&&(j==0)){
       //printf("%d\n",insnum);
     }
@@ -1522,6 +1521,7 @@ int main(int argc,char **argv){
       i=0;
       buf[i]=ch;
       i+=1;
+      printf("%s\n",buf);
     }
     else if((state==9)&&(j==1)&&((ch==' ')||(ch=='\t')||(ch==','))){
       j=2;/*命令読み込み終わり*/
@@ -1626,6 +1626,7 @@ int main(int argc,char **argv){
     }
     else if((state==9)&&(ch=='\n')){
       //insnum+=1;
+      //printf("kkkk %s\n",buf);
       clean_buf(buf);
       i=0;
       j=0;
