@@ -70,6 +70,8 @@ let rec g env = function
 			unify Type.Int (find x env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in Neg : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Int
 	| Add (x1, x2) | Sub (x1, x2) | Mul (x1, x2) | Div (x1, x2) | ShiftIL (x1, x2) | ShiftIR (x1, x2) -> 
@@ -78,6 +80,9 @@ let rec g env = function
 			unify Type.Int (find x2 env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in Add/Sub/Mul/Div/ShiftIL/ShiftIR : variable " ^ x1 ^ " or " ^ x2 ^ "\n");
+			print_string "var Type is "; Type.print_code (find x1 env);
+			print_string "var Type is "; Type.print_code (find x2 env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Int
 	| FNeg x | Floor x | Sqrt x -> 
@@ -85,14 +90,19 @@ let rec g env = function
 			unify Type.Float (find x env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in FNeg/Floor/Sqrt : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Float
-	| FAdd(x1, x2) | FSub(x1, x2) | FMul(x1, x2) | FDiv(x1, x2) ->
+	| FAdd (x1, x2) | FSub (x1, x2) | FMul (x1, x2) | FDiv (x1, x2) ->
 		(try
 			unify Type.Float (find x1 env);
 			unify Type.Float (find x2 env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in FAdd/FSub/FMul/FDiv : variable " ^ x1 ^ " or " ^ x2 ^ "\n");
+			print_string "var Type is "; Type.print_code (find x1 env);
+			print_string "var Type is "; Type.print_code (find x2 env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Float
 	| FtoI x ->
@@ -100,6 +110,8 @@ let rec g env = function
 			unify Type.Float (find x env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in FtoI : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Int
 	| ItoF x ->
@@ -107,6 +119,8 @@ let rec g env = function
 			unify Type.Int (find x env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in ItoF : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Float
 	| IfEq (x1, x2, e1, e2) -> 
@@ -114,12 +128,16 @@ let rec g env = function
 			unify (find x1 env) (find x2 env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in IfEq : variable " ^ x1 ^ " and variable " ^ x2 ^ " \n");
+			print_string "var Type is "; Type.print_code (find x1 env);
+			print_string "var Type is "; Type.print_code (find x2 env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		let tx1, tx2 = (g env e1), (g env e2) in
 		(try 
 			unify tx1 tx2
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in IfEq : e1 and e2 \n");
 			raise (Error (deref_typ t1, deref_typ t2)));
 		tx2
 	| IfLE (x1, x2, e1, e2) -> 
@@ -127,12 +145,16 @@ let rec g env = function
 			unify (find x1 env) (find x2 env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in IfLE : variable " ^ x1 ^ " and variable " ^ x2 ^ " \n");
+			print_string "var Type is "; Type.print_code (find x1 env);
+			print_string "var Type is "; Type.print_code (find x2 env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		let tx1, tx2 = (g env e1), (g env e2) in
 		(try 
 			unify tx1 tx2
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in IfLE : e1 and e2 \n");
 			raise (Error (deref_typ t1, deref_typ t2)));
 		tx2
 	| Let ((x, t), e1, e2) ->
@@ -140,6 +162,9 @@ let rec g env = function
 			unify t (g env e1)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in Let : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code t;
+			print_string "in f\n"; M.iter print_env env; print_newline ();
 			raise (Error (deref_typ t1, deref_typ t2)));
 		g (M.add x t env) e2
 	| Var x when M.mem x env -> find x env (* 変数の型推論 (caml2html: typing_var) *)
@@ -154,6 +179,8 @@ let rec g env = function
 			unify (Type.Fun (ty_args, ty_ret)) (find entry env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in MakeCls \n");
+			print_string "entry Type is "; Type.print_code (find entry env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		g env e
 	| AppCls (x, xs) -> 
@@ -162,6 +189,8 @@ let rec g env = function
 			unify (find x env) (Type.Fun (List.map (fun x -> find x env) xs, t))
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in AppCls \n");
+			print_string "appfun Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		t
 	| AppDir (Id.L(x), xs) -> 
@@ -175,6 +204,8 @@ let rec g env = function
 			unify (find x env) (Type.Fun (List.map (fun x -> find x env) xs, t))
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in AppDir \n");
+			print_string "appfun Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		t
 	| Tuple xs -> Type.Tuple(List.map (fun x -> find x env) xs)
@@ -183,6 +214,8 @@ let rec g env = function
 			unify (Type.Tuple(List.map snd xs)) (find tuple env);
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in LetTuple \n");
+			print_string "tuple Type is "; Type.print_code (find tuple env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		g (M.add_list xs env) e
 	| Get (arr, index) ->
@@ -192,6 +225,9 @@ let rec g env = function
 			unify Type.Int (find index env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in Get \n");
+			print_string "arr Type is "; Type.print_code (find arr env);
+			print_string "index Type is "; Type.print_code (find index env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		t
 	| Put (arr, index, value) ->
@@ -200,6 +236,10 @@ let rec g env = function
 			unify Type.Int (find index env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in Put \n");
+			print_string "arr Type is "; Type.print_code (find arr env);
+			print_string "index Type is "; Type.print_code (find index env);
+			print_string "value Type is "; Type.print_code (find value env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Unit
 	| ExtArray Id.L(x) ->
@@ -210,6 +250,8 @@ let rec g env = function
 			unify Type.Unit (find x env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in Read_I : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Int
 	| Read_F x -> 
@@ -217,6 +259,8 @@ let rec g env = function
 			unify Type.Unit (find x env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
+			print_string ("in Read_F : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Float
 	| _ -> raise Err
@@ -256,7 +300,9 @@ let rec f print_flag prog =
 	let (env : Type.t M.t ref) = ref M.empty in 
 	(try 
 		env := !(h_iter env fundefs);
+		(*
 		print_string "in f\n"; M.iter print_env !env; print_newline ();
+		*)
 		unify Type.Unit (g !env t) 
 	with Unify _ -> failwith "top level does not have type unit");
 	(if print_flag = 1 then 

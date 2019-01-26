@@ -240,10 +240,10 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 								(fun z -> Put(x, y, z), Type.Unit)))
 	| Syntax.Read_I(e) ->
 			insert_let (g env e)
-				(fun x -> Read_I(x), Type.Unit)
+				(fun x -> Read_I(x), Type.Int)
 	| Syntax.Read_F(e) ->
 			insert_let (g env e)
-				(fun x -> Read_F(x), Type.Unit)
+				(fun x -> Read_F(x), Type.Float)
 
 (* ここからデバッグ用print関数 *)
 

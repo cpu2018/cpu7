@@ -60,7 +60,8 @@ inprod inprod-rec inprod-loop matmul matmul-flat \
 manyargs \
 float float2 float3 \
 add xxx \
-fact 
+fact \
+read
 
 #do_test: $(TESTS:%=test/%.cmp)
 do_test: $(TESTS:%=test/%.s)
