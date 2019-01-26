@@ -45,23 +45,25 @@ latan87:
 	1045220557
 latan86:
 	1051372202
+l6:
+	0
+l5:
+	-1072902963
 	.globl _min_caml_start
 _min_caml_start:
-	li	r2, 15
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	fib10
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_int
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
+	lis	r31, ha16(l5)
+	addi	r31, r31, lo16(l5)
+	lfd	f0, 0(r31)
+	lis	r31, ha16(l6)
+	addi	r31, r31, lo16(l6)
+	lfd	f1, 0(r31)
+	fcmpu	cr7, f1, f0
+	bgt	cr7, ble_else8
+	li	r2, 0
+	b	ble_cont9
+ble_else8:
+	li	r2, 1
+ble_cont9:
 	blr
 reverse_flag55:
 	cmpwi	cr7, r2, 0
@@ -625,33 +627,4 @@ min_caml_print_int:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
-	blr
-fib10:
-	cmpwi	cr7, r2, 1
-	bgt	cr7, ble_else20
-	blr
-ble_else20:
-	subi	r5, r2, 1
-	stw	r2, 0(r3)
-	mflr	r31
-	mr	r2, r5
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	fib10
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	lwz	r5, 0(r3)
-	subi	r5, r5, 2
-	stw	r2, 4(r3)
-	mflr	r31
-	mr	r2, r5
-	stw	r31, 12(r3)
-	addi	r3, r3, 16
-	bl	fib10
-	subi	r3, r3, 16
-	lwz	r31, 12(r3)
-	mtlr	r31
-	lwz	r5, 4(r3)
-	add	r2, r5, r2
 	blr
