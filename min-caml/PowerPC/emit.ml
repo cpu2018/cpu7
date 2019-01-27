@@ -116,7 +116,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| NonTail(x), FtoI(y) -> Printf.fprintf oc "\tftoi\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), ItoF(y) -> Printf.fprintf oc "\titof\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), Read_I -> Printf.fprintf oc "\tread\t%s\n" (reg x)
-	| NonTail(x), Read_F -> Printf.fprintf oc "\tread\t%s\n" (reg x)
+	| NonTail(x), Read_F -> Printf.fprintf oc "\tfread\t%s\n" (reg x)
 	| NonTail(x), Lfd(y, V(z)) -> Printf.fprintf oc "\tlfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Lfd(y, C(z)) -> Printf.fprintf oc "\tlfd\t%s, %d(%s)\n" (reg x) z (reg y)
 	| NonTail(_), Stfd(x, y, V(z)) -> Printf.fprintf oc "\tstfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
@@ -338,10 +338,12 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "\tmtlr\tr0\n";
 	Printf.fprintf oc "\tlmw\tr30, -8(r1)\n";
 	*)
-	Printf.fprintf oc "\tblr\n";
+	Printf.fprintf oc "\tb\tmin_caml_fin\n";
 	(if sca_flag = 1 then Lib_sc.print_external_methods oc);
 	(if sca_flag = 1 then Lib_atan.print_external_methods oc);
 	(if array_flag = 1 then Lib_create_array.print_external_methods oc);
 	(if read_flag = 1 then Lib_read.print_external_methods oc);
 	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
-	List.iter (fun fundef -> h oc fundef) fundefs
+	List.iter (fun fundef -> h oc fundef) fundefs;
+	Printf.fprintf oc "min_caml_fin:"
+

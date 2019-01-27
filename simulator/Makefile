@@ -7,7 +7,8 @@ SIMU_SOURCE = simu.c
 ML_TESTS = \
 float2 \
 print_int \
-print_float
+print_float \
+read
 ASM_TESTS = 
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
