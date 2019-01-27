@@ -300,6 +300,7 @@ void change_arg_label(char *arg,char *x,label *list,int lnum,label la,unsigned i
 
   int rel = (int) addr1 - (int) addr2;
 
+  //printf("%s\n",arg);
   change_ibit_f(rel/4,x,32);/*変更*/
 
 }
@@ -316,7 +317,7 @@ void change_arg(char *arg,char *x,label *list,fdata *flist,int lnum,int fnum,lab
   else if(((arg[0]=='r')||(arg[0]=='f'))&&('0'<=arg[1])&&(arg[1]<='9')){
     change_arg_reg(arg,x);
   }
-  else if(strncmp("cr",arg,2)==0){
+  else if((strncmp("cr",arg,2)==0)&&('0'<=arg[2])&&(arg[2]<='9')){
     change_arg_cr(arg,x);
   }
   else if(arg[0]=='-'){
@@ -496,6 +497,7 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       char s3[15]={'\0'};
       change_arg((la.meirei[k]).arg2,code,list,flist,lnum,fnum,la,addr);
       strncpy(s3,code+18,14);
+      //printf("code %s\n",(la.meirei[k]).arg2);
       clean_code(code);
       strcat(ans,s1);
       strcat(ans,"00100");
@@ -505,6 +507,7 @@ void sub_write_ins(label la,label *list,int lnum,fdata *flist,int fnum,FILE *fp)
       char nans[5]={'\0'};
       change_bit_char_list(ans,nans);
       fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);
+      //printf("s3 %s\n",s3);
     }
     else if(strcmp(name,"blt")==0){
       char s1[7]="010000";
