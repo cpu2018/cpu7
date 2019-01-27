@@ -130,5 +130,4 @@ atan_ble_else109:
 	blr
 atan_ble_else106:
 	b	kernel_atan36
-
 "

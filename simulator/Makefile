@@ -39,6 +39,9 @@ do_asm: $(ASM_TESTS:%.s=%)
 %: %.s
 	-./assembler $^
 
+rm_assembly:
+	-rm -f $(ML_TESTS:%=%.s) $(ASM_TESTS)
+
 rm_binary:
 	-rm -f $(ML_TESTS) $(ASM_TESTS)
 
