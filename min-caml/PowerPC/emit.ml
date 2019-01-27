@@ -115,8 +115,22 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| NonTail(x), Sqrt(y) -> Printf.fprintf oc "\tfsqrt\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), FtoI(y) -> Printf.fprintf oc "\tftoi\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), ItoF(y) -> Printf.fprintf oc "\titof\t%s, %s\n" (reg x) (reg y)
+	(*
 	| NonTail(x), Read_I -> Printf.fprintf oc "\tread\t%s\n" (reg x)
+	*)
+	| NonTail(x), Read_I -> 
+		Printf.fprintf oc "\tin\t%s\n\tslwi\t%s, %s, 8\n" (reg x) (reg x) (reg x);
+		Printf.fprintf oc "\tin\t%s\n\tslwi\t%s, %s, 8\n" (reg x) (reg x) (reg x);
+		Printf.fprintf oc "\tin\t%s\n\tslwi\t%s, %s, 8\n" (reg x) (reg x) (reg x);
+		Printf.fprintf oc "\tin\t%s\n" (reg x)
+	(*
 	| NonTail(x), Read_F -> Printf.fprintf oc "\tfread\t%s\n" (reg x)
+	*)
+	| NonTail(x), Read_F ->
+		Printf.fprintf oc "\tfin\t%s\n\tslwi\t%s, %s, 8\n" (reg x) (reg x) (reg x);
+		Printf.fprintf oc "\tfin\t%s\n\tslwi\t%s, %s, 8\n" (reg x) (reg x) (reg x);
+		Printf.fprintf oc "\tfin\t%s\n\tslwi\t%s, %s, 8\n" (reg x) (reg x) (reg x);
+		Printf.fprintf oc "\tfin\t%s\n" (reg x)
 	| NonTail(x), Lfd(y, V(z)) -> Printf.fprintf oc "\tlfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Lfd(y, C(z)) -> Printf.fprintf oc "\tlfd\t%s, %d(%s)\n" (reg x) z (reg y)
 	| NonTail(_), Stfd(x, y, V(z)) -> Printf.fprintf oc "\tstfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
