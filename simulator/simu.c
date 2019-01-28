@@ -49,6 +49,8 @@ void init_label(label *label){
   }
 }
 
+
+
 /*インクリメント*/
 void inc(char *s,int len){
   for(int i=0;i<len;i++){
@@ -98,6 +100,39 @@ int pow2(int n,int m){
   return ans;
 }
 
+long pow2_long(long n,int m){
+  long ans=1;
+  for(int i=1;i<m+1;i++){
+    ans=ans * n;
+  }
+  return ans;
+}
+
+int change_char_int(char x){
+  int y=(int)x;
+  int tmp=0;
+  if(y>0){
+  for(int i=0;i<8;i++){
+    //printf("%d %d\n",y,y%2);
+    tmp+=(y%2)*pow2(2,i);
+    y=y/2;
+  }
+  }
+  else{
+    int y2 = ~y;
+    //printf("%d\n",y2);
+    for(int i=0;i<8;i++){
+      if(y2%2==0){
+        tmp+=pow(2,i);
+      }
+      y2=y2/2;
+    }
+    //y=y/2;
+  }
+  return tmp;
+}
+
+
 /*b bitの文字列の反転。gが反転されたbit列*/
 void hanten(char *g,char *s,int b){
   for(int i=0;i<b;i++){
@@ -112,18 +147,49 @@ void hanten(char *g,char *s,int b){
 
 
 void i_to_b(char *g,int i_g,int b){
+  if(i_g>=0){
   for(int i=0;i<b;i++){
     int r = i_g % 2;
     g[b-i-1] = r + 48;
     i_g = i_g / 2;
   }
+  }
+  else{
+    int g2 = ~i_g;
+    for(int i=0;i<b;i++){
+      int r=g2%2;
+      //printf("%d %d\n",g2,r);
+      if(r==0){
+        g[b-i-1]='1';
+      }
+      else{
+        g[b-i-1]='0';
+      }
+      g2=g2/2;
+    }
+  }
 }
 
 void i_to_b_long(char *g,long i_g,int b ){
+  if(i_g>=0){
   for(int i=0;i<b;i++){
     int r = i_g % 2;
     g[b-i-1] = r + 48;
     i_g = i_g / 2;
+  }
+  }
+  else{
+    long g2 = ~i_g;
+    for(int i=0;i<b;i++){
+      int r=g2%2;
+      if(r==0){
+        g[b-i-1]='1';
+      }
+      else{
+        g[b-i-1]='0';
+      }
+      g2=g2/2;
+    }
   }
 }
 
@@ -132,6 +198,16 @@ int b_to_i(char *s,int b,int e){
   for(int i=b;i<e+1;i++){
     if(s[i] == '1'){
       ans += pow2(2,e-i);
+    }
+  }
+  return ans;
+}
+
+int b_to_long(char *s,int b,int e){
+  long ans=0;
+  for(int i=b;i<e+1;i++){
+    if(s[i]=='1'){
+      ans += pow2_long(2,e-i);
     }
   }
   return ans;
@@ -698,6 +774,686 @@ void fpu_fdiv(char x1[33],char x2[33],char ans[33],char ovf[2]){
   strncpy(ovf,e_sub+1,1);
 }
 
+void fpu_itof(char i[33],char ans[33]){
+  char s[2]={'\0'};
+  char e[9]={'\0'};
+  char m[24]={'\0'};
+
+  s[0]=i[0];
+
+  char p33[34]={'\0'};
+  char p32[33]={'\0'};
+  char p[33]={'\0'};
+  strcat(p33,"0");
+  char ri[33]={'\0'};
+  hanten(ri,i,32);
+  strcat(p33,ri);
+  inc(p33,33);
+  if(s[0]=='1'){
+    strcpy(p32,p33+1);
+  }
+  else{
+    strcpy(p32,i);
+  }
+
+  long i_p32=b_to_long(p32,0,31);
+  long i_p_sub;
+  char p_sub[33]={'\0'};
+  long i_p;
+
+  if(p32[1]=='1'){
+    strcat(p_sub,"0000000000000000000000000");
+    p_sub[25]=p32[25];
+    //strcat(p_sub,p32[25]);
+    strcat(p_sub,"000000");
+    i_p_sub=b_to_long(p_sub,0,31);
+    i_p=i_p32+i_p_sub;
+  }
+  else if(p32[2]=='1'){
+    strcat(p_sub,"00000000000000000000000000");
+    p_sub[26]=p32[26];
+    //strcat(p_sub,p32[26]);
+    strcat(p_sub,"00000");
+    i_p_sub=b_to_long(p_sub,0,31);
+    i_p=i_p32+i_p_sub;
+  }
+  else if(p32[3]=='1'){
+    strcat(p_sub,"000000000000000000000000000");
+    p_sub[27]=p32[27];
+    //strcat(p_sub,p32[27]);
+    strcat(p_sub,"0000");
+    i_p_sub=b_to_long(p_sub,0,31);
+    i_p=i_p32+i_p_sub;
+  }
+  else if(p32[4]=='1'){
+    strcat(p_sub,"0000000000000000000000000000");
+    p_sub[28]=p32[28];
+    //strcat(p_sub,p32[28]);
+    strcat(p_sub,"000");
+    i_p_sub=b_to_long(p_sub,0,31);
+    i_p=i_p32+i_p_sub;
+  }
+  else if(p32[5]=='1'){
+    strcat(p_sub,"00000000000000000000000000000");
+    p_sub[29]=p32[29];
+    //strcat(p_sub,p32[29]);
+    strcat(p_sub,"00");
+    i_p_sub=b_to_long(p_sub,0,31);
+    i_p=i_p32+i_p_sub;
+  }
+  else if(p32[6]=='1'){
+    strcat(p_sub,"000000000000000000000000000000");
+    p_sub[30]=p32[30];
+    //strcat(p_sub,p32[30]);
+    strcat(p_sub,"0");
+    i_p_sub=b_to_long(p_sub,0,31);
+    i_p=i_p32+i_p_sub;
+  }  
+  else if(p32[7]=='1'){
+    strcat(p_sub,"0000000000000000000000000000000");
+    p_sub[31]=p32[31];
+    //strcat(p_sub,p32[31]);
+    i_p_sub=b_to_long(p_sub,0,31);
+    i_p=i_p32+i_p_sub;
+  }
+  else{
+    i_p=i_p32;
+  }
+  i_to_b_long(p,i_p,32);
+
+  if(p[0]=='1'){
+    strcpy(e,"10011110");
+  }
+  else if(p[1]=='1'){
+    strcpy(e,"10011101");
+  }
+  else if(p[2]=='1'){
+    strcpy(e,"10011100");
+  }  
+  else if(p[3]=='1'){
+    strcpy(e,"10011011");
+  }
+  else if(p[4]=='1'){
+    strcpy(e,"10011010");
+  }
+  else if(p[5]=='1'){
+    strcpy(e,"10011001");
+  }
+  else if(p[6]=='1'){
+    strcpy(e,"10011000");
+  }
+  else if(p[7]=='1'){
+    strcpy(e,"10010111");
+  }
+  else if(p[8]=='1'){
+    strcpy(e,"10010110");
+  }
+  else if(p[9]=='1'){
+    strcpy(e,"10010101");
+  }
+  else if(p[10]=='1'){
+    strcpy(e,"10010100");
+  }
+  else if(p[11]=='1'){
+    strcpy(e,"10010011");
+  }
+  else if(p[12]=='1'){
+    strcpy(e,"10010010");
+  }
+  else if(p[13]=='1'){
+    strcpy(e,"10010001");
+  }
+  else if(p[14]=='1'){
+    strcpy(e,"10010000");
+  }
+  else if(p[15]=='1'){
+    strcpy(e,"10001111");
+  }
+  else if(p[16]=='1'){
+    strcpy(e,"10001110");
+  }
+  else if(p[17]=='1'){
+    strcpy(e,"10001101");
+  }
+  else if(p[18]=='1'){
+    strcpy(e,"10001100");
+  }
+  else if(p[19]=='1'){
+    strcpy(e,"10001011");
+  }
+  else if(p[20]=='1'){
+    strcpy(e,"10001010");
+  }
+  else if(p[21]=='1'){
+    strcpy(e,"10001001");
+  }
+  else if(p[22]=='1'){
+    strcpy(e,"10001000");
+  }
+  else if(p[23]=='1'){
+    strcpy(e,"10000111");
+  }
+  else if(p[24]=='1'){
+    strcpy(e,"10000110");
+  }
+  else if(p[25]=='1'){
+    strcpy(e,"10000101");
+  }
+  else if(p[26]=='1'){
+    strcpy(e,"10000100");
+  }
+  else if(p[27]=='1'){
+    strcpy(e,"10000011");
+  }
+  else if(p[28]=='1'){
+    strcpy(e,"10000010");
+  }
+  else if(p[29]=='1'){
+    strcpy(e,"10000001");
+  }
+  else if(p[30]=='1'){
+    strcpy(e,"10000000");
+  }
+  else if(p[31]=='1'){
+    strcpy(e,"01111111");
+  }
+  else{
+    strcpy(e,"00000000");
+  }
+
+
+  
+  if(p[0]=='1'){
+    strncpy(m,p+1,23);
+  }
+  else if(p[1]=='1'){
+    strncpy(m,p+2,23);
+  }
+  else if(p[2]=='1'){
+    strncpy(m,p+3,23);
+  }  
+  else if(p[3]=='1'){
+    strncpy(m,p+4,23);
+  }
+  else if(p[4]=='1'){
+    strncpy(m,p+5,23);
+  }
+  else if(p[5]=='1'){
+    strncpy(m,p+6,23);
+  }
+  else if(p[6]=='1'){
+    strncpy(m,p+7,23);
+  }
+  else if(p[7]=='1'){
+    strncpy(m,p+8,23);
+  }
+  else if(p[8]=='1'){
+    strncpy(m,p+9,23);
+  }
+  else if(p[9]=='1'){
+    strcpy(m,p+10);
+    strcat(m,"0");
+  }
+  else if(p[10]=='1'){
+    strcpy(m,p+11);
+    strcat(m,"00");
+  }
+  else if(p[11]=='1'){
+    strcpy(m,p+12);
+    strcat(m,"000");
+  }
+  else if(p[12]=='1'){
+    strcpy(m,p+13);
+    strcat(m,"0000");
+  }
+  else if(p[13]=='1'){
+    strcpy(m,p+14);
+    strcat(m,"00000");
+  }
+  else if(p[14]=='1'){
+    strcpy(m,p+15);
+    strcat(m,"000000");
+  }
+  else if(p[15]=='1'){
+    strcpy(m,p+16);
+    strcat(m,"0000000");
+  }
+  else if(p[16]=='1'){
+    strcpy(m,p+17);
+    strcat(m,"00000000");
+  }
+  else if(p[17]=='1'){
+    strcpy(m,p+18);
+    strcat(m,"000000000");
+  }
+  else if(p[18]=='1'){
+    strcpy(m,p+19);
+    strcat(m,"0000000000");
+  }
+  else if(p[19]=='1'){
+    strcpy(m,p+20);
+    strcat(m,"00000000000");
+  }
+  else if(p[20]=='1'){
+    strcpy(m,p+21);
+    strcat(m,"000000000000");
+  }
+  else if(p[21]=='1'){
+    strcpy(m,p+22);
+    strcat(m,"0000000000000");
+  }
+  else if(p[22]=='1'){
+    strcpy(m,p+23);
+    strcat(m,"00000000000000");
+  }
+  else if(p[23]=='1'){
+    strcpy(m,p+24);
+    strcat(m,"000000000000000");
+  }
+  else if(p[24]=='1'){
+    strcpy(m,p+25);
+    strcat(m,"0000000000000000");
+  }
+  else if(p[25]=='1'){
+    strcpy(m,p+26);
+    strcat(m,"00000000000000000");
+  }
+  else if(p[26]=='1'){
+    strcpy(m,p+27);
+    strcat(m,"000000000000000000");
+  }
+  else if(p[27]=='1'){
+    strcpy(m,p+28);
+    strcat(m,"0000000000000000000");
+  }
+  else if(p[28]=='1'){
+    strcpy(m,p+29);
+    strcat(m,"00000000000000000000");
+  }
+  else if(p[29]=='1'){
+    strcpy(m,p+30);
+    strcat(m,"000000000000000000000");
+  }
+  else if(p[30]=='1'){
+    strcpy(m,p+31);
+    strcat(m,"0000000000000000000000");
+  }
+  else if(p[31]=='1'){
+    strcat(m,"00000000000000000000000");
+  }
+  else{
+    strcpy(m,"00000000000000000000000");
+  }
+  strcat(ans,s);
+  strcat(ans,e);
+  strcat(ans,m);
+  printf("ans %s\n",ans);
+}
+
+void fpu_ftoi(char f[33],char ans[33]){
+  char s[2]={'\0'};
+  char e[9]={'\0'};
+  char m[24]={'\0'};
+
+  strncpy(s,f,1);
+  strncpy(e,f+1,8);
+  strncpy(m,f+9,23);
+
+  int i_e=b_to_i(e,0,7);
+  int i_m=b_to_i(m,0,22);
+  int i_f=b_to_i(f,0,31);
+
+  char ui24[25]={'\0'};
+  char ui32[33]={'\0'};
+  char uineg33[34]={'\0'};
+  ui24[0]='1';
+  strcat(ui24,m);
+  //printf("%s\n",ui24);
+  if(strcmp(f,"11001111000000000000000000000000")==0){
+    strcpy(ui32,"10000000000000000000000000000000");
+  }
+  else{
+    if(i_e>=158){
+      strcpy(ui32,"01111111111111111111111111111111");
+    }
+    else if(i_e==157){
+      ui32[0]='0';
+      strcat(ui32,ui24);
+      strcat(ui32,"0000000");
+    }
+    else if(i_e==156){
+      strcpy(ui32,"00");
+      strcat(ui32,ui24);
+      strcat(ui32,"000000");
+    }
+    else if(i_e==155){
+      strcpy(ui32,"000");
+      strcat(ui32,ui24);
+      strcat(ui32,"00000");
+    }
+    else if(i_e==154){
+      strcpy(ui32,"0000");
+      strcat(ui32,ui24);
+      strcat(ui32,"0000");
+    }
+    else if(i_e==153){
+      strcpy(ui32,"00000");
+      strcat(ui32,ui24);
+      strcat(ui32,"000");
+    }
+    else if(i_e==152){
+      strcpy(ui32,"000000");
+      strcat(ui32,ui24);
+      strcat(ui32,"00");
+    }
+    else if(i_e==151){
+      strcpy(ui32,"0000000");
+      strcat(ui32,ui24);
+      strcat(ui32,"0");
+    }
+    else if(i_e==150){
+      strcpy(ui32,"00000000");
+      strcat(ui32,ui24);
+    }
+    else if(i_e==149){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000");
+      strncat(p,ui24,23);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[23];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==148){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000");
+      strncat(p,ui24,22);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[22];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }   
+    else if(i_e==147){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"00000000000");
+      strncat(p,ui24,21);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[21];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==146){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000000");
+      strncat(p,ui24,20);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[20];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==145){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000000");
+      strncat(p,ui24,19);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[19];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==144){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"00000000000000");
+      strncat(p,ui24,18);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[18];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==143){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000000000");
+      strncat(p,ui24,17);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[17];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==142){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000000000");
+      strncat(p,ui24,16);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[16];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==141){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"00000000000000000");
+      strncat(p,ui24,15);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[15];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==140){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000000000000");
+      strncat(p,ui24,14);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[14];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==139){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000000000000");
+      strncat(p,ui24,13);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[13];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==138){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"00000000000000000000");
+      strncat(p,ui24,12);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[12];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==137){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000000000000000");
+      strncat(p,ui24,11);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[11];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==136){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000000000000000");
+      strncat(p,ui24,10);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[10];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==135){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"00000000000000000000000");
+      strncat(p,ui24,9);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[9];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==134){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000000000000000000");
+      strncat(p,ui24,8);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[8];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==133){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000000000000000000");
+      strncat(p,ui24,7);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[7];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==132){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"00000000000000000000000000");
+      strncat(p,ui24,6);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[6];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==131){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000000000000000000000");
+      strncat(p,ui24,5);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[5];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==130){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000000000000000000000");
+      strncat(p,ui24,4);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[4];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==129){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"00000000000000000000000000000");
+      strncat(p,ui24,3);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[3];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==128){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"000000000000000000000000000000");
+      strncat(p,ui24,2);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[2];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==127){
+      char p[33]={'\0'};
+      char q[33]={'\0'};
+      strcat(p,"0000000000000000000000000000000");
+      strncat(p,ui24,1);
+      strcat(q,"0000000000000000000000000000000");
+      q[31]=ui24[1];
+      int i_p=b_to_i(p,0,31);
+      int i_q=b_to_i(q,0,31);
+      int i_ui32=i_p+i_q;
+      i_to_b(ui32,i_ui32,32);
+    }
+    else if(i_e==126){
+      strcat(ui32,"00000000000000000000000000000001");
+    }
+    else{
+      strcat(ui32,"00000000000000000000000000000000");
+    }
+  }
+  uineg33[0]='0';
+
+//char uineg32[33]={'\0'};
+  //char uineg33sub[33]={'\0'};
+  hanten(uineg33,ui32,32);
+  inc(uineg33,33);
+  int i_ui32a=b_to_i(ui32,0,31);
+  if((i_ui32a==0)||(s[0]=='0')){
+    strcpy(ans,ui32);
+  }
+  else{
+    strcpy(ans,uineg33+1);
+  }
+}
+  
+    
 void fpu_fsqrt(char x1[33],char ans[33],char ovf[2]){
   char s1[2]={'\0'};
   char e1[9]={'\0'};
@@ -1133,13 +1889,16 @@ void and(char ans[33],char s1[33],char s2[33]){
       
 static int i=0; 
 
-void out(CPU *cpu,int *a){
+void out(CPU *cpu,int *a,FILE *file){
   int addr = *a;
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int ra = change_ibit(5,code_6_10);
 
   int value = change_ibit_f(R,(cpu->reg)[ra]);
+  char x = value;
+  printf("%c\n",x);
+  fwrite(&x,sizeof(x),1,file);
   //printf("レジスタ%dをoutした %c\n",ra,value);
   *a+=4;
   output[i]=value;
@@ -1322,15 +2081,20 @@ void blt(CPU *cpu,int *a){
 }
 
 /*1byteの読み込み*/
-void in(CPU *cpu,int *a){
+void in(CPU *cpu,int *a,FILE *file){
   int addr = *a;
-  int x;
-  printf("1byte読み込み: ");
-  scanf("%d",&x);
+  char x;
+  fread(&x,sizeof(x),1,file);
+  int y=change_char_int(x);
+  //change_char_int(x,&y);/*char をintに*/
+  //printf("y %d\n",y);
+  
+  //printf("1byte読み込み: ");
+  //scanf("%d",&x);
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int ra = change_ibit(5,code_6_10);
-  change_int((cpu->reg)[ra],8,x);
+  change_int((cpu->reg)[ra],32,y);
   *a+=4;
 }
 
@@ -1977,7 +2741,7 @@ void print_cpu(CPU *cpu){
   }
 }
 
-void exec(CPU *cpu,label *labellist,code *codelist){
+void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
   int iaddr = (labellist[0]).addr;
   int addr=0;
   printf("ブレークポイントを入れますか? y or n\n");
@@ -2098,7 +2862,7 @@ void exec(CPU *cpu,label *labellist,code *codelist){
       }
     }
     else if(strcmp(code_0_5,"000010")==0){
-      in(cpu,&addr);
+      in(cpu,&addr,file);
     }
     else if(strcmp(code_0_5,"000011")==0){
       read(cpu,&addr);
@@ -2107,7 +2871,7 @@ void exec(CPU *cpu,label *labellist,code *codelist){
       addi(cpu,&addr);
     }
     else if(strcmp(code_0_5,"000001")==0){
-      out(cpu,&addr);
+      out(cpu,&addr,file2);
     }
     else if(strcmp(code_0_5,"010011")==0){
       if(strcmp(code_21_30,"0000010000")==0){
@@ -2200,7 +2964,10 @@ void exec(CPU *cpu,label *labellist,code *codelist){
 
 
 int main(int argc,char **argv){
-  //printf("%d -> %d\n",b_to_i(x1,0,31),b_to_i(ans,0,31));
+  char xi[33]="00000000000000000000000000000001";
+  char xg[33]={'\0'};
+  fpu_itof(xi,xg);
+  printf("%s\n",xg);
   FILE *file2;
   file2=fopen(argv[2],"r");
   int addr = 4;
@@ -2304,14 +3071,21 @@ int main(int argc,char **argv){
   }
   fclose(file);
 
+  FILE *file3;
+  file3=fopen(argv[3],"rb");
+  FILE *file4;
+  file4=fopen(argv[4],"w");
+
   zero_cpu(&cpu);
   //print_cpu(&cpu);
   //print_reg(&cpu);
   printf("実行します\n");
   //print_memory(cpu);
-  exec(&cpu,labellist,codelist);
+  exec(&cpu,labellist,codelist,file3,file4);
   //print_reg(&cpu);
-  printf("%s\n",output);
+  fclose(file3);
+  fclose(file4);
+  //printf("%s\n",output);
   return 0;
 }
 
