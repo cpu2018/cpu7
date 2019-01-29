@@ -164,7 +164,7 @@ let rec g env = function
 			print_error t1 t2;
 			print_string ("in Let : variable " ^ x ^ "\n");
 			print_string "var Type is "; Type.print_code t;
-			print_string "in f\n"; M.iter print_env env; print_newline ();
+			print_string "\n Type env is \n\n"; M.iter print_env env; print_newline ();
 			raise (Error (deref_typ t1, deref_typ t2)));
 		g (M.add x t env) e2
 	| Var x when M.mem x env -> find x env (* 変数の型推論 (caml2html: typing_var) *)
