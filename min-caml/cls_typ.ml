@@ -5,8 +5,9 @@ exception Error of Type.t * Type.t
 exception Err
 
 let extenv = ref M.empty
+let (env : Type.t M.t ref) = ref M.empty
 
-let find x env = try M.find x env with Not_found -> print_string x; print_string " was not found\n"; raise Err
+let find x env = try M.find x !env with Not_found -> print_string x; print_string " was not found\n"; raise Err
 let print_env n t = print_string ("name : " ^ n ^ " ------ Type : "); Type.print_code t
 let print_error t1 t2 = 
 	print_string "expected : "; Type.print_type t1; print_newline ();
@@ -164,11 +165,12 @@ let rec g env = function
 			print_error t1 t2;
 			print_string ("in Let : variable " ^ x ^ "\n");
 			print_string "var Type is "; Type.print_code t;
-			print_string "\n Type env is \n\n"; M.iter print_env env; print_newline ();
+			print_string "\n Type env is \n\n"; M.iter print_env !env; print_newline ();
 			raise (Error (deref_typ t1, deref_typ t2)));
-		g (M.add x t env) e2
-	| Var x when M.mem x env -> find x env (* 変数の型推論 (caml2html: typing_var) *)
-	| Var x when M.mem x !extenv -> find x !extenv
+		env := M.add x t !env;
+		g env e2
+	| Var x when M.mem x !env -> find x env (* 変数の型推論 (caml2html: typing_var) *)
+	| Var x when M.mem x !extenv -> find x extenv
 	| Var x -> (* 外部変数の型推論 (caml2html: typing_extvar) *)
 		Format.eprintf "free variable %s assumed as external@ found when closure type checking." x;
 		let t = Type.gentyp () in
@@ -196,10 +198,9 @@ let rec g env = function
 	| AppDir (Id.L(x), xs) -> 
 		let t = Type.gentyp () in
 		let fun_ty = 
-			(try M.find x env 
+			(try M.find x !env 
 			with Not_found -> Type.gentyp ()) in
-		let env = 
-			if fun_ty = Type.gentyp () then M.add x (Type.gentyp ()) env else env in
+		env := if fun_ty = Type.gentyp () then M.add x (Type.gentyp ()) !env else !env;
 		(try 
 			unify (find x env) (Type.Fun (List.map (fun x -> find x env) xs, t))
 		with Unify (t1, t2) -> 
@@ -217,7 +218,8 @@ let rec g env = function
 			print_string ("in LetTuple \n");
 			print_string "tuple Type is "; Type.print_code (find tuple env);
 			raise (Error (deref_typ t1, deref_typ t2)));
-		g (M.add_list xs env) e
+		env := M.add_list xs !env;
+		g env e
 	| Get (arr, index) ->
 		let t = Type.gentyp () in
 		(try
@@ -279,7 +281,7 @@ let rec h env {name = (Id.L(x), fun_type); args = args; formal_fv = fvs; body = 
 		env := M.add_list fvs !env;
 		env := M.add_list args !env;
 		env := M.add x fun_type !env;
-		unify fun_type (Type.Fun (List.map snd args, (g !env e)))
+		unify fun_type (Type.Fun (List.map snd args, (g env e)))
 	with Unify (t1, t2) -> 
 		print_error t1 t2;
 		raise (Error (deref_typ t1, deref_typ t2)));
@@ -297,13 +299,12 @@ let rec h_iter (env: Type.t M.t ref) = function
 let rec f print_flag prog =
 	let Prog (fundefs, t) = prog in
 	extenv := M.empty;
-	let (env : Type.t M.t ref) = ref M.empty in 
 	(try 
 		env := !(h_iter env fundefs);
 		(*
 		print_string "in f\n"; M.iter print_env !env; print_newline ();
 		*)
-		unify Type.Unit (g !env t) 
+		unify Type.Unit (g env t) 
 	with Unify _ -> failwith "top level does not have type unit");
 	(if print_flag = 1 then 
 		(print_string "<dump Closure.t after type check>\n=================================================================================================\n"; 

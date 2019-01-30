@@ -26,6 +26,7 @@ lib_atan.ml \
 lib_create_array.ml \
 lib_read.ml \
 lib_print_int.ml \
+lib_extarr.ml \
 type.ml \
 id.ml \
 m.ml s.ml \
