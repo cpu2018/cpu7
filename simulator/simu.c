@@ -3,7 +3,10 @@
 #include <string.h>
 #include <math.h>
 #define R 32
-#define M 10000
+#define M 50000
+#define M2 500000
+
+static int inf=0;
 
 static char output[100]={'\0'};
 
@@ -14,6 +17,7 @@ union IntAndFloat {
 
 typedef struct cpu{
   char memory[M][9];
+  int dmemory[M2];
   char reg[32][R+1];
   char freg[32][R+1];
   char lr[R+1];
@@ -70,6 +74,11 @@ void init_cpu(CPU *cpu){
       (cpu->memory)[i][j]='\0';
     }
   }
+  for(int i=0;i<M2;i++){
+    for(int j=0;j<9;j++){
+      (cpu->dmemory)[i]=0;
+    }
+  }
   for(int i=0;i<32;i++){
     for(int j=0;j<R+1;j++){
       (cpu->reg)[i][j]='\0';
@@ -111,7 +120,7 @@ long pow2_long(long n,int m){
 int change_char_int(char x){
   int y=(int)x;
   int tmp=0;
-  if(y>0){
+  if(y>=0){
   for(int i=0;i<8;i++){
     //printf("%d %d\n",y,y%2);
     tmp+=(y%2)*pow2(2,i);
@@ -259,15 +268,25 @@ int andx(char *s,int b,int e){
   return 1;
 }
 
+void fpu_or(char *ans,char *so,int x,int y){
+  char tmp[2]="0";
+  for(int i=x;i<y+1;i++){
+    if(so[i]=='1'){
+      tmp[0]='1';
+    }
+  }
+  strcat(ans,tmp);
+}
+
 
 
 void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
-  char s1[2];
-  char s2[2];
-  char e1[9];
-  char e2[9];
-  char m1[24];
-  char m2[24];
+  char s1[2]={'\0'};
+  char s2[2]={'\0'};
+  char e1[9]={'\0'};
+  char e2[9]={'\0'};
+  char m1[24]={'\0'};
+  char m2[24]={'\0'};
 
   strncpy(s1,x1,1);
   strncpy(s2,x2,1);
@@ -281,18 +300,18 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
   strcat(m1a,m1);
   strcat(m2a,m2);
 
-  char e2ai[9];
+  char e2ai[9]={'\0'};
   hanten(e2ai,e2,8);/*e2のbit反転をe2aiに入れる。8はbit数*/
 
-  char te9[10];
+  char te9[10]={'\0'};
   int i_e1 = b_to_i(e1,0,7);/*8bitを整数に*/
   int i_e2ai = b_to_i(e2ai,0,7);
   int i_te9 = i_e1+i_e2ai;
   i_to_b(te9,i_te9,9);/*整数を9bitに変換*/
 
-  char tde[9];
-  char tde_sub1[10];
-  char tde_sub2[10];
+  char tde[9]={'\0'};
+  char tde_sub1[10]={'\0'};
+  char tde_sub2[10]={'\0'};
   int i_tde_sub1 = i_te9 + 1;
   i_to_b(tde_sub1,i_tde_sub1,9);
   hanten(tde_sub2,te9,9);
@@ -303,7 +322,7 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
     strncpy(tde,tde_sub2+1,8);
   }
 
-  char de5[6];
+  char de5[6]={'\0'};
   int or_tde_7_5 = or(tde,0,2);/*tdeの上から3bitのor.veriogだと7:5*/
   if(or_tde_7_5==1){
     strcpy(de5,"11111");
@@ -334,11 +353,11 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
     }
   }
 
-  char ms[26];
-  char mi[26];
-  char es[9];
-  char ei[9];
-  char ss[2];
+  char ms[26]={'\0'};
+  char mi[26]={'\0'};
+  char es[9]={'\0'};
+  char ei[9]={'\0'};
+  char ss[2]={'\0'};
   if(sel==0){
     strcpy(ms,m1a);
     strcpy(mi,m2a);
@@ -354,17 +373,17 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
     strcpy(ss,s2);
   }
 
-  char mie[57];
+  char mie[57]={'\0'};
   strcpy(mie,mi);
   for(int i=0;i<31;i++){
     mie[25+i]='0';
   }
 
-  char mia[57];
+  char mia[57]={'\0'};
   int i_de5 = b_to_i(de5,0,5);
   r_shift(mia,mie,i_de5,56);/*56bitのmieをi_de5だけ右に論理シフト*/
   
-  char tstck[2];
+  char tstck[2]={'\0'};
   int or_mia = or(mia,27,55);/*miaの28bitから0bitのor*/
   if(or_mia==1){
     tstck[0]='1';
@@ -373,9 +392,9 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
     tstck[0]='0';
   }
 
-  char mye[28];
+  char mye[28]={'\0'};
   if(s1[0]==s2[0]){
-    char mye_sub[28];
+    char mye_sub[28]={'\0'};
     strcpy(mye_sub,ms);
     strcat(mye_sub,"00");
     int i_mye_sub = b_to_i(mye_sub,0,26);
@@ -384,7 +403,7 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
     i_to_b(mye,i_mye,27);
   }
   else{
-     char mye_sub[28];
+     char mye_sub[28]={'\0'};
     strcpy(mye_sub,ms);
     strcat(mye_sub,"00");
     int i_mye_sub = b_to_i(mye_sub,0,26);
@@ -393,14 +412,14 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
     i_to_b(mye,i_mye,27);
   }
 
-  char esi[9];
+  char esi[9]={'\0'};
   int i_es = b_to_i(es,0,7);
   int i_esi = i_es + 1;
   i_to_b(esi,i_esi,8);
   
-  char eyd[9];
-  char myd[28];
-  char stck[2];
+  char eyd[9]={'\0'};
+  char myd[28]={'\0'};
+  char stck[2]={'\0'};
   if(mye[0]=='1'){
     int i_eyd = i_es + 1;
     i_to_b(eyd,i_eyd,8);
@@ -425,10 +444,10 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
   }
 
 
-  char se[6];
+  char se[6]={'\0'};
   zero_count(se,myd,5,27);/*mydの25bitから数えて0の出てくる位置を5bitにする*/
 
-  char eyf[10];
+  char eyf[10]={'\0'};
   int i_eyd = b_to_i(eyd,0,7);
   char se_sub[9] = "000";
   strcat(se_sub,se);
@@ -443,14 +462,14 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
   }
 
 
-  char eyr[9];
-  char myf[28];
+  char eyr[9]={'\0'};
+  char myf[28]={'\0'};
   //int i_se = b_to_i(se,0,4);
   r_shift(myf,myd,i_se,27);
   strncpy(eyr,eyf+1,8);
 
 
-  char myr[26];
+  char myr[26]={'\0'};
   int i_myr = b_to_i(myf,0,24);
   if(((myf[25]=='1')&&(myf[26]=='1')&&(stck[0]=='0')&&(myf[24]=='1'))||((myf[25]=='1')&&(myf[26]=='0')&&(s1[0]==s2[0])&&(stck[0]==1))||((myf[25]=='1')&&(myf[26]=='1'))){
     i_myr+=1;
@@ -461,8 +480,8 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
   }
 
 
-  char ey[9];
-  char my[24];
+  char ey[9]={'\0'};
+  char my[24]={'\0'};
   int i_ey=b_to_i(eyr,0,7);
   if(myr[0]=='1'){
     i_ey+=1;
@@ -470,7 +489,7 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
   i_to_b(ey,i_ey,8);
   strncpy(my,myr+4,23);
 
-  char sy[2];
+  char sy[2]={'\0'};
   if((strcmp(ey,"00000000")==0)&&(strcmp(my,"00000000000000000000000")==0)){
     sy[0] = s1[0];
   }
@@ -490,7 +509,7 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
     strcat(ans,my);
   }
 
-  char ovf_sub_exception[2];
+  char ovf_sub_exception[2]={'\0'};
   int i_ovf_se = andx(ey,0,7);
   if(i_ovf_se==1){
     ovf_sub_exception[0]='1';
@@ -510,7 +529,7 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
 }
 
 void fpu_fsub(char x1[33],char x2[33],char ans[33],char ovf[2]){
-  char nx2[33];
+  char nx2[33]={'\0'};
   strcpy(nx2,x2);
   if(nx2[0]=='0'){
     nx2[0]='1';
@@ -522,12 +541,14 @@ void fpu_fsub(char x1[33],char x2[33],char ans[33],char ovf[2]){
 }
 
 void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
-  char s1[2];
-  char s2[2];
-  char e1[9];
-  char e2[9];
-  char m1[24];
-  char m2[24];
+  char s1[2]={'\0'};
+  char s2[2]={'\0'};
+  char e1[9]={'\0'};
+  char e2[9]={'\0'};
+  char m1[24]={'\0'};
+  char m2[24]={'\0'};
+
+  //printf("%s %s %s\n",x1,x2,ans);
 
   strncpy(s1,x1,1);
   strncpy(s2,x2,1);
@@ -544,16 +565,16 @@ void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
     int i_m2 = b_to_i(m2,0,22);*/
   
 
-  char s[2];
-  char e_sub[10];
-  //char e_subsub[10];
-  char e_subsubsub[10];
-  char e[9];
+  char s[2]={'\0'};
+  char e_sub[10]={'\0'};
+  //char e_subsub[10]={'\0'};
+  char e_subsubsub[10]={'\0'};
+  char e[9]={'\0'};
   char m1_sub[25]="1";
   char m2_sub[25]="1";
-  char m_sub[49];
-  char m[24];
-  char m_subsub[24];
+  char m_sub[49]={'\0'};
+  char m[24]={'\0'};
+  char m_subsub[24]={'\0'};
 
   int i_s = i_s1 * i_s2;
   i_to_b(s,i_s,1);
@@ -596,6 +617,7 @@ void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
     ovf[0]='0';
   }
 
+  //printf("m_sub_sub %s\n",e_subsubsub);
   if(ovf[0]=='1'){
     strcpy(e,"11111111");
   }
@@ -609,9 +631,13 @@ void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
     strcpy(m,m_subsub);
   }
 
-  strcat(ans,s);
+  
+  strcpy(ans,s);
+  //printf("%s\n",ans);
   strcat(ans,e);
+  //printf("%s\n",ans);
   strcat(ans,m);
+  //printf("%s\n",ans);
 }
 
 
@@ -1087,7 +1113,556 @@ void fpu_itof(char i[33],char ans[33]){
   strcat(ans,s);
   strcat(ans,e);
   strcat(ans,m);
-  printf("ans %s\n",ans);
+  //printf("ans %s\n",ans);
+}
+
+void fpu_floor(char x1[33],char ans[33]){
+  char s1[2]={'\0'};
+  char s[2]={'\0'};
+  char e1[9]={'\0'};
+  char e[9]={'\0'};
+  char m1[24]={'\0'};
+  char m[24]={'\0'};
+
+  strncpy(s1,x1,1);
+  strncpy(e1,x1+1,8);
+  strncpy(m1,x1+9,23);
+
+  char m_25[26]={'\0'};
+  char s1_e1[10]={'\0'};
+  int i_e1 = b_to_i(e1,0,7);
+  strcat(s1_e1,s1);
+  strcat(s1_e1,e1);
+  strcat(m_25,"01");
+  if(i_e1 >= 150){
+    strcat(m_25,m1);
+  }
+  else if(strcmp(s1_e1,"010010101")==0){
+    strncat(m_25,m1,22);
+    strcat(m_25,"0");
+  }
+  else if(strcmp(s1_e1,"010010100")==0){
+    strncat(m_25,m1,21);
+    strcat(m_25,"00");
+  }
+  else if(strcmp(s1_e1,"010010011")==0){
+    strncat(m_25,m1,20);
+    strcat(m_25,"000");
+  }
+  else if(strcmp(s1_e1,"010010010")==0){
+    strncat(m_25,m1,19);
+    strcat(m_25,"0000");
+  }
+  else if(strcmp(s1_e1,"010010001")==0){
+    strncat(m_25,m1,18);
+    strcat(m_25,"00000");
+  }
+  else if(strcmp(s1_e1,"010010000")==0){
+    strncat(m_25,m1,17);
+    strcat(m_25,"000000");
+  }
+  else if(strcmp(s1_e1,"010001111")==0){
+    strncat(m_25,m1,16);
+    strcat(m_25,"0000000");
+  }
+  else if(strcmp(s1_e1,"010001110")==0){
+    strncat(m_25,m1,15);
+    strcat(m_25,"00000000");
+  }
+  else if(strcmp(s1_e1,"010001101")==0){
+    strncat(m_25,m1,14);
+    strcat(m_25,"000000000");
+  }
+  else if(strcmp(s1_e1,"010001100")==0){
+    strncat(m_25,m1,13);
+    strcat(m_25,"0000000000");
+  }
+  else if(strcmp(s1_e1,"010001011")==0){
+    strncat(m_25,m1,12);
+    strcat(m_25,"00000000000");
+  }
+  else if(strcmp(s1_e1,"010001010")==0){
+    strncat(m_25,m1,11);
+    strcat(m_25,"000000000000");
+  }
+  else if(strcmp(s1_e1,"010001001")==0){
+    strncat(m_25,m1,10);
+    strcat(m_25,"0000000000000");
+  }
+  else if(strcmp(s1_e1,"010001000")==0){
+    strncat(m_25,m1,9);
+    strcat(m_25,"00000000000000");
+  }
+  else if(strcmp(s1_e1,"010000111")==0){
+    strncat(m_25,m1,8);
+    strcat(m_25,"000000000000000");
+  }
+  else if(strcmp(s1_e1,"010000110")==0){
+    strncat(m_25,m1,7);
+    strcat(m_25,"0000000000000000");
+  }
+  else if(strcmp(s1_e1,"010000101")==0){
+    strncat(m_25,m1,6);
+    strcat(m_25,"00000000000000000");
+  }
+  else if(strcmp(s1_e1,"010000100")==0){
+    strncat(m_25,m1,5);
+    strcat(m_25,"000000000000000000");
+  }
+  else if(strcmp(s1_e1,"010000011")==0){
+    strncat(m_25,m1,4);
+    strcat(m_25,"0000000000000000000");
+  }
+  else if(strcmp(s1_e1,"010000010")==0){
+    strncat(m_25,m1,3);
+    strcat(m_25,"00000000000000000000");
+  }
+  else if(strcmp(s1_e1,"010000001")==0){
+    strncat(m_25,m1,2);
+    strcat(m_25,"000000000000000000000");
+  }
+  else if(strcmp(s1_e1,"010000000")==0){
+    strncat(m_25,m1,1);
+    strcat(m_25,"0000000000000000000000");
+  }
+  else if(strcmp(s1_e1,"110010101")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,22);
+    strcat(m_25_s,"0");
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000000000000000000000");
+    strcat(m_25_g,m1+22);
+    strcat(m_25_g,"0");
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110010100")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,21);/*m*/
+    strcat(m_25_s,"00");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0000000000000000000000");/*m*/
+    fpu_or(m_25_g,m1,21,22);/*p*/
+    strcat(m_25_g,"00");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110010011")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,20);/*m*/
+    strcat(m_25_s,"000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"000000000000000000000");/*m*/
+    fpu_or(m_25_g,m1,20,22);/*m*/
+    strcat(m_25_g,"000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110010010")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,19);/*m*/
+    strcat(m_25_s,"0000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000000000000000000");/*m*/
+    fpu_or(m_25_g,m1,19,22);/*m*/
+    strcat(m_25_g,"0000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110010001")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,18);/*m*/
+    strcat(m_25_s,"00000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0000000000000000000");/*m*/
+    fpu_or(m_25_g,m1,18,22);/*m*/
+    strcat(m_25_g,"00000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110010000")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,17);/*m*/
+    strcat(m_25_s,"000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"000000000000000000");/*m*/
+    fpu_or(m_25_g,m1,17,22);/*m*/
+    strcat(m_25_g,"000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110010000")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,16);/*m*/
+    strcat(m_25_s,"0000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000000000000000");/*m*/
+    fpu_or(m_25_g,m1,16,22);/*m*/
+    strcat(m_25_g,"0000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110001111")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,15);/*m*/
+    strcat(m_25_s,"00000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0000000000000000");/*m*/
+    fpu_or(m_25_g,m1,15,22);/*m*/
+    strcat(m_25_g,"00000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110001110")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,14);/*m*/
+    strcat(m_25_s,"000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"000000000000000");/*m*/
+    fpu_or(m_25_g,m1,14,22);/*m*/
+    strcat(m_25_g,"000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110001101")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,13);/*m*/
+    strcat(m_25_s,"0000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000000000000");/*m*/
+    fpu_or(m_25_g,m1,13,22);/*m*/
+    strcat(m_25_g,"0000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }  
+  else if(strcmp(s1_e1,"110001100")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,12);/*m*/
+    strcat(m_25_s,"00000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0000000000000");/*m*/
+    fpu_or(m_25_g,m1,12,22);/*m*/
+    strcat(m_25_g,"00000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }    
+  else if(strcmp(s1_e1,"110001011")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,11);/*m*/
+    strcat(m_25_s,"000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"000000000000");/*m*/
+    fpu_or(m_25_g,m1,11,22);/*m*/
+    strcat(m_25_g,"000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110001010")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,10);/*m*/
+    strcat(m_25_s,"0000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000000000");/*m*/
+    fpu_or(m_25_g,m1,10,22);/*m*/
+    strcat(m_25_g,"0000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110001001")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,10);/*m*/
+    strcat(m_25_s,"0000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000000000");/*m*/
+    fpu_or(m_25_g,m1,10,22);/*m*/
+    strcat(m_25_g,"0000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110001000")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,9);/*m*/
+    strcat(m_25_s,"00000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0000000000");/*m*/
+    fpu_or(m_25_g,m1,9,22);/*m*/
+    strcat(m_25_g,"00000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110000111")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,8);/*m*/
+    strcat(m_25_s,"000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"000000000");/*m*/
+    fpu_or(m_25_g,m1,8,22);/*m*/
+    strcat(m_25_g,"000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110000110")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,7);/*m*/
+    strcat(m_25_s,"0000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000000");/*m*/
+    fpu_or(m_25_g,m1,7,22);/*m*/
+    strcat(m_25_g,"0000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110000101")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,6);/*m*/
+    strcat(m_25_s,"00000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0000000");/*m*/
+    fpu_or(m_25_g,m1,6,22);/*m*/
+    strcat(m_25_g,"00000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110000100")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,5);/*m*/
+    strcat(m_25_s,"000000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"000000");/*m*/
+    fpu_or(m_25_g,m1,5,22);/*m*/
+    strcat(m_25_g,"000000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }  
+  else if(strcmp(s1_e1,"110000011")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,4);/*m*/
+    strcat(m_25_s,"0000000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00000");/*m*/
+    fpu_or(m_25_g,m1,4,22);/*m*/
+    strcat(m_25_g,"0000000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110000010")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,3);/*m*/
+    strcat(m_25_s,"00000000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0000");/*m*/
+    fpu_or(m_25_g,m1,3,22);/*m*/
+    strcat(m_25_g,"00000000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"110000001")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,2);/*m*/
+    strcat(m_25_s,"000000000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"000");/*m*/
+    fpu_or(m_25_g,m1,2,22);/*m*/
+    strcat(m_25_g,"000000000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }  
+  else if(strcmp(s1_e1,"110000000")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    strncat(m_25_s,m1,1);/*m*/
+    strcat(m_25_s,"0000000000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"00");/*m*/
+    fpu_or(m_25_g,m1,1,22);/*m*/
+    strcat(m_25_g,"0000000000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if(strcmp(s1_e1,"101111111")==0){
+    char m_25_s[26]={'\0'};
+    strcat(m_25_s,"01");
+    //strncat(m_25_s,m1,1);/*m*/
+    strcat(m_25_s,"00000000000000000000000");/*p*/
+
+    char m_25_g[26]={'\0'};
+    strcat(m_25_g,"0");/*m*/
+    fpu_or(m_25_g,m1,0,22);/*m*/
+    strcat(m_25_g,"00000000000000000000000");/*p*/
+
+    long i_m_25_s = b_to_long(m_25_s,0,24);
+    long i_m_25_g = b_to_long(m_25_s,0,24);
+
+    long i_m_25 = i_m_25_s + i_m_25_g;
+    i_to_b_long(m_25,i_m_25,25);
+  }
+  else if((s1[0]=='1')&&(strcmp(e1,"00000000")!=0)&&(strcmp(m1,"00000000000000000000000")!=0)){
+    strcpy(m_25,"1000000000000000000000001");
+  }
+  else{
+    strcpy(m_25,"0000000000000000000000000");
+  }
+
+  strcpy(s,s1);
+  if((m_25[0]=='1')&&(m_25[24]=='1')){
+    strcpy(e,"01111111");
+  }
+  else if(m_25[0]=='1'){
+    strcpy(e,e1);
+    inc(e,8);
+  }
+  else if(m_25[1]=='1'){
+    strcpy(e,e1);
+  }
+  else{
+    strcpy(e,"00000000");
+  }
+  if(m_25[0]=='1'){
+    strncpy(m,m_25+1,23);
+  }
+  else{
+    strncpy(m,m_25+2,23);
+  }
+  strcat(ans,s);
+  strcat(ans,e);
+  strcat(ans,m);
 }
 
 void fpu_ftoi(char f[33],char ans[33]){
@@ -1451,6 +2026,7 @@ void fpu_ftoi(char f[33],char ans[33]){
   else{
     strcpy(ans,uineg33+1);
   }
+  //printf("ans %s\n",ans);
 }
   
     
@@ -1660,6 +2236,7 @@ void change_float_to_string(char *s,int v){
 /*bit列をfloatに*/
 
 float change_float(char *f){
+  int s = change_ibit(1,f);
   int m2=change_ibit(23,f+9);
   int e=change_ibit(8,f+1);
   float m = (float) m2;
@@ -1690,7 +2267,12 @@ float change_float(char *f){
       }
     }
   }
+  if(s==0){
   return m;
+  }
+  else{
+    return -m;
+  }
 }
 
 int change_float_int(char *f){
@@ -1800,15 +2382,20 @@ void srw(CPU *cpu,int *a){
   unsigned int s = change_ibit(R,(cpu->reg)[rs]);
   unsigned int b = change_ibit(R,(cpu->reg)[rb]);
 
+  //printf("%d %d\n",s,b);
   unsigned int ns = s >> b;
 
   change_int((cpu->reg)[ra],32,ns);
   *a+=4;
+  printf("srw r%d, r%d, r%d\n",ra,rs,rb);
 }
 
+
 void print_memory(CPU cpu){
-  for(int i=0;i<M;i++){
-    printf("addr %d code %s\n",i,cpu.memory[i]);
+  for(int i=0;i<M2;i++){
+    if(cpu.dmemory[i]!=0){
+    printf("addr %d code %d\n",i,cpu.dmemory[i]);
+    }
   }
 }
 
@@ -1885,11 +2472,12 @@ void and(char ans[33],char s1[33],char s2[33]){
       ans[i]='0';
     }
   }
-}
+}/**/
       
 static int i=0; 
 
 void out(CPU *cpu,int *a,FILE *file){
+  //printf("出力\n");
   int addr = *a;
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
@@ -1903,7 +2491,11 @@ void out(CPU *cpu,int *a,FILE *file){
   *a+=4;
   output[i]=value;
   i+=1;
-}
+  int k;
+  printf("%c\n",x);
+  scanf("%d",&k);
+  printf("%d\n",k);
+  }/**/
 
 void cmpi(CPU *cpu,int *a){
   int addr = *a;
@@ -1920,7 +2512,9 @@ void cmpi(CPU *cpu,int *a){
   int value = change_ibit_f(R,(cpu->reg)[ra]);/*符号も考える*/
   int sim = change_ibit_f(16,code_16_31);
   int bf = change_ibit(3,code_6_8);
-  
+
+  //printf("v %d s %d\n",value,sim);
+  //printf("%s -> ",(cpu->cr)[bf]);
   if (value < sim){
     strcpy((cpu->cr)[bf],"0001");
   }
@@ -1930,8 +2524,10 @@ void cmpi(CPU *cpu,int *a){
   else{
     strcpy((cpu->cr)[bf],"0100");
   }
+  //printf("%s\n",(cpu->cr)[bf]);
   *a += 4;
   //printf("cmpi cr%d reg%d %dを実行\n",bf,ra,sim);
+  printf("cmpi cr%d, r%d, %d\n",bf,ra,sim);
 }
 
 void fcmpu(CPU *cpu,int *a){
@@ -1943,11 +2539,14 @@ void fcmpu(CPU *cpu,int *a){
   char code_16_20[6]={'\0'};
   read_i_j(cpu,addr,code_16_20,16,20);
   int fra = change_ibit(5,code_11_15);
-  int frb = change_ibit(5,code_11_15);
+  int frb = change_ibit(5,code_16_20);
   float va = change_float((cpu->freg)[fra]);
   float vb = change_float((cpu->freg)[frb]);
   int bf = change_ibit(3,code_6_8);
-
+  
+  printf("v %d s %d\n",fra,frb);
+  printf("%s -> ",(cpu->cr)[bf]);
+  
   if(va < vb){
     strcpy((cpu->cr)[bf],"0001");
   }
@@ -1957,8 +2556,11 @@ void fcmpu(CPU *cpu,int *a){
   else{
     strcpy((cpu->cr)[bf],"0100");
   }
+
+  printf("%s\n",(cpu->cr)[bf]);
+  
   *a+=4;
-}
+}/**/
 
 void cmp(CPU *cpu,int *a){
   int addr = *a;
@@ -1975,6 +2577,10 @@ void cmp(CPU *cpu,int *a){
   int vb = change_ibit_f(R,(cpu->reg)[rb]);
   int bf = change_ibit(3,code_6_8);
 
+
+  printf("v %d s %d\n",va,vb);
+  printf("%s -> ",(cpu->cr)[bf]);
+  
   if(va < vb){
     strcpy((cpu->cr)[bf],"0001");
   }
@@ -1984,9 +2590,10 @@ void cmp(CPU *cpu,int *a){
   else{
     strcpy((cpu->cr)[bf],"0100");
   }
+  printf("%s\n",(cpu->cr)[bf]);
   *a+=4;
   //printf("cmp reg%d reg%dを実行\n",ra,rb);
-}
+}/**/
   
 
 void bne(CPU *cpu,int *a){
@@ -2010,6 +2617,7 @@ void bne(CPU *cpu,int *a){
     *a+=j*4;
   }
   //printf("bne cr%d を実行\n",cr);
+  printf("bne cr%d\n",cr);
 }
 
 void bgt(CPU *cpu,int *a){
@@ -2022,7 +2630,7 @@ void bgt(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
-  cr = cr/4;
+  //cr = cr/4;
   if(strcmp((cpu->cr)[cr],"0010")!=0){
     *a+=4;
   }
@@ -2043,7 +2651,7 @@ void beq(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_29,16,29);
 
   int cr = change_ibit(5,code_11_15);
-  cr = cr/4;
+  //cr = cr/4;
   if(strcmp((cpu->cr)[cr],"0100")!=0){
     *a+=4;
   }
@@ -2067,7 +2675,8 @@ void blt(CPU *cpu,int *a){
 
   int cr = change_ibit(5,code_11_15);
   
-  cr = cr/4;
+  //cr = cr/4;
+  printf("cr%d\n",cr);
   if(strcmp((cpu->cr)[cr],"0001")!=0){
     
     *a+=4;
@@ -2094,8 +2703,43 @@ void in(CPU *cpu,int *a,FILE *file){
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
   int ra = change_ibit(5,code_6_10);
-  change_int((cpu->reg)[ra],32,y);
+  char tmp[33]={'\0'};
+  change_int(tmp,32,y);
+  strncpy((cpu->reg)[ra]+24,tmp+24,8);
+  //printf("%s を in\n",tmp);
+  //change_int((cpu->reg)[ra],32,y);
   *a+=4;
+
+  printf("%s\n",(cpu->reg)[ra]);
+  int k;
+  //scanf("%d",&k);
+  //printf("%d\n",k);
+}
+
+void fin(CPU *cpu,int *a,FILE *file){
+  int addr = *a;
+  char x;
+  fread(&x,sizeof(x),1,file);
+  int y=change_char_int(x);
+  //change_char_int(x,&y);/*char をintに*/
+  //printf("y %d\n",y);
+  
+  //printf("1byte読み込み: ");
+  //scanf("%d",&x);
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  int ra = change_ibit(5,code_6_10);
+  char tmp[33]={'\0'};
+  change_int(tmp,32,y);
+  strncpy((cpu->freg)[ra]+24,tmp+24,8);
+  //printf("in\n");
+  //change_int((cpu->freg)[ra],32,y);
+  *a+=4;
+  inf+=1;
+  int k;
+  printf("%s\n",(cpu->freg)[ra]);
+  //scanf("%d",&k);
+  //printf("%d\n",k);
 }
 
 void read(CPU *cpu,int *a){
@@ -2122,6 +2766,9 @@ void addi(CPU *cpu,int *a){
   int rt = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_11_15);
   int si = change_ibit_f(16,code_16_31);
+  if(si<-1000){
+    si=change_ibit(16,code_16_31);
+  }/*ずる*/
 
   if(ra==0){
     change_int((cpu->reg)[rt],32,si);
@@ -2129,12 +2776,14 @@ void addi(CPU *cpu,int *a){
   else{
     int x = change_ibit_f(R,(cpu->reg)[ra]);
     int y = x + si;
+    //printf("%d + %d = %d\n",x,si,y);
     
     change_int((cpu->reg)[rt],32,y);
     
   }
   *a+=4;
   //printf("addiを実行 レジスタ%dにレジスタ%dと%dの和を代入\n",rt,ra,si);
+  printf("addi r%d, r%d, %d\n",rt,ra,si);
 }
 
 void fabs2(CPU *cpu,int *a){
@@ -2150,6 +2799,7 @@ void fabs2(CPU *cpu,int *a){
     (cpu->reg)[frd][0]='0';
   }
   *a+=4;
+  printf("fabs f%d, f%d\n",frd,fra);
 }
 
 void neg(CPU *cpu,int *a){
@@ -2164,9 +2814,11 @@ void neg(CPU *cpu,int *a){
   hanten((cpu->reg)[rd],(cpu->reg)[ra],32);
   inc((cpu->reg)[rd],32);
   *a+=4;
+  printf("neg r%d, r%d\n",rd,ra);
 }
 
 void fneg(CPU *cpu,int *a){
+  //rintf("aaaa\n");
   int addr = *a;
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
@@ -2174,14 +2826,18 @@ void fneg(CPU *cpu,int *a){
   char code_16_20[6]={'\0'};
   read_i_j(cpu,addr,code_16_20,16,20);
   int fra = change_ibit(5,code_16_20);
-  strcpy((cpu->reg)[frd],(cpu->reg)[fra]);
-  if((cpu->reg)[frd][0]=='0'){
-    (cpu->reg)[frd][0]='1';
+  //char s[33]={'\0'};
+  if(fra!=frd){
+  strcpy((cpu->freg)[frd],(cpu->freg)[fra]);
+  }
+  if((cpu->freg)[frd][0]=='0'){
+    (cpu->freg)[frd][0]='1';
   }
   else{
-    (cpu->reg)[frd][0]='0';
+    (cpu->freg)[frd][0]='0';
   }
   *a+=4;
+  printf("fneg f%d, f%d\n",frd,fra);
 }
 
   
@@ -2199,6 +2855,7 @@ void lis(CPU *cpu,int *a){
   change_int((cpu->reg)[rt],32,ns);
   *a+=4;
   //printf("lisを実行 レジスタ%dに%dをシフトしたものを代入\n",rt,si);
+  printf("lis r%d, %d\n",rt,si);
 }
 
 void blr(CPU *cpu,int *addr){
@@ -2211,6 +2868,98 @@ void blr(CPU *cpu,int *addr){
     *addr = x;
   }
   //printf("blrを実行\n");
+  printf("blr %d\n",x);
+}
+
+void stfd(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_31[17]={'\0'};
+  read_i_j(cpu,addr,code_16_31,16,31);
+  int frt = change_ibit(5,code_6_10);
+  int ra = change_ibit(5,code_11_15);
+  int d = change_ibit_f(16,code_16_31);
+  int b;
+  if(ra==0){
+    b=0;
+  }
+  else{
+    b=change_ibit_f(R,(cpu->reg)[ra]);
+  }
+
+  int x=change_ibit_f(R,(cpu->freg)[frt]);
+  int ea = b + d;
+  (cpu->dmemory)[ea/4]=x;
+  //strncpy((cpu->dmemory)[ea],(cpu->freg)[frt]/*+32*/,8);
+  //strncpy((cpu->dmemory)[ea],(cpu->freg)[frt]/*+40*/+8,8);
+  //strncpy((cpu->dmemory)[ea],(cpu->freg)[frt]/*+48*/+16,8);
+  //strncpy((cpu->dmemory)[ea],(cpu->freg)[frt]/*+56*/+24,8);
+
+  *a+=4;
+  printf("stfd f%d, %d(r%d)\n",frt,d,ra);
+}
+void stfdx(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_20[6]={'\0'};
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int rs = change_ibit(5,code_6_10);
+  int ra = change_ibit(5,code_11_15);
+  int rb = change_ibit(5,code_16_20);
+  int b;
+  if(ra==0){
+    b=0;
+  }
+  else{
+    b = change_ibit_f(R,(cpu->reg)[ra]);
+  }
+  b += change_ibit_f(R,(cpu->reg)[rb]);
+  int x=change_ibit_f(R,(cpu->freg)[rs]);
+  (cpu->dmemory)[b/4]=x;
+  //strncpy((cpu->dmemory)[b],(cpu->freg)[rs]/*+32*/,8);
+  //strncpy((cpu->dmemory)[b],(cpu->freg)[rs]/*+40*/+8,8);
+  //strncpy((cpu->dmemory)[b],(cpu->freg)[rs]/*+48*/+16,8);
+  //strncpy((cpu->dmemory)[b],(cpu->freg)[rs]/*+56*/+24,8);
+
+  *a+=4;
+  printf("stfdx f%d, r%d, r%d\n",rs,ra,rb);
+}
+
+void stwx(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_20[6]={'\0'};
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int rs = change_ibit(5,code_6_10);
+  int ra = change_ibit(5,code_11_15);
+  int rb = change_ibit(5,code_16_20);
+  int b;
+  if(ra==0){
+    b=0;
+  }
+  else{
+    b = change_ibit_f(R,(cpu->reg)[ra]);
+  }
+  b += change_ibit_f(R,(cpu->reg)[rb]);
+
+  int x=change_ibit_f(R,(cpu->reg)[rs]);
+  (cpu->dmemory)[b/4]=x;
+  //strncpy((cpu->dmemory)[b],(cpu->reg)[rs]/*+32*/,8);
+  //strncpy((cpu->dmemory)[b],(cpu->reg)[rs]/*+40*/+8,8);
+  //strncpy((cpu->dmemory)[b],(cpu->reg)[rs]/*+48*/+16,8);
+  //strncpy((cpu->dmemory)[b],(cpu->reg)[rs]/*+56*/+24,8);
+
+  *a+=4;
+  printf("stwx r%d, r%d, r%d\n",rs,ra,rb);
 }
 
 void stw(CPU *cpu,int *a){
@@ -2238,14 +2987,22 @@ void stw(CPU *cpu,int *a){
   //printf("%s\n",(cpu->reg)[rs]);
 
 
-  strncpy((cpu->memory)[addr2],(cpu->reg)[rs]/*+32*/,8);
-  strncpy((cpu->memory)[addr2+1],(cpu->reg)[rs]/*+40*/+8,8);
-  strncpy((cpu->memory)[addr2+2],(cpu->reg)[rs]/*+48*/+16,8);
-  strncpy((cpu->memory)[addr2+3],(cpu->reg)[rs]/*+56*/+24,8);
+  //printf("%d %s %s\n",addr2,(cpu->reg)[rs],(cpu->reg)[4]);
+
+
+  printf("rs   %d r%d\n",addr2,ra);
+  int x=change_ibit_f(R,(cpu->reg)[rs]);
+  //printf("store %d %s\n",x,(cpu->freg)[rs]);
+  (cpu->dmemory)[addr2/4]=x;
+  //strncpy((cpu->dmemory)[addr2],(cpu->reg)[rs]/*+32*/,8);
+  //strncpy((cpu->dmemory)[addr2+1],(cpu->reg)[rs]/*+40*/+8,8);
+  //strncpy((cpu->dmemory)[addr2+2],(cpu->reg)[rs]/*+48*/+16,8);
+  //strncpy((cpu->dmemory)[addr2+3],(cpu->reg)[rs]/*+56*/+24,8);
 
   *a+=4;
   //printf("stwを実行\n");
   //printf("stw reg%d %d(reg%d)を実行\n",rs,d,ra);
+  printf("stw r%d, %d(r%d)\n",rs,d,ra);
 }
 
 void mflr(CPU *cpu,int *a){
@@ -2260,6 +3017,22 @@ void mflr(CPU *cpu,int *a){
   *a+=4;
   //printf("mflr\n");
   //printf("mflr reg%dを実行\n",rd);
+  printf("mflr r%d\n",rd);
+}
+
+void fmr(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_16_20[6]={'\0'};
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int rs = change_ibit(5,code_6_10);
+  int ra = change_ibit(5,code_16_20);
+  strcpy((cpu->freg)[ra],(cpu->freg)[rs]);
+  *a+=4;
+  //printf("%d\n",addr);
+  //printf("mr reg%d reg%dを実行\n",rs,ra);
+  printf("fmr f%d, f%d\n",ra,rs);
 }
 
 void mr(CPU *cpu,int *a){
@@ -2272,7 +3045,9 @@ void mr(CPU *cpu,int *a){
   int ra = change_ibit(5,code_11_15);
   strcpy((cpu->reg)[ra],(cpu->reg)[rs]);
   *a+=4;
+  //printf("%d\n",addr);
   //printf("mr reg%d reg%dを実行\n",rs,ra);
+  printf("mr r%d, r%d\n",ra,rs);
 }
 
 void add(CPU *cpu,int *a){
@@ -2294,6 +3069,7 @@ void add(CPU *cpu,int *a){
   change_int((cpu->reg)[rt],32,z);
   *a+=4;
   //printf("add reg%d reg%d reg%dを実行\n",rt,ra,rb);
+  printf("add r%d, r%d, r%d\n",rt,ra,rb);
 }
 
 void subf(CPU *cpu,int *a){
@@ -2315,6 +3091,7 @@ void subf(CPU *cpu,int *a){
   change_int((cpu->reg)[rt],32,z);
   *a+=4;
   //printf("subf reg%d reg%d reg%dを実行\n",rt,ra,rb);
+  printf("subf r%d, r%d, r%d\n",rt,ra,rb);
 }
 
 void b(CPU *cpu,int *a){
@@ -2324,7 +3101,24 @@ void b(CPU *cpu,int *a){
   int target = change_ibit_f(24,code_6_29) * 4;
   *a=target+*a;
   //printf("bを実行\n");
+  printf("b\n");
 }
+
+void bctr(CPU *cpu,int *a){
+  int addr=*a;
+  char code_31[2]={'\0'};
+  read_i_j(cpu,addr,code_31,31,31);
+  if(code_31[0]=='1'){
+    change_int((cpu->lr),32,addr+4);
+  }
+
+  int next = b_to_i((cpu->cor),0,31);
+  *a=next;
+  printf("bctr\n");
+}
+
+
+  
 
 void bl(CPU *cpu,int *a){
   int addr = *a;
@@ -2334,8 +3128,10 @@ void bl(CPU *cpu,int *a){
   //printf("target %d\n",target);
   change_int((cpu->lr),32,addr+4);
   *a=target+*a;
+  //printf("%d %d %d\n",*a-target,target,*a);
   //printf("%d\n",*a);
   //printf("blを実行\n");
+  printf("bl\n");
 }
 
 void lfd(CPU *cpu,int *a){
@@ -2356,16 +3152,98 @@ void lfd(CPU *cpu,int *a){
   else{
     b=change_ibit_f(R,(cpu->reg)[ra]);
   }
-
-  int ea = b + d;
   char s[33]={'\0'};
+  int ea = b + d;
+  if(ea>=400){
+  int x =(cpu->dmemory)[ea/4];
+  i_to_b(s,x,R);
+  }
+  else{
   strcat(s,(cpu->memory)[ea]);
   strcat(s,(cpu->memory)[ea+1]);
   strcat(s,(cpu->memory)[ea+2]);
   strcat(s,(cpu->memory)[ea+3]);
+  }
 
+  //printf("sssssss %s\n",s);
   strcpy((cpu->freg)[frt],s);
   *a+=4;
+  printf("lfd f%d, %d(r%d)\n",frt,d,ra);
+}
+
+void lfdx(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_20[6]={'\0'};
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int rt = change_ibit(5,code_6_10);
+  int ra = change_ibit(5,code_11_15);
+  int rb = change_ibit(5,code_16_20);
+  int b;
+  if(ra==0){
+    b=0;
+  }
+  else{
+    b = change_ibit_f(R,(cpu->reg)[ra]);
+  }
+  b += change_ibit_f(R,(cpu->reg)[rb]);
+  //char s[33]={'\0'};
+  char s[33]={'\0'};
+  if(b>=400){
+  int x =(cpu->dmemory)[b/4];
+
+  i_to_b(s,x,R);
+  }
+  else{
+  //printf("ssssssss %s\n",s);
+  strcat(s,(cpu->memory)[b]);
+  strcat(s,(cpu->memory)[b+1]);
+  strcat(s,(cpu->memory)[b+2]);
+  strcat(s,(cpu->memory)[b+3]);
+  }
+  strcpy((cpu->freg)[rt],s);
+  *a+=4;
+  printf("lfdx f%d, r%d, r%d\n",rt,ra,rb);
+}
+
+void lwzx(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  char code_16_20[6]={'\0'};
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int rt = change_ibit(5,code_6_10);
+  int ra = change_ibit(5,code_11_15);
+  int rb = change_ibit(5,code_16_20);
+  int b;
+  if(ra==0){
+    b=0;
+  }
+  else{
+    b = change_ibit_f(R,(cpu->reg)[ra]);
+  }
+  b += change_ibit_f(R,(cpu->reg)[rb]);
+  //char s[33]={'\0'};
+  char s[33]={'\0'};
+  if(b>=400){
+  int x =(cpu->dmemory)[b/4];
+
+  i_to_b(s,x,R);
+  }
+  else{
+  strcat(s,(cpu->memory)[b]);
+  strcat(s,(cpu->memory)[b+1]);
+  strcat(s,(cpu->memory)[b+2]);
+  strcat(s,(cpu->memory)[b+3]);
+  }
+  strcpy((cpu->reg)[rt],s);
+  *a+=4;
+  printf("lwzx r%d, r%d, r%d\n",rt,ra,rb);
 }
 
 void lwz(CPU *cpu,int *a){
@@ -2390,19 +3268,42 @@ void lwz(CPU *cpu,int *a){
   }
   int ea = b + d;
   //char s[65]="00000000000000000000000000000000";
-  char s[33]={'\0'};
+  //char s[33]={'\0'};
   /*for(int i=0;i<4;i++){
     printf("%d %s\n",ea,(cpu->memory)[ea+i]);
     }*/
+  char s[33]={'\0'};
+  if(ea>=400){
+  int x =(cpu->dmemory)[ea/4];
+
+  i_to_b(s,x,R);
+  }
+  else{
   strcat(s,(cpu->memory)[ea]);
   strcat(s,(cpu->memory)[ea+1]);
   strcat(s,(cpu->memory)[ea+2]);
   strcat(s,(cpu->memory)[ea+3]);
+  }
 
   strcpy((cpu->reg)[rt],s);
   /*printf("reg%d %s\n",rt,(cpu->reg)[rt]);*/
   *a+=4;
   //printf("lwz reg%d %d(reg%d)を実行\n",rt,d,ra);
+  printf("lwz r%d, %d(r%d)\n",rt,d,ra);
+}
+
+void mtctr(CPU *cpu,int *addr){
+  int a=*addr;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,a,code_6_10,6,10);
+
+  int rs = change_ibit(5,code_6_10);
+  strcpy((cpu->cor),(cpu->reg)[rs]);
+  printf("%s %s\n",(cpu->cor),(cpu->reg)[rs]);
+  //printf("b\n");
+  *addr+=4;
+  //printf("mtlr reg%dを実行\n",rs);
+  printf("mtctr r%d\n",rs);
 }
 
 void mtlr(CPU *cpu,int *addr){
@@ -2415,6 +3316,7 @@ void mtlr(CPU *cpu,int *addr){
   //printf("b\n");
   *addr+=4;
   //printf("mtlr reg%dを実行\n",rs);
+  printf("mtlr r%d\n",rs);
 }
 
 void stmw(CPU *cpu,int *a){
@@ -2441,18 +3343,56 @@ void stmw(CPU *cpu,int *a){
   int ea = b + d;
   int r = rs;
   while(r <= 31){
-    strncpy((cpu->memory)[ea],(cpu->reg)[r]/*+32*/,8);
-    strncpy((cpu->memory)[ea+1],(cpu->reg)[r]/*+40*/+8,8);
-    strncpy((cpu->memory)[ea+2],(cpu->reg)[r]/*+48*/+16,8);
-    strncpy((cpu->memory)[ea+3],(cpu->reg)[r]/*+56*/+24,8);
+    int x = change_ibit_f(R,(cpu->reg)[r]);
+    (cpu->dmemory)[ea/4]=x;
+    //strncpy((cpu->dmemory)[ea],(cpu->reg)[r]/*+32*/,8);
+    //strncpy((cpu->dmemory)[ea+1],(cpu->reg)[r]/*+40*/+8,8);
+    //strncpy((cpu->dmemory)[ea+2],(cpu->reg)[r]/*+48*/+16,8);
+    //strncpy((cpu->dmemory)[ea+3],(cpu->reg)[r]/*+56*/+24,8);
 
     r+=1;
     ea+=4;
   }
   *a+=4;
   //printf("stmw reg%d %d(reg%d)を実行\n",rs,d,ra);
+  printf("stmw r%d, %d(r%d)\n",rs,d,ra);
 }
 
+void fslwi(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  int rs = change_ibit(5,code_6_10);
+
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  int ra = change_ibit(5,code_11_15);
+
+  char code_16_20[6]={'\0'};
+  read_i_j(cpu,addr,code_16_20,16,20);
+  int sh = change_ibit(5,code_16_20);
+
+  char code_21_25[6]={'\0'};
+  read_i_j(cpu,addr,code_21_25,21,25);
+  int mb = change_ibit(5,code_21_25);
+
+  char code_26_30[6]={'\0'};
+  read_i_j(cpu,addr,code_26_30,26,30);
+  int me = change_ibit(5,code_26_30);
+
+  int n = sh;
+  char rc[33]={'\0'};
+  rot_l(rc,(cpu->freg)[rs],n);/*左にnだけ回転*/
+  char mask[33]={'\0'};
+  make_mask(mask,mb,me);
+  char ra_c[33]={'\0'};
+  and(ra_c,rc,mask);
+  //printf("n %d\n",n);
+  strcpy((cpu->freg)[ra],ra_c);
+  *a+=4;
+  //printf("rlwinm r%d r%d %d %d %dを実行\n",ra,rs,sh,mb,me);
+  printf("fslwi r%d, r%d, %d\n",ra,rs,n);
+}
 void rlwinm(CPU *cpu,int *a){
   int addr = *a;
   char code_6_10[6]={'\0'};
@@ -2486,6 +3426,7 @@ void rlwinm(CPU *cpu,int *a){
   strcpy((cpu->reg)[ra],ra_c);
   *a+=4;
   //printf("rlwinm r%d r%d %d %d %dを実行\n",ra,rs,sh,mb,me);
+  printf("rlwinm r%d, r%d, %d, %d, %d\n",ra,rs,sh,mb,me);
 }
   
 
@@ -2504,14 +3445,17 @@ void stwu(CPU *cpu,int *a){
   int d = change_ibit_f(16,code_16_31);
 
   int ea = change_ibit_f(R,(cpu->reg)[ra]) + d;
-  strncpy((cpu->memory)[ea],(cpu->reg)[rs]/*+32*/,8);
-  strncpy((cpu->memory)[ea+1],(cpu->reg)[rs]/*+40*/+8,8);
-  strncpy((cpu->memory)[ea+2],(cpu->reg)[rs]/*+48*/+16,8);
-  strncpy((cpu->memory)[ea+3],(cpu->reg)[rs]/*+56*/+24,8);
+  int x = change_ibit_f(R,(cpu->reg)[rs]);
+  (cpu->dmemory)[ea/4]=x;
+  //strncpy((cpu->dmemory)[ea],(cpu->reg)[rs]/*+32*/,8);
+  //strncpy((cpu->dmemory)[ea+1],(cpu->reg)[rs]/*+40*/+8,8);
+  //strncpy((cpu->dmemory)[ea+2],(cpu->reg)[rs]/*+48*/+16,8);
+  //strncpy((cpu->dmemory)[ea+3],(cpu->reg)[rs]/*+56*/+24,8);
 
   change_int((cpu->reg)[ra],32,ea);
   *a+=4;
   //printf("stwu reg%d %d(reg%d)を実行\n",rs,d,ra);
+  printf("stwu r%d, %d(r%d)\n",rs,d,ra);
 }
 
 void lmw(CPU *cpu,int *a){
@@ -2538,21 +3482,29 @@ void lmw(CPU *cpu,int *a){
   int ea = b + d;
   int r = rt;
   while(r <= 31){
-    //char s[65] = "00000000000000000000000000000000";
     char s[33]={'\0'};
+    //char s[65] = "00000000000000000000000000000000";
+    if(ea>=400){
+    int x = (cpu->dmemory)[ea/4];
+
+    i_to_b(s,x,R);
+    }
+    else{
     strcat(s,(cpu->memory)[ea]);
     strcat(s,(cpu->memory)[ea+1]);
     strcat(s,(cpu->memory)[ea+2]);
     strcat(s,(cpu->memory)[ea+3]);
+    }
     ea += 4;
     strcpy((cpu->reg)[r],s);
     r+=1;
   }
   *a+=4;
   //printf("lmw reg%d %d(reg%d)を実行\n",rt,d,ra);
+  printf("lmw r%d %d(r%d)\n",rt,d,ra);
 }
 /*itof rft ra*/
-void itof(CPU *cpu,int *a){
+/*void itof(CPU *cpu,int *a){
   int addr=*a;
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
@@ -2564,10 +3516,24 @@ void itof(CPU *cpu,int *a){
   //printf("これだ%d\n",v);
   change_float_to_string((cpu->freg)[frt],v);
   *a+=4;
+  }*/
+
+void itof(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  int frt=change_ibit(5,code_6_10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  int ra = change_ibit(5,code_11_15);
+  strcpy((cpu->freg)[frt],"");
+  fpu_itof((cpu->reg)[ra],(cpu->freg)[frt]);
+  *a+=4;
+  printf("itof f%d, r%d\n",frt,ra);
 }
 
 /*ftoi rft ra*/
-void ftoi(CPU *cpu,int *a){
+/*void ftoi(CPU *cpu,int *a){
   int addr=*a;
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
@@ -2577,10 +3543,25 @@ void ftoi(CPU *cpu,int *a){
   int frt = change_ibit(5,code_11_15);
   change_float_to_int_string((cpu->reg)[ra],(cpu->freg)[frt]);
   *a+=4;
+  }*/
+
+void ftoi(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  int ra = change_ibit(5,code_6_10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  int frt = change_ibit(5,code_11_15);
+  strcpy((cpu->reg)[ra],"");
+  fpu_ftoi((cpu->freg)[frt],(cpu->reg)[ra]);
+  *a+=4;
+  //printf("a-----%d %d\n",ra,frt);
+  printf("ftoi r%d, f%d\n",ra,frt);
 }
 
 /*floor fa fd*/
-void floor2(CPU *cpu,int *a){
+/*void floor2(CPU *cpu,int *a){
   int addr =*a;
   char code_6_10[6]={'\0'};
   read_i_j(cpu,addr,code_6_10,6,10);
@@ -2592,6 +3573,20 @@ void floor2(CPU *cpu,int *a){
   v = floorf(v);
   change_float_to_string((cpu->freg)[fa],v);
   *a+=4;
+  }*/
+
+void floor2(CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  read_i_j(cpu,addr,code_6_10,6,10);
+  int fa = change_ibit(5,code_6_10);
+  char code_11_15[6]={'\0'};
+  read_i_j(cpu,addr,code_11_15,11,15);
+  int fd = change_ibit(5,code_11_15);
+  strcpy((cpu->freg)[fa],"");
+  fpu_floor((cpu->freg)[fd],(cpu->freg)[fa]);
+  *a+=4;
+  printf("floor f%d, f%d\n",fd,fa);
 }
 
 
@@ -2614,8 +3609,11 @@ void fadd(CPU *cpu,int *a){
 
   char ovf[2]={'\0'};
 
-  fpu_fadd((cpu->freg)[frt],(cpu->freg)[fra],(cpu->freg)[frb],ovf);
+  strcpy((cpu->freg)[frt],"");
+    printf("fadd f%d, f%d, f%d\n",frt,fra,frb);
+  fpu_fadd((cpu->freg)[fra],(cpu->freg)[frb],(cpu->freg)[frt],ovf);
   *a+=4;
+
 }
 
 void fsub(CPU *cpu,int *a){
@@ -2634,8 +3632,10 @@ void fsub(CPU *cpu,int *a){
 
   char ovf[2] = {'\0'};
 
-  fpu_fsub((cpu->freg)[frt],(cpu->freg)[fra],(cpu->freg)[frb],ovf);
+  strcpy((cpu->freg)[frt],"");
+  fpu_fsub((cpu->freg)[fra],(cpu->freg)[frb],(cpu->freg)[frt],ovf);
   *a+=4;
+  printf("fsub f%d, f%d, f%d\n",frt,fra,frb);
 }
 
 void fmul(CPU *cpu,int *a){
@@ -2654,8 +3654,19 @@ void fmul(CPU *cpu,int *a){
 
   char ovf[2] = {'\0'};
 
-  fpu_fmul((cpu->freg)[frt],(cpu->freg)[fra],(cpu->freg)[frb],ovf);
+  //strcpy((cpu->freg)[frt],"");
+
+  char t[33]={'\0'};
+  //printf("%s\n",(cpu->freg)[fra]);
+  //printf("%s\n",(cpu->freg)[frb]);
+  /*(cpu->freg)[fra][R]='\0';
+    (cpu->freg)[frb][R]='\0';*/
+  fpu_fmul((cpu->freg)[frb],(cpu->freg)[fra],t,ovf);
+  //printf("%s\n",t);
+  strcpy((cpu->freg)[frt],t);
   *a += 4;
+  //printf("%s\n",t);
+  printf("fmul f%d, f%d, f%d\n",frt,fra,frb);
 }
 
 void fdiv(CPU *cpu,int *a){
@@ -2670,8 +3681,13 @@ void fdiv(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_16_20,16,20);
   int frb=change_ibit(5,code_16_20);
   char ovf[2]={'\0'};
-  fpu_fdiv((cpu->freg)[fra],(cpu->freg)[frb],(cpu->freg)[frd],ovf);
+  //strcpy((cpu->freg)[frd],"");
+  char s[33]={'\0'};
+  fpu_fdiv((cpu->freg)[fra],(cpu->freg)[frb],s,ovf);
+  //printf("s %s\n",s);
+  strcpy((cpu->freg)[frd],s);
   *a+=4;
+  printf("fdiv f%d, f%d, f%d\n",frd,fra,frb);
 }
 
 void fsqrt(CPU *cpu,int *a){
@@ -2683,8 +3699,10 @@ void fsqrt(CPU *cpu,int *a){
   read_i_j(cpu,addr,code_6_10,6,10);
   int fra=change_ibit(5,code_11_15);
   char ovf[2]={'\0'};
+  strcpy((cpu->freg)[frd],"");
   fpu_fsqrt((cpu->freg)[fra],(cpu->freg)[frd],ovf);
   *a+=4;
+  printf("fsqrt f%d, f%d\n",frd,fra);
 }
 
 /*sは8bitの16進数である。iメモリのアドレスをさす*/
@@ -2718,13 +3736,16 @@ void zero_cpu(CPU *cpu){
   for(int i=0;i<R;i++){
     (cpu->lr)[i]='0';
   }
+  for(int i=0;i<R;i++){
+    (cpu->cor)[i]='0';
+  }
   for(int i=0;i<8;i++){
     for(int k=0;k<4;k++){
       (cpu->cr)[i][k]='0';
     }
   }
-  change_int((cpu->reg)[1],R,2000);
-  change_int((cpu->reg)[3],R,5000);
+  change_int((cpu->reg)[4],R,100000);
+  change_int((cpu->reg)[3],R,50000);
 }
 
 void print_cpu(CPU *cpu){
@@ -2739,6 +3760,192 @@ void print_cpu(CPU *cpu){
       printf("%s ",(cpu->memory)[i]);
     }
   }
+}
+
+void print_cpu2(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
+  printf("%lu %lu %lu %lu %lu %lu\n",sizeof(cpu),sizeof(labellist),sizeof(codelist),sizeof(file),sizeof(file2),sizeof(int));
+}
+
+void exec2(char *code_0_5,char *code_22_30,char *code_21_30,char *code_6_10,char *code_30,char *code_31,char *code_26_30,char *code_11_20,char *name,int *addr,FILE *file,FILE *file2,label *labellist,code *codelist,CPU *cpu){
+     if(strcmp(code_0_5,"011111")==0){
+      if(strcmp(code_22_30,"100001010")==0){
+        add(cpu,addr);
+      }
+      else if(strcmp(code_22_30,"111111111")==0){
+        itof(cpu,addr);
+      }
+      else if(strcmp(code_22_30,"000101000")==0){
+        subf(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"0110111100")==0){
+        mr(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"0000010111")==0){
+        lwzx(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"0010010111")==0){
+        stwx(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"1001010111")==0){
+        lfdx(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"1011010111")==0){
+        stfdx(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"0101010011")==0){
+        //printf("aaaaaaaa\n");
+        mflr(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"0111010011")==0){
+        if(strcmp(code_11_20,"0000001000")==0){
+          mtlr(cpu,addr);
+        }
+        else if(strcmp(code_11_20,"0000001001")==0){
+          mtctr(cpu,addr);
+        }
+      }
+      else if(strcmp(code_21_30,"0000000000")==0){
+        cmp(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"0000011000")==0){
+        slw(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"1000011000")==0){
+        srw(cpu,addr);
+      }
+      else if(strcmp(code_22_30,"001101000")==0){
+        neg(cpu,addr);
+      }
+    }
+    else if(strcmp(code_0_5,"001111")==0){
+      lis(cpu,addr);
+    }
+    
+    else if(strcmp(code_0_5,"110010")==0){
+      lfd(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"110110")==0){
+      stfd(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"001011")==0){
+      cmpi(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"010000")==0){
+      if(code_30[0]=='0'){
+        if(strcmp(code_6_10,"00100")==0){
+          bne(cpu,addr);
+        }
+        else if(strcmp(code_6_10,"00010")==0){
+          bgt(cpu,addr);
+        }
+        else if(strcmp(code_6_10,"00001")==0){
+          blt(cpu,addr);
+        }
+        else if(strcmp(code_6_10,"01000")==0){
+          beq(cpu,addr);
+        }
+      }
+    }
+    else if(strcmp(code_0_5,"000010")==0){
+      in(cpu,addr,file);
+    }
+    else if(strcmp(code_0_5,"000100")==0){
+      fin(cpu,addr,file);
+    }
+    else if(strcmp(code_0_5,"000011")==0){
+      read(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"001110")==0){
+      addi(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"000001")==0){
+      out(cpu,addr,file2);
+    }
+    else if(strcmp(code_0_5,"010011")==0){
+      if(strcmp(code_21_30,"0000010000")==0){
+        blr(cpu,addr);
+      }
+      else if(strcmp(code_21_30,"1000010000")==0){
+        bctr(cpu,addr);
+      }
+    }
+    else if(strcmp(code_0_5,"100100")==0){
+      stw(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"011111")==0){
+      if(strcmp(code_21_30,"0101010011")==0){
+        mflr(cpu,addr);
+      }
+    }
+    else if(strcmp(code_0_5,"011111")==0){
+      if(strcmp(code_21_30,"0110111100")==0){
+        mr(cpu,addr);
+      }
+    }
+    else if(strcmp(code_0_5,"010010")==0){
+      if(code_31[0] == '1'){
+        bl(cpu,addr);
+      }
+      else{
+        b(cpu,addr);
+      }
+    }
+    else if(strcmp(code_0_5,"011111")==0){
+      if(strcmp(code_21_30,"0111010011")==0){
+        mtlr(cpu,addr);
+      }
+    }
+    else if(strcmp(code_0_5,"100101")==0){
+      stwu(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"101110")==0){
+      lmw(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"101111")==0){
+      stmw(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"100000")==0){
+      lwz(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"010101")==0){
+      rlwinm(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"101010")==0){
+      fslwi(cpu,addr);
+    }
+    else if(strcmp(code_0_5,"111111")==0){
+      printf("%s\n",code_26_30);
+      if(strcmp(code_26_30,"10101")==0){
+        fadd(cpu,addr);
+      }
+      else if(strcmp(code_26_30,"10100")==0){
+        fsub(cpu,addr);
+      }
+      else if(strcmp(code_26_30,"11001")==0){
+        fmul(cpu,addr);
+      }
+      else if(strcmp(code_26_30,"10010")==0){
+        fdiv(cpu,addr);
+      }
+      else if(strcmp(code_26_30,"11110")==0){
+        fabs2(cpu,addr);
+      }
+      else if(strcmp(code_26_30,"10110")==0){
+        fsqrt(cpu,addr);
+      }
+      else if(strcmp(code_26_30,"00001")==0){
+        fcmpu(cpu,addr);
+      }
+      else if(strcmp(code_26_30,"00000")==0){
+        fneg(cpu,addr);
+      }
+      else if(strcmp(code_22_30,"111111110")==0){
+        ftoi(cpu,addr);
+      }
+      else if(strcmp(code_22_30,"111111111")==0){
+        floor2(cpu,addr);
+      }
+    }
 }
 
 void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
@@ -2763,20 +3970,37 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
       
     }
   }
-    
+    //printf("%d %s %s\n",addr,(cpu->reg)[3],(cpu->reg)[4]);
   while(1){
+    printf("%d\n",inf);
+    //printf("%d\n",change_ibit_f(R,(cpu->reg)[4]));
+    /*if(addr == 6744){
+      int u=0;
+      scanf("%d",&u);
+      if(u==1){
+      print_memory(*cpu);
+      }
+      }*/
     //printf("addr %d addrx %d\n",addr,addrx);
     if(r[0]=='y'){
       if(addr==addrx){
         check=1;
       }
     }
+    if(addr==11764/*(change_ibit_f(R,(cpu->reg)[4])>2000000)*/){
+      //printf("a\n");
+      
+      check=0;
+    }
+    if(change_ibit_f(R,(cpu->reg)[4]) > 500000){
+      //check=1;
+    }
     if(check==1){
       printf("aで実行した命令を表示\n");
       scanf("%s",q);
       //printf("%d %s\n",addr,q);
       if(q[0]=='a'){
-        printf("%s\n",(codelist[(addr-iaddr)/4]).name);
+        //printf("%s\n",(codelist[(addr-iaddr)/4]).name);
         //print_reg(cpu);
       }
       printf("bでメモリの表示\n");
@@ -2796,6 +4020,7 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     char code_30[2]={'\0'};
     char code_31[2]={'\0'};
     char code_26_30[6]={'\0'};
+    char code_11_20[11]={'\0'};
     read_i_j(cpu,addr,code_0_5,0,5);
     read_i_j(cpu,addr,code_22_30,22,30);
     read_i_j(cpu,addr,code_21_30,21,30);
@@ -2803,15 +4028,16 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     read_i_j(cpu,addr,code_30,30,30);
     read_i_j(cpu,addr,code_31,31,31);
     read_i_j(cpu,addr,code_26_30,26,30);
-    //printf("%d\n",addr);
+    read_i_j(cpu,addr,code_11_20,11,20);
+    printf("addr %d\n",addr);
     //printf("%s\n",code_0_5);
+    //exec2(code_0_5,code_22_30,code_21_30,code_6_10,code_30,code_31,code_26_30,code_11_20,name,&addr,file,file2,labellist,codelist,cpu);
     if(strcmp(code_0_5,"011111")==0){
       if(strcmp(code_22_30,"100001010")==0){
         add(cpu,&addr);
       }
       else if(strcmp(code_22_30,"111111111")==0){
-        //printf("aaaaaaaaaaaaa\n");
-        itof(cpu,&addr);/*cの組み込みで代用*/
+        itof(cpu,&addr);
       }
       else if(strcmp(code_22_30,"000101000")==0){
         subf(cpu,&addr);
@@ -2819,12 +4045,29 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
       else if(strcmp(code_21_30,"0110111100")==0){
         mr(cpu,&addr);
       }
+      else if(strcmp(code_21_30,"0000010111")==0){
+        lwzx(cpu,&addr);
+      }
+      else if(strcmp(code_21_30,"0010010111")==0){
+        stwx(cpu,&addr);
+      }
+      else if(strcmp(code_21_30,"1001010111")==0){
+        lfdx(cpu,&addr);
+      }
+      else if(strcmp(code_21_30,"1011010111")==0){
+        stfdx(cpu,&addr);
+      }
       else if(strcmp(code_21_30,"0101010011")==0){
         //printf("aaaaaaaa\n");
         mflr(cpu,&addr);
       }
       else if(strcmp(code_21_30,"0111010011")==0){
-        mtlr(cpu,&addr);
+        if(strcmp(code_11_20,"0000001000")==0){
+          mtlr(cpu,&addr);
+        }
+        else if(strcmp(code_11_20,"0000001001")==0){
+          mtctr(cpu,&addr);
+        }
       }
       else if(strcmp(code_21_30,"0000000000")==0){
         cmp(cpu,&addr);
@@ -2841,6 +4084,13 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     }
     else if(strcmp(code_0_5,"001111")==0){
       lis(cpu,&addr);
+    }
+    
+    else if(strcmp(code_0_5,"110010")==0){
+      lfd(cpu,&addr);
+    }
+    else if(strcmp(code_0_5,"110110")==0){
+      stfd(cpu,&addr);
     }
     else if(strcmp(code_0_5,"001011")==0){
       cmpi(cpu,&addr);
@@ -2864,6 +4114,9 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     else if(strcmp(code_0_5,"000010")==0){
       in(cpu,&addr,file);
     }
+    else if(strcmp(code_0_5,"000100")==0){
+      fin(cpu,&addr,file);
+    }
     else if(strcmp(code_0_5,"000011")==0){
       read(cpu,&addr);
     }
@@ -2874,8 +4127,12 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
       out(cpu,&addr,file2);
     }
     else if(strcmp(code_0_5,"010011")==0){
+      //printf("%s\n",code_21_);
       if(strcmp(code_21_30,"0000010000")==0){
         blr(cpu,&addr);
+      }
+      else if(strcmp(code_21_30,"1000010000")==0){
+        bctr(cpu,&addr);
       }
     }
     else if(strcmp(code_0_5,"100100")==0){
@@ -2919,27 +4176,36 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     else if(strcmp(code_0_5,"010101")==0){
       rlwinm(cpu,&addr);
     }
+    else if(strcmp(code_0_5,"101010")==0){
+      fslwi(cpu,&addr);
+    }
     else if(strcmp(code_0_5,"111111")==0){
-      if(strcmp(code_26_30,"010101")==0){
+      if(strcmp(code_26_30,"10101")==0){
         fadd(cpu,&addr);
       }
-      else if(strcmp(code_26_30,"010100")==0){
+      else if(strcmp(code_26_30,"10100")==0){
         fsub(cpu,&addr);
       }
-      else if(strcmp(code_26_30,"011001")==0){
+      else if(strcmp(code_26_30,"11001")==0){
         fmul(cpu,&addr);
       }
-      else if(strcmp(code_26_30,"010010")==0){
+      else if(strcmp(code_26_30,"10010")==0){
         fdiv(cpu,&addr);
       }
-      else if(strcmp(code_26_30,"111110")==0){
+      else if(strcmp(code_26_30,"11110")==0){
         fabs2(cpu,&addr);
       }
-      else if(strcmp(code_26_30,"010110")==0){
+      else if(strcmp(code_26_30,"01000")==0){
+        fmr(cpu,&addr);
+      }
+      else if(strcmp(code_26_30,"10110")==0){
         fsqrt(cpu,&addr);
       }
-      else if(strcmp(code_26_30,"000000")==0){
+      else if(strcmp(code_26_30,"00000")==0){
         fneg(cpu,&addr);
+      }
+      else if(strcmp(code_26_30,"00001")==0){
+        fcmpu(cpu,&addr);
       }
       else if(strcmp(code_22_30,"111111110")==0){
         ftoi(cpu,&addr);
@@ -2951,6 +4217,7 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     else{
       break;
     }
+    /*
     if(check==1){
       if(q[0]=='a'){
         print_reg(cpu);
@@ -2959,15 +4226,22 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
         print_memory(*cpu);
       }
     }
+    */
+    if(check==1){
+    print_reg(cpu);
+    //check=0;
+    }
   }
 }
 
 
 int main(int argc,char **argv){
-  char xi[33]="00000000000000000000000000000001";
-  char xg[33]={'\0'};
-  fpu_itof(xi,xg);
-  printf("%s\n",xg);
+  char xi[33]="00111100100011101111101000110101";
+  char xg[33]="00000000000000000000000000000000";
+  char s[33]={'\0'};
+  char ovf[2]={'\0'};
+  fpu_fmul(xi,xg,s,ovf);
+  printf("%s\n",s);
   FILE *file2;
   file2=fopen(argv[2],"r");
   int addr = 4;
@@ -3017,16 +4291,16 @@ int main(int argc,char **argv){
       z+=1;
     }
     else if((state==4)&&(ch=='\n')){
-      strcpy(labellist[lnum].name,buf);
-      labellist[lnum].addr=addr;
+      //strcpy(labellist[lnum].name,buf);
+      //labellist[lnum].addr=addr;
       clean(buf);
       z=0;
       lnum+=1;
       state=5;/*codeを読む*/
     }
     else if((state==5)&&(ch=='\n')){
-      strcpy(codelist[cnum].name,buf);
-      codelist[cnum].addr=addr;
+      //strcpy(codelist[cnum].name,buf);
+      //codelist[cnum].addr=addr;
       clean(buf);
       z=0;
       cnum+=1;
@@ -3079,8 +4353,12 @@ int main(int argc,char **argv){
   zero_cpu(&cpu);
   //print_cpu(&cpu);
   //print_reg(&cpu);
+  //printf("%d\n",(int) &cpu);
   printf("実行します\n");
   //print_memory(cpu);
+  //strcat(cpu.memory[M-1],"111");
+  //printf("%s\n",(cpu.memory)[M-1]);
+  print_cpu2(&cpu,labellist,codelist,file3,file4);
   exec(&cpu,labellist,codelist,file3,file4);
   //print_reg(&cpu);
   fclose(file3);
