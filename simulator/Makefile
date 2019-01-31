@@ -5,14 +5,10 @@ CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
 SIMU_SOURCE = simu.c
 ML_TESTS = \
-print_int \
-print_float \
 read \
 sin cos atan \
-array \
-unit \
-paint_red \
-print_char
+atan2 \
+array float
 ASM_TESTS = 
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
