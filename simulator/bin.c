@@ -4,8 +4,9 @@
 int main(void)
 {
     FILE* fp;
-    int num = 90;
-    //double d = 7.85;
+    //int num = 90;
+    //int num2 = 80;
+    float d = 7.85;
     //char str[] = "xyzxyz";
 
 
@@ -15,8 +16,9 @@ int main(void)
         exit( EXIT_FAILURE );
     }
 
-    fwrite( &num, sizeof(num), 1, fp );
-    //fwrite( &d, sizeof(d), 1, fp );
+    //fwrite( &num, sizeof(num), 1, fp );
+    //fwrite(&num2,sizeof(num2),1,fp);
+    fwrite( &d, sizeof(d), 1, fp );
     //fwrite( str, sizeof(str[0]), sizeof(str), fp );
 
     if( fclose( fp ) == EOF ){
