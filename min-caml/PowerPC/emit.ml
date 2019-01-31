@@ -300,6 +300,9 @@ let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
 
 let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (Prog(data, fundefs, e)) =
 	Format.eprintf "generating assembly...@.";
+	Printf.fprintf oc "\t.data\n";
+	(* 外部配列の記述 *)
+	Lib_extarr.print_arraddr oc;
 	(* ライブラリのfloat valueの記述 *)
 	(if float_value_flag = 1 then Lib_float_value.print_external_methods oc);
 	(* プログラム内で定義されたfloat valueの記述 *)
@@ -310,8 +313,6 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 				 Printf.fprintf oc "%s:\n" x;
 				 Printf.fprintf oc "\t%ld\n" (getfloat d))
 			 data);
-	(* 外部配列の記述 *)
-	Lib_extarr.print_arraddr oc;
 	(* 本処理の開始 *)
 	Printf.fprintf oc "\t.globl _min_caml_start\n";
 	Printf.fprintf oc "_min_caml_start:\n";

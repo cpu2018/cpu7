@@ -1,6 +1,5 @@
 let print_external_methods oc = Printf.fprintf oc
-"	.data
-lsc186:
+"lsc186:
 	1082130432
 lsc173:
 	0

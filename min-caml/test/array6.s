@@ -108,28 +108,11 @@ latan86:
 	.globl _min_caml_start
 _min_caml_start:
 	addi	r4, r4, 6484
-	li	r2, 5
-	li	r5, 4
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_create_array
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	mr	r30, r4
-	addi	r4, r4, 8
-	lis	r5, ha16(f6)
-	addi	r5, r5, lo16(f6)
-	stw	r5, 0(r30)
-	stw	r2, 4(r30)
 	li	r2, 1
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
-	lwz	r31, 0(r30)
-	mtctr	r31
-	bctrl
+	bl	f4
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
@@ -696,8 +679,9 @@ min_caml_print_int:
 	lwz	r31, 4(r3)
 	mtlr	r31
 	blr
-f6:
-	lwz	r5, 4(r30)
+f4:
+	lis	r5, ha16(min_caml_a)
+	addi	r5, r5, lo16(min_caml_a)
 	stw	r2, 8(r5)
 	blr
 min_caml_fin:
