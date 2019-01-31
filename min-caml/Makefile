@@ -9,7 +9,7 @@ CC = gcc
 CFLAGS = -g -O2 -Wall
 OCAMLLDFLAGS=-warn-error -31
 
-default: debug-code top $(RESULT) do_test
+default: debug-code top $(RESULT) do_test cp
 $(RESULT): debug-code top
 ## [自分（住井）用の注]
 ## ・OCamlMakefileや古いGNU Makeのバグ(?)で上のような定義が必要(??)
@@ -100,5 +100,9 @@ min-caml.html: main.mli main.ml id.ml m.ml s.ml \
 release: min-caml.html
 	rm -fr tmp ; mkdir tmp ; cd tmp ; cvs -d:ext:sumii@min-caml.cvs.sf.net://cvsroot/min-caml export -Dtomorrow min-caml ; tar cvzf ../min-caml.tar.gz min-caml ; cd .. ; rm -fr tmp
 	cp Makefile stub.c SPARC/libmincaml.S min-caml.html min-caml.tar.gz ../htdocs/
+
+
+cp:
+	cp min-caml ../simulator/min-caml
 
 include OCamlMakefile
