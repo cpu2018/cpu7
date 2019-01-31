@@ -1,62 +1,62 @@
 let print_arraddr oc = Printf.fprintf oc
 "min_caml_n_objects:
-	50000
+	0
 min_caml_objects:
-	50004
+	4
 min_caml_screen:
-	52644
+	2644
 min_caml_viewpoint:
-	52656
+	2656
 min_caml_light:
-	52668
+	2668
 min_caml_beam:
-	52680
+	2680
 min_caml_and_net:
-	52684
+	2684
 min_caml_or_net:
-	52884
+	2884
 min_caml_solver_dist:
-	52888
+	2888
 min_caml_intsec_rectside:
-	52892
+	2892
 min_caml_tmin:
-	52896
+	2896
 min_caml_intersection_point:
-	52900
+	2900
 min_caml_intersected_object_id:
-	52912
+	2912
 min_caml_nvector:
-	52916
+	2916
 min_caml_texture_color:
-	52928
+	2928
 min_caml_diffuse_ray:
-	52940
+	2940
 min_caml_rgb:
-	52952
+	2952
 min_caml_image_size:
-	52964
+	2964
 min_caml_image_center:
-	52972
+	2972
 min_caml_scan_pitch:
-	52980
+	2980
 min_caml_startp:
-	52984
+	2984
 min_caml_startp_fast:
-	52996
+	2996
 min_caml_screenx_dir:
-	53008
+	3008
 min_caml_screeny_dir:
-	53020
+	3020
 min_caml_screenz_dir:
-	53032
+	3032
 min_caml_ptrace_dirvec:
-	53044
+	3044
 min_caml_dirvecs:
-	53056
+	3056
 min_caml_light_dirvec:
-	53096
+	3096
 min_caml_reflecrions:
-	53600
+	3600
 min_caml_n_reflections:
-	56480
+	6480
 "

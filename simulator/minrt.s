@@ -1,64 +1,64 @@
 	.data
 min_caml_n_objects:
-	0
+	50000
 min_caml_objects:
-	4
+	50004
 min_caml_screen:
-	2644
+	52644
 min_caml_viewpoint:
-	2656
+	52656
 min_caml_light:
-	2668
+	52668
 min_caml_beam:
-	2680
+	52680
 min_caml_and_net:
-	2684
+	52684
 min_caml_or_net:
-	2884
+	52884
 min_caml_solver_dist:
-	2888
+	52888
 min_caml_intsec_rectside:
-	2892
+	52892
 min_caml_tmin:
-	2896
+	52896
 min_caml_intersection_point:
-	2900
+	52900
 min_caml_intersected_object_id:
-	2912
+	52912
 min_caml_nvector:
-	2916
+	52916
 min_caml_texture_color:
-	2928
+	52928
 min_caml_diffuse_ray:
-	2940
+	52940
 min_caml_rgb:
-	2952
+	52952
 min_caml_image_size:
-	2964
+	52964
 min_caml_image_center:
-	2972
+	52972
 min_caml_scan_pitch:
-	2980
+	52980
 min_caml_startp:
-	2984
+	52984
 min_caml_startp_fast:
-	2996
+	52996
 min_caml_screenx_dir:
-	3008
+	53008
 min_caml_screeny_dir:
-	3020
+	53020
 min_caml_screenz_dir:
-	3032
+	53032
 min_caml_ptrace_dirvec:
-	3044
+	53044
 min_caml_dirvecs:
-	3056
+	53056
 min_caml_light_dirvec:
-	3096
+	53096
 min_caml_reflecrions:
-	3600
+	53600
 min_caml_n_reflections:
-	6480
+	56480
 lsc186:
 	1082130432
 lsc173:
@@ -171,7 +171,7 @@ l5590:
 	0
 	.globl _min_caml_start
 _min_caml_start:
-	addi	r4, r4, 6484
+	addi	r4, r4, 50000
 	li	r2, 512
 	li	r5, 512
 	mflr	r31

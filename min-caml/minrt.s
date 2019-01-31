@@ -1,4 +1,64 @@
 	.data
+min_caml_n_objects:
+	50000
+min_caml_objects:
+	50004
+min_caml_screen:
+	52644
+min_caml_viewpoint:
+	52656
+min_caml_light:
+	52668
+min_caml_beam:
+	52680
+min_caml_and_net:
+	52684
+min_caml_or_net:
+	52884
+min_caml_solver_dist:
+	52888
+min_caml_intsec_rectside:
+	52892
+min_caml_tmin:
+	52896
+min_caml_intersection_point:
+	52900
+min_caml_intersected_object_id:
+	52912
+min_caml_nvector:
+	52916
+min_caml_texture_color:
+	52928
+min_caml_diffuse_ray:
+	52940
+min_caml_rgb:
+	52952
+min_caml_image_size:
+	52964
+min_caml_image_center:
+	52972
+min_caml_scan_pitch:
+	52980
+min_caml_startp:
+	52984
+min_caml_startp_fast:
+	52996
+min_caml_screenx_dir:
+	53008
+min_caml_screeny_dir:
+	53020
+min_caml_screenz_dir:
+	53032
+min_caml_ptrace_dirvec:
+	53044
+min_caml_dirvecs:
+	53056
+min_caml_light_dirvec:
+	53096
+min_caml_reflecrions:
+	53600
+min_caml_n_reflections:
+	56480
 lsc186:
 	1082130432
 lsc173:
@@ -109,69 +169,9 @@ l5591:
 	1065353216
 l5590:
 	0
-min_caml_n_objects:
-	0
-min_caml_objects:
-	4
-min_caml_screen:
-	2644
-min_caml_viewpoint:
-	2656
-min_caml_light:
-	2668
-min_caml_beam:
-	2680
-min_caml_and_net:
-	2684
-min_caml_or_net:
-	2884
-min_caml_solver_dist:
-	2888
-min_caml_intsec_rectside:
-	2892
-min_caml_tmin:
-	2896
-min_caml_intersection_point:
-	2900
-min_caml_intersected_object_id:
-	2912
-min_caml_nvector:
-	2916
-min_caml_texture_color:
-	2928
-min_caml_diffuse_ray:
-	2940
-min_caml_rgb:
-	2952
-min_caml_image_size:
-	2964
-min_caml_image_center:
-	2972
-min_caml_scan_pitch:
-	2980
-min_caml_startp:
-	2984
-min_caml_startp_fast:
-	2996
-min_caml_screenx_dir:
-	3008
-min_caml_screeny_dir:
-	3020
-min_caml_screenz_dir:
-	3032
-min_caml_ptrace_dirvec:
-	3044
-min_caml_dirvecs:
-	3056
-min_caml_light_dirvec:
-	3096
-min_caml_reflecrions:
-	3600
-min_caml_n_reflections:
-	6480
 	.globl _min_caml_start
 _min_caml_start:
-	addi	r4, r4, 6484
+	addi	r4, r4, 50000
 	li	r2, 512
 	li	r5, 512
 	mflr	r31

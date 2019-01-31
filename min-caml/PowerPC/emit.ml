@@ -318,7 +318,7 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "_min_caml_start:\n";
 	stackset := S.empty;
 	stackmap := [];
-	Printf.fprintf oc "\taddi\tr4, r4, 6484\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 50000\n";
 	g oc (NonTail("_R_0"), e);
 	Printf.fprintf oc "\tb\tmin_caml_fin\n";
 	(* ライブラリ関数の記述 *)
