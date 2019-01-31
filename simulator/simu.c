@@ -4001,7 +4001,7 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
       //printf("%d %s\n",addr,q);
       if(q[0]=='a'){
         //printf("%s\n",(codelist[(addr-iaddr)/4]).name);
-        //print_reg(cpu);
+        print_reg(cpu);
       }
       printf("bでメモリの表示\n");
       scanf("%s",g);
@@ -4029,7 +4029,7 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     read_i_j(cpu,addr,code_31,31,31);
     read_i_j(cpu,addr,code_26_30,26,30);
     read_i_j(cpu,addr,code_11_20,11,20);
-    printf("addr %d\n",addr);
+    //printf("addr %d\n",addr);
     //printf("%s\n",code_0_5);
     //exec2(code_0_5,code_22_30,code_21_30,code_6_10,code_30,code_31,code_26_30,code_11_20,name,&addr,file,file2,labellist,codelist,cpu);
     if(strcmp(code_0_5,"011111")==0){
@@ -4228,7 +4228,7 @@ void exec(CPU *cpu,label *labellist,code *codelist,FILE *file,FILE *file2){
     }
     */
     if(check==1){
-    print_reg(cpu);
+    //print_reg(cpu);
     //check=0;
     }
   }

@@ -327,6 +327,7 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	(if array_flag = 1 then Lib_create_array.print_external_methods oc);
 	(if read_flag = 1 then Lib_read.print_external_methods oc);
 	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
+	(if print_flag = 1 then Lib_print_char.print_external_methods oc);
 	(* プログラム内で定義された関数の記述 *)
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	(* 終了ラベル *)

@@ -10,7 +10,9 @@ print_float \
 read \
 sin cos atan \
 array \
-unit
+unit \
+paint_red \
+print_char
 ASM_TESTS = 
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
