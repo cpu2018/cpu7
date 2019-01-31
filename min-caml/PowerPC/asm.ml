@@ -48,6 +48,7 @@ and exp = (* 一つ一つの命令に対応する式 (caml2html: sparcasm_exp) *)
 	| Restore of Id.t (* スタック変数から値を復元 (caml2html: sparcasm_restore) *)
 	| Read_I
 	| Read_F
+	| Out of Id.t
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
 (* プログラム全体 = 浮動小数点数テーブル + トップレベル関数 + メインの式 (caml2html: sparcasm_prog) *)
 type prog = Prog of (Id.l * float) list * fundef list * t
@@ -85,7 +86,7 @@ let rec remove_and_uniq xs = function
 let fv_id_or_imm = function V(x) -> [x] | _ -> []
 let rec fv_exp = function
 	| Nop | Li(_) | FLi(_) | SetL(_) | Comment(_) | Restore(_) | Read_I | Read_F -> []
-	| Mr(x) | Neg(x) | FMr(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) | Save(x, _) -> [x]
+	| Mr(x) | Neg(x) | FMr(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) | Save(x, _) | Out(x) -> [x]
 	| Add(x, y') | Sub(x, y') | Mul(x, y')| Div(x, y') | Slw(x, y') | Srw(x, y') | Lfd(x, y') | Lwz(x, y') -> x :: fv_id_or_imm y'
 	| Stw(x, y, z') | Stfd(x, y, z') -> x :: y :: fv_id_or_imm z'
 	| FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) -> [x; y]
@@ -221,6 +222,9 @@ and print_exp depth expr =
 		print_indent (depth + 1); Id.print_t x
 	| ItoF x -> 
 		print_string "ItoF "; print_newline ();
+		print_indent (depth + 1); Id.print_t x
+	| Out x -> 
+		print_string "Out "; print_newline ();
 		print_indent (depth + 1); Id.print_t x
 	| Lfd (idt, idim) -> 
 		print_string "Lfd "; print_newline ();

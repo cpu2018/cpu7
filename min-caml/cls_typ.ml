@@ -124,6 +124,15 @@ let rec g env = function
 			print_string "var Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
 		Type.Float
+	| Out x ->
+		(try
+			unify Type.Int (find x env)
+		with Unify (t1, t2) -> 
+			print_error t1 t2;
+			print_string ("in ItoF : variable " ^ x ^ "\n");
+			print_string "var Type is "; Type.print_code (find x env);
+			raise (Error (deref_typ t1, deref_typ t2)));
+		Type.Unit
 	| IfEq (x1, x2, e1, e2) -> 
 		(try 
 			unify (find x1 env) (find x2 env)

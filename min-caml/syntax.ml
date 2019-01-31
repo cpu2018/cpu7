@@ -36,6 +36,7 @@ type t = (* MinCamlの構文を表現するデータ型 (caml2html: syntax_t) *)
 	| ShiftIR of t * t
 	| Read_I of t
 	| Read_F of t
+	| Out of t
 and fundef = { name : (Id.t * Type.t) * pos; args : (Id.t * Type.t) list; body : t }
 and pos = {ls : int; le: int; chs : int; che : int}
 
@@ -195,6 +196,8 @@ let rec print_syntax depth expr =
 	| Read_I x      -> print_string "<Read_Int> "	; print_newline ();
 					print_code (depth + 1) x
 	| Read_F x      -> print_string "<Read_Float> "	; print_newline ();
+					print_code (depth + 1) x
+	| Out x 		-> print_string "<Out> "		; print_newline ();
 					print_code (depth + 1) x
 
 and print_code depth expr = print_syntax depth expr; is_already_newline newline_flag

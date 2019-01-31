@@ -1,11 +1,12 @@
-let rec write_ppm_header _ =
+let size = 10 in
+let rec write_ppm_header size =
 (
 	print_char 80;
 	print_char (48 + 3);
 	print_char 10;
-	print_int 10;
+	print_int size;
 	print_char 32;
-	print_int 10;
+	print_int size;
 	print_char 32;
 	print_int 255;
 	print_char 10
@@ -38,4 +39,5 @@ let rec paint_all x y =
 		(paint_row y;
 		paint_all (x - 1) y)
 in
-write_ppm_header ();
+write_ppm_header size;
+paint_all size size

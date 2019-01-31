@@ -115,6 +115,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| NonTail(x), Sqrt(y) -> Printf.fprintf oc "\tfsqrt\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), FtoI(y) -> Printf.fprintf oc "\tftoi\t%s, %s\n" (reg x) (reg y)
 	| NonTail(x), ItoF(y) -> Printf.fprintf oc "\titof\t%s, %s\n" (reg x) (reg y)
+	| NonTail(_), Out(y) -> Printf.fprintf oc "\tout\t%s\n" (reg y)
 	(*
 	| NonTail(x), Read_I -> Printf.fprintf oc "\tread\t%s\n" (reg x)
 	*)
@@ -151,7 +152,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 			assert (List.mem x allfregs);
 			Printf.fprintf oc "\tlfd\t%s, %d(%s)\n" (reg x) (offset y) (reg reg_sp)
 	(* 末尾だったら計算結果を第一レジスタにセットしてリターン (caml2html: emit_tailret) *)
-	| Tail, (Nop | Stw _ | Stfd _ | Comment _ | Save _ as exp) ->
+	| Tail, (Nop | Stw _ | Stfd _ | Comment _ | Save _ | Out _ as exp) ->
 			g' oc (NonTail(Id.gentmp Type.Unit), exp);
 			Printf.fprintf oc "\tblr\n";
 	| Tail, (Li _ | SetL _ | Mr _ | Neg _ | Add _ | Sub _ | Mul _ | Div _ | Slw _ | Srw _ | Lwz _ as exp) ->
@@ -327,7 +328,6 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	(if array_flag = 1 then Lib_create_array.print_external_methods oc);
 	(if read_flag = 1 then Lib_read.print_external_methods oc);
 	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
-	(if print_flag = 1 then Lib_print_char.print_external_methods oc);
 	(* プログラム内で定義された関数の記述 *)
 	List.iter (fun fundef -> h oc fundef) fundefs;
 	(* 終了ラベル *)

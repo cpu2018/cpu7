@@ -32,6 +32,7 @@ type t =
 	| ExtFunApp of Id.t * Id.t list
 	| Read_I of Id.t
 	| Read_F of Id.t
+	| Out of Id.t
 and fundef = { name : Id.t * Type.t; args : (Id.t * Type.t) list; body : t }
 
 val fv : t -> S.t

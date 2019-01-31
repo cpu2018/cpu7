@@ -44,6 +44,7 @@ let rec g env = function (* β簡約ルーチン本体 (caml2html: beta_g) *)
 	| ExtFunApp(x, ys) -> ExtFunApp(x, List.map (fun y -> find y env) ys)
  	| Read_I(x) -> Read_I(find x env)
  	| Read_F(x) -> Read_F(find x env)
+ 	| Out(x) -> Out(find x env)
 
 let f print_flag t = 
 	let alpha_t = g M.empty t in

@@ -7825,30 +7825,6 @@ bge_else7714:
 ble_else7713:
 	blr
 write_ppm_header3035:
-	li	r2, 80
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_char
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	li	r2, 51
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_char
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	li	r2, 10
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_char
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
 	lis	r2, ha16(min_caml_image_size)
 	addi	r2, r2, lo16(min_caml_image_size)
 	lwz	r2, 0(r2)
@@ -7856,14 +7832,6 @@ write_ppm_header3035:
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
 	bl	min_caml_print_int
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	li	r2, 32
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_char
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
@@ -7877,14 +7845,6 @@ write_ppm_header3035:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
-	li	r2, 32
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_char
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
 	li	r2, 255
 	mflr	r31
 	stw	r31, 4(r3)
@@ -7894,21 +7854,22 @@ write_ppm_header3035:
 	lwz	r31, 4(r3)
 	mtlr	r31
 	li	r2, 10
-	b	min_caml_print_char
+	out	r2
+	blr
 write_rgb_element3037:
 	ftoi	r2, f0
 	cmpwi	cr7, r2, 255
-	bgt	cr7, ble_else7720
+	bgt	cr7, ble_else7721
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else7722
-	b	bge_cont7723
-bge_else7722:
+	blt	cr7, bge_else7723
+	b	bge_cont7724
+bge_else7723:
 	li	r2, 0
-bge_cont7723:
-	b	ble_cont7721
-ble_else7720:
+bge_cont7724:
+	b	ble_cont7722
+ble_else7721:
 	li	r2, 255
-ble_cont7721:
+ble_cont7722:
 	b	min_caml_print_int
 write_rgb3039:
 	lis	r2, ha16(min_caml_rgb)
@@ -7921,14 +7882,6 @@ write_rgb3039:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
-	li	r2, 32
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_char
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
 	lis	r2, ha16(min_caml_rgb)
 	addi	r2, r2, lo16(min_caml_rgb)
 	lfd	f0, 8(r2)
@@ -7936,14 +7889,6 @@ write_rgb3039:
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
 	bl	write_rgb_element3037
-	subi	r3, r3, 8
-	lwz	r31, 4(r3)
-	mtlr	r31
-	li	r2, 32
-	mflr	r31
-	stw	r31, 4(r3)
-	addi	r3, r3, 8
-	bl	min_caml_print_char
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
@@ -7958,10 +7903,11 @@ write_rgb3039:
 	lwz	r31, 4(r3)
 	mtlr	r31
 	li	r2, 10
-	b	min_caml_print_char
+	out	r2
+	blr
 pretrace_diffuse_rays3041:
 	cmpwi	cr7, r5, 4
-	bgt	cr7, ble_else7724
+	bgt	cr7, ble_else7726
 	stw	r5, 0(r3)
 	stw	r2, 4(r3)
 	mflr	r31
@@ -7972,7 +7918,7 @@ pretrace_diffuse_rays3041:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else7725
+	blt	cr7, bge_else7727
 	lwz	r2, 4(r3)
 	mflr	r31
 	stw	r31, 12(r3)
@@ -7985,9 +7931,9 @@ pretrace_diffuse_rays3041:
 	slwi	r6, r5, 2
 	lwzx	r2, r2, r6
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else7726
-	b	beq_cont7727
-beq_else7726:
+	bne	cr7, beq_else7728
+	b	beq_cont7729
+beq_else7728:
 	lwz	r2, 4(r3)
 	mflr	r31
 	stw	r31, 12(r3)
@@ -8067,18 +8013,18 @@ beq_else7726:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-beq_cont7727:
+beq_cont7729:
 	lwz	r2, 0(r3)
 	addi	r5, r2, 1
 	lwz	r2, 4(r3)
 	b	pretrace_diffuse_rays3041
-bge_else7725:
+bge_else7727:
 	blr
-ble_else7724:
+ble_else7726:
 	blr
 pretrace_pixels3044:
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else7730
+	blt	cr7, bge_else7732
 	lis	r7, ha16(min_caml_scan_pitch)
 	addi	r7, r7, lo16(min_caml_scan_pitch)
 	lfd	f3, 0(r7)
@@ -8240,7 +8186,7 @@ pretrace_pixels3044:
 	lwz	r2, 28(r3)
 	lwz	r5, 36(r3)
 	b	pretrace_pixels3044
-bge_else7730:
+bge_else7732:
 	blr
 pretrace_line3051:
 	lis	r7, ha16(min_caml_scan_pitch)
@@ -8290,9 +8236,9 @@ scan_pixel3055:
 	addi	r9, r9, lo16(min_caml_image_size)
 	lwz	r9, 0(r9)
 	cmpw	cr7, r9, r2
-	bgt	cr7, ble_else7732
+	bgt	cr7, ble_else7734
 	blr
-ble_else7732:
+ble_else7734:
 	lis	r9, ha16(min_caml_rgb)
 	addi	r9, r9, lo16(min_caml_rgb)
 	slwi	r10, r2, 2
@@ -8331,7 +8277,7 @@ ble_else7732:
 	lwz	r31, 28(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 0
-	bne	cr7, beq_else7734
+	bne	cr7, beq_else7736
 	lwz	r2, 16(r3)
 	slwi	r5, r2, 2
 	lwz	r6, 4(r3)
@@ -8346,8 +8292,8 @@ ble_else7732:
 	subi	r3, r3, 32
 	lwz	r31, 28(r3)
 	mtlr	r31
-	b	beq_cont7735
-beq_else7734:
+	b	beq_cont7737
+beq_else7736:
 	li	r9, 0
 	lwz	r2, 16(r3)
 	lwz	r5, 12(r3)
@@ -8361,7 +8307,7 @@ beq_else7734:
 	subi	r3, r3, 32
 	lwz	r31, 28(r3)
 	mtlr	r31
-beq_cont7735:
+beq_cont7737:
 	mflr	r31
 	stw	r31, 28(r3)
 	addi	r3, r3, 32
@@ -8381,9 +8327,9 @@ scan_line3061:
 	addi	r9, r9, lo16(min_caml_image_size)
 	lwz	r9, 4(r9)
 	cmpw	cr7, r9, r2
-	bgt	cr7, ble_else7736
+	bgt	cr7, ble_else7738
 	blr
-ble_else7736:
+ble_else7738:
 	lis	r9, ha16(min_caml_image_size)
 	addi	r9, r9, lo16(min_caml_image_size)
 	lwz	r9, 4(r9)
@@ -8394,9 +8340,9 @@ ble_else7736:
 	stw	r5, 12(r3)
 	stw	r2, 16(r3)
 	cmpw	cr7, r9, r2
-	bgt	cr7, ble_else7738
-	b	ble_cont7739
-ble_else7738:
+	bgt	cr7, ble_else7740
+	b	ble_cont7741
+ble_else7740:
 	addi	r9, r2, 1
 	mflr	r31
 	mr	r6, r8
@@ -8408,7 +8354,7 @@ ble_else7738:
 	subi	r3, r3, 24
 	lwz	r31, 20(r3)
 	mtlr	r31
-ble_cont7739:
+ble_cont7741:
 	li	r2, 0
 	lwz	r5, 16(r3)
 	lwz	r6, 12(r3)
@@ -8618,7 +8564,7 @@ create_pixel3069:
 	blr
 init_line_elements3071:
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else7740
+	blt	cr7, bge_else7742
 	stw	r2, 0(r3)
 	stw	r5, 4(r3)
 	mflr	r31
@@ -8635,7 +8581,7 @@ init_line_elements3071:
 	subi	r5, r5, 1
 	mr	r2, r7
 	b	init_line_elements3071
-bge_else7740:
+bge_else7742:
 	blr
 create_pixelline3074:
 	lis	r2, ha16(min_caml_image_size)
@@ -8720,7 +8666,7 @@ adjust_position3078:
 	blr
 calc_dirvec3081:
 	cmpwi	cr7, r2, 5
-	blt	cr7, bge_else7741
+	blt	cr7, bge_else7743
 	fmul	f2, f0, f0
 	fmul	f3, f1, f1
 	fadd	f2, f2, f3
@@ -8891,7 +8837,7 @@ calc_dirvec3081:
 	lfd	f1, 24(r3)
 	lfd	f2, 16(r3)
 	b	vecset2654
-bge_else7741:
+bge_else7743:
 	stfd	f2, 32(r3)
 	stw	r6, 4(r3)
 	stw	r5, 40(r3)
@@ -8928,7 +8874,7 @@ bge_else7741:
 	b	calc_dirvec3081
 calc_dirvecs3089:
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else7744
+	blt	cr7, bge_else7746
 	itof	f1, r2
 	lis	r31, ha16(l6167)
 	addi	r31, r31, lo16(l6167)
@@ -9010,11 +8956,11 @@ calc_dirvecs3089:
 	lwz	r2, 20(r3)
 	lwz	r6, 12(r3)
 	b	calc_dirvecs3089
-bge_else7744:
+bge_else7746:
 	blr
 calc_dirvec_rows3094:
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else7746
+	blt	cr7, bge_else7748
 	itof	f0, r2
 	lis	r31, ha16(l6167)
 	addi	r31, r31, lo16(l6167)
@@ -9054,7 +9000,7 @@ calc_dirvec_rows3094:
 	addi	r6, r2, 4
 	lwz	r2, 12(r3)
 	b	calc_dirvec_rows3094
-bge_else7746:
+bge_else7748:
 	blr
 create_dirvec3098:
 	li	r2, 3
@@ -9089,7 +9035,7 @@ create_dirvec3098:
 	blr
 create_dirvec_elements3100:
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else7748
+	blt	cr7, bge_else7750
 	stw	r2, 0(r3)
 	stw	r5, 4(r3)
 	mflr	r31
@@ -9106,11 +9052,11 @@ create_dirvec_elements3100:
 	subi	r5, r5, 1
 	mr	r2, r7
 	b	create_dirvec_elements3100
-bge_else7748:
+bge_else7750:
 	blr
 create_dirvecs3103:
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else7750
+	blt	cr7, bge_else7752
 	lis	r5, ha16(min_caml_dirvecs)
 	addi	r5, r5, lo16(min_caml_dirvecs)
 	li	r6, 120
@@ -9153,11 +9099,11 @@ create_dirvecs3103:
 	lwz	r2, 4(r3)
 	subi	r2, r2, 1
 	b	create_dirvecs3103
-bge_else7750:
+bge_else7752:
 	blr
 init_dirvec_constants3105:
 	cmpwi	cr7, r5, 0
-	blt	cr7, bge_else7752
+	blt	cr7, bge_else7754
 	slwi	r6, r5, 2
 	lwzx	r6, r2, r6
 	stw	r2, 0(r3)
@@ -9174,11 +9120,11 @@ init_dirvec_constants3105:
 	subi	r5, r2, 1
 	lwz	r2, 0(r3)
 	b	init_dirvec_constants3105
-bge_else7752:
+bge_else7754:
 	blr
 init_vecset_constants3108:
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else7754
+	blt	cr7, bge_else7756
 	lis	r5, ha16(min_caml_dirvecs)
 	addi	r5, r5, lo16(min_caml_dirvecs)
 	slwi	r6, r2, 2
@@ -9197,7 +9143,7 @@ init_vecset_constants3108:
 	lwz	r2, 0(r3)
 	subi	r2, r2, 1
 	b	init_vecset_constants3108
-bge_else7754:
+bge_else7756:
 	blr
 init_dirvecs3110:
 	li	r2, 4
@@ -9500,7 +9446,7 @@ setup_surface_reflection3122:
 	blr
 setup_reflections3125:
 	cmpwi	cr7, r2, 0
-	blt	cr7, bge_else7761
+	blt	cr7, bge_else7763
 	lis	r5, ha16(min_caml_objects)
 	addi	r5, r5, lo16(min_caml_objects)
 	slwi	r6, r2, 2
@@ -9516,7 +9462,7 @@ setup_reflections3125:
 	lwz	r31, 12(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else7762
+	bne	cr7, beq_else7764
 	lis	r31, ha16(l5591)
 	addi	r31, r31, lo16(l5591)
 	lfd	f0, 0(r31)
@@ -9531,9 +9477,9 @@ setup_reflections3125:
 	mtlr	r31
 	lfd	f1, 8(r3)
 	fcmpu	cr7, f1, f0
-	bgt	cr7, ble_else7763
+	bgt	cr7, ble_else7765
 	blr
-ble_else7763:
+ble_else7765:
 	lwz	r2, 4(r3)
 	mflr	r31
 	stw	r31, 20(r3)
@@ -9543,21 +9489,21 @@ ble_else7763:
 	lwz	r31, 20(r3)
 	mtlr	r31
 	cmpwi	cr7, r2, 1
-	bne	cr7, beq_else7765
+	bne	cr7, beq_else7767
 	lwz	r2, 0(r3)
 	lwz	r5, 4(r3)
 	b	setup_rect_reflection3119
-beq_else7765:
+beq_else7767:
 	cmpwi	cr7, r2, 2
-	bne	cr7, beq_else7766
+	bne	cr7, beq_else7768
 	lwz	r2, 0(r3)
 	lwz	r5, 4(r3)
 	b	setup_surface_reflection3122
-beq_else7766:
+beq_else7768:
 	blr
-beq_else7762:
+beq_else7764:
 	blr
-bge_else7761:
+bge_else7763:
 	blr
 rt3127:
 	lis	r6, ha16(min_caml_image_size)

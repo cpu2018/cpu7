@@ -62,6 +62,7 @@ let getpos () = {
 %token FHALF
 %token FNEG
 %token FLESS
+%token PRINT_CHAR
 
 /* (* 優先順位とassociativityの定義（低い方から高い方へ） (caml2html: parser_prior) *) */
 %nonassoc IN
@@ -74,7 +75,7 @@ let getpos () = {
 %left EQUAL LESS_GREATER LESS GREATER LESS_EQUAL GREATER_EQUAL
 %left PLUS MINUS PLUS_DOT MINUS_DOT
 %left AST_DOT SLASH_DOT AST SLASH
-%left FTOI ITOF READINT READFLOAT FABS FSQR FISZERO FISPOS FISNEG FHALF FNEG FLESS
+%left FTOI ITOF READINT READFLOAT FABS FSQR FISZERO FISPOS FISNEG FHALF FNEG FLESS PRINT_CHAR
 %right prec_unary_minus
 %left prec_app
 %left DOT
@@ -208,6 +209,8 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
 	{ Not (LE($3, $2)) }
 | FSQR simple_exp
 	{ FMul ($2, $2) }
+| PRINT_CHAR simple_exp
+	{ Out $2 }
 | error
     { failwith
         (Printf.sprintf "parse error near line %d-%d characters %d-%d"

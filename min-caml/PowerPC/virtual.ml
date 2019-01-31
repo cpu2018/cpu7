@@ -151,6 +151,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
   | Closure.ExtArray(Id.L(x)) -> Ans(SetL(Id.L("min_caml_" ^ x)))
   | Closure.Read_I(x) -> Ans(Read_I)
   | Closure.Read_F(x) -> Ans(Read_F)
+  | Closure.Out(x) -> Ans(Out(x))
   | Closure.WildCard -> print_string "*** appeared WildCard *** \n"; WildCard
 
 (* 関数の仮想マシンコード生成 (caml2html: virtual_h) *)

@@ -33,6 +33,7 @@ type t =
 	| ExtArray of Id.l
 	| Read_I of Id.t
 	| Read_F of Id.t
+	| Out of Id.t
 	| WildCard
 type fundef = { name : Id.l * Type.t;
 				args : (Id.t * Type.t) list;
