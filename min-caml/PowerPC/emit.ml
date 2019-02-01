@@ -37,9 +37,17 @@ let reg r = (* レジスタを表すための衣("%"記号)を取る作業 *)
 let load_label r label =
 	let r' = reg r in
 	Printf.sprintf
+		"\tlis\t%s, lo16(%s)\n\tsrwi\t%s, %s, 31\n\taddi\t%s, %s, ha16(%s)\n\tslwi\t%s, %s, 16\n\taddi\t%s, %s, lo16(%s)\n"
+		r' label
+		r' r'
+		r' r' label 
+		r' r'
+		r' r' label
+	(*
+	Printf.sprintf
 		"\tlis\t%s, ha16(%s)\n\taddi\t%s, %s, lo16(%s)\n"
 		r' label r' r' label
-
+	*)
 (* 関数呼び出しのために引数を並べ替える(register shuffling) (caml2html: emit_shuffle) *)
 let rec shuffle sw xys =
 	(* remove identical moves *)
