@@ -8,8 +8,12 @@ ML_TESTS = \
 read \
 sin cos atan \
 atan2 \
-array float
-ASM_TESTS = 
+atan3 \
+atan4 \
+array \
+idi idf
+ASM_TESTS = \
+idf_as
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
 .PHONY: all clean rm_binary
