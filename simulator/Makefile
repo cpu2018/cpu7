@@ -5,15 +5,11 @@ CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
 SIMU_SOURCE = simu.c
 ML_TESTS = \
-read \
-sin cos atan \
-atan2 \
-atan3 \
-atan4 \
-array \
-idi idf
-ASM_TESTS = \
-idf_as
+atan_kernel \
+atan_simple \
+atan \
+idf
+ASM_TESTS = 
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
 .PHONY: all clean rm_binary
