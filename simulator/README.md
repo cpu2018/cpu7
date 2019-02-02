@@ -5,7 +5,7 @@
 - ./assembler \[アセンブリファイル\]
 - ./simulator \[バイナリファイル\] \[アセンブリファイル\]
 
-gcc -o simulator simu.c finv1.c finv2.c fsqrt_table.c fsqrtinv_table.c
+gcc -o simulator simu.c finv1.c finv2.c fsqrt\_table.c fsqrtinv\_table.c
 でコンパイル。
 
 gcc -o assembler as.c

@@ -129,7 +129,7 @@ and g'_and_restore dest cont regenv exp = (* »ÈÍÑ¤µ¤ì¤ëÊÑ¿ô¤ò¥¹¥¿¥Ã¥¯¤«¤é¥ì¥¸¥¹¥
 		 g dest cont regenv (Let((x, t, gen_id ()), Restore(x), Ans(exp))))
 (* (Id.t * Type.t) -> Asm.t -> M.t -> exp -> (Asm.t * M.t) *)
 and g' dest cont regenv = function (* ³ÆÌ¿Îá¤Î¥ì¥¸¥¹¥¿³ä¤êÅö¤Æ (caml2html: regalloc_gprime) *)
-	| Nop | Li _ | SetL _ | Comment _ | Restore _ | FLi _ | Read_I | Read_F as exp -> (Ans(exp), regenv)
+	| Nop | Li _ | SetL _ | ExtSetL _ | Comment _ | Restore _ | FLi _ | Read_I | Read_F as exp -> (Ans(exp), regenv)
 	| Mr(x) -> (Ans(Mr(find x Type.Int regenv)), regenv)
 	| Neg(x) -> (Ans(Neg(find x Type.Int regenv)), regenv)
 	| Add(x, y') -> (Ans(Add(find x Type.Int regenv, find' y' regenv)), regenv) (* Add(ÊÑ¿ôÌ¾, ÊÑ¿ôÌ¾ or Äê¿ô) ¤ò Add(¥ì¥¸¥¹¥¿Ì¾, ¥ì¥¸¥¹¥¿Ì¾ or Â¨ÃÍ) ¤ËÊÑ´¹¤·¤Æ¤¤¤ë *)
