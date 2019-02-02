@@ -16,7 +16,7 @@ in
 
 let rec paint_red x =
 (
-	print_int (int_of_float (fabs (255.0 *. (sin (float_of_int x)))))
+	print_int (int_of_float (fabs (255.0 *. (sin (float_of_int x)))));
 	print_char 32;
 	print_int 0;
 	print_char 32;

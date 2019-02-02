@@ -1696,7 +1696,7 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       strcat(ans,s3);
       strcat(ans,"00000");
       strcat(ans,"01111");
-      strcat(ans,"11110");
+      strcat(ans,"11100");
       strcat(ans,"0");
       char nans[5]={'\0'};
       change_bit_char_list(ans,nans);
