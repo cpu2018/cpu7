@@ -38,7 +38,7 @@ let print_external_methods oc = Printf.fprintf oc
 	fmul	f1, f2, f1
 	fadd	f0, f0, f1
 	blr
-min_caml_atan38:
+min_caml_atan:
 	lis	r31, ha16(latan92)
 	addi	r31, r31, lo16(latan92)
 	lfd	f1, 0(r31)
