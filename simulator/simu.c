@@ -3267,6 +3267,7 @@ int main(int argc,char **argv){
   CPU cpu;
   init_cpu(&cpu);
 
+  printf("実行\n");
   read_memory(&cpu,memory_sub);
 
   FILE *file2;
