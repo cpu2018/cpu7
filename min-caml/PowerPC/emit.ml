@@ -48,6 +48,18 @@ let load_label r label =
 		"\tlis\t%s, ha16(%s)\n\taddi\t%s, %s, lo16(%s)\n"
 		r' label r' r' label
 	*)
+
+let load_extlabel r label =
+	let r' = reg r in
+	Printf.sprintf
+		"\tlis\t%s, lo16(%s)\n\tsrwi\t%s, %s, 31\n\taddi\t%s, %s, ha16(%s)\n\tslwi\t%s, %s, 16\n\taddi\t%s, %s, lo16(%s)\n\tlwz\t%s, 0(%s)\n"
+		r' label
+		r' r'
+		r' r' label 
+		r' r'
+		r' r' label
+		r' r'
+
 (* 関数呼び出しのために引数を並べ替える(register shuffling) (caml2html: emit_shuffle) *)
 let rec shuffle sw xys =
 	(* remove identical moves *)
@@ -92,6 +104,9 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 			Printf.fprintf oc "%s\tlfd\t%s, 0(%s)\n" s (reg x) (reg reg_tmp)
 	| NonTail(x), SetL(Id.L(y)) ->
 			let s = load_label x y in
+			Printf.fprintf oc "%s" s
+	| NonTail(x), ExtSetL(Id.L(y)) ->
+			let s = load_extlabel x y in
 			Printf.fprintf oc "%s" s
 	| NonTail(x), Mr(y) when x = y -> ()
 	| NonTail(x), Mr(y) -> Printf.fprintf oc "\tmr\t%s, %s\n" (reg x) (reg y)
@@ -163,7 +178,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 	| Tail, (Nop | Stw _ | Stfd _ | Comment _ | Save _ | Out _ as exp) ->
 			g' oc (NonTail(Id.gentmp Type.Unit), exp);
 			Printf.fprintf oc "\tblr\n";
-	| Tail, (Li _ | SetL _ | Mr _ | Neg _ | Add _ | Sub _ | Mul _ | Div _ | Slw _ | Srw _ | Lwz _ as exp) ->
+	| Tail, (Li _ | SetL _ | ExtSetL _ | Mr _ | Neg _ | Add _ | Sub _ | Mul _ | Div _ | Slw _ | Srw _ | Lwz _ as exp) ->
 			g' oc (NonTail(regs.(0)), exp);
 			Printf.fprintf oc "\tblr\n";
 	| Tail, (FLi _ | FMr _ | FNeg _ | FAdd _ | FSub _ | FMul _ | FDiv _ | Lfd _ as exp) ->
@@ -327,7 +342,7 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "_min_caml_start:\n";
 	stackset := S.empty;
 	stackmap := [];
-	Printf.fprintf oc "\taddi\tr4, r4, 50000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 100000\n";
 	g oc (NonTail("_R_0"), e);
 	Printf.fprintf oc "\tb\tmin_caml_fin\n";
 	(* ライブラリ関数の記述 *)

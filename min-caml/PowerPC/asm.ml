@@ -12,6 +12,7 @@ and exp = (* 一つ一つの命令に対応する式 (caml2html: sparcasm_exp) *)
 	| Li of int
 	| FLi of Id.l
 	| SetL of Id.l
+	| ExtSetL of Id.l
 	| Mr of Id.t
 	| Neg of Id.t
 	| Add of Id.t * id_or_imm
@@ -85,7 +86,7 @@ let rec remove_and_uniq xs = function
 (* free variables in the order of use (for spilling) (caml2html: sparcasm_fv) *)
 let fv_id_or_imm = function V(x) -> [x] | _ -> []
 let rec fv_exp = function
-	| Nop | Li(_) | FLi(_) | SetL(_) | Comment(_) | Restore(_) | Read_I | Read_F -> []
+	| Nop | Li(_) | FLi(_) | SetL(_) | ExtSetL(_) | Comment(_) | Restore(_) | Read_I | Read_F -> []
 	| Mr(x) | Neg(x) | FMr(x) | FNeg(x) | Floor(x) | Sqrt(x) | FtoI(x) | ItoF(x) | Save(x, _) | Out(x) -> [x]
 	| Add(x, y') | Sub(x, y') | Mul(x, y')| Div(x, y') | Slw(x, y') | Srw(x, y') | Lfd(x, y') | Lwz(x, y') -> x :: fv_id_or_imm y'
 	| Stw(x, y, z') | Stfd(x, y, z') -> x :: y :: fv_id_or_imm z'
@@ -154,6 +155,7 @@ and print_exp depth expr =
 	| Li i -> print_string "Li "; print_string (string_of_int i)
 	| FLi x -> print_string "FLi "; Id.print_l x
 	| SetL x -> print_string "SetL "; Id.print_l x
+	| ExtSetL x -> print_string "ExtSetL "; Id.print_l x
 	| Mr x -> print_string "Mr "; Id.print_t x
 	| Neg x -> print_string "Neg "; Id.print_t x
 	| Add (x, y) -> 

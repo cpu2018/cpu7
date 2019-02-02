@@ -148,7 +148,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
           Let((offset, Type.Int, 0), Slw(y, C(2)),
               Ans(Stw(z, x, V(offset))))
       | _ -> assert false)
-  | Closure.ExtArray(Id.L(x)) -> Ans(SetL(Id.L("min_caml_" ^ x)))
+  | Closure.ExtArray(Id.L(x)) -> Ans(ExtSetL(Id.L("min_caml_" ^ x)))
   | Closure.Read_I(x) -> Ans(Read_I)
   | Closure.Read_F(x) -> Ans(Read_F)
   | Closure.Out(x) -> Ans(Out(x))
