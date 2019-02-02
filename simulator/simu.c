@@ -3417,6 +3417,9 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     if(check==1){
       printf("cpuの状態を表示しますか?y:1 n:0");
       scanf("%d",&x);
+      printf("自動実行に切り替えますか?y:0 n:1");
+      scanf("%d",&check);
+      change_check=check;
     }
     i_to_b(code,(cpu->memory)[addr/4],32);
     printf("addr %d %s\n",addr,code);
