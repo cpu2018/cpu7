@@ -3420,6 +3420,11 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       printf("自動実行に切り替えますか?y:0 n:1");
       scanf("%d",&check);
       change_check=check;
+      if(check==0){
+        printf("ブレークしたいアドレスを入力してください。不要なら負の値:");
+        scanf("%d",&stopaddr);
+        x=0;
+      }
     }
     i_to_b(code,(cpu->memory)[addr/4],32);
     printf("addr %d %s\n",addr,code);
