@@ -3398,6 +3398,8 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int stopaddr = -1;
   int check=0;
   int x=0;
+  printf("ブレークしたいアドレスを入力してください。不要なら負の値:");
+  scanf("%d",&stopaddr);
   while(1){
     int rc=0;
     struct sigaction act;
