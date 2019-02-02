@@ -3167,9 +3167,14 @@ void fadd(char *code,CPU *cpu,int *a){
 
   char ovf[2]={'\0'};
 
-  strcpy((cpu->freg)[frt],"");
-    printf("fadd f%d, f%d, f%d\n",frt,fra,frb);
-  fpu_fadd((cpu->freg)[fra],(cpu->freg)[frb],(cpu->freg)[frt],ovf);
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
+  char f3[33]={'\0'};
+  printf("fadd f%d, f%d, f%d\n",frt,fra,frb);
+  fpu_fadd(f1,f2,f3,ovf);
+  strcpy((cpu->freg)[frt],f3);
   *a+=4;
 
 }
@@ -3190,9 +3195,14 @@ void fsub(char *code,CPU *cpu,int *a){
 
   char ovf[2] = {'\0'};
 
-  strcpy((cpu->freg)[frt],"");
-  fpu_fsub((cpu->freg)[fra],(cpu->freg)[frb],(cpu->freg)[frt],ovf);
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
+  char f3[33]={'\0'};
+  fpu_fsub(f1,f2,f3,ovf);
   *a+=4;
+  strcpy((cpu->freg)[frt],f3);
   printf("fsub f%d, f%d, f%d\n",frt,fra,frb);
 }
 
@@ -3213,8 +3223,12 @@ void fmul(char *code,CPU *cpu,int *a){
   char ovf[2] = {'\0'};
 
 
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
   char t[33]={'\0'};
-  fpu_fmul((cpu->freg)[frb],(cpu->freg)[fra],t,ovf);
+  fpu_fmul(f2,f1,t,ovf);
   strcpy((cpu->freg)[frt],t);
   *a += 4;
   printf("fmul f%d, f%d, f%d\n",frt,fra,frb);
@@ -3232,6 +3246,11 @@ void fdiv(char *code,CPU *cpu,int *a){
   strncpy(code_16_20,code+16,5);
   int frb=change_ibit(5,code_16_20);
   char ovf[2]={'\0'};
+
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
   char s[33]={'\0'};
   fpu_fdiv((cpu->freg)[fra],(cpu->freg)[frb],s,ovf);
   strcpy((cpu->freg)[frd],s);
@@ -3248,13 +3267,20 @@ void fsqrt(char *code,CPU *cpu,int *a){
   strncpy(code_11_15,code+11,5);
   int fra=change_ibit(5,code_11_15);
   char ovf[2]={'\0'};
-  strcpy((cpu->freg)[frd],"");
-  fpu_fsqrt((cpu->freg)[fra],(cpu->freg)[frd],ovf);
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  fpu_fsqrt(f1,(cpu->freg)[frd],ovf);
   *a+=4;
   printf("fsqrt f%d, f%d\n",frd,fra);
 }
 
 int main(int argc,char **argv){
+  char f1[33]="01000000010000000000000000000000";
+  char f2[33]="00000000000000000000000000000000";
+  char ans[33]={'\0'};
+  char ovf[2]={'\0'};
+  fpu_fadd(f1,f2,ans,ovf);
+  printf("%s\n",ans);
   FILE *file;
   file=fopen(argv[1],"rb");
   fseek(file,0,SEEK_END);
@@ -3296,7 +3322,7 @@ void read_memory(CPU *cpu,int *memory){
     x4 = (x4 >> 24) & 0xff;
     x = x1 + x2 + x3 + x4;
     (cpu->memory)[i]=x;
-    printf("read %d\n",x);
+    //printf("read %d\n",x);
   }
 }
 
@@ -3618,7 +3644,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       else if(strcmp(code_26_30,"00001")==0){
         fcmpu(code,cpu,&addr);
       }
-      else if(strcmp(code_22_30,"111111110")==0){
+      else if(strcmp(code_22_30,"111111100")==0){
         ftoi(code,cpu,&addr);
       }
       else if(strcmp(code_22_30,"111111111")==0){
