@@ -2215,7 +2215,7 @@ int main(int argc,char **argv){
       arg3[i3]=ch;
       i3+=1;
     }
-    printf("%c",ch);
+    //printf("%c",ch);
   }
   rewind(fp2);
   write_start(label_list,labelnum,start_label,fp2);
