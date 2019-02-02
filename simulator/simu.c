@@ -3,8 +3,11 @@
 #include <string.h>
 #include <math.h>
 #include "ins.h"
+#include <errno.h>
+#include <unistd.h>
+#include <signal.h>
 #define R 32
-#define M 5000
+#define M 500000
 
 union IntAndFloat {
   int ival;
@@ -2422,7 +2425,7 @@ void fin(char *code,CPU *cpu,int *a,FILE *file){
   int k;
   printf("%s\n",(cpu->freg)[ra]);
 }
-
+/*
 void read(char *code,CPU *cpu,int *a){
   int addr =*a;
   int x;
@@ -2433,7 +2436,7 @@ void read(char *code,CPU *cpu,int *a){
   int ra = change_ibit(5,code_6_10);
   change_int((cpu->reg)[ra],32,x);
   *a+=4;
-}
+  }*/
 
 void addi(char *code,CPU *cpu,int *a){
   int addr = *a;
@@ -2643,8 +2646,8 @@ void stw(char *code,CPU *cpu,int *a){
   int d = change_ibit_f(16,code_16_31);
 
   int addr2 = b+d;
-  printf("rs   %d r%d\n",addr2,ra);
   int x=change_ibit_f(R,(cpu->reg)[rs]);
+  printf("%d\n",addr2/4);
   (cpu->memory)[addr2/4]=x;
 
   *a+=4;
@@ -2764,7 +2767,7 @@ void bl(char *code,CPU *cpu,int *a){
   int target = change_ibit_f(24,code_6_29) * 4;
   change_int((cpu->lr),32,addr+4);
   *a=target+*a;
-  printf("bl\n");
+  printf("bl %d\n",*a);
 }
 
 void lfd(char *code,CPU *cpu,int *a){
@@ -3355,6 +3358,8 @@ void init_cpu(CPU *cpu){
       }
     }
   }
+  change_int((cpu->reg)[4],R,100000);
+  change_int((cpu->reg)[3],R,100000);
 }
 
 void i_to_b(char *g,int i_g,int b){
@@ -3380,6 +3385,13 @@ void i_to_b(char *g,int i_g,int b){
   }
 }
 
+static int change_check=0;
+static int ppp=0;
+void check_change(){
+  change_check=1;
+  ppp=1;
+}
+
 void exec(CPU *cpu,FILE *file2,FILE *file3){
   int addr = 0;
   char code[33]={'\0'};
@@ -3387,6 +3399,16 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int check=0;
   int x=0;
   while(1){
+    int rc=0;
+    struct sigaction act;
+    memset(&act,0,sizeof(act));
+    act.sa_handler=check_change;
+    rc=sigaction(SIGTSTP,&act,NULL);
+    if(rc>0){
+      printf("止まります\n");
+    }
+    rc=0;
+    check=change_check;
     if(addr==stopaddr){
       check=1;
     }
@@ -3497,7 +3519,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       fin(code,cpu,&addr,file2);
     }
     else if(strcmp(code_0_5,"000011")==0){
-      read(code,cpu,&addr);
+      /*read(code,cpu,&addr);*/
     }
     else if(strcmp(code_0_5,"001110")==0){
       addi(code,cpu,&addr);
@@ -3598,6 +3620,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     if(x==1){
       print_reg(cpu);
     }
+    check=0;
   }
 }
 
