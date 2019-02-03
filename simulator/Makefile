@@ -27,7 +27,7 @@ do_casm: $(ML_TESTS:%.ml=%)
 .PRECIOUS: %.s
 
 %.s: %.ml
-	-./$(MIN_CAML) $*
+	-./$(MIN_CAML) -iter 0 $*
 
 %: %.s
 	-./assembler $^
