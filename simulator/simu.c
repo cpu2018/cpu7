@@ -3271,7 +3271,7 @@ void fdiv(char *code,CPU *cpu,int *a){
   char f2[33]={'\0'};
   strcpy(f2,(cpu->freg)[frb]);
   char s[33]={'\0'};
-  fpu_fdiv((cpu->freg)[fra],(cpu->freg)[frb],s,ovf);
+  fpu_fdiv(f1,f2,s,ovf);
   strcpy((cpu->freg)[frd],s);
   *a+=4;
   printf("fdiv f%d, f%d, f%d\n",frd,fra,frb);
