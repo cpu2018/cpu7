@@ -2694,15 +2694,9 @@ void fmr(char *code,CPU *cpu,int *a){
   strncpy(code_16_20,code+16,5);
   int rs = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_16_20);
-<<<<<<< HEAD
-  strcpy((cpu->freg)[rs],(cpu->freg)[ra]);
-  *a+=4;
-  printf("fmr f%d, f%d\n",rs,ra);
-=======
   strcpy((cpu->freg)[rs],(cpu->freg)[ra]); //bobo変更済
   *a+=4;
   printf("fmr f%d, f%d\n",rs,ra); // bobo変更済
->>>>>>> 5c5e862f9d51789563ce82adaa33cb43c51c6a45
 }
 
 void mr(char *code,CPU *cpu,int *a){
