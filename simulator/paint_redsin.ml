@@ -30,7 +30,7 @@ let rec paint_row x =
                paint_red x
        else
                (paint_red x;
-               paint_row (x  1))
+               paint_row (x - 1))
 in
 
 let rec paint_all x y =
@@ -38,7 +38,7 @@ let rec paint_all x y =
                paint_row y
        else
                (paint_row y;
-               paint_all (x  1) y)
+               paint_all (x - 1) y)
 in
 
 write_ppm_header size;
