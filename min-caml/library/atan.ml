@@ -18,4 +18,5 @@ let rec min_caml_atan x =
 	else
 		let ans = pi /. 4.0 +. kernel_atan ((xabs -. 1.0) /. (xabs +. 1.0)) in
 		if x < 0.0 then -. ans else ans
-in ()
+in 
+print_int(min_caml_atan 1.0)
