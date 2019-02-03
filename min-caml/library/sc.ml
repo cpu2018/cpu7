@@ -63,4 +63,6 @@ let rec min_caml_cos x =
 		(if x >= pi /. 4.0 then kernel_cos x
 		else let x = pi /. 2.0 -. x in kernel_sin x)
 	in add_flag ans flag
-in ()
+in
+print_int (min_caml_sin 1.0);
+print_int (min_caml_cos 1.0)

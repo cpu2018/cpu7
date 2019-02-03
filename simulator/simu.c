@@ -1934,6 +1934,22 @@ int change_ibit_f(int i,char *code){
   return v;
 }
 
+// bobo original
+/*
+float print_float(char *char_val) {
+	float f = 0;
+	for (int i = 0; i < 32; i++) {
+		if (char_val[i] == "1") {
+			f = (f << 0x00000001) | 0x00000001;
+		}
+		else {
+			f = f << 0x00000001;
+		}
+	}
+	return f;
+}
+*/
+
 void change_float_to_string2(char *s,float f){
 
   union IntAndFloat target;
@@ -2127,11 +2143,12 @@ void srw(char *code,CPU *cpu,int *a){
 
 
 void print_reg(CPU *cpu){
-  for(int i=0;i<32;i++){
-    printf("reg %d value %d code %s\n",i,change_ibit_f(32,(cpu->reg)[i]),(cpu->reg)[i]);
+  for(int i=0;i<10;i++){
+    printf("reg %d	value %d code %s\n",i,change_ibit_f(32,(cpu->reg)[i]),(cpu->reg)[i]);
   }
-  for(int i=0;i<32;i++){
-    printf("freg %d value整数表示 %d code %s\n",i,change_ibit_f(32,(cpu->freg)[i]),(cpu->freg)[i]);
+  for(int i=0;i<10;i++){
+	int a = change_ibit_f(32,(cpu->freg)[i]);
+    printf("freg %d	value: int ->  %d float -> %f code %s\n", i, a, *(float*)&a, (cpu->freg)[i]);
   }
   for(int i=0;i<8;i++){
     printf("cr %d code %s\n",i,(cpu->cr)[i]);
@@ -2675,9 +2692,9 @@ void fmr(char *code,CPU *cpu,int *a){
   strncpy(code_16_20,code+16,5);
   int rs = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_16_20);
-  strcpy((cpu->freg)[ra],(cpu->freg)[rs]);
+  strcpy((cpu->freg)[rs],(cpu->freg)[ra]); //bobo変更済
   *a+=4;
-  printf("fmr f%d, f%d\n",ra,rs);
+  printf("fmr f%d, f%d\n",rs,ra); // bobo変更済
 }
 
 void mr(char *code,CPU *cpu,int *a){
