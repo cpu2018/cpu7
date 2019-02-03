@@ -1,4 +1,4 @@
-assembling atan.s to atan ...
+assembling sin.s to sin ...
 	.data
 min_caml_n_objects: 4 
 	50000
@@ -120,7 +120,7 @@ l58: 236
 	1092616192
 	.globl _min_caml_start
 _min_caml_start:
-	addi	r4, r4, 50000 240 
+	addi	r4, r4, 100000 240 
 	lis	r31, lo16(l58) 244 
 	srwi	r31, r31, 31 248 
 	addi	r31, r31, ha16(l58) 252 
@@ -138,7 +138,7 @@ _min_caml_start:
 	fmr	f0, f1 300 
 	stw	r31, 12(r3) 304 
 	addi	r3, r3, 16 308 
-	bl	min_caml_atan 312 
+	bl	min_caml_sin 312 
 	subi	r3, r3, 16 316 
 	lwz	r31, 12(r3) 320 
 	mtlr	r31 324 
@@ -162,7 +162,7 @@ _min_caml_start:
 	fmr	f0, f2 396 
 	stw	r31, 28(r3) 400 
 	addi	r3, r3, 32 404 
-	bl	min_caml_atan 408 
+	bl	min_caml_sin 408 
 	subi	r3, r3, 32 412 
 	lwz	r31, 28(r3) 416 
 	mtlr	r31 420 
@@ -186,7 +186,7 @@ _min_caml_start:
 	fmr	f0, f2 492 
 	stw	r31, 44(r3) 496 
 	addi	r3, r3, 48 500 
-	bl	min_caml_atan 504 
+	bl	min_caml_sin 504 
 	subi	r3, r3, 48 508 
 	lwz	r31, 44(r3) 512 
 	mtlr	r31 516 
@@ -210,7 +210,7 @@ _min_caml_start:
 	fmr	f0, f2 588 
 	stw	r31, 60(r3) 592 
 	addi	r3, r3, 64 596 
-	bl	min_caml_atan 600 
+	bl	min_caml_sin 600 
 	subi	r3, r3, 64 604 
 	lwz	r31, 60(r3) 608 
 	mtlr	r31 612 
@@ -234,7 +234,7 @@ _min_caml_start:
 	fmr	f0, f2 684 
 	stw	r31, 76(r3) 688 
 	addi	r3, r3, 80 692 
-	bl	min_caml_atan 696 
+	bl	min_caml_sin 696 
 	subi	r3, r3, 80 700 
 	lwz	r31, 76(r3) 704 
 	mtlr	r31 708 

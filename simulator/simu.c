@@ -316,7 +316,6 @@ void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
   char m1[24]={'\0'};
   char m2[24]={'\0'};
 
-  //printf("%s %s %s\n",x1,x2,ans);
 
   strncpy(s1,x1,1);
   strncpy(s2,x2,1);
@@ -329,8 +328,6 @@ void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
   int i_s2 = b_to_i(s2,0,0);
   int i_e1 = b_to_i(e1,0,7);
   int i_e2 = b_to_i(e2,0,7);
-  /*int i_m1 = b_to_i(m1,0,22);
-    int i_m2 = b_to_i(m2,0,22);*/
   
 
   char s[2]={'\0'};
@@ -352,13 +349,17 @@ void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
   int i_m2_sub = b_to_i(m2_sub,0,23);
   long i_m_sub = (long) i_m1_sub * (long) i_m2_sub;
   i_to_b_long(m_sub,i_m_sub,48);
+  //printf("%d %d\n",i_m1_sub,i_m2_sub);
+  //printf("sub %s\n",m_sub);
   if(m_sub[0]=='1'){
+    printf("aaa\n");
     strncpy(m_subsub,m_sub+1,23);
   }
   else{
     strncpy(m_subsub,m_sub+2,23);
   }
   int i_e_sub = i_e1 + i_e2;
+  //printf("%d %d %d\n",i_e1,i_e2,i_e_sub);
   i_to_b(e_sub,i_e_sub,9);
   int i_e_subsub;
   if(i_e_sub > 126){
@@ -378,6 +379,7 @@ void fpu_fmul(char x1[33],char x2[33],char ans[33],char ovf[2]){
   }
   i_to_b(e_subsubsub,i_e_subsubsub,9);
 
+  //printf("%s\n",e_subsubsub);
   if(i_e_subsubsub >= 255){
     ovf[0]='1';
   }
@@ -2507,7 +2509,7 @@ void fneg(char *code,CPU *cpu,int *a){
   if(fra!=frd){
   strcpy((cpu->freg)[frd],(cpu->freg)[fra]);
   }
-  if((cpu->freg)[frd][0]=='0'){
+  if(((cpu->freg)[frd][0]=='0')&&(strcmp((cpu->freg)[frd],"00000000000000000000000000000000")!=0)){
     (cpu->freg)[frd][0]='1';
   }
   else{
@@ -2675,9 +2677,9 @@ void fmr(char *code,CPU *cpu,int *a){
   strncpy(code_16_20,code+16,5);
   int rs = change_ibit(5,code_6_10);
   int ra = change_ibit(5,code_16_20);
-  strcpy((cpu->freg)[ra],(cpu->freg)[rs]);
+  strcpy((cpu->freg)[rs],(cpu->freg)[ra]);
   *a+=4;
-  printf("fmr f%d, f%d\n",ra,rs);
+  printf("fmr f%d, f%d\n",rs,ra);
 }
 
 void mr(char *code,CPU *cpu,int *a){
@@ -3275,11 +3277,11 @@ void fsqrt(char *code,CPU *cpu,int *a){
 }
 
 int main(int argc,char **argv){
-  char f1[33]="01000000010000000000000000000000";
-  char f2[33]="00000000000000000000000000000000";
+  char f1[33]="00111101101110000101000111101100";
+  char f2[33]="00111100110111010010111100011011";
   char ans[33]={'\0'};
   char ovf[2]={'\0'};
-  fpu_fadd(f1,f2,ans,ovf);
+  fpu_fmul(f1,f2,ans,ovf);
   printf("%s\n",ans);
   FILE *file;
   file=fopen(argv[1],"rb");

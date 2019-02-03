@@ -119,7 +119,7 @@ l58:
 	1092616192
 	.globl _min_caml_start
 _min_caml_start:
-	addi	r4, r4, 50000
+	addi	r4, r4, 100000
 	lis	r31, lo16(l58)
 	srwi	r31, r31, 31
 	addi	r31, r31, ha16(l58)
@@ -137,7 +137,7 @@ _min_caml_start:
 	fmr	f0, f1
 	stw	r31, 12(r3)
 	addi	r3, r3, 16
-	bl	min_caml_atan
+	bl	min_caml_sin
 	subi	r3, r3, 16
 	lwz	r31, 12(r3)
 	mtlr	r31
@@ -161,7 +161,7 @@ _min_caml_start:
 	fmr	f0, f2
 	stw	r31, 28(r3)
 	addi	r3, r3, 32
-	bl	min_caml_atan
+	bl	min_caml_sin
 	subi	r3, r3, 32
 	lwz	r31, 28(r3)
 	mtlr	r31
@@ -185,7 +185,7 @@ _min_caml_start:
 	fmr	f0, f2
 	stw	r31, 44(r3)
 	addi	r3, r3, 48
-	bl	min_caml_atan
+	bl	min_caml_sin
 	subi	r3, r3, 48
 	lwz	r31, 44(r3)
 	mtlr	r31
@@ -209,7 +209,7 @@ _min_caml_start:
 	fmr	f0, f2
 	stw	r31, 60(r3)
 	addi	r3, r3, 64
-	bl	min_caml_atan
+	bl	min_caml_sin
 	subi	r3, r3, 64
 	lwz	r31, 60(r3)
 	mtlr	r31
@@ -233,7 +233,7 @@ _min_caml_start:
 	fmr	f0, f2
 	stw	r31, 76(r3)
 	addi	r3, r3, 80
-	bl	min_caml_atan
+	bl	min_caml_sin
 	subi	r3, r3, 80
 	lwz	r31, 76(r3)
 	mtlr	r31
