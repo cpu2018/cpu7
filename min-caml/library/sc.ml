@@ -2,7 +2,7 @@ let rec reverse_flag flag = if flag then false else flag
 in
 let rec add_flag x flag = if flag then x else -. x
 in
-let rec while1 x p = if x >= p then p *. 2.0 else p
+let rec while1 x p = if x >= p then while1 x (p *. 2.0) else p
 in
 let rec while2 x p pi =
 	if x >= 2.0 *. pi 
