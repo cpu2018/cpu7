@@ -45,6 +45,7 @@ int or(char *s,int b,int e);
 int andx(char *s,int b,int e);
 void fpu_or(char *ans,char *so,int x,int y);
 long b_to_long(char *s,int b,int e);
+int change_ibit_f(int b,char *x);
 
 
 
@@ -294,6 +295,8 @@ void fpu_fadd(char x1[33],char x2[33],char ans[33],char ovf[2]){
   else{
     strcpy(ovf,ovf_sub_exception);
   }
+  int f1 = change_ibit_f(32,ans);
+  printf("%f\n",*(float *)&f1);
 }
 
 void fpu_fsub(char x1[33],char x2[33],char ans[33],char ovf[2]){
@@ -305,6 +308,9 @@ void fpu_fsub(char x1[33],char x2[33],char ans[33],char ovf[2]){
   else{
     nx2[1]='0';
   }
+  int f1 = change_ibit_f(32,x1);
+  int f2 = change_ibit_f(32,nx2);
+  printf("%f %f\n",*(float *)&f1,*(float *)&f2);
   fpu_fadd(x1,nx2,ans,ovf);
 }
 
@@ -3132,10 +3138,28 @@ void ftoi(char *code,CPU *cpu,int *a){
   strncpy(code_11_15,code+11,5);
   int frt = change_ibit(5,code_11_15);
   strcpy((cpu->reg)[ra],"");
+  int f = change_ibit_f(32,(cpu->freg)[frt]);
+  float ff = *(float *)&f;
+  int x = roundf(ff);
+  i_to_b((cpu->reg)[ra],x,32);
+  *a+=4;
+  printf("ftoi r%d, f%d\n",ra,frt);  
+}
+/*本物
+void ftoi(char *code,CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  strncpy(code_6_10,code+6,5);
+  int ra = change_ibit(5,code_6_10);
+  char code_11_15[6]={'\0'};
+  strncpy(code_11_15,code+11,5);
+  int frt = change_ibit(5,code_11_15);
+  strcpy((cpu->reg)[ra],"");
   fpu_ftoi((cpu->freg)[frt],(cpu->reg)[ra]);
   *a+=4;
   printf("ftoi r%d, f%d\n",ra,frt);
 }
+*/
 
 /*floor fa fd*/
 /*void floor2(char *code,CPU *cpu,int *a){
@@ -3166,10 +3190,119 @@ void floor2(char *code,CPU *cpu,int *a){
   printf("floor f%d, f%d\n",fd,fa);
 }
 
+void fadd(char *code,CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  strncpy(code_6_10,code+6,5);
+  int frt = change_ibit(5,code_6_10);
 
-  
-  
+  char code_11_15[6] = {'\0'};
+  strncpy(code_11_15,code+11,5);
+  int fra = change_ibit(5,code_11_15);
 
+  char code_16_20[6] = {'\0'};
+  strncpy(code_16_20,code+16,5);
+  int frb = change_ibit(5,code_16_20);  
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
+  int ff1 = change_ibit_f(32,f1);
+  int ff2 = change_ibit_f(32,f2);
+  float fff1 = *(float *)&ff1;
+  float fff2 = *(float *)&ff2;
+  float fff3 = fff1 + fff2;
+  int ff3 = *(int *)&fff3;
+  i_to_b((cpu->freg)[frt],ff3,32);
+  *a+=4;
+  printf("fadd f%d, f%d, f%d\n",frt,fra,frb);
+}
+
+void fsub(char *code,CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  strncpy(code_6_10,code+6,5);
+  int frt = change_ibit(5,code_6_10);
+
+  char code_11_15[6] = {'\0'};
+  strncpy(code_11_15,code+11,5);
+  int fra = change_ibit(5,code_11_15);
+
+  char code_16_20[6] = {'\0'};
+  strncpy(code_16_20,code+16,5);
+  int frb = change_ibit(5,code_16_20);  
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
+  int ff1 = change_ibit_f(32,f1);
+  int ff2 = change_ibit_f(32,f2);
+  float fff1 = *(float *)&ff1;
+  float fff2 = *(float *)&ff2;
+  float fff3 = fff1 - fff2;
+  int ff3 = *(int *)&fff3;
+  i_to_b((cpu->freg)[frt],ff3,32);
+  *a+=4;
+  printf("fsub f%d, f%d, f%d\n",frt,fra,frb);
+}
+/*
+void fmul(char *code,CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  strncpy(code_6_10,code+6,5);
+  int frt = change_ibit(5,code_6_10);
+
+  char code_11_15[6] = {'\0'};
+  strncpy(code_11_15,code+11,5);
+  int fra = change_ibit(5,code_11_15);
+
+  char code_16_20[6] = {'\0'};
+  strncpy(code_16_20,code+16,5);
+  int frb = change_ibit(5,code_16_20);  
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
+  int ff1 = change_ibit_f(32,f1);
+  int ff2 = change_ibit_f(32,f2);
+  float fff1 = *(float *)&ff1;
+  float fff2 = *(float *)&ff2;
+  float fff3 = fff1 * fff2;
+  int ff3 = *(int *)&fff3;
+  i_to_b((cpu->freg)[frt],ff3,32);
+  *a+=4;
+  printf("fmul f%d, f%d, f%d\n",frt,fra,frb);
+  }*/
+/*偽
+void fdiv(char *code,CPU *cpu,int *a){
+  int addr = *a;
+  char code_6_10[6]={'\0'};
+  strncpy(code_6_10,code+6,5);
+  int frt = change_ibit(5,code_6_10);
+
+  char code_11_15[6] = {'\0'};
+  strncpy(code_11_15,code+11,5);
+  int fra = change_ibit(5,code_11_15);
+
+  char code_16_20[6] = {'\0'};
+  strncpy(code_16_20,code+16,5);
+  int frb = change_ibit(5,code_16_20);  
+  char f1[33]={'\0'};
+  strcpy(f1,(cpu->freg)[fra]);
+  char f2[33]={'\0'};
+  strcpy(f2,(cpu->freg)[frb]);
+  int ff1 = change_ibit_f(32,f1);
+  int ff2 = change_ibit_f(32,f2);
+  float fff1 = *(float *)&ff1;
+  float fff2 = *(float *)&ff2;
+  float fff3 = fff1 / fff2;
+  int ff3 = *(int *)&fff3;
+  i_to_b((cpu->freg)[frt],ff3,32);
+  *a+=4;
+  printf("fdiv f%d, f%d, f%d\n",frt,fra,frb);
+  }*/
+  
+/*
 void fadd(char *code,CPU *cpu,int *a){
   int addr = *a;
   char code_6_10[6]={'\0'};
@@ -3223,7 +3356,7 @@ void fsub(char *code,CPU *cpu,int *a){
   *a+=4;
   strcpy((cpu->freg)[frt],f3);
   printf("fsub f%d, f%d, f%d\n",frt,fra,frb);
-}
+  }*/
 
 void fmul(char *code,CPU *cpu,int *a){
   int addr = *a;
@@ -3277,6 +3410,7 @@ void fdiv(char *code,CPU *cpu,int *a){
   printf("fdiv f%d, f%d, f%d\n",frd,fra,frb);
 }
 
+
 void fsqrt(char *code,CPU *cpu,int *a){
   int addr = *a;
   char code_6_10[6]={'\0'};
@@ -3294,11 +3428,11 @@ void fsqrt(char *code,CPU *cpu,int *a){
 }
 
 int main(int argc,char **argv){
-  char f1[33]="00111101101110000101000111101100";
-  char f2[33]="00111100110111010010111100011011";
+  char f1[33]="01000000010010010000111111011011";
+  char f2[33]="01000000101000000000000000000000";
   char ans[33]={'\0'};
   char ovf[2]={'\0'};
-  fpu_fmul(f1,f2,ans,ovf);
+  fpu_fsub(f2,f1,ans,ovf);
   printf("%s\n",ans);
   FILE *file;
   file=fopen(argv[1],"rb");
