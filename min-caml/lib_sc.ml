@@ -158,7 +158,7 @@ kernel_cos77:
 	fdiv	f1, f2, f1
 	fsub	f0, f0, f1
 	blr
-min_caml_sin:
+min_caml_sin79:
 	lis	r31, lo16(lsc182)
 	srwi	r31, r31, 31
 	addi	r31, r31, ha16(lsc182)
@@ -258,7 +258,7 @@ sc_ble_cont247:
 	addi	r31, r31, lo16(lsc197)
 	lfd	f1, 0(r31)
 	stw	r5, 24(r3)
-	fcmpu	cr7, f1, f0
+	fcmpu	cr7, f0, f1
 	bgt	cr7, sc_ble_else248
 	mflr	r31
 	stw	r31, 28(r3)
@@ -286,7 +286,7 @@ sc_ble_else248:
 sc_ble_cont249:
 	lwz	r2, 24(r3)
 	b	add_flag62
-min_caml_cos:
+min_caml_cos81:
 	lis	r31, lo16(lsc182)
 	srwi	r31, r31, 31
 	addi	r31, r31, ha16(lsc182)
@@ -385,7 +385,7 @@ sc_ble_cont256:
 	addi	r31, r31, lo16(lsc197)
 	lfd	f1, 0(r31)
 	stw	r5, 32(r3)
-	fcmpu	cr7, f1, f0
+	fcmpu	cr7, f0, f1
 	bgt	cr7, sc_ble_else257
 	mflr	r31
 	stw	r31, 36(r3)

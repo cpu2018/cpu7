@@ -44,7 +44,7 @@ let rec min_caml_sin x =
 		if x >= pi /. 2.0 then (pi -. x), flag else x, flag
 	in
 	let ans = 
-		(if x >= pi /. 4.0 then kernel_sin x
+		(if x <= pi /. 4.0 then kernel_sin x
 		else let x = pi /. 2.0 -. x in kernel_cos x)
 	in add_flag ans flag
 in
@@ -60,7 +60,7 @@ let rec min_caml_cos x =
 		if x >= pi /. 2.0 then (pi -. x), (reverse_flag flag) else x, flag
 	in
 	let ans = 
-		(if x >= pi /. 4.0 then kernel_cos x
+		(if x <= pi /. 4.0 then kernel_cos x
 		else let x = pi /. 2.0 -. x in kernel_sin x)
 	in add_flag ans flag
 in
