@@ -263,7 +263,7 @@ sc_ble_cont247:
 	mflr	r31
 	stw	r31, 28(r3)
 	addi	r3, r3, 32
-	bl	kernel_sin77
+	bl	kernel_sin75
 	subi	r3, r3, 32
 	lwz	r31, 28(r3)
 	mtlr	r31
@@ -279,7 +279,7 @@ sc_ble_else248:
 	mflr	r31
 	stw	r31, 28(r3)
 	addi	r3, r3, 32
-	bl	kernel_cos75
+	bl	kernel_cos77
 	subi	r3, r3, 32
 	lwz	r31, 28(r3)
 	mtlr	r31
