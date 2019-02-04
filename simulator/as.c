@@ -378,6 +378,9 @@ void change_arg(char *arg,char *x,label *list,fdata *flist,int lnum,int fnum,uns
     change_arg_lo(arg,x,list,flist,lnum,fnum);
   }
   else if(strncmp("ha16",arg,4)==0){
+    if(strcmp(arg,"ha16(min_caml_n_objects)")==0){
+      //printf("aaaaaaaaaaaaaaaaaaaaaaa\n");
+    }
     change_arg_ha(arg,x,list,flist,lnum,fnum);
   }
   else if(((arg[0]=='r')||(arg[0]=='f'))&&('0'<=arg[1])&&(arg[1]<='9')){
@@ -501,8 +504,8 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       clean_code(code);
       char s5[11]="0000011000";
       strcat(ans,s1);
-      strcat(ans,s3);
       strcat(ans,s2);
+      strcat(ans,s3);
       strcat(ans,s4);
       strcat(ans,s5);
       strcat(ans,"0");
@@ -527,8 +530,8 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       clean_code(code);
       char s5[11]="1000011000";
       strcat(ans,s1);
-      strcat(ans,s3);
       strcat(ans,s2);
+      strcat(ans,s3);
       strcat(ans,s4);
       strcat(ans,s5);
       strcat(ans,"0");
@@ -1773,9 +1776,9 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       *a+=4;
     }
     else{
-
-      if(strcmp(name,"")!=0){
-        //printf("%s\n",name);
+      int q = strlen(name);
+      if((strcmp(name,"")!=0)&&(name[q-1]!=':')){
+        printf("%s\n",name);
       }
     }
 }
@@ -1837,10 +1840,13 @@ int main(int argc,char **argv){
     }
     else if((state==2)&&(ch=='\n')){
       state=3;/*セクションの読み込み終わり、ラベルの読み込み*/
+      clean_buf(buf);
+      i=0;
     }
     else if((state==3)&&(ch==':')){
       state=4;/*ラベルの読み込み終わり*/
       strcpy(fdata_list[fdata_num].name,buf);
+      printf("buf %s\n",buf);
       clean_buf(buf);
       fdata_list[fdata_num].addr=addr;
       i=0;
@@ -2075,6 +2081,7 @@ int main(int argc,char **argv){
       i2=0;
       i3=0;
       state=0;
+      //printf("objects %s\n",m);
     }
     else if(state==0){
       m[m0]=ch;

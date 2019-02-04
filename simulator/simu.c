@@ -62,12 +62,12 @@ void slw(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
   int code_16_20 = (code >> 11) & 0x1F;/*rb*/
-  int vs = (cpu->reg)[code_6_10];
-  int vb = (cpu->reg)[code_11_15];
+  int vs = (cpu->reg)[code_11_15];
+  int vb = (cpu->reg)[code_16_20];
   unsigned int s = *(unsigned int *)&vs;
   unsigned int b = *(unsigned int *)&vb;
   unsigned int ns = s << b;
-  (cpu->reg)[code_16_20]=*(int *)&ns;
+  (cpu->reg)[code_6_10]=*(int *)&ns;
   *a+=4;
 }/*ok*/
 
@@ -75,12 +75,12 @@ void srw(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
   int code_16_20 = (code >> 11) & 0x1F;/*rb*/
-  int vs = (cpu->reg)[code_6_10];
-  int vb = (cpu->reg)[code_11_15];
+  int vs = (cpu->reg)[code_11_15];
+  int vb = (cpu->reg)[code_16_20];
   unsigned int s = *(unsigned int *)&vs;
   unsigned int b = *(unsigned int *)&vb;
   unsigned int ns = s >> b;
-  (cpu->reg)[code_16_20]=*(int *)&ns;
+  (cpu->reg)[code_6_10]=*(int *)&ns;
   *a+=4;
 }/*ok*/
 
@@ -246,11 +246,10 @@ void in(int code,CPU *cpu,int *a,FILE *file){
   fread(&x,sizeof(x),1,file);
   int y=(int) x;
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
-  (cpu->reg)[code_6_10] = y;
+  int k = (cpu->reg)[code_6_10];
+  (cpu->reg)[code_6_10] = (k & 0xFFFFFF00)+y;
   *a+=4;
-  if((y!=255)&&(y!=0)){
   printf("in %d\n",y);
-  }
 }
 
 void fin(int code,CPU *cpu,int *a,FILE *file){
@@ -992,6 +991,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int u=0;
   while(1){
     u+=1;
+    printf("%d\n",addr);
     if(u==50000000){
       //printf("\n\ntoo long loop ... \n");
       //print_memory(cpu);
@@ -1089,7 +1089,9 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       }
     }
     else if(code_0_5 == 134217728){
+      int y;
       in(code,cpu,&addr,file2);
+      scanf("%d",&y);
     }
     else if(code_0_5 == 268435456){
       fin(code,cpu,&addr,file2);

@@ -1,174 +1,259 @@
 assembling minrt.s to minrt ...
 	.data
-min_caml_n_objects: 4 
+min_caml_n_objectsbuf min_caml_n_objects
+: 4 
 	50000
-min_caml_objects: 8 
+min_caml_objectsbuf min_caml_objects
+: 8 
 	50004
-min_caml_screen: 12 
+min_caml_screenbuf min_caml_screen
+: 12 
 	52644
-min_caml_viewpoint: 16 
+min_caml_viewpointbuf min_caml_viewpoint
+: 16 
 	52656
-min_caml_light: 20 
+min_caml_lightbuf min_caml_light
+: 20 
 	52668
-min_caml_beam: 24 
+min_caml_beambuf min_caml_beam
+: 24 
 	52680
-min_caml_and_net: 28 
+min_caml_and_netbuf min_caml_and_net
+: 28 
 	52684
-min_caml_or_net: 32 
+min_caml_or_netbuf min_caml_or_net
+: 32 
 	52884
-min_caml_solver_dist: 36 
+min_caml_solver_distbuf min_caml_solver_dist
+: 36 
 	52888
-min_caml_intsec_rectside: 40 
+min_caml_intsec_rectsidebuf min_caml_intsec_rectside
+: 40 
 	52892
-min_caml_tmin: 44 
+min_caml_tminbuf min_caml_tmin
+: 44 
 	52896
-min_caml_intersection_point: 48 
+min_caml_intersection_pointbuf min_caml_intersection_point
+: 48 
 	52900
-min_caml_intersected_object_id: 52 
+min_caml_intersected_object_idbuf min_caml_intersected_object_id
+: 52 
 	52912
-min_caml_nvector: 56 
+min_caml_nvectorbuf min_caml_nvector
+: 56 
 	52916
-min_caml_texture_color: 60 
+min_caml_texture_colorbuf min_caml_texture_color
+: 60 
 	52928
-min_caml_diffuse_ray: 64 
+min_caml_diffuse_raybuf min_caml_diffuse_ray
+: 64 
 	52940
-min_caml_rgb: 68 
+min_caml_rgbbuf min_caml_rgb
+: 68 
 	52952
-min_caml_image_size: 72 
+min_caml_image_sizebuf min_caml_image_size
+: 72 
 	52964
-min_caml_image_center: 76 
+min_caml_image_centerbuf min_caml_image_center
+: 76 
 	52972
-min_caml_scan_pitch: 80 
+min_caml_scan_pitchbuf min_caml_scan_pitch
+: 80 
 	52980
-min_caml_startp: 84 
+min_caml_startpbuf min_caml_startp
+: 84 
 	52984
-min_caml_startp_fast: 88 
+min_caml_startp_fastbuf min_caml_startp_fast
+: 88 
 	52996
-min_caml_screenx_dir: 92 
+min_caml_screenx_dirbuf min_caml_screenx_dir
+: 92 
 	53008
-min_caml_screeny_dir: 96 
+min_caml_screeny_dirbuf min_caml_screeny_dir
+: 96 
 	53020
-min_caml_screenz_dir: 100 
+min_caml_screenz_dirbuf min_caml_screenz_dir
+: 100 
 	53032
-min_caml_ptrace_dirvec: 104 
+min_caml_ptrace_dirvecbuf min_caml_ptrace_dirvec
+: 104 
 	53044
-min_caml_dirvecs: 108 
+min_caml_dirvecsbuf min_caml_dirvecs
+: 108 
 	53056
-min_caml_light_dirvec: 112 
+min_caml_light_dirvecbuf min_caml_light_dirvec
+: 112 
 	53096
-min_caml_reflecrions: 116 
+min_caml_reflecrionsbuf min_caml_reflecrions
+: 116 
 	53600
-min_caml_n_reflections: 120 
+min_caml_n_reflectionsbuf min_caml_n_reflections
+: 120 
 	56480
-lsc199: 124 
+lsc199buf lsc199
+: 124 
 	1061752795
-lsc192: 128 
+lsc192buf lsc192
+: 128 
 	1070141403
-lsc185: 132 
+lsc185buf lsc185
+: 132 
 	0
-lsc184: 136 
+lsc184buf lsc184
+: 136 
 	1078530011
-lsc183: 140 
+lsc183buf lsc183
+: 140 
 	1144258560
-lsc182: 144 
+lsc182buf lsc182
+: 144 
 	1103101952
-lsc181: 148 
+lsc181buf lsc181
+: 148 
 	1065353216
-lsc180: 152 
+lsc180buf lsc180
+: 152 
 	1167949824
-lsc179: 156 
+lsc179buf lsc179
+: 156 
 	1123024896
-lsc178: 160 
+lsc178buf lsc178
+: 160 
 	1077936128
-lsc174: 164 
+lsc174buf lsc174
+: 164 
 	1073741824
-latan101: 168 
+latan101buf latan101
+: 168 
 	1061752795
-latan100: 172 
+latan100buf latan100
+: 172 
 	1065353216
-latan99: 176 
+latan99buf latan99
+: 176 
 	1070141403
-latan98: 180 
+latan98buf latan98
+: 180 
 	1075576832
-latan97: 184 
+latan97buf latan97
+: 184 
 	1054867456
-latan96: 188 
+latan96buf latan96
+: 188 
 	0
-latan95: 192 
+latan95buf latan95
+: 192 
 	1031137221
-latan94: 196 
+latan94buf latan94
+: 196 
 	1035458158
-latan93: 200 
+latan93buf latan93
+: 200 
 	1038323256
-latan92: 204 
+latan92buf latan92
+: 204 
 	-1106097883
-latan91: 208 
+latan91buf latan91
+: 208 
 	1045220557
-latan90: 212 
+latan90buf latan90
+: 212 
 	1051372202
-l6201: 216 
+l6201buf l6201
+: 216 
 	1124073472
-l6168: 220 
+l6168buf l6168
+: 220 
 	1063675494
-l6167: 224 
+l6167buf l6167
+: 224 
 	1045220557
-l6073: 228 
+l6073buf l6073
+: 228 
 	1125515264
-l6071: 232 
+l6071buf l6071
+: 232 
 	-1021968384
-l6055: 236 
+l6055buf l6055
+: 236 
 	1036831949
-l6052: 240 
+l6052buf l6052
+: 240 
 	-1073741824
-l6050: 244 
+l6050buf l6050
+: 244 
 	998244352
-l6028: 248 
+l6028buf l6028
+: 248 
 	1101004800
-l6027: 252 
+l6027buf l6027
+: 252 
 	1028443341
-l6022: 256 
+l6022buf l6022
+: 256 
 	1048576000
-l6018: 260 
+l6018buf l6018
+: 260 
 	1092616192
-l6014: 264 
+l6014buf l6014
+: 264 
 	1050253722
-l6013: 268 
+l6013buf l6013
+: 268 
 	1132396544
-l6012: 272 
+l6012buf l6012
+: 272 
 	1041865114
-l6010: 276 
+l6010buf l6010
+: 276 
 	1078530011
-l6009: 280 
+l6009buf l6009
+: 280 
 	1106247680
-l6008: 284 
+l6008buf l6008
+: 284 
 	1097859072
-l6007: 288 
+l6007buf l6007
+: 288 
 	953267991
-l5964: 292 
+l5964buf l5964
+: 292 
 	1287568416
-l5960: 296 
+l5960buf l5960
+: 296 
 	1315859240
-l5939: 300 
+l5939buf l5939
+: 300 
 	-1110651699
-l5927: 304 
+l5927buf l5927
+: 304 
 	1008981770
-l5926: 308 
+l5926buf l5926
+: 308 
 	-1102263091
-l5776: 312 
+l5776buf l5776
+: 312 
 	1056964608
-l5718: 316 
+l5718buf l5718
+: 316 
 	1073741824
-l5684: 320 
+l5684buf l5684
+: 320 
 	-1018691584
-l5682: 324 
+l5682buf l5682
+: 324 
 	1128792064
-l5678: 328 
+l5678buf l5678
+: 328 
 	1016003125
-l5592: 332 
+l5592buf l5592
+: 332 
 	-1082130432
-l5591: 336 
+l5591buf l5591
+: 336 
 	1065353216
-l5590: 340 
+l5590buf l5590
+: 340 
 	0
 	.globl _min_caml_start
 _min_caml_start:
@@ -11327,4 +11412,91 @@ rt3127:
 	lwz	r6, 4(r3) 42816 
 	lwz	r7, 8(r3) 42820 
 	b	scan_line3061 42824 
-min_caml_fin:
+min_caml_fin:.data
+min_caml_n_objects:00000000000000101010100
+50000
+50004
+52644
+52656
+52668
+52680
+52684
+52884
+52888
+52892
+52896
+52900
+52912
+52916
+52928
+52940
+52952
+52964
+52972
+52980
+52984
+52996
+53008
+53020
+53032
+53044
+53056
+53096
+53600
+56480
+1061752795
+1070141403
+0
+1078530011
+1144258560
+1103101952
+1065353216
+1167949824
+1123024896
+1077936128
+1073741824
+1061752795
+1065353216
+1070141403
+1075576832
+1054867456
+0
+1031137221
+1035458158
+1038323256
+-1106097883
+1045220557
+1051372202
+1124073472
+1063675494
+1045220557
+1125515264
+-1021968384
+1036831949
+-1073741824
+998244352
+1101004800
+1028443341
+1048576000
+1092616192
+1050253722
+1132396544
+1041865114
+1078530011
+1106247680
+1097859072
+953267991
+1287568416
+1315859240
+-1110651699
+1008981770
+-1102263091
+1056964608
+1073741824
+-1018691584
+1128792064
+1016003125
+-1082130432
+1065353216
+0
+.globl
