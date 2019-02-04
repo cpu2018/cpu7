@@ -64,7 +64,6 @@ void i_to_b(char *g,int i_g,int b){
     int g2 = ~i_g;
     for(int i=0;i<b;i++){
       int r=g2%2;
-      //printf("%d %d\n",g2,r);
       if(r==0){
         g[b-i-1]='1';
       }
@@ -285,7 +284,6 @@ void write_start(label *list,int num,char *start,FILE *fp){
 void search_data(char *code,fdata *flist,int fnum,char *label){
   for(int i=0;i<fnum;i++){
     if(strcmp((flist[i]).name,label)==0){
-      //printf("label %s %s\n",label,(flist[i]).num);
       strcpy(code,(flist[i]).num);
     }
   }
@@ -294,13 +292,9 @@ void search_data(char *code,fdata *flist,int fnum,char *label){
 void search_label(char *code,label *list,int lnum,char *label){
   for(int i=0;i<lnum;i++){
     if(strcmp((list[i]).name,label)==0){
-      //printf("label %s %s\n",label,(flist[i]).num);
       char num2[33]={'\0'};
-      //printf("%s %d\n",label,(int) (list[i]).addr);
       long l2 = (long) (list[i].addr);
-      //printf("%ld\n",l2);
       change_num(num2,l2);
-      //printf("%s\n",num2);
       strcpy(code,num2);
     }
   }
@@ -327,7 +321,6 @@ void change_arg_ha(char *arg,char *x,label *list,fdata *flist,int lnum,int fnum)
   int len = strlen(arg);
   char label[33]={'\0'};
   strncpy(label,arg+5,len-6);
-  //printf("%s label\n",label);
   char code[33]={'\0'};
   search_data(code,flist,fnum,label);
   if(strcmp(code,"")==0){
@@ -378,9 +371,6 @@ void change_arg(char *arg,char *x,label *list,fdata *flist,int lnum,int fnum,uns
     change_arg_lo(arg,x,list,flist,lnum,fnum);
   }
   else if(strncmp("ha16",arg,4)==0){
-    if(strcmp(arg,"ha16(min_caml_n_objects)")==0){
-      //printf("aaaaaaaaaaaaaaaaaaaaaaa\n");
-    }
     change_arg_ha(arg,x,list,flist,lnum,fnum);
   }
   else if(((arg[0]=='r')||(arg[0]=='f'))&&('0'<=arg[1])&&(arg[1]<='9')){
@@ -1092,7 +1082,6 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       *a+=4;
     }
     else if(strcmp(name,"bctr")==0){
-      //printf("aaaa\n");
       char s1[7]="010011";
       char s2[6]="10100";/*20無条件*/
       char s3[6]="00000";/*cr0*/
@@ -1107,7 +1096,6 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       strcat(ans,s5);
       strcat(ans,s6);
       strcat(ans,s7);
-      //printf("ans %s\n",ans);
       char nans[5]={'\0'};
       change_bit_char_list(ans,nans);
       fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);
@@ -1132,7 +1120,6 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       change_bit_char_list(ans,nans);
       fwrite(nans,sizeof(nans[0]),sizeof(nans)-1,fp);
       *a+=4;
-      //printf("aaaaa\n");
     }
     else if(strcmp(name,"bcl")==0){
       char s1[7]="010000";
@@ -1778,7 +1765,7 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
     else{
       int q = strlen(name);
       if((strcmp(name,"")!=0)&&(name[q-1]!=':')){
-        printf("%s\n",name);
+        //printf("%s\n",name);
       }
     }
 }
@@ -1825,7 +1812,6 @@ int main(int argc,char **argv){
 
   fwrite("0000",sizeof(char),4,fp2);
   while((ch = fgetc(fp)) != EOF){
-    //printf("%c",ch);
     if(ch == '.'){
       clean_buf(buf);
       i=0;
@@ -1846,7 +1832,6 @@ int main(int argc,char **argv){
     else if((state==3)&&(ch==':')){
       state=4;/*ラベルの読み込み終わり*/
       strcpy(fdata_list[fdata_num].name,buf);
-      printf("buf %s\n",buf);
       clean_buf(buf);
       fdata_list[fdata_num].addr=addr;
       i=0;
@@ -1871,15 +1856,11 @@ int main(int argc,char **argv){
       char num2[33]={'\0'};
       long l2 = (long) addr;
       change_num(num2,l2);
-      //printf("%d\n",(int) addr);
-      //printf("%s\n",num2);
       strcpy(fdata_list[fdata_num].num,num2);
       write_data(num,&addr,fp2);
       clean_buf(buf);
       i=0;
       fdata_num+=1;
-      //addr+=4;
-      //write_data2(fp2,num);
     }
     else if(state==5){
       buf[i]=ch;
@@ -2043,14 +2024,8 @@ int main(int argc,char **argv){
   labelnum+=1;
   rewind(fp);
   state=0;
-  //addr=4;
 
-  for(int i=0;i<labelnum;i++){
-    //printf("名前 %s %d\n",label_list[i].name,label_list[i].addr);
-  }
-  //printf("a\n");
-
-  char m[10]={'\0'};
+  char m[100]={'\0'};
   char arg1[40]={'\0'};
   char arg2[40]={'\0'};
   char arg3[40]={'\0'};
@@ -2067,7 +2042,6 @@ int main(int argc,char **argv){
   addr = na;
   
   while((ch=fgetc(fp))!=EOF){
-    //printf("%s\n",arg1);
     if((state==0)&&((ch==' ')||(ch=='\t'))){
     }
     else if((state==0)&&(ch=='\n')){
@@ -2081,7 +2055,6 @@ int main(int argc,char **argv){
       i2=0;
       i3=0;
       state=0;
-      //printf("objects %s\n",m);
     }
     else if(state==0){
       m[m0]=ch;
@@ -2222,7 +2195,6 @@ int main(int argc,char **argv){
       arg3[i3]=ch;
       i3+=1;
     }
-    //printf("%c",ch);
   }
   rewind(fp2);
   write_start(label_list,labelnum,start_label,fp2);
