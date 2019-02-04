@@ -1310,7 +1310,7 @@ void write_ins(label *list,int lnum,fdata *flist,int fnum,FILE *fp,char *name,ch
       
       clean_code(code);
       char s5[6]={'\0'};
-      strcpy(s5,s4);
+      strcpy(s5,s4_sub);
       char s6[6]="11111";
       strcat(ans,s1);
       strcat(ans,s2);

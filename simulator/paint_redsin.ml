@@ -1,4 +1,4 @@
-let size = 100 in
+let size = 18 in
 
 let rec write_ppm_header size =
 (
@@ -26,7 +26,7 @@ let rec paint_red x =
 in
 
 let rec paint_row x =
-       if x = 0 then
+       if x = 1 then
                paint_red x
        else
                (paint_red x;
@@ -34,7 +34,7 @@ let rec paint_row x =
 in
 
 let rec paint_all x y =
-       if x = 0 then
+       if x = 1 then
                paint_row y
        else
                (paint_row y;
