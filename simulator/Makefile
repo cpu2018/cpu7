@@ -7,7 +7,7 @@ SIMU_SOURCE = simu.c finv1.c finv2.c fsqrt_table.c fsqrtinv_table.c
 ML_TESTS = \
 external \
 minrt_read
-ASM_TESTS = 
+ASM_TESTS = minrt
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
 .PHONY: all clean rma rmb
