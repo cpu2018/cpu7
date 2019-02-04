@@ -989,7 +989,9 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   while(1){
     u+=1;
     if(u==50000000){
+	  printf("\n\ntoo long loop ... \n");
       print_memory(cpu);
+	  printf("too long loop ... \n\n");
     }
     if(addr == stopaddr){
       print_reg(cpu);
@@ -1185,7 +1187,10 @@ int main(int argc,char **argv){
   CPU cpu;
   init_cpu(&cpu);
 
-  printf("実行\n");
+  char print_flag;
+  printf(">>> 最後にメモリを表示するならy, しないならnを入力: ");
+  scanf("%c", &print_flag);
+  printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   read_memory(&cpu,memory_sub);
 
   FILE *file2;
@@ -1195,7 +1200,9 @@ int main(int argc,char **argv){
 
 
   exec(&cpu,file2,file3);
-  print_memory(&cpu);
+  if (print_flag == 'y') {
+    print_memory(&cpu);
+  }
 
   fclose(file2);
   fclose(file3);

@@ -1,4 +1,4 @@
-let size = 18 in
+let size = 100 in
 
 let rec write_ppm_header size =
 (
