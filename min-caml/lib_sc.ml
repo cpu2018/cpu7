@@ -1,7 +1,9 @@
 let print_external_methods oc = Printf.fprintf oc
-"reverse_flag61:
+"
+reverse_flag61:
 	cmpwi	cr7, r2, 0
-	bne	cr7, sc_beq_else236
+	bne	cr7, beq_else236
+	li	r2, 1
 	blr
 sc_beq_else236:
 	li	r2, 0

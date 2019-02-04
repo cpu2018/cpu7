@@ -1,4 +1,4 @@
-let rec reverse_flag flag = if flag then false else flag
+let rec reverse_flag flag = if flag then false else true
 in
 let rec add_flag x flag = if flag then x else -. x
 in

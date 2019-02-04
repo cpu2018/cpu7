@@ -83,7 +83,10 @@ l174:
 	1073741824
 	.globl _min_caml_start
 _min_caml_start:
-	addi	r4, r4, 100000
+	addi	r4, r4, 25000
+	addi	r4, r4, 25000
+	addi	r4, r4, 25000
+	addi	r4, r4, 25000
 	lis	r31, lo16(l181)
 	srwi	r31, r31, 31
 	addi	r31, r31, ha16(l181)
@@ -128,6 +131,7 @@ _min_caml_start:
 reverse_flag61:
 	cmpwi	cr7, r2, 0
 	bne	cr7, beq_else236
+	li	r2, 1
 	blr
 beq_else236:
 	li	r2, 0
