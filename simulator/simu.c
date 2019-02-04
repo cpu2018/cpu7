@@ -991,7 +991,6 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   scanf("%d",&stopaddr);
   int u=0;
   while(1){
-    printf("addr %d\n",addr);
     u+=1;
     if(u==50000000){
       //printf("\n\ntoo long loop ... \n");
