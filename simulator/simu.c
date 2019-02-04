@@ -964,7 +964,7 @@ void print_reg(CPU *cpu){
 void print_memory(CPU *cpu){
   for(int i=0;i<M;i++){
     if(cpu->memory[i]!=0){
-      printf("%d %d\n",i*4,cpu->memory[i]);
+      printf("%d		%d		%f \n",i*4,cpu->memory[i], *(float*)&(cpu->memory[i]));
     }
   }
 }
