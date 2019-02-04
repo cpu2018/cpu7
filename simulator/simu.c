@@ -248,6 +248,9 @@ void in(int code,CPU *cpu,int *a,FILE *file){
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
   (cpu->reg)[code_6_10] = y;
   *a+=4;
+  if((y!=255)&&(y!=0)){
+  printf("in %d\n",y);
+  }
 }
 
 void fin(int code,CPU *cpu,int *a,FILE *file){
@@ -988,6 +991,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   scanf("%d",&stopaddr);
   int u=0;
   while(1){
+    printf("addr %d\n",addr);
     u+=1;
     if(u==50000000){
       //printf("\n\ntoo long loop ... \n");
@@ -1047,10 +1051,10 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       else if(code_11_20 == 0){
         cmp(code,cpu,&addr);
       }
-      else if(code_11_20 == 49152){
+      else if(code_21_30 == 48){
         slw(code,cpu,&addr);
       }
-      else if(code_11_20 == 1097728){
+      else if(code_21_30 == 1072){
         srw(code,cpu,&addr);
       }
       else if(code_11_20 == 212992){
