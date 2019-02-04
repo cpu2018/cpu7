@@ -984,6 +984,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int code_31=0;
   int code_26_30=0;
   int code_11_20=0;
+  printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   scanf("%d",&stopaddr);
   int u=0;
   while(1){
@@ -1190,9 +1191,8 @@ int main(int argc,char **argv){
   char print_flag;
   printf(">>> 最後にメモリを表示するならy, しないならnを入力: ");
   scanf("%c", &print_flag);
-  printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   read_memory(&cpu,memory_sub);
-
+  
   FILE *file2;
   FILE *file3;
   file2 = fopen(argv[2],"rb");
