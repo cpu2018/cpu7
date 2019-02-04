@@ -67,7 +67,7 @@ static void read_sld_env(FILE *fp) {
 	read_float(fp);
 	read_float(fp);
 	/* n_lights : Actually, it should be an int value ! */
-	read_float(fp);
+	read_int(fp);
 	/* light rotation */
 	read_float(fp);
 	read_float(fp);
