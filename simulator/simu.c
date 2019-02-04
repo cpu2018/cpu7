@@ -990,9 +990,9 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   while(1){
     u+=1;
     if(u==50000000){
-	  printf("\n\ntoo long loop ... \n");
-      print_memory(cpu);
-	  printf("too long loop ... \n\n");
+      //printf("\n\ntoo long loop ... \n");
+      //print_memory(cpu);
+      //printf("too long loop ... \n\n");
     }
     if(addr == stopaddr){
       print_reg(cpu);

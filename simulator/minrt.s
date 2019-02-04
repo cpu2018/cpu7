@@ -188,6 +188,7 @@ _min_caml_start:
 reverse_flag61:
 	cmpwi	cr7, r2, 0
 	bne	cr7, sc_beq_else236
+	li	r2, 1
 	blr
 sc_beq_else236:
 	li	r2, 0
