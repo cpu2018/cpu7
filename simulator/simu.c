@@ -1272,11 +1272,9 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       int o;
       in(code,cpu,&addr,file2);
       scanf("%d",&o);
-      printf("aaa\n");
     }
     else if(code_0_5 == 268435456){
       fin(code,cpu,&addr,file2);
-      printf("bbb\n");
     }
     else if(code_0_5 == 939524096){
       addi(code,cpu,&addr);
