@@ -38,8 +38,8 @@ void init_cpu(CPU *cpu){
     (cpu->cr)[i]=0;
   }
   (cpu->cor)=0;
-  (cpu->reg)[4]=300000;
-  (cpu->reg)[3]=300000;
+  (cpu->reg)[4]=100000;
+  (cpu->reg)[3]=100000;
 }
 
 void read_memory(CPU *cpu,int *memory){
@@ -109,7 +109,7 @@ void out(int code,CPU *cpu,int *a,FILE *file){
   fwrite(&x,sizeof(x),1,file);
   *a+=4;
   h+=1;
-  printf("out %c ---- %d\n",x,*a);
+  printf("out %c ---- %d\n",x,*a-4);
 }
 
 void cmpi(int code,CPU *cpu,int *a){
@@ -983,6 +983,8 @@ void print_memory(CPU *cpu){
       printf("%d		%d		%f \n",i*4,cpu->memory[i], *(float*)&(cpu->memory[i]));
     }
   }
+  printf("reg3                %d\n",(cpu->reg)[3]);
+  printf("reg4                %d\n",(cpu->reg)[4]);
 }
 
 void print_ins(int code,int addr){
@@ -1182,6 +1184,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int flag = 0;
   int inflag =0;
   int pflag =0;
+  int mflag = 0;
   printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   scanf("%d",&stopaddr);
   printf(">>> 命令を表示するならば1 しないならば0 : ");
@@ -1190,9 +1193,14 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   scanf("%d",&inflag);
   int uu=0;
   while(1){
+    if(addr==3280){
+      printf("%d\n",(cpu->reg)[2]);
+    }
     if(addr == stopaddr){
       pflag=1;
       uu=1;
+      printf("メモリを表示1 しない0 :");
+      scanf("%d",&mflag);
     }
     if(uu==1){
       //printf("freggggggggggggg1 %d\n",(cpu->freg)[1]);
@@ -1387,9 +1395,14 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     if(uu==1){
       //printf("freggggggggggggg1 %d\n",(cpu->freg)[1]);
     }
-    if(pflag==1){
+    if(mflag==1){
+      print_memory(cpu);
+      mflag=0;
+    }
+    if(pflag==1){     
       print_reg(cpu);
       pflag=0;
+      printf("次のストップアドレスを入力:");
       scanf("%d",&stopaddr);
     }
   }

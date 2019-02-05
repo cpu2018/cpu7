@@ -2252,7 +2252,7 @@ beq_else7370:
 	lwz	r5, 40(r3) 8108 
 	mflr	r31 8112 
 	stw	r31, 76(r3) 8116 
-	addi	r3, r3, 80 8120
+	addi	r3, r3, 80 8120 
 	bl	rotate_quadratic_matrix2777 8124 
 	subi	r3, r3, 80 8128 
 	lwz	r31, 76(r3) 8132 
@@ -2270,7 +2270,7 @@ bge_else7372:
 	stw	r31, 4(r3) 8168 
 	addi	r3, r3, 8 8172 
 	bl	read_nth_object2780 8176 
-	subi	r3, r3, 8 8180 ここまでok
+	subi	r3, r3, 8 8180 
 	lwz	r31, 4(r3) 8184 
 	mtlr	r31 8188 
 	cmpwi	cr7, r2, 0 8192 
