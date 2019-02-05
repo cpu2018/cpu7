@@ -259,6 +259,9 @@ void fin(int code,CPU *cpu,int *a,FILE *file){
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
   (cpu->freg)[code_6_10] = y;
   *a+=4;
+  printf("fin %d\n",y);
+  int o;
+  scanf("%d",&o);
 }
 
 void addi(int code,CPU *cpu,int *a){
@@ -971,6 +974,185 @@ void print_memory(CPU *cpu){
   }
 }
 
+void print_ins(int code,int addr){
+  int code_0_5=0;
+  int code_22_30=0;
+  int code_21_30=0;
+  int code_6_10=0;
+  int code_30=0;
+  int code_31=0;
+  int code_26_30=0;
+  int code_11_20=0;
+  code_0_5 = code & 0xFC000000;
+  code_22_30 = code & 0x3FE;
+  code_21_30 = code & 0x7FE;
+  code_6_10 = code & 0x3E00000;
+  code_30 = code & 0x2;
+  code_31 = code & 0x1;
+  code_26_30 = code & 0x3E;
+  code_11_20 = code & 0x1FF800;
+  if(code_0_5 == 2080374784){
+    if(code_22_30 == 532){
+      printf("add --- %d\n",addr);
+    }
+    else if(code_22_30 == 1022){
+      printf("itof --- %d\n",addr);
+    }    
+    else if(code_22_30 == 80){
+      printf("subf --- %d\n",addr);
+    }
+    else if(code_21_30 == 888){
+      printf("mr --- %d\n",addr);
+    }
+    else if(code_21_30 == 46){
+      printf("lwzx --- %d\n",addr);
+    }
+    else if(code_21_30 == 302){
+      printf("stwx --- %d\n",addr);
+    }
+    else if(code_21_30 == 1198){
+      printf("lfdx --- %d\n",addr);
+    }
+    else if(code_21_30 == 1454){
+      printf("stfdx --- %d\n",addr);
+    }
+    else if(code_21_30 == 678){
+      printf("mflr --- %d\n",addr);
+    }
+    else if(code_21_30 == 934){
+      if(code_11_20 == 16384){
+        printf("mtlr --- %d\n",addr);
+      }
+      else if(code_11_20 == 18432){
+        printf("mtctr --- %d\n",addr);
+      }
+    }
+    else if(code_22_30 == 0){
+      printf("cmp --- %d\n",addr);
+    }
+    else if(code_21_30 == 48){
+      printf("slw --- %d\n",addr);
+    }
+    else if(code_21_30 == 1072){
+      printf("srw --- %d\n",addr);
+    }
+    else if(code_11_20 == 212992){
+      printf("neg --- %d\n",addr);
+    }
+  }
+  else if(code_0_5 == 1006632960){
+    printf("lis --- %d\n",addr);
+  }   
+  else if(code_0_5 == -939524096){
+    printf("lfd --- %d\n",addr);
+  }
+  else if(code_0_5 == -671088640){
+    printf("stfd --- %d\n",addr);
+  }
+  else if(code_0_5 == 738197504){
+    printf("cmpi --- %d\n",addr);
+  }
+  else if(code_0_5 == 1073741824){
+    if(code_30==0){
+      if(code_6_10 == 8388608){
+        printf("bne --- %d\n",addr);
+      }
+      else if(code_6_10 == 4194304){
+        printf("bgt --- %d\n",addr);
+      }
+      else if(code_6_10 == 2097152){
+        printf("blt --- %d\n",addr);
+      }
+      else if(code_6_10 == 16777216){
+        printf("beq --- %d\n",addr);
+      }
+    }
+  }
+  else if(code_0_5 == 134217728){
+    printf("in --- %d\n",addr);
+  }
+  else if(code_0_5 == 268435456){
+    printf("fin --- %d\n",addr);
+  }
+  else if(code_0_5 == 939524096){
+    printf("addi --- %d\n",addr);
+  }
+  else if(code_0_5 == 67108864){
+    printf("out --- %d\n",addr);
+  }
+  else if(code_0_5 == 1275068416){
+    if(code_21_30 == 32){
+      printf("blr --- %d\n",addr);
+    }
+    else if(code_21_30 == 1056){
+      printf("bctr --- %d\n",addr);
+    }
+  }
+  else if(code_0_5 == -1879048192){
+    printf("stw --- %d\n",addr);
+  }
+  else if(code_0_5 == 1207959552){
+    if(code_31 == 1){
+      printf("bl --- %d\n",addr);
+    }
+    else{
+      printf("b --- %d\n",addr);
+    }
+  }
+  else if(code_0_5 == -1811939328){
+    printf("stwu --- %d\n",addr);
+  }
+  else if(code_0_5 == -1207959552){
+    printf("lmw --- %d\n",addr);
+  }
+  else if(code_0_5 == -1140850688){
+    printf("stmw --- %d\n",addr);
+  }
+  else if(code_0_5 == -2147483648){
+    printf("lwz --- %d\n",addr);
+  }
+  else if(code_0_5 == 1409286144){
+    printf("slwi か srwi --- %d \n",addr);
+  }
+  else if(code_0_5 == -1476395008){
+    printf("fslwi --- %d\n",addr);
+  }
+  else if(code_0_5 == -67108864){
+    if(code_26_30 == 42){
+      printf("fadd --- %d\n",addr);
+    }
+    else if(code_26_30 == 40){
+      printf("fsub --- %d\n",addr);
+    }
+    else if(code_26_30 == 50){
+      printf("fmul --- %d\n",addr);
+    }
+    else if(code_26_30 == 36){
+      printf("fdiv --- %d\n",addr);
+    }
+    else if(code_26_30 == 60){
+      printf("fabs --- %d\n",addr);
+    }
+    else if(code_26_30 == 16){
+      printf("fmr --- %d\n",addr);
+    }
+    else if(code_26_30 == 44){
+      printf("fsqrt --- %d\n",addr);
+    }
+    else if(code_26_30 == 0){
+      printf("fneg --- %d\n",addr);
+    }
+    else if(code_26_30 == 2){
+      printf("fcmpu --- %d\n",addr);
+    }
+    else if(code_22_30 == 1016){
+      printf("ftoi --- %d\n",addr);
+    }
+    else if(code_22_30 == 1022){
+      printf("floor --- %d\n",addr);
+    }
+  }
+}
 void exec(CPU *cpu,FILE *file2,FILE *file3){
   int addr=0;
   int stopaddr = -1;
@@ -986,17 +1168,12 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int code_31=0;
   int code_26_30=0;
   int code_11_20=0;
+  int flag = 0;
   printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   scanf("%d",&stopaddr);
-  int u=0;
+  printf(">>> 命令を表示するならば1 しないならば0 : ");
+  scanf("%d",&flag);
   while(1){
-    u+=1;
-    printf("%d\n",addr);
-    if(u==50000000){
-      //printf("\n\ntoo long loop ... \n");
-      //print_memory(cpu);
-      //printf("too long loop ... \n\n");
-    }
     if(addr == stopaddr){
       print_reg(cpu);
       scanf("%d",&stopaddr);
@@ -1010,7 +1187,10 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     code_31 = code & 0x1;
     code_26_30 = code & 0x3E;
     code_11_20 = code & 0x1FF800;
-
+    if(flag==1){
+      print_ins(code,addr);
+    }
+    
     if(code_0_5 == 2080374784){
       if(code_22_30 == 532){
         add(code,cpu,&addr);
@@ -1047,7 +1227,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
           mtctr(code,cpu,&addr);
         }
       }
-      else if(code_11_20 == 0){
+      else if(code_22_30 == 0){
         cmp(code,cpu,&addr);
       }
       else if(code_21_30 == 48){
@@ -1089,12 +1269,14 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       }
     }
     else if(code_0_5 == 134217728){
-      int y;
+      int o;
       in(code,cpu,&addr,file2);
-      scanf("%d",&y);
+      scanf("%d",&o);
+      printf("aaa\n");
     }
     else if(code_0_5 == 268435456){
       fin(code,cpu,&addr,file2);
+      printf("bbb\n");
     }
     else if(code_0_5 == 939524096){
       addi(code,cpu,&addr);
