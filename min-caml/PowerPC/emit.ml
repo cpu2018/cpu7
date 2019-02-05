@@ -347,12 +347,11 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "\taddi\tr4, r4, 25000\n";
 	Printf.fprintf oc "\taddi\tr4, r4, 25000\n";
 	Printf.fprintf oc "\tli\tr2, 30000\n";
-	Printf.fprintf oc "\taddi\tr2, t2, 23096\n";
+	Printf.fprintf oc "\taddi\tr2, r2, 23096\n";
 	Printf.fprintf oc "\tli\tr5, 30000\n";
 	Printf.fprintf oc "\taddi\tr5, r5, 23104\n";
 	Printf.fprintf oc "\tstw\tr5, 0(r2)\n";
-	Printf.fprintf oc "\tli\tr5, 30000\n";
-	Printf.fprintf oc "\taddi\tr5, r5, 23116\n";
+	Printf.fprintf oc "\taddi\tr5, r5, 12\n";
 	Printf.fprintf oc "\tstw\tr5, 4(r2)\n";
 	g oc (NonTail("_R_0"), e);
 	Printf.fprintf oc "\tb\tmin_caml_fin\n";

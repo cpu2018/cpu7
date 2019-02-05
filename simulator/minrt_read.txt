@@ -1,5 +1,3 @@
-gcc -Wall -O2 -o assembler as.c
-gcc -Wall -O2 -o simulator simu.c finv1.c finv2.c fsqrt_table.c fsqrtinv_table.c -lm
 ./min-caml  minrt_read
 ./assembler minrt_read.s
 assembling minrt_read.s to minrt_read ...
@@ -180,12 +178,12 @@ _min_caml_start:
 	addi	r4, r4, 25000 348 
 	addi	r4, r4, 25000 352 
 	addi	r4, r4, 25000 356 
-	li	r2, 20000 360 
+	li	r2, 30000 360 
 	addi	r2, t2, 23096 364 
-	li	r5, 20000 368 
+	li	r5, 30000 368 
 	addi	r5, r5, 23104 372 
 	stw	r5, 0(r2) 376 
-	li	r5, 20000 380 
+	li	r5, 30000 380 
 	addi	r5, r5, 23116 384 
 	stw	r5, 4(r2) 388 
 	li	r2, 512 392 
