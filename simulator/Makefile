@@ -5,7 +5,7 @@ CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
 SIMU_SOURCE = simu.c finv1.c finv2.c fsqrt_table.c fsqrtinv_table.c
 ML_TESTS = \
-minrt
+minrt_read
 ASM_TESTS =
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
@@ -24,10 +24,10 @@ simulator: $(SIMU_SOURCE)
 
 do_casm: $(ML_TESTS:%.ml=%)
 
-.PRECIOUS: %.s
+.PRECIOUS: %.s %.txt
 
 %.s: %.ml
-	-./$(MIN_CAML) -iter 0 $*
+	-./$(MIN_CAML) $*
 
 %: %.s
 	-./assembler $^
