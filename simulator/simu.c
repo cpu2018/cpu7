@@ -106,11 +106,10 @@ void out(int code,CPU *cpu,int *a,FILE *file){
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
   int value = (cpu->reg)[code_6_10];
   char x = value;
-  //printf("%c\n",x);
   fwrite(&x,sizeof(x),1,file);
   *a+=4;
   h+=1;
-  //printf("%d\n",*a-4);
+  printf("out %c ---- %d\n",x,*a);
 }
 
 void cmpi(int code,CPU *cpu,int *a){
@@ -249,7 +248,7 @@ void in(int code,CPU *cpu,int *a,FILE *file){
   int k = (cpu->reg)[code_6_10];
   (cpu->reg)[code_6_10] = (k & 0xFFFFFF00)+y;
   *a+=4;
-  printf("in %d\n",y);
+  printf("in %d %d\n",y,*a-4);
 }
 
 void fin(int code,CPU *cpu,int *a,FILE *file){
@@ -257,9 +256,10 @@ void fin(int code,CPU *cpu,int *a,FILE *file){
   fread(&x,sizeof(x),1,file);
   int y=(int) x;
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
-  (cpu->freg)[code_6_10] = y;
+  int k = (cpu->freg)[code_6_10];
+  (cpu->freg)[code_6_10] = (k & 0xFFFFFF00) + y;
   *a+=4;
-  printf("fin %d\n",y);
+  printf("fin %d %d\n",y,*a-4);
 }
 
 void addi(int code,CPU *cpu,int *a){
@@ -603,6 +603,17 @@ void stmw(int code,CPU *cpu,int *a){
 }/*ok*/
 
 void fslwi(int code,CPU *cpu,int *a){
+  int code_6_10 = (code >> 21) & 0x1F;
+  int code_11_15 = (code >> 16) & 0x1F;
+  int code_16_20 = (code >> 11) & 0x1F;
+  int n = code_16_20;
+  int k=(cpu->freg)[code_6_10];
+  int x = (cpu->freg)[code_6_10] << n;
+  (cpu->freg)[code_11_15]=x;
+  *a+=4;
+}
+
+void fslwi_sub(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
   int code_16_20 = (code >> 11) & 0x1F;/*sh*/
@@ -625,10 +636,12 @@ void rlwinm(int code,CPU *cpu,int *a){
   int code_21_25 = (code >> 6) & 0x1F;/*mb*/
   int code_26_30 = (code >> 1) & 0x1F;/*me*/
   int n = code_16_20;
-  int x1 = (cpu->reg)[code_6_10] >> (32-n);
+  unsigned int x11 = ((unsigned) (cpu->reg)[code_6_10]) >> (32-n);
+  int x1 = (int) x11;
   int x2 = (cpu->reg)[code_6_10] << n;
   int rc = x1 + x2;
   int mask = make_mask(code_21_25,code_26_30);
+  //printf("mask %d %d\n",(cpu->reg)[code_6_10],rc);
   int ra_c = rc & mask;
   (cpu->reg)[code_11_15]=ra_c;
   *a+=4;
@@ -956,7 +969,7 @@ void print_reg(CPU *cpu){
   for(int i=0;i<32;i++){
     int t = (cpu->freg)[i];
     float f = *(float *)&t;
-    printf("f%d %f\n",i,f);
+    printf("f%d %f %d\n",i,f,t);
   }
   printf("lr %d\n",(cpu->lr));
   for(int i=0;i<8;i++){
@@ -1168,16 +1181,21 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int code_11_20=0;
   int flag = 0;
   int inflag =0;
+  int pflag =0;
   printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   scanf("%d",&stopaddr);
   printf(">>> 命令を表示するならば1 しないならば0 : ");
   scanf("%d",&flag);
   printf("in finごとにscanfを挟むなら1 挟まないなら0 : ");
   scanf("%d",&inflag);
+  int uu=0;
   while(1){
     if(addr == stopaddr){
-      print_reg(cpu);
-      scanf("%d",&stopaddr);
+      pflag=1;
+      uu=1;
+    }
+    if(uu==1){
+      //printf("freggggggggggggg1 %d\n",(cpu->freg)[1]);
     }
     code=(cpu->memory)[addr/4];
     code_0_5 = code & 0xFC000000;
@@ -1365,6 +1383,14 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     }
     else{
       break;
+    }
+    if(uu==1){
+      //printf("freggggggggggggg1 %d\n",(cpu->freg)[1]);
+    }
+    if(pflag==1){
+      print_reg(cpu);
+      pflag=0;
+      scanf("%d",&stopaddr);
     }
   }
 }    
