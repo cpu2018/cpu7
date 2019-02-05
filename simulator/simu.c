@@ -248,8 +248,6 @@ void in(int code,CPU *cpu,int *a,FILE *file){
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
   int k = (cpu->reg)[code_6_10];
   (cpu->reg)[code_6_10] = (k & 0xFFFFFF00)+y;
-  *a+=4;
-  printf("in %d\n",y);
 }
 
 void fin(int code,CPU *cpu,int *a,FILE *file){
@@ -260,8 +258,6 @@ void fin(int code,CPU *cpu,int *a,FILE *file){
   (cpu->freg)[code_6_10] = y;
   *a+=4;
   printf("fin %d\n",y);
-  int o;
-  scanf("%d",&o);
 }
 
 void addi(int code,CPU *cpu,int *a){
