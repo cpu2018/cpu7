@@ -223,4 +223,10 @@ let rec read_parameter _ =
    or_net.(0) <- read_or_network 0
   )
 in
-read_parameter ()
+read_parameter ();
+let (a,b,c,d,e,f,g,h,i,j,k) = objects.(0) in
+print_int (int_of_float e.(0));
+print_char 10;
+print_int (int_of_float e.(1));
+print_char 10;
+print_int (int_of_float e.(2))
