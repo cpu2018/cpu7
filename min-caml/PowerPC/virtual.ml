@@ -27,7 +27,7 @@ let expand xts ini addf addi =
     ini
     (fun (offset, acc) x ->
       let offset = align offset in
-      (offset + 4, addf x offset acc)) (* floatの場合 *)
+      (offset + 4, addf x offset acc)) (* floatの場合 *) (* 8から4に変更済み *)
     (fun (offset, acc) x t ->
       (offset + 4, addi x t offset acc)) (* intの場合 *)
 
@@ -131,7 +131,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       (match M.find x env with
       | Type.Array(Type.Unit) -> Ans(Nop)
       | Type.Array(Type.Float) ->
-          Let((offset, Type.Int, 0), Slw(y, C(3)),
+          Let((offset, Type.Int, 0), Slw(y, C(2)), (* 3 -> 2 *)
               Ans(Lfd(x, V(offset))))
       | Type.Array(_) ->
           Let((offset, Type.Int, 0), Slw(y, C(2)),
@@ -142,7 +142,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       (match M.find x env with
       | Type.Array(Type.Unit) -> Ans(Nop)
       | Type.Array(Type.Float) ->
-          Let((offset, Type.Int, 0), Slw(y, C(3)),
+          Let((offset, Type.Int, 0), Slw(y, C(2)), (* 3 -> 2 *)
               Ans(Stfd(z, x, V(offset))))
       | Type.Array(_) ->
           Let((offset, Type.Int, 0), Slw(y, C(2)),
