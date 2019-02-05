@@ -249,6 +249,7 @@ void in(int code,CPU *cpu,int *a,FILE *file){
   int k = (cpu->reg)[code_6_10];
   (cpu->reg)[code_6_10] = (k & 0xFFFFFF00)+y;
   *a+=4;
+  printf("in %d\n",y);
 }
 
 void fin(int code,CPU *cpu,int *a,FILE *file){
@@ -1166,10 +1167,13 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int code_26_30=0;
   int code_11_20=0;
   int flag = 0;
+  int inflag =0;
   printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   scanf("%d",&stopaddr);
   printf(">>> 命令を表示するならば1 しないならば0 : ");
   scanf("%d",&flag);
+  printf("in finごとにscanfを挟むなら1 挟まないなら0 : ");
+  scanf("%d",&inflag);
   while(1){
     if(addr == stopaddr){
       print_reg(cpu);
@@ -1267,9 +1271,19 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     }
     else if(code_0_5 == 134217728){
       in(code,cpu,&addr,file2);
+      if(inflag==1){
+        int y;
+        printf("何か入力: ");
+        scanf("%d",&y);
+      }
     }
     else if(code_0_5 == 268435456){
       fin(code,cpu,&addr,file2);
+      if(inflag==1){
+        int y;
+        printf("何か入力: ");
+        scanf("%d",&y);
+      }
     }
     else if(code_0_5 == 939524096){
       addi(code,cpu,&addr);
