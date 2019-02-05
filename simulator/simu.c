@@ -1265,9 +1265,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       }
     }
     else if(code_0_5 == 134217728){
-      int o;
       in(code,cpu,&addr,file2);
-      scanf("%d",&o);
     }
     else if(code_0_5 == 268435456){
       fin(code,cpu,&addr,file2);
