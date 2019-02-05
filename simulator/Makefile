@@ -9,7 +9,7 @@ minrt
 ASM_TESTS =
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
-.PHONY: all clean rma rmb
+.PHONY: all clean rma rmb rm
 
 all: converter assembler simulator do_casm do_asm
 
@@ -36,6 +36,9 @@ do_asm: $(ASM_TESTS:%.s=%)
 
 %: %.s
 	-./assembler $^
+
+rm:
+	-rm -f $(ML_TESTS:%=%.s) $(ASM_TESTS:%=%.s) $(ML_TESTS) $(ASM_TESTS)
 
 rma:
 	-rm -f $(ML_TESTS:%=%.s) $(ASM_TESTS:%=%.s)
