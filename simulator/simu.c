@@ -801,8 +801,9 @@ void floor2(int code,CPU *cpu,int *a){
   int code_11_15 = (code >> 16) & 0x1F;
   int f = (cpu->freg)[code_11_15];
   float ff = *(float *)&f;
-  int x = floorf(ff);
-  (cpu->freg)[code_6_10]=x;
+  float x = floorf(ff);
+  int x2 = *(int *)&x;
+  (cpu->freg)[code_6_10]=x2;
   *a+=4;
 }
 
