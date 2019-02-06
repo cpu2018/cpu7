@@ -42,8 +42,9 @@ void init_cpu(CPU *cpu){
   (cpu->reg)[3]=100000;
 }
 
-void read_memory(CPU *cpu,int *memory){
-  for(int i=0;i<M;i++){
+void read_memory(CPU *cpu,int *memory,int len){
+  for(int i=0;i<len;i++){
+    //printf("%d\n",i);
     int x = memory[i];
     int x1 = x & 0xff;
     int x2 = x & 0xff00;
@@ -56,6 +57,7 @@ void read_memory(CPU *cpu,int *memory){
     x = x1 + x2 + x3 + x4;
     (cpu->memory)[i]=x;
   }
+  printf("b\n");
 }
 
 void slw(int code,CPU *cpu,int *a){
@@ -779,7 +781,7 @@ void floor2(int code,CPU *cpu,int *a){
   int f = (cpu->freg)[code_11_15];
   float ff = *(float *)&f;
   int x = floorf(ff);
-  (cpu->reg)[code_6_10]=x;
+  (cpu->freg)[code_6_10]=x;
   *a+=4;
 }
 
@@ -1446,8 +1448,8 @@ int main(int argc,char **argv){
   fseek(file,0,SEEK_END);
   int size=ftell(file);
   rewind(file);
-  int *memory_sub = (int *) malloc(size);
-  fread(memory_sub,sizeof(int),size,file);
+  int *memory_sub = (int *) malloc(size/4);
+  fread(memory_sub,sizeof(int),size/4,file);
   fclose(file);
 
   CPU cpu;
@@ -1456,7 +1458,9 @@ int main(int argc,char **argv){
   char print_flag;
   printf(">>> 最後にメモリを表示するならy, しないならnを入力: ");
   scanf("%c", &print_flag);
-  read_memory(&cpu,memory_sub);
+  printf("%d\n",memory_sub[3]);
+  read_memory(&cpu,memory_sub,size/4);
+  printf("a\n");
   
   FILE *file2;
   FILE *file3;
