@@ -546,11 +546,11 @@ let rec read_light _ =
 
   (* 光線関係 *)
   let l1 = rad (read_float ()) in
-  print_int (int_of_float l1); print_char 32;
+  print_int (int_of_float (unrad l1)); print_char 32;
   let sl1 = sin l1 in
   light.(1) <- fneg sl1;
   let l2 = rad (read_float ()) in
-  print_int (int_of_float l2); print_char 10;
+  print_int (int_of_float (unrad l2)); print_char 10;
   let cl1 = cos l1 in
   let sl2 = sin l2 in
   light.(0) <- cl1 *. sl2;
