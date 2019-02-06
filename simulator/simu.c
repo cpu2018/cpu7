@@ -982,7 +982,7 @@ void fsqrt(int code,CPU *cpu,int *a){
   float ff = *(float *)&f;
   float fff = sqrtf(ff);
   int x = *(float *)&fff;
-  (cpu->reg)[code_6_10]=x;
+  (cpu->freg)[code_6_10]=x;
   *a+=4;
 }
 
@@ -1246,7 +1246,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       //scanf("%d",&stopaddr);
       flagj=0;
     }
-    if(addr==36952){
+    if(addr==36944){
       yy+=1;
       printf("%d\n",yy);
     }
