@@ -7,15 +7,16 @@
 #include <unistd.h>
 #include <signal.h>
 #define R 32
-#define M 1000000
+#define M 100000000
 
 union IntAndFloat {
   int ival;
   float fval;
 };
 
+static int cpu_memory[M];
+
 typedef struct cpu{
-  int  memory[M];
   int reg[32];
   int freg[32];
   int lr;
@@ -25,7 +26,7 @@ typedef struct cpu{
 
 void init_cpu(CPU *cpu){
   for(int i=0;i<M;i++){
-    (cpu->memory)[i]=0;
+    (cpu_memory)[i]=0;
   }
   for(int i=0;i<32;i++){
     (cpu->reg)[i]=0;
@@ -42,8 +43,8 @@ void init_cpu(CPU *cpu){
   (cpu->reg)[3]=100000;
 }
 
-void read_memory(CPU *cpu,int *memory){
-  for(int i=0;i<M;i++){
+void read_memory(CPU *cpu,int *memory,int len){
+  for(int i=0;i<len;i++){
     //printf("%d\n",i);
     int x = memory[i];
     int x1 = x & 0xff;
@@ -55,7 +56,7 @@ void read_memory(CPU *cpu,int *memory){
     x3 = (x3 >> 8) & 0xff00;
     x4 = (x4 >> 24) & 0xff;
     x = x1 + x2 + x3 + x4;
-    (cpu->memory)[i]=x;
+    (cpu_memory)[i]=x;
   }
   printf("b\n");
 }
@@ -353,7 +354,11 @@ void stfd(int code,CPU *cpu,int *a){
   }
   int x=(cpu->freg)[code_6_10];
   int ea = b + d;
-  (cpu->memory)[ea/4]=x;
+  if(ea/4>M){
+    printf("%dが変\n",*a);
+    exit(1);
+  }
+  (cpu_memory)[ea/4]=x;
   *a+=4;
 }/*ok*/
 
@@ -370,7 +375,11 @@ void stfdx(int code,CPU *cpu,int *a){
   }
   b += (cpu->reg)[code_16_20];
   int x = (cpu->freg)[code_6_10];
-  (cpu->memory)[b/4]=x;
+  if(b/4>M){
+    printf("%dが変\n",*a);
+    exit(1);
+  }
+  (cpu_memory)[b/4]=x;
   *a+=4;
 }/*ok*/
 
@@ -387,7 +396,11 @@ void stwx(int code,CPU *cpu,int *a){
   }
   b += (cpu->reg)[code_16_20];
   int x=(cpu->reg)[code_6_10];
-  (cpu->memory)[b/4]=x;
+  if(b/4>M){
+    printf("%dが変\n",*a);
+    exit(1);
+  }
+  (cpu_memory)[b/4]=x;
   *a+=4;
 }/*ok*/
 
@@ -407,7 +420,11 @@ void stw(int code,CPU *cpu,int *a){
   }
   int x=(cpu->reg)[code_6_10];
   int ea = b + d;
-  (cpu->memory)[ea/4]=x;
+  if(ea/4>M){
+    printf("%dが変\n",*a);
+    exit(1);
+  }
+  (cpu_memory)[ea/4]=x;
   *a+=4;
 }/*ok*/
 
@@ -509,7 +526,7 @@ void lfd(int code,CPU *cpu,int *a){
     b = (cpu->reg)[code_11_15];
   }
   int ea = b + d;
-  int x = (cpu->memory)[ea/4];
+  int x = (cpu_memory)[ea/4];
   (cpu->freg)[code_6_10]=x;
   *a+=4;
 }/*ok*/
@@ -526,7 +543,7 @@ void lfdx(int code,CPU *cpu,int *a){
     b = (cpu->reg)[code_11_15];
   }
   b += (cpu->reg)[code_16_20];
-  int x = (cpu->memory)[b/4];
+  int x = (cpu_memory)[b/4];
   (cpu->freg)[code_6_10]=x;
   *a+=4;
 }/*ok*/
@@ -543,7 +560,7 @@ void lwzx(int code,CPU *cpu,int *a){
     b = (cpu->reg)[code_11_15];
   }
   b += (cpu->reg)[code_16_20];
-  int x = (cpu->memory)[b/4];
+  int x = (cpu_memory)[b/4];
   (cpu->reg)[code_6_10]=x;
   *a+=4;
 }/*ok*/
@@ -563,7 +580,7 @@ void lwz(int code,CPU *cpu,int *a){
     b = (cpu->reg)[code_11_15];
   }
   int ea = b + d;
-  int x = (cpu->memory)[ea/4];
+  int x = (cpu_memory)[ea/4];
   (cpu->reg)[code_6_10] = x;
   *a+=4;
 }/*ok*/
@@ -598,7 +615,7 @@ void stmw(int code,CPU *cpu,int *a){
   int r = code_6_10;
   while(r <= 31){
     int x = (cpu->reg)[r];
-    (cpu->memory)[ea/4]=x;
+    (cpu_memory)[ea/4]=x;
     r+=1;
     ea+=4;
   }
@@ -667,7 +684,11 @@ void stwu(int code,CPU *cpu,int *a){
   }
   int ea = b + d;
   int x = (cpu->reg)[code_6_10];
-  (cpu->memory)[ea/4]=x;
+  if(ea/4>M){
+    printf("%dが変\n",*a);
+    exit(1);
+  }
+  (cpu_memory)[ea/4]=x;
   (cpu->reg)[code_11_15]=ea;
   *a+=4;
 }/*ok*/
@@ -689,7 +710,7 @@ void lmw(int code,CPU *cpu,int *a){
   int ea = b + d;
   int r = code_6_10;
   while(r <= 31){
-    int x = (cpu->memory)[ea/4];
+    int x = (cpu_memory)[ea/4];
     (cpu->reg)[r]=x;
     ea+=4;
     r+=1;
@@ -966,7 +987,7 @@ void fsqrt(int code,CPU *cpu,int *a){
 }
 
 void print_reg(CPU *cpu){
-  for(int i=0;i<9;i++){
+  for(int i=0;i<10;i++){
     int t = (cpu->reg)[i];
     int k = (cpu->freg)[i];
     float f = *(float *)&k;
@@ -997,8 +1018,8 @@ void print_reg(CPU *cpu){
 
 void print_memory(CPU *cpu){
   for(int i=0;i<M;i++){
-    if(cpu->memory[i]!=0 && i < 100000){
-      printf("%d		%d		%f \n",i*4,cpu->memory[i], *(float*)&(cpu->memory[i]));
+    if(cpu_memory[i]!=0 && i < 100000){
+      printf("%d		%d		%f \n",i*4,cpu_memory[i], *(float*)&(cpu_memory[i]));
     }
   }
   printf("reg3                %d\n",(cpu->reg)[3]);
@@ -1204,6 +1225,8 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int pflag =0;
   int mflag = 0;
   int fggg=0;
+  int yy=0;
+  int flagj=2;
   printf(">>> 停止させたいアドレスを入力(最後まで実行するなら負の値): ");
   scanf("%d",&stopaddr);
   printf(">>> 命令を表示するならば1 しないならば0 : ");
@@ -1213,21 +1236,33 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int uu=0;
   int insnum=0;
   while(1){
-   
+    if((cpu->reg)[3]>(cpu->reg)[4]){
+      printf("スタックがヒープに入る %d\n",addr);
+      exit(1);
+    }
     insnum+=1;
+    if(flagj==1){
+      //printf("入力 :");
+      //scanf("%d",&stopaddr);
+      flagj=0;
+    }
+    if(addr==36952){
+      yy+=1;
+      printf("%d\n",yy);
+    }
 
 
-    /*if((fggg==1)&&((cpu->memory)[8/4]==1065353216)){
+    /*if((fggg==1)&&((cpu_memory)[8/4]==1065353216)){
       printf("adddddr %d\n",addr);
       int hhh=0;
       scanf("%d",&hhh);
     }
-    printf("memory 8 %d\n",(cpu->memory)[8/4]);
-    if((cpu->memory)[8/4]==50004){
+    printf("memory 8 %d\n",(cpu_memory)[8/4]);
+    if((cpu_memory)[8/4]==50004){
       fggg=1;
     }*/
     if(addr==380){
-      printf("ADDR 53096 MEMORY %d\n",(cpu->memory)[53096/4]);
+      printf("ADDR 53096 MEMORY %d\n",(cpu_memory)[53096/4]);
     }
     if(addr == stopaddr){
       pflag=1;
@@ -1238,7 +1273,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     if(uu==1){
       //printf("freggggggggggggg1 %d\n",(cpu->freg)[1]);
     }
-    code=(cpu->memory)[addr/4];
+    code=(cpu_memory)[addr/4];
     code_0_5 = code & 0xFC000000;
     code_22_30 = code & 0x3FE;
     code_21_30 = code & 0x7FE;
@@ -1437,6 +1472,9 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       pflag=0;
       printf("次のストップアドレスを入力:");
       scanf("%d",&stopaddr);
+      if(stopaddr==1){
+        stopaddr=addr;
+      }
     }
   }
   printf("%d回命令を実行\n",insnum);
@@ -1447,9 +1485,10 @@ int main(int argc,char **argv){
   file=fopen(argv[1],"rb");
   fseek(file,0,SEEK_END);
   int size=ftell(file);
+  printf("%d\n",size);
   rewind(file);
   int *memory_sub = (int *) malloc(size);
-  fread(memory_sub,sizeof(int),size/4,file);
+  fread(memory_sub,sizeof(int),size,file);
   fclose(file);
 
   CPU cpu;
@@ -1458,8 +1497,7 @@ int main(int argc,char **argv){
   char print_flag;
   printf(">>> 最後にメモリを表示するならy, しないならnを入力: ");
   scanf("%c", &print_flag);
-  printf("%d\n",memory_sub[3]);
-  read_memory(&cpu,memory_sub);
+  read_memory(&cpu,memory_sub,size);
   printf("a\n");
   
   FILE *file2;
