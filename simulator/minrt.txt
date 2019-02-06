@@ -7542,3805 +7542,3799 @@ beq_else7650:
 	addi	r2, r2, lo16(min_caml_intersected_object_id) 28144 
 	lwz	r2, 0(r2) 28148 
 	lwz	r2, 0(r2) 28152 
-	li	r5, 4 28156 
-	slw	r2, r2, r5 28160 
-	lis	r5, lo16(min_caml_intsec_rectside) 28164 
-	srwi	r5, r5, 31 28168 
-	addi	r5, r5, ha16(min_caml_intsec_rectside) 28172 
-	slwi	r5, r5, 16 28176 
-	addi	r5, r5, lo16(min_caml_intsec_rectside) 28180 
+	slwi	r2, r2, 2 28156 
+	lis	r5, lo16(min_caml_intsec_rectside) 28160 
+	srwi	r5, r5, 31 28164 
+	addi	r5, r5, ha16(min_caml_intsec_rectside) 28168 
+	slwi	r5, r5, 16 28172 
+	addi	r5, r5, lo16(min_caml_intsec_rectside) 28176 
+	lwz	r5, 0(r5) 28180 
 	lwz	r5, 0(r5) 28184 
-	lwz	r5, 0(r5) 28188 
-	add	r2, r2, r5 28192 
-	lwz	r5, 32(r3) 28196 
-	stw	r2, 40(r3) 28200 
-	mflr	r31 28204 
-	mr	r2, r5 28208 
-	stw	r31, 44(r3) 28212 
-	addi	r3, r3, 48 28216 
-	bl	r_surface_id2765 28220 
-	subi	r3, r3, 48 28224 
-	lwz	r31, 44(r3) 28228 
-	mtlr	r31 28232 
-	lwz	r5, 40(r3) 28236 
-	cmpw	cr7, r5, r2 28240 
-	bne	cr7, beq_else7652 28244 
-	li	r2, 0 28248 
-	lis	r5, lo16(min_caml_or_net) 28252 
-	srwi	r5, r5, 31 28256 
-	addi	r5, r5, ha16(min_caml_or_net) 28260 
-	slwi	r5, r5, 16 28264 
-	addi	r5, r5, lo16(min_caml_or_net) 28268 
+	add	r2, r2, r5 28188 
+	lwz	r5, 32(r3) 28192 
+	stw	r2, 40(r3) 28196 
+	mflr	r31 28200 
+	mr	r2, r5 28204 
+	stw	r31, 44(r3) 28208 
+	addi	r3, r3, 48 28212 
+	bl	r_surface_id2765 28216 
+	subi	r3, r3, 48 28220 
+	lwz	r31, 44(r3) 28224 
+	mtlr	r31 28228 
+	lwz	r5, 40(r3) 28232 
+	cmpw	cr7, r5, r2 28236 
+	bne	cr7, beq_else7652 28240 
+	li	r2, 0 28244 
+	lis	r5, lo16(min_caml_or_net) 28248 
+	srwi	r5, r5, 31 28252 
+	addi	r5, r5, ha16(min_caml_or_net) 28256 
+	slwi	r5, r5, 16 28260 
+	addi	r5, r5, lo16(min_caml_or_net) 28264 
+	lwz	r5, 0(r5) 28268 
 	lwz	r5, 0(r5) 28272 
-	lwz	r5, 0(r5) 28276 
-	mflr	r31 28280 
-	stw	r31, 44(r3) 28284 
-	addi	r3, r3, 48 28288 
-	bl	shadow_check_one_or_matrix2929 28292 
-	subi	r3, r3, 48 28296 
-	lwz	r31, 44(r3) 28300 
-	mtlr	r31 28304 
-	cmpwi	cr7, r2, 0 28308 
-	bne	cr7, beq_else7654 28312 
-	lis	r2, lo16(min_caml_nvector) 28316 
-	srwi	r2, r2, 31 28320 
-	addi	r2, r2, ha16(min_caml_nvector) 28324 
-	slwi	r2, r2, 16 28328 
-	addi	r2, r2, lo16(min_caml_nvector) 28332 
-	lwz	r2, 0(r2) 28336 
-	lwz	r5, 36(r3) 28340 
-	stw	r2, 44(r3) 28344 
-	mflr	r31 28348 
-	mr	r2, r5 28352 
-	stw	r31, 52(r3) 28356 
-	addi	r3, r3, 56 28360 
-	bl	d_vec2761 28364 
-	subi	r3, r3, 56 28368 
-	lwz	r31, 52(r3) 28372 
-	mr	r5, r2 28376 
-	mtlr	r31 28380 
-	lwz	r2, 44(r3) 28384 
-	mflr	r31 28388 
-	stw	r31, 52(r3) 28392 
-	addi	r3, r3, 56 28396 
-	bl	veciprod2675 28400 
-	subi	r3, r3, 56 28404 
-	lwz	r31, 52(r3) 28408 
-	mtlr	r31 28412 
-	lwz	r2, 32(r3) 28416 
-	stfd	f0, 48(r3) 28420 
-	mflr	r31 28424 
-	stw	r31, 60(r3) 28428 
-	addi	r3, r3, 64 28432 
-	bl	r_bright2769 28436 
-	subi	r3, r3, 64 28440 
-	lwz	r31, 60(r3) 28444 
-	mtlr	r31 28448 
-	lfd	f1, 24(r3) 28452 
-	fmul	f2, f0, f1 28456 
-	lfd	f3, 48(r3) 28460 
-	fmul	f2, f2, f3 28464 
-	lwz	r2, 36(r3) 28468 
-	stfd	f2, 56(r3) 28472 
-	stfd	f0, 64(r3) 28476 
-	mflr	r31 28480 
-	stw	r31, 76(r3) 28484 
-	addi	r3, r3, 80 28488 
-	bl	d_vec2761 28492 
-	subi	r3, r3, 80 28496 
-	lwz	r31, 76(r3) 28500 
-	mr	r5, r2 28504 
-	mtlr	r31 28508 
-	lwz	r2, 16(r3) 28512 
-	mflr	r31 28516 
-	stw	r31, 76(r3) 28520 
-	addi	r3, r3, 80 28524 
-	bl	veciprod2675 28528 
-	subi	r3, r3, 80 28532 
-	lwz	r31, 76(r3) 28536 
-	mtlr	r31 28540 
-	lfd	f1, 64(r3) 28544 
-	fmul	f1, f1, f0 28548 
-	lfd	f0, 56(r3) 28552 
-	lfd	f2, 8(r3) 28556 
-	mflr	r31 28560 
-	stw	r31, 76(r3) 28564 
-	addi	r3, r3, 80 28568 
-	bl	add_light2972 28572 
-	subi	r3, r3, 80 28576 
-	lwz	r31, 76(r3) 28580 
-	mtlr	r31 28584 
-	b	beq_cont7655 28588 
+	mflr	r31 28276 
+	stw	r31, 44(r3) 28280 
+	addi	r3, r3, 48 28284 
+	bl	shadow_check_one_or_matrix2929 28288 
+	subi	r3, r3, 48 28292 
+	lwz	r31, 44(r3) 28296 
+	mtlr	r31 28300 
+	cmpwi	cr7, r2, 0 28304 
+	bne	cr7, beq_else7654 28308 
+	lis	r2, lo16(min_caml_nvector) 28312 
+	srwi	r2, r2, 31 28316 
+	addi	r2, r2, ha16(min_caml_nvector) 28320 
+	slwi	r2, r2, 16 28324 
+	addi	r2, r2, lo16(min_caml_nvector) 28328 
+	lwz	r2, 0(r2) 28332 
+	lwz	r5, 36(r3) 28336 
+	stw	r2, 44(r3) 28340 
+	mflr	r31 28344 
+	mr	r2, r5 28348 
+	stw	r31, 52(r3) 28352 
+	addi	r3, r3, 56 28356 
+	bl	d_vec2761 28360 
+	subi	r3, r3, 56 28364 
+	lwz	r31, 52(r3) 28368 
+	mr	r5, r2 28372 
+	mtlr	r31 28376 
+	lwz	r2, 44(r3) 28380 
+	mflr	r31 28384 
+	stw	r31, 52(r3) 28388 
+	addi	r3, r3, 56 28392 
+	bl	veciprod2675 28396 
+	subi	r3, r3, 56 28400 
+	lwz	r31, 52(r3) 28404 
+	mtlr	r31 28408 
+	lwz	r2, 32(r3) 28412 
+	stfd	f0, 48(r3) 28416 
+	mflr	r31 28420 
+	stw	r31, 60(r3) 28424 
+	addi	r3, r3, 64 28428 
+	bl	r_bright2769 28432 
+	subi	r3, r3, 64 28436 
+	lwz	r31, 60(r3) 28440 
+	mtlr	r31 28444 
+	lfd	f1, 24(r3) 28448 
+	fmul	f2, f0, f1 28452 
+	lfd	f3, 48(r3) 28456 
+	fmul	f2, f2, f3 28460 
+	lwz	r2, 36(r3) 28464 
+	stfd	f2, 56(r3) 28468 
+	stfd	f0, 64(r3) 28472 
+	mflr	r31 28476 
+	stw	r31, 76(r3) 28480 
+	addi	r3, r3, 80 28484 
+	bl	d_vec2761 28488 
+	subi	r3, r3, 80 28492 
+	lwz	r31, 76(r3) 28496 
+	mr	r5, r2 28500 
+	mtlr	r31 28504 
+	lwz	r2, 16(r3) 28508 
+	mflr	r31 28512 
+	stw	r31, 76(r3) 28516 
+	addi	r3, r3, 80 28520 
+	bl	veciprod2675 28524 
+	subi	r3, r3, 80 28528 
+	lwz	r31, 76(r3) 28532 
+	mtlr	r31 28536 
+	lfd	f1, 64(r3) 28540 
+	fmul	f1, f1, f0 28544 
+	lfd	f0, 56(r3) 28548 
+	lfd	f2, 8(r3) 28552 
+	mflr	r31 28556 
+	stw	r31, 76(r3) 28560 
+	addi	r3, r3, 80 28564 
+	bl	add_light2972 28568 
+	subi	r3, r3, 80 28572 
+	lwz	r31, 76(r3) 28576 
+	mtlr	r31 28580 
+	b	beq_cont7655 28584 
 beq_else7654:
 beq_cont7655:
-	b	beq_cont7653 28592 
+	b	beq_cont7653 28588 
 beq_else7652:
 beq_cont7653:
 beq_cont7651:
-	lwz	r2, 0(r3) 28596 
-	subi	r2, r2, 1 28600 
-	lfd	f0, 24(r3) 28604 
-	lfd	f1, 8(r3) 28608 
-	lwz	r5, 16(r3) 28612 
-	b	trace_reflections2976 28616 
+	lwz	r2, 0(r3) 28592 
+	subi	r2, r2, 1 28596 
+	lfd	f0, 24(r3) 28600 
+	lfd	f1, 8(r3) 28604 
+	lwz	r5, 16(r3) 28608 
+	b	trace_reflections2976 28612 
 bge_else7647:
-	blr 28620 
+	blr 28616 
 trace_ray2981:
-	cmpwi	cr7, r2, 4 28624 
-	bgt	cr7, ble_else7657 28628 
-	stfd	f1, 0(r3) 28632 
-	stw	r6, 8(r3) 28636 
-	stfd	f0, 16(r3) 28640 
-	stw	r2, 24(r3) 28644 
-	stw	r5, 28(r3) 28648 
-	mflr	r31 28652 
-	mr	r2, r6 28656 
-	stw	r31, 36(r3) 28660 
-	addi	r3, r3, 40 28664 
-	bl	p_surface_ids2746 28668 
-	subi	r3, r3, 40 28672 
-	lwz	r31, 36(r3) 28676 
-	mtlr	r31 28680 
-	lwz	r5, 28(r3) 28684 
-	stw	r2, 32(r3) 28688 
-	mflr	r31 28692 
-	mr	r2, r5 28696 
-	stw	r31, 36(r3) 28700 
-	addi	r3, r3, 40 28704 
-	bl	judge_intersection2944 28708 
-	subi	r3, r3, 40 28712 
-	lwz	r31, 36(r3) 28716 
-	mtlr	r31 28720 
-	cmpwi	cr7, r2, 0 28724 
-	bne	cr7, beq_else7659 28728 
-	li	r2, -1 28732 
-	lwz	r5, 24(r3) 28736 
-	slwi	r6, r5, 2 28740 
-	lwz	r7, 32(r3) 28744 
-	stwx	r2, r7, r6 28748 
-	cmpwi	cr7, r5, 0 28752 
-	bne	cr7, beq_else7660 28756 
-	blr 28760 
+	cmpwi	cr7, r2, 4 28620 
+	bgt	cr7, ble_else7657 28624 
+	stfd	f1, 0(r3) 28628 
+	stw	r6, 8(r3) 28632 
+	stfd	f0, 16(r3) 28636 
+	stw	r2, 24(r3) 28640 
+	stw	r5, 28(r3) 28644 
+	mflr	r31 28648 
+	mr	r2, r6 28652 
+	stw	r31, 36(r3) 28656 
+	addi	r3, r3, 40 28660 
+	bl	p_surface_ids2746 28664 
+	subi	r3, r3, 40 28668 
+	lwz	r31, 36(r3) 28672 
+	mtlr	r31 28676 
+	lwz	r5, 28(r3) 28680 
+	stw	r2, 32(r3) 28684 
+	mflr	r31 28688 
+	mr	r2, r5 28692 
+	stw	r31, 36(r3) 28696 
+	addi	r3, r3, 40 28700 
+	bl	judge_intersection2944 28704 
+	subi	r3, r3, 40 28708 
+	lwz	r31, 36(r3) 28712 
+	mtlr	r31 28716 
+	cmpwi	cr7, r2, 0 28720 
+	bne	cr7, beq_else7659 28724 
+	li	r2, -1 28728 
+	lwz	r5, 24(r3) 28732 
+	slwi	r6, r5, 2 28736 
+	lwz	r7, 32(r3) 28740 
+	stwx	r2, r7, r6 28744 
+	cmpwi	cr7, r5, 0 28748 
+	bne	cr7, beq_else7660 28752 
+	blr 28756 
 beq_else7660:
-	lis	r5, lo16(min_caml_light) 28764 
-	srwi	r5, r5, 31 28768 
-	addi	r5, r5, ha16(min_caml_light) 28772 
-	slwi	r5, r5, 16 28776 
-	addi	r5, r5, lo16(min_caml_light) 28780 
-	lwz	r5, 0(r5) 28784 
-	lwz	r2, 28(r3) 28788 
-	mflr	r31 28792 
-	stw	r31, 36(r3) 28796 
-	addi	r3, r3, 40 28800 
-	bl	veciprod2675 28804 
-	subi	r3, r3, 40 28808 
-	lwz	r31, 36(r3) 28812 
-	mtlr	r31 28816 
-	fneg	f0, f0 28820 
-	lis	r31, lo16(l5590) 28824 
-	srwi	r31, r31, 31 28828 
-	addi	r31, r31, ha16(l5590) 28832 
-	slwi	r31, r31, 16 28836 
-	addi	r31, r31, lo16(l5590) 28840 
-	lfd	f1, 0(r31) 28844 
-	fcmpu	cr7, f0, f1 28848 
-	bgt	cr7, ble_else7662 28852 
-	blr 28856 
+	lis	r5, lo16(min_caml_light) 28760 
+	srwi	r5, r5, 31 28764 
+	addi	r5, r5, ha16(min_caml_light) 28768 
+	slwi	r5, r5, 16 28772 
+	addi	r5, r5, lo16(min_caml_light) 28776 
+	lwz	r5, 0(r5) 28780 
+	lwz	r2, 28(r3) 28784 
+	mflr	r31 28788 
+	stw	r31, 36(r3) 28792 
+	addi	r3, r3, 40 28796 
+	bl	veciprod2675 28800 
+	subi	r3, r3, 40 28804 
+	lwz	r31, 36(r3) 28808 
+	mtlr	r31 28812 
+	fneg	f0, f0 28816 
+	lis	r31, lo16(l5590) 28820 
+	srwi	r31, r31, 31 28824 
+	addi	r31, r31, ha16(l5590) 28828 
+	slwi	r31, r31, 16 28832 
+	addi	r31, r31, lo16(l5590) 28836 
+	lfd	f1, 0(r31) 28840 
+	fcmpu	cr7, f0, f1 28844 
+	bgt	cr7, ble_else7662 28848 
+	blr 28852 
 ble_else7662:
-	fmul	f1, f0, f0 28860 
-	fmul	f0, f1, f0 28864 
-	lfd	f1, 16(r3) 28868 
-	fmul	f0, f0, f1 28872 
-	lis	r2, lo16(min_caml_beam) 28876 
-	srwi	r2, r2, 31 28880 
-	addi	r2, r2, ha16(min_caml_beam) 28884 
-	slwi	r2, r2, 16 28888 
-	addi	r2, r2, lo16(min_caml_beam) 28892 
-	lwz	r2, 0(r2) 28896 
-	lfd	f1, 0(r2) 28900 
-	fmul	f0, f0, f1 28904 
-	lis	r2, lo16(min_caml_rgb) 28908 
-	srwi	r2, r2, 31 28912 
-	addi	r2, r2, ha16(min_caml_rgb) 28916 
-	slwi	r2, r2, 16 28920 
-	addi	r2, r2, lo16(min_caml_rgb) 28924 
-	lwz	r2, 0(r2) 28928 
-	lis	r5, lo16(min_caml_rgb) 28932 
-	srwi	r5, r5, 31 28936 
-	addi	r5, r5, ha16(min_caml_rgb) 28940 
-	slwi	r5, r5, 16 28944 
-	addi	r5, r5, lo16(min_caml_rgb) 28948 
-	lwz	r5, 0(r5) 28952 
-	lfd	f1, 0(r5) 28956 
-	fadd	f1, f1, f0 28960 
-	stfd	f1, 0(r2) 28964 
-	lis	r2, lo16(min_caml_rgb) 28968 
-	srwi	r2, r2, 31 28972 
-	addi	r2, r2, ha16(min_caml_rgb) 28976 
-	slwi	r2, r2, 16 28980 
-	addi	r2, r2, lo16(min_caml_rgb) 28984 
-	lwz	r2, 0(r2) 28988 
-	lis	r5, lo16(min_caml_rgb) 28992 
-	srwi	r5, r5, 31 28996 
-	addi	r5, r5, ha16(min_caml_rgb) 29000 
-	slwi	r5, r5, 16 29004 
-	addi	r5, r5, lo16(min_caml_rgb) 29008 
-	lwz	r5, 0(r5) 29012 
-	lfd	f1, 4(r5) 29016 
-	fadd	f1, f1, f0 29020 
-	stfd	f1, 4(r2) 29024 
-	lis	r2, lo16(min_caml_rgb) 29028 
-	srwi	r2, r2, 31 29032 
-	addi	r2, r2, ha16(min_caml_rgb) 29036 
-	slwi	r2, r2, 16 29040 
-	addi	r2, r2, lo16(min_caml_rgb) 29044 
-	lwz	r2, 0(r2) 29048 
-	lis	r5, lo16(min_caml_rgb) 29052 
-	srwi	r5, r5, 31 29056 
-	addi	r5, r5, ha16(min_caml_rgb) 29060 
-	slwi	r5, r5, 16 29064 
-	addi	r5, r5, lo16(min_caml_rgb) 29068 
-	lwz	r5, 0(r5) 29072 
-	lfd	f1, 8(r5) 29076 
-	fadd	f0, f1, f0 29080 
-	stfd	f0, 8(r2) 29084 
-	blr 29088 
+	fmul	f1, f0, f0 28856 
+	fmul	f0, f1, f0 28860 
+	lfd	f1, 16(r3) 28864 
+	fmul	f0, f0, f1 28868 
+	lis	r2, lo16(min_caml_beam) 28872 
+	srwi	r2, r2, 31 28876 
+	addi	r2, r2, ha16(min_caml_beam) 28880 
+	slwi	r2, r2, 16 28884 
+	addi	r2, r2, lo16(min_caml_beam) 28888 
+	lwz	r2, 0(r2) 28892 
+	lfd	f1, 0(r2) 28896 
+	fmul	f0, f0, f1 28900 
+	lis	r2, lo16(min_caml_rgb) 28904 
+	srwi	r2, r2, 31 28908 
+	addi	r2, r2, ha16(min_caml_rgb) 28912 
+	slwi	r2, r2, 16 28916 
+	addi	r2, r2, lo16(min_caml_rgb) 28920 
+	lwz	r2, 0(r2) 28924 
+	lis	r5, lo16(min_caml_rgb) 28928 
+	srwi	r5, r5, 31 28932 
+	addi	r5, r5, ha16(min_caml_rgb) 28936 
+	slwi	r5, r5, 16 28940 
+	addi	r5, r5, lo16(min_caml_rgb) 28944 
+	lwz	r5, 0(r5) 28948 
+	lfd	f1, 0(r5) 28952 
+	fadd	f1, f1, f0 28956 
+	stfd	f1, 0(r2) 28960 
+	lis	r2, lo16(min_caml_rgb) 28964 
+	srwi	r2, r2, 31 28968 
+	addi	r2, r2, ha16(min_caml_rgb) 28972 
+	slwi	r2, r2, 16 28976 
+	addi	r2, r2, lo16(min_caml_rgb) 28980 
+	lwz	r2, 0(r2) 28984 
+	lis	r5, lo16(min_caml_rgb) 28988 
+	srwi	r5, r5, 31 28992 
+	addi	r5, r5, ha16(min_caml_rgb) 28996 
+	slwi	r5, r5, 16 29000 
+	addi	r5, r5, lo16(min_caml_rgb) 29004 
+	lwz	r5, 0(r5) 29008 
+	lfd	f1, 4(r5) 29012 
+	fadd	f1, f1, f0 29016 
+	stfd	f1, 4(r2) 29020 
+	lis	r2, lo16(min_caml_rgb) 29024 
+	srwi	r2, r2, 31 29028 
+	addi	r2, r2, ha16(min_caml_rgb) 29032 
+	slwi	r2, r2, 16 29036 
+	addi	r2, r2, lo16(min_caml_rgb) 29040 
+	lwz	r2, 0(r2) 29044 
+	lis	r5, lo16(min_caml_rgb) 29048 
+	srwi	r5, r5, 31 29052 
+	addi	r5, r5, ha16(min_caml_rgb) 29056 
+	slwi	r5, r5, 16 29060 
+	addi	r5, r5, lo16(min_caml_rgb) 29064 
+	lwz	r5, 0(r5) 29068 
+	lfd	f1, 8(r5) 29072 
+	fadd	f0, f1, f0 29076 
+	stfd	f0, 8(r2) 29080 
+	blr 29084 
 beq_else7659:
-	lis	r2, lo16(min_caml_intersected_object_id) 29092 
-	srwi	r2, r2, 31 29096 
-	addi	r2, r2, ha16(min_caml_intersected_object_id) 29100 
-	slwi	r2, r2, 16 29104 
-	addi	r2, r2, lo16(min_caml_intersected_object_id) 29108 
+	lis	r2, lo16(min_caml_intersected_object_id) 29088 
+	srwi	r2, r2, 31 29092 
+	addi	r2, r2, ha16(min_caml_intersected_object_id) 29096 
+	slwi	r2, r2, 16 29100 
+	addi	r2, r2, lo16(min_caml_intersected_object_id) 29104 
+	lwz	r2, 0(r2) 29108 
 	lwz	r2, 0(r2) 29112 
-	lwz	r2, 0(r2) 29116 
-	lis	r5, lo16(min_caml_objects) 29120 
-	srwi	r5, r5, 31 29124 
-	addi	r5, r5, ha16(min_caml_objects) 29128 
-	slwi	r5, r5, 16 29132 
-	addi	r5, r5, lo16(min_caml_objects) 29136 
-	lwz	r5, 0(r5) 29140 
-	slwi	r6, r2, 2 29144 
-	lwzx	r5, r5, r6 29148 
-	stw	r2, 36(r3) 29152 
-	stw	r5, 40(r3) 29156 
-	mflr	r31 29160 
-	mr	r2, r5 29164 
-	stw	r31, 44(r3) 29168 
-	addi	r3, r3, 48 29172 
-	bl	o_reflectiontype2704 29176 
-	subi	r3, r3, 48 29180 
-	lwz	r31, 44(r3) 29184 
-	mtlr	r31 29188 
-	lwz	r5, 40(r3) 29192 
-	stw	r2, 44(r3) 29196 
-	mflr	r31 29200 
-	mr	r2, r5 29204 
-	stw	r31, 52(r3) 29208 
-	addi	r3, r3, 56 29212 
-	bl	o_diffuse2724 29216 
-	subi	r3, r3, 56 29220 
-	lwz	r31, 52(r3) 29224 
-	mtlr	r31 29228 
-	lfd	f1, 16(r3) 29232 
-	fmul	f0, f0, f1 29236 
-	lwz	r2, 40(r3) 29240 
-	lwz	r5, 28(r3) 29244 
-	stfd	f0, 48(r3) 29248 
-	mflr	r31 29252 
-	stw	r31, 60(r3) 29256 
-	addi	r3, r3, 64 29260 
-	bl	get_nvector2966 29264 
-	subi	r3, r3, 64 29268 
-	lwz	r31, 60(r3) 29272 
-	mtlr	r31 29276 
-	lis	r2, lo16(min_caml_startp) 29280 
-	srwi	r2, r2, 31 29284 
-	addi	r2, r2, ha16(min_caml_startp) 29288 
-	slwi	r2, r2, 16 29292 
-	addi	r2, r2, lo16(min_caml_startp) 29296 
-	lwz	r2, 0(r2) 29300 
-	lis	r5, lo16(min_caml_intersection_point) 29304 
-	srwi	r5, r5, 31 29308 
-	addi	r5, r5, ha16(min_caml_intersection_point) 29312 
-	slwi	r5, r5, 16 29316 
-	addi	r5, r5, lo16(min_caml_intersection_point) 29320 
-	lwz	r5, 0(r5) 29324 
-	mflr	r31 29328 
-	stw	r31, 60(r3) 29332 
-	addi	r3, r3, 64 29336 
-	bl	veccpy2664 29340 
-	subi	r3, r3, 64 29344 
-	lwz	r31, 60(r3) 29348 
-	mtlr	r31 29352 
-	lis	r5, lo16(min_caml_intersection_point) 29356 
-	srwi	r5, r5, 31 29360 
-	addi	r5, r5, ha16(min_caml_intersection_point) 29364 
-	slwi	r5, r5, 16 29368 
-	addi	r5, r5, lo16(min_caml_intersection_point) 29372 
-	lwz	r5, 0(r5) 29376 
-	lwz	r2, 40(r3) 29380 
-	mflr	r31 29384 
-	stw	r31, 60(r3) 29388 
-	addi	r3, r3, 64 29392 
-	bl	utexture2969 29396 
-	subi	r3, r3, 64 29400 
-	lwz	r31, 60(r3) 29404 
-	mtlr	r31 29408 
-	li	r2, 4 29412 
-	lwz	r5, 36(r3) 29416 
-	slw	r2, r5, r2 29420 
-	lis	r5, lo16(min_caml_intsec_rectside) 29424 
-	srwi	r5, r5, 31 29428 
-	addi	r5, r5, ha16(min_caml_intsec_rectside) 29432 
-	slwi	r5, r5, 16 29436 
-	addi	r5, r5, lo16(min_caml_intsec_rectside) 29440 
-	lwz	r5, 0(r5) 29444 
-	lwz	r5, 0(r5) 29448 
-	add	r2, r2, r5 29452 
-	lwz	r5, 24(r3) 29456 
-	slwi	r6, r5, 2 29460 
-	lwz	r7, 32(r3) 29464 
-	stwx	r2, r7, r6 29468 
-	lwz	r2, 8(r3) 29472 
-	mflr	r31 29476 
-	stw	r31, 60(r3) 29480 
-	addi	r3, r3, 64 29484 
-	bl	p_intersection_points2744 29488 
-	subi	r3, r3, 64 29492 
-	lwz	r31, 60(r3) 29496 
-	mtlr	r31 29500 
-	lwz	r5, 24(r3) 29504 
-	slwi	r6, r5, 2 29508 
-	lwzx	r2, r2, r6 29512 
-	lis	r6, lo16(min_caml_intersection_point) 29516 
-	srwi	r6, r6, 31 29520 
-	addi	r6, r6, ha16(min_caml_intersection_point) 29524 
-	slwi	r6, r6, 16 29528 
-	addi	r6, r6, lo16(min_caml_intersection_point) 29532 
-	lwz	r6, 0(r6) 29536 
-	mflr	r31 29540 
-	mr	r5, r6 29544 
-	stw	r31, 60(r3) 29548 
-	addi	r3, r3, 64 29552 
-	bl	veccpy2664 29556 
-	subi	r3, r3, 64 29560 
-	lwz	r31, 60(r3) 29564 
-	mtlr	r31 29568 
-	lwz	r2, 8(r3) 29572 
-	mflr	r31 29576 
-	stw	r31, 60(r3) 29580 
-	addi	r3, r3, 64 29584 
-	bl	p_calc_diffuse2748 29588 
-	subi	r3, r3, 64 29592 
-	lwz	r31, 60(r3) 29596 
-	mtlr	r31 29600 
-	lis	r31, lo16(l5776) 29604 
-	srwi	r31, r31, 31 29608 
-	addi	r31, r31, ha16(l5776) 29612 
-	slwi	r31, r31, 16 29616 
-	addi	r31, r31, lo16(l5776) 29620 
-	lfd	f0, 0(r31) 29624 
-	lwz	r5, 40(r3) 29628 
-	stw	r2, 56(r3) 29632 
-	stfd	f0, 64(r3) 29636 
-	mflr	r31 29640 
-	mr	r2, r5 29644 
-	stw	r31, 76(r3) 29648 
-	addi	r3, r3, 80 29652 
-	bl	o_diffuse2724 29656 
-	subi	r3, r3, 80 29660 
-	lwz	r31, 76(r3) 29664 
-	mtlr	r31 29668 
-	lfd	f1, 64(r3) 29672 
-	fcmpu	cr7, f1, f0 29676 
-	bgt	cr7, ble_else7666 29680 
-	li	r2, 1 29684 
-	lwz	r5, 24(r3) 29688 
-	slwi	r6, r5, 2 29692 
-	lwz	r7, 56(r3) 29696 
-	stwx	r2, r7, r6 29700 
-	lwz	r2, 8(r3) 29704 
-	mflr	r31 29708 
-	stw	r31, 76(r3) 29712 
-	addi	r3, r3, 80 29716 
-	bl	p_energy2750 29720 
-	subi	r3, r3, 80 29724 
-	lwz	r31, 76(r3) 29728 
-	mtlr	r31 29732 
-	lwz	r5, 24(r3) 29736 
-	slwi	r6, r5, 2 29740 
-	lwzx	r6, r2, r6 29744 
-	lis	r7, lo16(min_caml_texture_color) 29748 
-	srwi	r7, r7, 31 29752 
-	addi	r7, r7, ha16(min_caml_texture_color) 29756 
-	slwi	r7, r7, 16 29760 
-	addi	r7, r7, lo16(min_caml_texture_color) 29764 
-	lwz	r7, 0(r7) 29768 
-	stw	r2, 72(r3) 29772 
-	mflr	r31 29776 
-	mr	r5, r7 29780 
-	mr	r2, r6 29784 
-	stw	r31, 76(r3) 29788 
-	addi	r3, r3, 80 29792 
-	bl	veccpy2664 29796 
-	subi	r3, r3, 80 29800 
-	lwz	r31, 76(r3) 29804 
-	mtlr	r31 29808 
-	lwz	r2, 24(r3) 29812 
-	slwi	r5, r2, 2 29816 
-	lwz	r6, 72(r3) 29820 
-	lwzx	r5, r6, r5 29824 
-	lis	r31, lo16(l6050) 29828 
-	srwi	r31, r31, 31 29832 
-	addi	r31, r31, ha16(l6050) 29836 
-	slwi	r31, r31, 16 29840 
-	addi	r31, r31, lo16(l6050) 29844 
-	lfd	f0, 0(r31) 29848 
-	lfd	f1, 48(r3) 29852 
-	fmul	f0, f0, f1 29856 
-	mflr	r31 29860 
-	mr	r2, r5 29864 
-	stw	r31, 76(r3) 29868 
-	addi	r3, r3, 80 29872 
-	bl	vecscale2693 29876 
-	subi	r3, r3, 80 29880 
-	lwz	r31, 76(r3) 29884 
-	mtlr	r31 29888 
-	lwz	r2, 8(r3) 29892 
-	mflr	r31 29896 
-	stw	r31, 76(r3) 29900 
-	addi	r3, r3, 80 29904 
-	bl	p_nvectors2759 29908 
-	subi	r3, r3, 80 29912 
-	lwz	r31, 76(r3) 29916 
-	mtlr	r31 29920 
-	lwz	r5, 24(r3) 29924 
-	slwi	r6, r5, 2 29928 
-	lwzx	r2, r2, r6 29932 
-	lis	r6, lo16(min_caml_nvector) 29936 
-	srwi	r6, r6, 31 29940 
-	addi	r6, r6, ha16(min_caml_nvector) 29944 
-	slwi	r6, r6, 16 29948 
-	addi	r6, r6, lo16(min_caml_nvector) 29952 
-	lwz	r6, 0(r6) 29956 
-	mflr	r31 29960 
-	mr	r5, r6 29964 
-	stw	r31, 76(r3) 29968 
-	addi	r3, r3, 80 29972 
-	bl	veccpy2664 29976 
-	subi	r3, r3, 80 29980 
-	lwz	r31, 76(r3) 29984 
-	mtlr	r31 29988 
-	b	ble_cont7667 29992 
+	lis	r5, lo16(min_caml_objects) 29116 
+	srwi	r5, r5, 31 29120 
+	addi	r5, r5, ha16(min_caml_objects) 29124 
+	slwi	r5, r5, 16 29128 
+	addi	r5, r5, lo16(min_caml_objects) 29132 
+	lwz	r5, 0(r5) 29136 
+	slwi	r6, r2, 2 29140 
+	lwzx	r5, r5, r6 29144 
+	stw	r2, 36(r3) 29148 
+	stw	r5, 40(r3) 29152 
+	mflr	r31 29156 
+	mr	r2, r5 29160 
+	stw	r31, 44(r3) 29164 
+	addi	r3, r3, 48 29168 
+	bl	o_reflectiontype2704 29172 
+	subi	r3, r3, 48 29176 
+	lwz	r31, 44(r3) 29180 
+	mtlr	r31 29184 
+	lwz	r5, 40(r3) 29188 
+	stw	r2, 44(r3) 29192 
+	mflr	r31 29196 
+	mr	r2, r5 29200 
+	stw	r31, 52(r3) 29204 
+	addi	r3, r3, 56 29208 
+	bl	o_diffuse2724 29212 
+	subi	r3, r3, 56 29216 
+	lwz	r31, 52(r3) 29220 
+	mtlr	r31 29224 
+	lfd	f1, 16(r3) 29228 
+	fmul	f0, f0, f1 29232 
+	lwz	r2, 40(r3) 29236 
+	lwz	r5, 28(r3) 29240 
+	stfd	f0, 48(r3) 29244 
+	mflr	r31 29248 
+	stw	r31, 60(r3) 29252 
+	addi	r3, r3, 64 29256 
+	bl	get_nvector2966 29260 
+	subi	r3, r3, 64 29264 
+	lwz	r31, 60(r3) 29268 
+	mtlr	r31 29272 
+	lis	r2, lo16(min_caml_startp) 29276 
+	srwi	r2, r2, 31 29280 
+	addi	r2, r2, ha16(min_caml_startp) 29284 
+	slwi	r2, r2, 16 29288 
+	addi	r2, r2, lo16(min_caml_startp) 29292 
+	lwz	r2, 0(r2) 29296 
+	lis	r5, lo16(min_caml_intersection_point) 29300 
+	srwi	r5, r5, 31 29304 
+	addi	r5, r5, ha16(min_caml_intersection_point) 29308 
+	slwi	r5, r5, 16 29312 
+	addi	r5, r5, lo16(min_caml_intersection_point) 29316 
+	lwz	r5, 0(r5) 29320 
+	mflr	r31 29324 
+	stw	r31, 60(r3) 29328 
+	addi	r3, r3, 64 29332 
+	bl	veccpy2664 29336 
+	subi	r3, r3, 64 29340 
+	lwz	r31, 60(r3) 29344 
+	mtlr	r31 29348 
+	lis	r5, lo16(min_caml_intersection_point) 29352 
+	srwi	r5, r5, 31 29356 
+	addi	r5, r5, ha16(min_caml_intersection_point) 29360 
+	slwi	r5, r5, 16 29364 
+	addi	r5, r5, lo16(min_caml_intersection_point) 29368 
+	lwz	r5, 0(r5) 29372 
+	lwz	r2, 40(r3) 29376 
+	mflr	r31 29380 
+	stw	r31, 60(r3) 29384 
+	addi	r3, r3, 64 29388 
+	bl	utexture2969 29392 
+	subi	r3, r3, 64 29396 
+	lwz	r31, 60(r3) 29400 
+	mtlr	r31 29404 
+	lwz	r2, 36(r3) 29408 
+	slwi	r2, r2, 2 29412 
+	lis	r5, lo16(min_caml_intsec_rectside) 29416 
+	srwi	r5, r5, 31 29420 
+	addi	r5, r5, ha16(min_caml_intsec_rectside) 29424 
+	slwi	r5, r5, 16 29428 
+	addi	r5, r5, lo16(min_caml_intsec_rectside) 29432 
+	lwz	r5, 0(r5) 29436 
+	lwz	r5, 0(r5) 29440 
+	add	r2, r2, r5 29444 
+	lwz	r5, 24(r3) 29448 
+	slwi	r6, r5, 2 29452 
+	lwz	r7, 32(r3) 29456 
+	stwx	r2, r7, r6 29460 
+	lwz	r2, 8(r3) 29464 
+	mflr	r31 29468 
+	stw	r31, 60(r3) 29472 
+	addi	r3, r3, 64 29476 
+	bl	p_intersection_points2744 29480 
+	subi	r3, r3, 64 29484 
+	lwz	r31, 60(r3) 29488 
+	mtlr	r31 29492 
+	lwz	r5, 24(r3) 29496 
+	slwi	r6, r5, 2 29500 
+	lwzx	r2, r2, r6 29504 
+	lis	r6, lo16(min_caml_intersection_point) 29508 
+	srwi	r6, r6, 31 29512 
+	addi	r6, r6, ha16(min_caml_intersection_point) 29516 
+	slwi	r6, r6, 16 29520 
+	addi	r6, r6, lo16(min_caml_intersection_point) 29524 
+	lwz	r6, 0(r6) 29528 
+	mflr	r31 29532 
+	mr	r5, r6 29536 
+	stw	r31, 60(r3) 29540 
+	addi	r3, r3, 64 29544 
+	bl	veccpy2664 29548 
+	subi	r3, r3, 64 29552 
+	lwz	r31, 60(r3) 29556 
+	mtlr	r31 29560 
+	lwz	r2, 8(r3) 29564 
+	mflr	r31 29568 
+	stw	r31, 60(r3) 29572 
+	addi	r3, r3, 64 29576 
+	bl	p_calc_diffuse2748 29580 
+	subi	r3, r3, 64 29584 
+	lwz	r31, 60(r3) 29588 
+	mtlr	r31 29592 
+	lis	r31, lo16(l5776) 29596 
+	srwi	r31, r31, 31 29600 
+	addi	r31, r31, ha16(l5776) 29604 
+	slwi	r31, r31, 16 29608 
+	addi	r31, r31, lo16(l5776) 29612 
+	lfd	f0, 0(r31) 29616 
+	lwz	r5, 40(r3) 29620 
+	stw	r2, 56(r3) 29624 
+	stfd	f0, 64(r3) 29628 
+	mflr	r31 29632 
+	mr	r2, r5 29636 
+	stw	r31, 76(r3) 29640 
+	addi	r3, r3, 80 29644 
+	bl	o_diffuse2724 29648 
+	subi	r3, r3, 80 29652 
+	lwz	r31, 76(r3) 29656 
+	mtlr	r31 29660 
+	lfd	f1, 64(r3) 29664 
+	fcmpu	cr7, f1, f0 29668 
+	bgt	cr7, ble_else7666 29672 
+	li	r2, 1 29676 
+	lwz	r5, 24(r3) 29680 
+	slwi	r6, r5, 2 29684 
+	lwz	r7, 56(r3) 29688 
+	stwx	r2, r7, r6 29692 
+	lwz	r2, 8(r3) 29696 
+	mflr	r31 29700 
+	stw	r31, 76(r3) 29704 
+	addi	r3, r3, 80 29708 
+	bl	p_energy2750 29712 
+	subi	r3, r3, 80 29716 
+	lwz	r31, 76(r3) 29720 
+	mtlr	r31 29724 
+	lwz	r5, 24(r3) 29728 
+	slwi	r6, r5, 2 29732 
+	lwzx	r6, r2, r6 29736 
+	lis	r7, lo16(min_caml_texture_color) 29740 
+	srwi	r7, r7, 31 29744 
+	addi	r7, r7, ha16(min_caml_texture_color) 29748 
+	slwi	r7, r7, 16 29752 
+	addi	r7, r7, lo16(min_caml_texture_color) 29756 
+	lwz	r7, 0(r7) 29760 
+	stw	r2, 72(r3) 29764 
+	mflr	r31 29768 
+	mr	r5, r7 29772 
+	mr	r2, r6 29776 
+	stw	r31, 76(r3) 29780 
+	addi	r3, r3, 80 29784 
+	bl	veccpy2664 29788 
+	subi	r3, r3, 80 29792 
+	lwz	r31, 76(r3) 29796 
+	mtlr	r31 29800 
+	lwz	r2, 24(r3) 29804 
+	slwi	r5, r2, 2 29808 
+	lwz	r6, 72(r3) 29812 
+	lwzx	r5, r6, r5 29816 
+	lis	r31, lo16(l6050) 29820 
+	srwi	r31, r31, 31 29824 
+	addi	r31, r31, ha16(l6050) 29828 
+	slwi	r31, r31, 16 29832 
+	addi	r31, r31, lo16(l6050) 29836 
+	lfd	f0, 0(r31) 29840 
+	lfd	f1, 48(r3) 29844 
+	fmul	f0, f0, f1 29848 
+	mflr	r31 29852 
+	mr	r2, r5 29856 
+	stw	r31, 76(r3) 29860 
+	addi	r3, r3, 80 29864 
+	bl	vecscale2693 29868 
+	subi	r3, r3, 80 29872 
+	lwz	r31, 76(r3) 29876 
+	mtlr	r31 29880 
+	lwz	r2, 8(r3) 29884 
+	mflr	r31 29888 
+	stw	r31, 76(r3) 29892 
+	addi	r3, r3, 80 29896 
+	bl	p_nvectors2759 29900 
+	subi	r3, r3, 80 29904 
+	lwz	r31, 76(r3) 29908 
+	mtlr	r31 29912 
+	lwz	r5, 24(r3) 29916 
+	slwi	r6, r5, 2 29920 
+	lwzx	r2, r2, r6 29924 
+	lis	r6, lo16(min_caml_nvector) 29928 
+	srwi	r6, r6, 31 29932 
+	addi	r6, r6, ha16(min_caml_nvector) 29936 
+	slwi	r6, r6, 16 29940 
+	addi	r6, r6, lo16(min_caml_nvector) 29944 
+	lwz	r6, 0(r6) 29948 
+	mflr	r31 29952 
+	mr	r5, r6 29956 
+	stw	r31, 76(r3) 29960 
+	addi	r3, r3, 80 29964 
+	bl	veccpy2664 29968 
+	subi	r3, r3, 80 29972 
+	lwz	r31, 76(r3) 29976 
+	mtlr	r31 29980 
+	b	ble_cont7667 29984 
 ble_else7666:
-	li	r2, 0 29996 
-	lwz	r5, 24(r3) 30000 
-	slwi	r6, r5, 2 30004 
-	lwz	r7, 56(r3) 30008 
-	stwx	r2, r7, r6 30012 
+	li	r2, 0 29988 
+	lwz	r5, 24(r3) 29992 
+	slwi	r6, r5, 2 29996 
+	lwz	r7, 56(r3) 30000 
+	stwx	r2, r7, r6 30004 
 ble_cont7667:
-	lis	r31, lo16(l6052) 30016 
-	srwi	r31, r31, 31 30020 
-	addi	r31, r31, ha16(l6052) 30024 
-	slwi	r31, r31, 16 30028 
-	addi	r31, r31, lo16(l6052) 30032 
-	lfd	f0, 0(r31) 30036 
-	lis	r5, lo16(min_caml_nvector) 30040 
-	srwi	r5, r5, 31 30044 
-	addi	r5, r5, ha16(min_caml_nvector) 30048 
-	slwi	r5, r5, 16 30052 
-	addi	r5, r5, lo16(min_caml_nvector) 30056 
-	lwz	r5, 0(r5) 30060 
-	lwz	r2, 28(r3) 30064 
-	stfd	f0, 80(r3) 30068 
-	mflr	r31 30072 
-	stw	r31, 92(r3) 30076 
-	addi	r3, r3, 96 30080 
-	bl	veciprod2675 30084 
-	subi	r3, r3, 96 30088 
-	lwz	r31, 92(r3) 30092 
-	mtlr	r31 30096 
-	lfd	f1, 80(r3) 30100 
-	fmul	f0, f1, f0 30104 
-	lis	r5, lo16(min_caml_nvector) 30108 
-	srwi	r5, r5, 31 30112 
-	addi	r5, r5, ha16(min_caml_nvector) 30116 
-	slwi	r5, r5, 16 30120 
-	addi	r5, r5, lo16(min_caml_nvector) 30124 
-	lwz	r5, 0(r5) 30128 
-	lwz	r2, 28(r3) 30132 
-	mflr	r31 30136 
-	stw	r31, 92(r3) 30140 
-	addi	r3, r3, 96 30144 
-	bl	vecaccum2683 30148 
-	subi	r3, r3, 96 30152 
-	lwz	r31, 92(r3) 30156 
-	mtlr	r31 30160 
-	lwz	r2, 40(r3) 30164 
-	mflr	r31 30168 
-	stw	r31, 92(r3) 30172 
-	addi	r3, r3, 96 30176 
-	bl	o_hilight2726 30180 
-	subi	r3, r3, 96 30184 
-	lwz	r31, 92(r3) 30188 
-	mtlr	r31 30192 
-	lfd	f1, 16(r3) 30196 
-	fmul	f0, f1, f0 30200 
-	li	r2, 0 30204 
-	lis	r5, lo16(min_caml_or_net) 30208 
-	srwi	r5, r5, 31 30212 
-	addi	r5, r5, ha16(min_caml_or_net) 30216 
-	slwi	r5, r5, 16 30220 
-	addi	r5, r5, lo16(min_caml_or_net) 30224 
-	lwz	r5, 0(r5) 30228 
-	lwz	r5, 0(r5) 30232 
-	stfd	f0, 88(r3) 30236 
-	mflr	r31 30240 
-	stw	r31, 100(r3) 30244 
-	addi	r3, r3, 104 30248 
-	bl	shadow_check_one_or_matrix2929 30252 
-	subi	r3, r3, 104 30256 
-	lwz	r31, 100(r3) 30260 
-	mtlr	r31 30264 
-	cmpwi	cr7, r2, 0 30268 
-	bne	cr7, beq_else7669 30272 
-	lis	r2, lo16(min_caml_nvector) 30276 
-	srwi	r2, r2, 31 30280 
-	addi	r2, r2, ha16(min_caml_nvector) 30284 
-	slwi	r2, r2, 16 30288 
-	addi	r2, r2, lo16(min_caml_nvector) 30292 
-	lwz	r2, 0(r2) 30296 
-	lis	r5, lo16(min_caml_light) 30300 
-	srwi	r5, r5, 31 30304 
-	addi	r5, r5, ha16(min_caml_light) 30308 
-	slwi	r5, r5, 16 30312 
-	addi	r5, r5, lo16(min_caml_light) 30316 
-	lwz	r5, 0(r5) 30320 
-	mflr	r31 30324 
-	stw	r31, 100(r3) 30328 
-	addi	r3, r3, 104 30332 
-	bl	veciprod2675 30336 
-	subi	r3, r3, 104 30340 
-	lwz	r31, 100(r3) 30344 
-	mtlr	r31 30348 
-	fneg	f0, f0 30352 
-	lfd	f1, 48(r3) 30356 
-	fmul	f0, f0, f1 30360 
-	lis	r5, lo16(min_caml_light) 30364 
-	srwi	r5, r5, 31 30368 
-	addi	r5, r5, ha16(min_caml_light) 30372 
-	slwi	r5, r5, 16 30376 
-	addi	r5, r5, lo16(min_caml_light) 30380 
-	lwz	r5, 0(r5) 30384 
-	lwz	r2, 28(r3) 30388 
-	stfd	f0, 96(r3) 30392 
-	mflr	r31 30396 
-	stw	r31, 108(r3) 30400 
-	addi	r3, r3, 112 30404 
-	bl	veciprod2675 30408 
-	subi	r3, r3, 112 30412 
-	lwz	r31, 108(r3) 30416 
-	mtlr	r31 30420 
-	fneg	f1, f0 30424 
-	lfd	f0, 96(r3) 30428 
-	lfd	f2, 88(r3) 30432 
-	mflr	r31 30436 
-	stw	r31, 108(r3) 30440 
-	addi	r3, r3, 112 30444 
-	bl	add_light2972 30448 
-	subi	r3, r3, 112 30452 
-	lwz	r31, 108(r3) 30456 
-	mtlr	r31 30460 
-	b	beq_cont7670 30464 
+	lis	r31, lo16(l6052) 30008 
+	srwi	r31, r31, 31 30012 
+	addi	r31, r31, ha16(l6052) 30016 
+	slwi	r31, r31, 16 30020 
+	addi	r31, r31, lo16(l6052) 30024 
+	lfd	f0, 0(r31) 30028 
+	lis	r5, lo16(min_caml_nvector) 30032 
+	srwi	r5, r5, 31 30036 
+	addi	r5, r5, ha16(min_caml_nvector) 30040 
+	slwi	r5, r5, 16 30044 
+	addi	r5, r5, lo16(min_caml_nvector) 30048 
+	lwz	r5, 0(r5) 30052 
+	lwz	r2, 28(r3) 30056 
+	stfd	f0, 80(r3) 30060 
+	mflr	r31 30064 
+	stw	r31, 92(r3) 30068 
+	addi	r3, r3, 96 30072 
+	bl	veciprod2675 30076 
+	subi	r3, r3, 96 30080 
+	lwz	r31, 92(r3) 30084 
+	mtlr	r31 30088 
+	lfd	f1, 80(r3) 30092 
+	fmul	f0, f1, f0 30096 
+	lis	r5, lo16(min_caml_nvector) 30100 
+	srwi	r5, r5, 31 30104 
+	addi	r5, r5, ha16(min_caml_nvector) 30108 
+	slwi	r5, r5, 16 30112 
+	addi	r5, r5, lo16(min_caml_nvector) 30116 
+	lwz	r5, 0(r5) 30120 
+	lwz	r2, 28(r3) 30124 
+	mflr	r31 30128 
+	stw	r31, 92(r3) 30132 
+	addi	r3, r3, 96 30136 
+	bl	vecaccum2683 30140 
+	subi	r3, r3, 96 30144 
+	lwz	r31, 92(r3) 30148 
+	mtlr	r31 30152 
+	lwz	r2, 40(r3) 30156 
+	mflr	r31 30160 
+	stw	r31, 92(r3) 30164 
+	addi	r3, r3, 96 30168 
+	bl	o_hilight2726 30172 
+	subi	r3, r3, 96 30176 
+	lwz	r31, 92(r3) 30180 
+	mtlr	r31 30184 
+	lfd	f1, 16(r3) 30188 
+	fmul	f0, f1, f0 30192 
+	li	r2, 0 30196 
+	lis	r5, lo16(min_caml_or_net) 30200 
+	srwi	r5, r5, 31 30204 
+	addi	r5, r5, ha16(min_caml_or_net) 30208 
+	slwi	r5, r5, 16 30212 
+	addi	r5, r5, lo16(min_caml_or_net) 30216 
+	lwz	r5, 0(r5) 30220 
+	lwz	r5, 0(r5) 30224 
+	stfd	f0, 88(r3) 30228 
+	mflr	r31 30232 
+	stw	r31, 100(r3) 30236 
+	addi	r3, r3, 104 30240 
+	bl	shadow_check_one_or_matrix2929 30244 
+	subi	r3, r3, 104 30248 
+	lwz	r31, 100(r3) 30252 
+	mtlr	r31 30256 
+	cmpwi	cr7, r2, 0 30260 
+	bne	cr7, beq_else7669 30264 
+	lis	r2, lo16(min_caml_nvector) 30268 
+	srwi	r2, r2, 31 30272 
+	addi	r2, r2, ha16(min_caml_nvector) 30276 
+	slwi	r2, r2, 16 30280 
+	addi	r2, r2, lo16(min_caml_nvector) 30284 
+	lwz	r2, 0(r2) 30288 
+	lis	r5, lo16(min_caml_light) 30292 
+	srwi	r5, r5, 31 30296 
+	addi	r5, r5, ha16(min_caml_light) 30300 
+	slwi	r5, r5, 16 30304 
+	addi	r5, r5, lo16(min_caml_light) 30308 
+	lwz	r5, 0(r5) 30312 
+	mflr	r31 30316 
+	stw	r31, 100(r3) 30320 
+	addi	r3, r3, 104 30324 
+	bl	veciprod2675 30328 
+	subi	r3, r3, 104 30332 
+	lwz	r31, 100(r3) 30336 
+	mtlr	r31 30340 
+	fneg	f0, f0 30344 
+	lfd	f1, 48(r3) 30348 
+	fmul	f0, f0, f1 30352 
+	lis	r5, lo16(min_caml_light) 30356 
+	srwi	r5, r5, 31 30360 
+	addi	r5, r5, ha16(min_caml_light) 30364 
+	slwi	r5, r5, 16 30368 
+	addi	r5, r5, lo16(min_caml_light) 30372 
+	lwz	r5, 0(r5) 30376 
+	lwz	r2, 28(r3) 30380 
+	stfd	f0, 96(r3) 30384 
+	mflr	r31 30388 
+	stw	r31, 108(r3) 30392 
+	addi	r3, r3, 112 30396 
+	bl	veciprod2675 30400 
+	subi	r3, r3, 112 30404 
+	lwz	r31, 108(r3) 30408 
+	mtlr	r31 30412 
+	fneg	f1, f0 30416 
+	lfd	f0, 96(r3) 30420 
+	lfd	f2, 88(r3) 30424 
+	mflr	r31 30428 
+	stw	r31, 108(r3) 30432 
+	addi	r3, r3, 112 30436 
+	bl	add_light2972 30440 
+	subi	r3, r3, 112 30444 
+	lwz	r31, 108(r3) 30448 
+	mtlr	r31 30452 
+	b	beq_cont7670 30456 
 beq_else7669:
 beq_cont7670:
-	lis	r2, lo16(min_caml_intersection_point) 30468 
-	srwi	r2, r2, 31 30472 
-	addi	r2, r2, ha16(min_caml_intersection_point) 30476 
-	slwi	r2, r2, 16 30480 
-	addi	r2, r2, lo16(min_caml_intersection_point) 30484 
-	lwz	r2, 0(r2) 30488 
-	mflr	r31 30492 
-	stw	r31, 108(r3) 30496 
-	addi	r3, r3, 112 30500 
-	bl	setup_startp2895 30504 
-	subi	r3, r3, 112 30508 
-	lwz	r31, 108(r3) 30512 
-	mtlr	r31 30516 
-	lis	r2, lo16(min_caml_n_reflections) 30520 
-	srwi	r2, r2, 31 30524 
-	addi	r2, r2, ha16(min_caml_n_reflections) 30528 
-	slwi	r2, r2, 16 30532 
-	addi	r2, r2, lo16(min_caml_n_reflections) 30536 
-	lwz	r2, 0(r2) 30540 
-	lwz	r2, 0(r2) 30544 
-	subi	r2, r2, 1 30548 
-	lfd	f0, 48(r3) 30552 
-	lfd	f1, 88(r3) 30556 
-	lwz	r5, 28(r3) 30560 
-	mflr	r31 30564 
-	stw	r31, 108(r3) 30568 
-	addi	r3, r3, 112 30572 
-	bl	trace_reflections2976 30576 
-	subi	r3, r3, 112 30580 
-	lwz	r31, 108(r3) 30584 
-	mtlr	r31 30588 
-	lis	r31, lo16(l6055) 30592 
-	srwi	r31, r31, 31 30596 
-	addi	r31, r31, ha16(l6055) 30600 
-	slwi	r31, r31, 16 30604 
-	addi	r31, r31, lo16(l6055) 30608 
-	lfd	f0, 0(r31) 30612 
-	lfd	f1, 16(r3) 30616 
-	fcmpu	cr7, f1, f0 30620 
-	bgt	cr7, ble_else7671 30624 
-	blr 30628 
+	lis	r2, lo16(min_caml_intersection_point) 30460 
+	srwi	r2, r2, 31 30464 
+	addi	r2, r2, ha16(min_caml_intersection_point) 30468 
+	slwi	r2, r2, 16 30472 
+	addi	r2, r2, lo16(min_caml_intersection_point) 30476 
+	lwz	r2, 0(r2) 30480 
+	mflr	r31 30484 
+	stw	r31, 108(r3) 30488 
+	addi	r3, r3, 112 30492 
+	bl	setup_startp2895 30496 
+	subi	r3, r3, 112 30500 
+	lwz	r31, 108(r3) 30504 
+	mtlr	r31 30508 
+	lis	r2, lo16(min_caml_n_reflections) 30512 
+	srwi	r2, r2, 31 30516 
+	addi	r2, r2, ha16(min_caml_n_reflections) 30520 
+	slwi	r2, r2, 16 30524 
+	addi	r2, r2, lo16(min_caml_n_reflections) 30528 
+	lwz	r2, 0(r2) 30532 
+	lwz	r2, 0(r2) 30536 
+	subi	r2, r2, 1 30540 
+	lfd	f0, 48(r3) 30544 
+	lfd	f1, 88(r3) 30548 
+	lwz	r5, 28(r3) 30552 
+	mflr	r31 30556 
+	stw	r31, 108(r3) 30560 
+	addi	r3, r3, 112 30564 
+	bl	trace_reflections2976 30568 
+	subi	r3, r3, 112 30572 
+	lwz	r31, 108(r3) 30576 
+	mtlr	r31 30580 
+	lis	r31, lo16(l6055) 30584 
+	srwi	r31, r31, 31 30588 
+	addi	r31, r31, ha16(l6055) 30592 
+	slwi	r31, r31, 16 30596 
+	addi	r31, r31, lo16(l6055) 30600 
+	lfd	f0, 0(r31) 30604 
+	lfd	f1, 16(r3) 30608 
+	fcmpu	cr7, f1, f0 30612 
+	bgt	cr7, ble_else7671 30616 
+	blr 30620 
 ble_else7671:
-	lwz	r2, 24(r3) 30632 
-	cmpwi	cr7, r2, 4 30636 
-	blt	cr7, bge_else7673 30640 
-	b	bge_cont7674 30644 
+	lwz	r2, 24(r3) 30624 
+	cmpwi	cr7, r2, 4 30628 
+	blt	cr7, bge_else7673 30632 
+	b	bge_cont7674 30636 
 bge_else7673:
-	addi	r5, r2, 1 30648 
-	li	r6, -1 30652 
-	slwi	r5, r5, 2 30656 
-	lwz	r7, 32(r3) 30660 
-	stwx	r6, r7, r5 30664 
+	addi	r5, r2, 1 30640 
+	li	r6, -1 30644 
+	slwi	r5, r5, 2 30648 
+	lwz	r7, 32(r3) 30652 
+	stwx	r6, r7, r5 30656 
 bge_cont7674:
-	lwz	r5, 44(r3) 30668 
-	cmpwi	cr7, r5, 2 30672 
-	bne	cr7, beq_else7675 30676 
-	lis	r31, lo16(l5591) 30680 
-	srwi	r31, r31, 31 30684 
-	addi	r31, r31, ha16(l5591) 30688 
-	slwi	r31, r31, 16 30692 
-	addi	r31, r31, lo16(l5591) 30696 
-	lfd	f0, 0(r31) 30700 
-	lwz	r5, 40(r3) 30704 
-	stfd	f0, 104(r3) 30708 
-	mflr	r31 30712 
-	mr	r2, r5 30716 
-	stw	r31, 116(r3) 30720 
-	addi	r3, r3, 120 30724 
-	bl	o_diffuse2724 30728 
-	subi	r3, r3, 120 30732 
-	lwz	r31, 116(r3) 30736 
-	mtlr	r31 30740 
-	lfd	f1, 104(r3) 30744 
-	fsub	f0, f1, f0 30748 
-	lfd	f1, 16(r3) 30752 
-	fmul	f0, f1, f0 30756 
-	lwz	r2, 24(r3) 30760 
-	addi	r2, r2, 1 30764 
-	lis	r5, lo16(min_caml_tmin) 30768 
-	srwi	r5, r5, 31 30772 
-	addi	r5, r5, ha16(min_caml_tmin) 30776 
-	slwi	r5, r5, 16 30780 
-	addi	r5, r5, lo16(min_caml_tmin) 30784 
-	lwz	r5, 0(r5) 30788 
-	lfd	f1, 0(r5) 30792 
-	lfd	f2, 0(r3) 30796 
-	fadd	f1, f2, f1 30800 
-	lwz	r5, 28(r3) 30804 
-	lwz	r6, 8(r3) 30808 
-	b	trace_ray2981 30812 
+	lwz	r5, 44(r3) 30660 
+	cmpwi	cr7, r5, 2 30664 
+	bne	cr7, beq_else7675 30668 
+	lis	r31, lo16(l5591) 30672 
+	srwi	r31, r31, 31 30676 
+	addi	r31, r31, ha16(l5591) 30680 
+	slwi	r31, r31, 16 30684 
+	addi	r31, r31, lo16(l5591) 30688 
+	lfd	f0, 0(r31) 30692 
+	lwz	r5, 40(r3) 30696 
+	stfd	f0, 104(r3) 30700 
+	mflr	r31 30704 
+	mr	r2, r5 30708 
+	stw	r31, 116(r3) 30712 
+	addi	r3, r3, 120 30716 
+	bl	o_diffuse2724 30720 
+	subi	r3, r3, 120 30724 
+	lwz	r31, 116(r3) 30728 
+	mtlr	r31 30732 
+	lfd	f1, 104(r3) 30736 
+	fsub	f0, f1, f0 30740 
+	lfd	f1, 16(r3) 30744 
+	fmul	f0, f1, f0 30748 
+	lwz	r2, 24(r3) 30752 
+	addi	r2, r2, 1 30756 
+	lis	r5, lo16(min_caml_tmin) 30760 
+	srwi	r5, r5, 31 30764 
+	addi	r5, r5, ha16(min_caml_tmin) 30768 
+	slwi	r5, r5, 16 30772 
+	addi	r5, r5, lo16(min_caml_tmin) 30776 
+	lwz	r5, 0(r5) 30780 
+	lfd	f1, 0(r5) 30784 
+	lfd	f2, 0(r3) 30788 
+	fadd	f1, f2, f1 30792 
+	lwz	r5, 28(r3) 30796 
+	lwz	r6, 8(r3) 30800 
+	b	trace_ray2981 30804 
 beq_else7675:
-	blr 30816 
+	blr 30808 
 ble_else7657:
-	blr 30820 
+	blr 30812 
 trace_diffuse_ray2987:
-	stfd	f0, 0(r3) 30824 
-	stw	r2, 8(r3) 30828 
-	mflr	r31 30832 
-	stw	r31, 12(r3) 30836 
-	addi	r3, r3, 16 30840 
-	bl	judge_intersection_fast2958 30844 
-	subi	r3, r3, 16 30848 
-	lwz	r31, 12(r3) 30852 
-	mtlr	r31 30856 
-	cmpwi	cr7, r2, 0 30860 
-	bne	cr7, beq_else7678 30864 
-	blr 30868 
+	stfd	f0, 0(r3) 30816 
+	stw	r2, 8(r3) 30820 
+	mflr	r31 30824 
+	stw	r31, 12(r3) 30828 
+	addi	r3, r3, 16 30832 
+	bl	judge_intersection_fast2958 30836 
+	subi	r3, r3, 16 30840 
+	lwz	r31, 12(r3) 30844 
+	mtlr	r31 30848 
+	cmpwi	cr7, r2, 0 30852 
+	bne	cr7, beq_else7678 30856 
+	blr 30860 
 beq_else7678:
-	lis	r2, lo16(min_caml_objects) 30872 
-	srwi	r2, r2, 31 30876 
-	addi	r2, r2, ha16(min_caml_objects) 30880 
-	slwi	r2, r2, 16 30884 
-	addi	r2, r2, lo16(min_caml_objects) 30888 
-	lwz	r2, 0(r2) 30892 
-	lis	r5, lo16(min_caml_intersected_object_id) 30896 
-	srwi	r5, r5, 31 30900 
-	addi	r5, r5, ha16(min_caml_intersected_object_id) 30904 
-	slwi	r5, r5, 16 30908 
-	addi	r5, r5, lo16(min_caml_intersected_object_id) 30912 
-	lwz	r5, 0(r5) 30916 
-	lwz	r5, 0(r5) 30920 
-	slwi	r5, r5, 2 30924 
-	lwzx	r2, r2, r5 30928 
-	lwz	r5, 8(r3) 30932 
-	stw	r2, 12(r3) 30936 
-	mflr	r31 30940 
-	mr	r2, r5 30944 
-	stw	r31, 20(r3) 30948 
-	addi	r3, r3, 24 30952 
-	bl	d_vec2761 30956 
-	subi	r3, r3, 24 30960 
-	lwz	r31, 20(r3) 30964 
-	mr	r5, r2 30968 
-	mtlr	r31 30972 
-	lwz	r2, 12(r3) 30976 
-	mflr	r31 30980 
-	stw	r31, 20(r3) 30984 
-	addi	r3, r3, 24 30988 
-	bl	get_nvector2966 30992 
-	subi	r3, r3, 24 30996 
-	lwz	r31, 20(r3) 31000 
-	mtlr	r31 31004 
-	lis	r5, lo16(min_caml_intersection_point) 31008 
-	srwi	r5, r5, 31 31012 
-	addi	r5, r5, ha16(min_caml_intersection_point) 31016 
-	slwi	r5, r5, 16 31020 
-	addi	r5, r5, lo16(min_caml_intersection_point) 31024 
-	lwz	r5, 0(r5) 31028 
-	lwz	r2, 12(r3) 31032 
-	mflr	r31 31036 
-	stw	r31, 20(r3) 31040 
-	addi	r3, r3, 24 31044 
-	bl	utexture2969 31048 
-	subi	r3, r3, 24 31052 
-	lwz	r31, 20(r3) 31056 
-	mtlr	r31 31060 
-	li	r2, 0 31064 
-	lis	r5, lo16(min_caml_or_net) 31068 
-	srwi	r5, r5, 31 31072 
-	addi	r5, r5, ha16(min_caml_or_net) 31076 
-	slwi	r5, r5, 16 31080 
-	addi	r5, r5, lo16(min_caml_or_net) 31084 
-	lwz	r5, 0(r5) 31088 
-	lwz	r5, 0(r5) 31092 
-	mflr	r31 31096 
-	stw	r31, 20(r3) 31100 
-	addi	r3, r3, 24 31104 
-	bl	shadow_check_one_or_matrix2929 31108 
-	subi	r3, r3, 24 31112 
-	lwz	r31, 20(r3) 31116 
-	mtlr	r31 31120 
-	cmpwi	cr7, r2, 0 31124 
-	bne	cr7, beq_else7680 31128 
-	lis	r2, lo16(min_caml_nvector) 31132 
-	srwi	r2, r2, 31 31136 
-	addi	r2, r2, ha16(min_caml_nvector) 31140 
-	slwi	r2, r2, 16 31144 
-	addi	r2, r2, lo16(min_caml_nvector) 31148 
-	lwz	r2, 0(r2) 31152 
-	lis	r5, lo16(min_caml_light) 31156 
-	srwi	r5, r5, 31 31160 
-	addi	r5, r5, ha16(min_caml_light) 31164 
-	slwi	r5, r5, 16 31168 
-	addi	r5, r5, lo16(min_caml_light) 31172 
-	lwz	r5, 0(r5) 31176 
-	mflr	r31 31180 
-	stw	r31, 20(r3) 31184 
-	addi	r3, r3, 24 31188 
-	bl	veciprod2675 31192 
-	subi	r3, r3, 24 31196 
-	lwz	r31, 20(r3) 31200 
-	mtlr	r31 31204 
-	fneg	f0, f0 31208 
-	lis	r31, lo16(l5590) 31212 
-	srwi	r31, r31, 31 31216 
-	addi	r31, r31, ha16(l5590) 31220 
-	slwi	r31, r31, 16 31224 
-	addi	r31, r31, lo16(l5590) 31228 
-	lfd	f1, 0(r31) 31232 
-	fcmpu	cr7, f0, f1 31236 
-	bgt	cr7, ble_else7681 31240 
-	lis	r31, lo16(l5590) 31244 
-	srwi	r31, r31, 31 31248 
-	addi	r31, r31, ha16(l5590) 31252 
-	slwi	r31, r31, 16 31256 
-	addi	r31, r31, lo16(l5590) 31260 
-	lfd	f0, 0(r31) 31264 
-	b	ble_cont7682 31268 
+	lis	r2, lo16(min_caml_objects) 30864 
+	srwi	r2, r2, 31 30868 
+	addi	r2, r2, ha16(min_caml_objects) 30872 
+	slwi	r2, r2, 16 30876 
+	addi	r2, r2, lo16(min_caml_objects) 30880 
+	lwz	r2, 0(r2) 30884 
+	lis	r5, lo16(min_caml_intersected_object_id) 30888 
+	srwi	r5, r5, 31 30892 
+	addi	r5, r5, ha16(min_caml_intersected_object_id) 30896 
+	slwi	r5, r5, 16 30900 
+	addi	r5, r5, lo16(min_caml_intersected_object_id) 30904 
+	lwz	r5, 0(r5) 30908 
+	lwz	r5, 0(r5) 30912 
+	slwi	r5, r5, 2 30916 
+	lwzx	r2, r2, r5 30920 
+	lwz	r5, 8(r3) 30924 
+	stw	r2, 12(r3) 30928 
+	mflr	r31 30932 
+	mr	r2, r5 30936 
+	stw	r31, 20(r3) 30940 
+	addi	r3, r3, 24 30944 
+	bl	d_vec2761 30948 
+	subi	r3, r3, 24 30952 
+	lwz	r31, 20(r3) 30956 
+	mr	r5, r2 30960 
+	mtlr	r31 30964 
+	lwz	r2, 12(r3) 30968 
+	mflr	r31 30972 
+	stw	r31, 20(r3) 30976 
+	addi	r3, r3, 24 30980 
+	bl	get_nvector2966 30984 
+	subi	r3, r3, 24 30988 
+	lwz	r31, 20(r3) 30992 
+	mtlr	r31 30996 
+	lis	r5, lo16(min_caml_intersection_point) 31000 
+	srwi	r5, r5, 31 31004 
+	addi	r5, r5, ha16(min_caml_intersection_point) 31008 
+	slwi	r5, r5, 16 31012 
+	addi	r5, r5, lo16(min_caml_intersection_point) 31016 
+	lwz	r5, 0(r5) 31020 
+	lwz	r2, 12(r3) 31024 
+	mflr	r31 31028 
+	stw	r31, 20(r3) 31032 
+	addi	r3, r3, 24 31036 
+	bl	utexture2969 31040 
+	subi	r3, r3, 24 31044 
+	lwz	r31, 20(r3) 31048 
+	mtlr	r31 31052 
+	li	r2, 0 31056 
+	lis	r5, lo16(min_caml_or_net) 31060 
+	srwi	r5, r5, 31 31064 
+	addi	r5, r5, ha16(min_caml_or_net) 31068 
+	slwi	r5, r5, 16 31072 
+	addi	r5, r5, lo16(min_caml_or_net) 31076 
+	lwz	r5, 0(r5) 31080 
+	lwz	r5, 0(r5) 31084 
+	mflr	r31 31088 
+	stw	r31, 20(r3) 31092 
+	addi	r3, r3, 24 31096 
+	bl	shadow_check_one_or_matrix2929 31100 
+	subi	r3, r3, 24 31104 
+	lwz	r31, 20(r3) 31108 
+	mtlr	r31 31112 
+	cmpwi	cr7, r2, 0 31116 
+	bne	cr7, beq_else7680 31120 
+	lis	r2, lo16(min_caml_nvector) 31124 
+	srwi	r2, r2, 31 31128 
+	addi	r2, r2, ha16(min_caml_nvector) 31132 
+	slwi	r2, r2, 16 31136 
+	addi	r2, r2, lo16(min_caml_nvector) 31140 
+	lwz	r2, 0(r2) 31144 
+	lis	r5, lo16(min_caml_light) 31148 
+	srwi	r5, r5, 31 31152 
+	addi	r5, r5, ha16(min_caml_light) 31156 
+	slwi	r5, r5, 16 31160 
+	addi	r5, r5, lo16(min_caml_light) 31164 
+	lwz	r5, 0(r5) 31168 
+	mflr	r31 31172 
+	stw	r31, 20(r3) 31176 
+	addi	r3, r3, 24 31180 
+	bl	veciprod2675 31184 
+	subi	r3, r3, 24 31188 
+	lwz	r31, 20(r3) 31192 
+	mtlr	r31 31196 
+	fneg	f0, f0 31200 
+	lis	r31, lo16(l5590) 31204 
+	srwi	r31, r31, 31 31208 
+	addi	r31, r31, ha16(l5590) 31212 
+	slwi	r31, r31, 16 31216 
+	addi	r31, r31, lo16(l5590) 31220 
+	lfd	f1, 0(r31) 31224 
+	fcmpu	cr7, f0, f1 31228 
+	bgt	cr7, ble_else7681 31232 
+	lis	r31, lo16(l5590) 31236 
+	srwi	r31, r31, 31 31240 
+	addi	r31, r31, ha16(l5590) 31244 
+	slwi	r31, r31, 16 31248 
+	addi	r31, r31, lo16(l5590) 31252 
+	lfd	f0, 0(r31) 31256 
+	b	ble_cont7682 31260 
 ble_else7681:
 ble_cont7682:
-	lis	r2, lo16(min_caml_diffuse_ray) 31272 
-	srwi	r2, r2, 31 31276 
-	addi	r2, r2, ha16(min_caml_diffuse_ray) 31280 
-	slwi	r2, r2, 16 31284 
-	addi	r2, r2, lo16(min_caml_diffuse_ray) 31288 
-	lwz	r2, 0(r2) 31292 
-	lfd	f1, 0(r3) 31296 
-	fmul	f0, f1, f0 31300 
-	lwz	r5, 12(r3) 31304 
-	stw	r2, 16(r3) 31308 
-	stfd	f0, 24(r3) 31312 
-	mflr	r31 31316 
-	mr	r2, r5 31320 
-	stw	r31, 36(r3) 31324 
-	addi	r3, r3, 40 31328 
-	bl	o_diffuse2724 31332 
-	subi	r3, r3, 40 31336 
-	lwz	r31, 36(r3) 31340 
-	mtlr	r31 31344 
-	lfd	f1, 24(r3) 31348 
-	fmul	f0, f1, f0 31352 
-	lis	r5, lo16(min_caml_texture_color) 31356 
-	srwi	r5, r5, 31 31360 
-	addi	r5, r5, ha16(min_caml_texture_color) 31364 
-	slwi	r5, r5, 16 31368 
-	addi	r5, r5, lo16(min_caml_texture_color) 31372 
-	lwz	r5, 0(r5) 31376 
-	lwz	r2, 16(r3) 31380 
-	b	vecaccum2683 31384 
+	lis	r2, lo16(min_caml_diffuse_ray) 31264 
+	srwi	r2, r2, 31 31268 
+	addi	r2, r2, ha16(min_caml_diffuse_ray) 31272 
+	slwi	r2, r2, 16 31276 
+	addi	r2, r2, lo16(min_caml_diffuse_ray) 31280 
+	lwz	r2, 0(r2) 31284 
+	lfd	f1, 0(r3) 31288 
+	fmul	f0, f1, f0 31292 
+	lwz	r5, 12(r3) 31296 
+	stw	r2, 16(r3) 31300 
+	stfd	f0, 24(r3) 31304 
+	mflr	r31 31308 
+	mr	r2, r5 31312 
+	stw	r31, 36(r3) 31316 
+	addi	r3, r3, 40 31320 
+	bl	o_diffuse2724 31324 
+	subi	r3, r3, 40 31328 
+	lwz	r31, 36(r3) 31332 
+	mtlr	r31 31336 
+	lfd	f1, 24(r3) 31340 
+	fmul	f0, f1, f0 31344 
+	lis	r5, lo16(min_caml_texture_color) 31348 
+	srwi	r5, r5, 31 31352 
+	addi	r5, r5, ha16(min_caml_texture_color) 31356 
+	slwi	r5, r5, 16 31360 
+	addi	r5, r5, lo16(min_caml_texture_color) 31364 
+	lwz	r5, 0(r5) 31368 
+	lwz	r2, 16(r3) 31372 
+	b	vecaccum2683 31376 
 beq_else7680:
-	blr 31388 
+	blr 31380 
 iter_trace_diffuse_rays2990:
-	cmpwi	cr7, r7, 0 31392 
-	blt	cr7, bge_else7685 31396 
-	slwi	r8, r7, 2 31400 
-	lwzx	r8, r2, r8 31404 
-	stw	r6, 0(r3) 31408 
-	stw	r2, 4(r3) 31412 
-	stw	r7, 8(r3) 31416 
-	stw	r5, 12(r3) 31420 
-	mflr	r31 31424 
-	mr	r2, r8 31428 
-	stw	r31, 20(r3) 31432 
-	addi	r3, r3, 24 31436 
-	bl	d_vec2761 31440 
-	subi	r3, r3, 24 31444 
-	lwz	r31, 20(r3) 31448 
-	mtlr	r31 31452 
-	lwz	r5, 12(r3) 31456 
-	mflr	r31 31460 
-	stw	r31, 20(r3) 31464 
-	addi	r3, r3, 24 31468 
-	bl	veciprod2675 31472 
-	subi	r3, r3, 24 31476 
-	lwz	r31, 20(r3) 31480 
-	mtlr	r31 31484 
-	lis	r31, lo16(l5590) 31488 
-	srwi	r31, r31, 31 31492 
-	addi	r31, r31, ha16(l5590) 31496 
-	slwi	r31, r31, 16 31500 
-	addi	r31, r31, lo16(l5590) 31504 
-	lfd	f1, 0(r31) 31508 
-	fcmpu	cr7, f1, f0 31512 
-	bgt	cr7, ble_else7686 31516 
-	lwz	r2, 8(r3) 31520 
-	slwi	r5, r2, 2 31524 
-	lwz	r6, 4(r3) 31528 
-	lwzx	r5, r6, r5 31532 
-	lis	r31, lo16(l6073) 31536 
-	srwi	r31, r31, 31 31540 
-	addi	r31, r31, ha16(l6073) 31544 
-	slwi	r31, r31, 16 31548 
-	addi	r31, r31, lo16(l6073) 31552 
-	lfd	f1, 0(r31) 31556 
-	fdiv	f0, f0, f1 31560 
-	mflr	r31 31564 
-	mr	r2, r5 31568 
-	stw	r31, 20(r3) 31572 
-	addi	r3, r3, 24 31576 
-	bl	trace_diffuse_ray2987 31580 
-	subi	r3, r3, 24 31584 
-	lwz	r31, 20(r3) 31588 
-	mtlr	r31 31592 
-	b	ble_cont7687 31596 
+	cmpwi	cr7, r7, 0 31384 
+	blt	cr7, bge_else7685 31388 
+	slwi	r8, r7, 2 31392 
+	lwzx	r8, r2, r8 31396 
+	stw	r6, 0(r3) 31400 
+	stw	r2, 4(r3) 31404 
+	stw	r7, 8(r3) 31408 
+	stw	r5, 12(r3) 31412 
+	mflr	r31 31416 
+	mr	r2, r8 31420 
+	stw	r31, 20(r3) 31424 
+	addi	r3, r3, 24 31428 
+	bl	d_vec2761 31432 
+	subi	r3, r3, 24 31436 
+	lwz	r31, 20(r3) 31440 
+	mtlr	r31 31444 
+	lwz	r5, 12(r3) 31448 
+	mflr	r31 31452 
+	stw	r31, 20(r3) 31456 
+	addi	r3, r3, 24 31460 
+	bl	veciprod2675 31464 
+	subi	r3, r3, 24 31468 
+	lwz	r31, 20(r3) 31472 
+	mtlr	r31 31476 
+	lis	r31, lo16(l5590) 31480 
+	srwi	r31, r31, 31 31484 
+	addi	r31, r31, ha16(l5590) 31488 
+	slwi	r31, r31, 16 31492 
+	addi	r31, r31, lo16(l5590) 31496 
+	lfd	f1, 0(r31) 31500 
+	fcmpu	cr7, f1, f0 31504 
+	bgt	cr7, ble_else7686 31508 
+	lwz	r2, 8(r3) 31512 
+	slwi	r5, r2, 2 31516 
+	lwz	r6, 4(r3) 31520 
+	lwzx	r5, r6, r5 31524 
+	lis	r31, lo16(l6073) 31528 
+	srwi	r31, r31, 31 31532 
+	addi	r31, r31, ha16(l6073) 31536 
+	slwi	r31, r31, 16 31540 
+	addi	r31, r31, lo16(l6073) 31544 
+	lfd	f1, 0(r31) 31548 
+	fdiv	f0, f0, f1 31552 
+	mflr	r31 31556 
+	mr	r2, r5 31560 
+	stw	r31, 20(r3) 31564 
+	addi	r3, r3, 24 31568 
+	bl	trace_diffuse_ray2987 31572 
+	subi	r3, r3, 24 31576 
+	lwz	r31, 20(r3) 31580 
+	mtlr	r31 31584 
+	b	ble_cont7687 31588 
 ble_else7686:
-	lwz	r2, 8(r3) 31600 
-	addi	r5, r2, 1 31604 
-	slwi	r5, r5, 2 31608 
-	lwz	r6, 4(r3) 31612 
-	lwzx	r5, r6, r5 31616 
-	lis	r31, lo16(l6071) 31620 
-	srwi	r31, r31, 31 31624 
-	addi	r31, r31, ha16(l6071) 31628 
-	slwi	r31, r31, 16 31632 
-	addi	r31, r31, lo16(l6071) 31636 
-	lfd	f1, 0(r31) 31640 
-	fdiv	f0, f0, f1 31644 
-	mflr	r31 31648 
-	mr	r2, r5 31652 
-	stw	r31, 20(r3) 31656 
-	addi	r3, r3, 24 31660 
-	bl	trace_diffuse_ray2987 31664 
-	subi	r3, r3, 24 31668 
-	lwz	r31, 20(r3) 31672 
-	mtlr	r31 31676 
+	lwz	r2, 8(r3) 31592 
+	addi	r5, r2, 1 31596 
+	slwi	r5, r5, 2 31600 
+	lwz	r6, 4(r3) 31604 
+	lwzx	r5, r6, r5 31608 
+	lis	r31, lo16(l6071) 31612 
+	srwi	r31, r31, 31 31616 
+	addi	r31, r31, ha16(l6071) 31620 
+	slwi	r31, r31, 16 31624 
+	addi	r31, r31, lo16(l6071) 31628 
+	lfd	f1, 0(r31) 31632 
+	fdiv	f0, f0, f1 31636 
+	mflr	r31 31640 
+	mr	r2, r5 31644 
+	stw	r31, 20(r3) 31648 
+	addi	r3, r3, 24 31652 
+	bl	trace_diffuse_ray2987 31656 
+	subi	r3, r3, 24 31660 
+	lwz	r31, 20(r3) 31664 
+	mtlr	r31 31668 
 ble_cont7687:
-	lwz	r2, 8(r3) 31680 
-	subi	r7, r2, 2 31684 
-	lwz	r2, 4(r3) 31688 
-	lwz	r5, 12(r3) 31692 
-	lwz	r6, 0(r3) 31696 
-	b	iter_trace_diffuse_rays2990 31700 
+	lwz	r2, 8(r3) 31672 
+	subi	r7, r2, 2 31676 
+	lwz	r2, 4(r3) 31680 
+	lwz	r5, 12(r3) 31684 
+	lwz	r6, 0(r3) 31688 
+	b	iter_trace_diffuse_rays2990 31692 
 bge_else7685:
-	blr 31704 
+	blr 31696 
 trace_diffuse_rays2995:
-	stw	r6, 0(r3) 31708 
-	stw	r5, 4(r3) 31712 
-	stw	r2, 8(r3) 31716 
-	mflr	r31 31720 
-	mr	r2, r6 31724 
-	stw	r31, 12(r3) 31728 
-	addi	r3, r3, 16 31732 
-	bl	setup_startp2895 31736 
-	subi	r3, r3, 16 31740 
-	lwz	r31, 12(r3) 31744 
-	mtlr	r31 31748 
-	li	r7, 118 31752 
-	lwz	r2, 8(r3) 31756 
-	lwz	r5, 4(r3) 31760 
-	lwz	r6, 0(r3) 31764 
-	b	iter_trace_diffuse_rays2990 31768 
+	stw	r6, 0(r3) 31700 
+	stw	r5, 4(r3) 31704 
+	stw	r2, 8(r3) 31708 
+	mflr	r31 31712 
+	mr	r2, r6 31716 
+	stw	r31, 12(r3) 31720 
+	addi	r3, r3, 16 31724 
+	bl	setup_startp2895 31728 
+	subi	r3, r3, 16 31732 
+	lwz	r31, 12(r3) 31736 
+	mtlr	r31 31740 
+	li	r7, 118 31744 
+	lwz	r2, 8(r3) 31748 
+	lwz	r5, 4(r3) 31752 
+	lwz	r6, 0(r3) 31756 
+	b	iter_trace_diffuse_rays2990 31760 
 trace_diffuse_ray_80percent2999:
-	stw	r6, 0(r3) 31772 
-	stw	r5, 4(r3) 31776 
-	stw	r2, 8(r3) 31780 
-	cmpwi	cr7, r2, 0 31784 
-	bne	cr7, beq_else7689 31788 
-	b	beq_cont7690 31792 
+	stw	r6, 0(r3) 31764 
+	stw	r5, 4(r3) 31768 
+	stw	r2, 8(r3) 31772 
+	cmpwi	cr7, r2, 0 31776 
+	bne	cr7, beq_else7689 31780 
+	b	beq_cont7690 31784 
 beq_else7689:
-	lis	r7, lo16(min_caml_dirvecs) 31796 
-	srwi	r7, r7, 31 31800 
-	addi	r7, r7, ha16(min_caml_dirvecs) 31804 
-	slwi	r7, r7, 16 31808 
-	addi	r7, r7, lo16(min_caml_dirvecs) 31812 
-	lwz	r7, 0(r7) 31816 
-	lwz	r7, 0(r7) 31820 
-	mflr	r31 31824 
-	mr	r2, r7 31828 
-	stw	r31, 12(r3) 31832 
-	addi	r3, r3, 16 31836 
-	bl	trace_diffuse_rays2995 31840 
-	subi	r3, r3, 16 31844 
-	lwz	r31, 12(r3) 31848 
-	mtlr	r31 31852 
+	lis	r7, lo16(min_caml_dirvecs) 31788 
+	srwi	r7, r7, 31 31792 
+	addi	r7, r7, ha16(min_caml_dirvecs) 31796 
+	slwi	r7, r7, 16 31800 
+	addi	r7, r7, lo16(min_caml_dirvecs) 31804 
+	lwz	r7, 0(r7) 31808 
+	lwz	r7, 0(r7) 31812 
+	mflr	r31 31816 
+	mr	r2, r7 31820 
+	stw	r31, 12(r3) 31824 
+	addi	r3, r3, 16 31828 
+	bl	trace_diffuse_rays2995 31832 
+	subi	r3, r3, 16 31836 
+	lwz	r31, 12(r3) 31840 
+	mtlr	r31 31844 
 beq_cont7690:
-	lwz	r2, 8(r3) 31856 
-	cmpwi	cr7, r2, 1 31860 
-	bne	cr7, beq_else7691 31864 
-	b	beq_cont7692 31868 
+	lwz	r2, 8(r3) 31848 
+	cmpwi	cr7, r2, 1 31852 
+	bne	cr7, beq_else7691 31856 
+	b	beq_cont7692 31860 
 beq_else7691:
-	lis	r5, lo16(min_caml_dirvecs) 31872 
-	srwi	r5, r5, 31 31876 
-	addi	r5, r5, ha16(min_caml_dirvecs) 31880 
-	slwi	r5, r5, 16 31884 
-	addi	r5, r5, lo16(min_caml_dirvecs) 31888 
-	lwz	r5, 0(r5) 31892 
-	lwz	r5, 4(r5) 31896 
-	lwz	r6, 4(r3) 31900 
-	lwz	r7, 0(r3) 31904 
-	mflr	r31 31908 
-	mr	r2, r5 31912 
-	mr	r5, r6 31916 
-	mr	r6, r7 31920 
-	stw	r31, 12(r3) 31924 
-	addi	r3, r3, 16 31928 
-	bl	trace_diffuse_rays2995 31932 
-	subi	r3, r3, 16 31936 
-	lwz	r31, 12(r3) 31940 
-	mtlr	r31 31944 
+	lis	r5, lo16(min_caml_dirvecs) 31864 
+	srwi	r5, r5, 31 31868 
+	addi	r5, r5, ha16(min_caml_dirvecs) 31872 
+	slwi	r5, r5, 16 31876 
+	addi	r5, r5, lo16(min_caml_dirvecs) 31880 
+	lwz	r5, 0(r5) 31884 
+	lwz	r5, 4(r5) 31888 
+	lwz	r6, 4(r3) 31892 
+	lwz	r7, 0(r3) 31896 
+	mflr	r31 31900 
+	mr	r2, r5 31904 
+	mr	r5, r6 31908 
+	mr	r6, r7 31912 
+	stw	r31, 12(r3) 31916 
+	addi	r3, r3, 16 31920 
+	bl	trace_diffuse_rays2995 31924 
+	subi	r3, r3, 16 31928 
+	lwz	r31, 12(r3) 31932 
+	mtlr	r31 31936 
 beq_cont7692:
-	lwz	r2, 8(r3) 31948 
-	cmpwi	cr7, r2, 2 31952 
-	bne	cr7, beq_else7693 31956 
-	b	beq_cont7694 31960 
+	lwz	r2, 8(r3) 31940 
+	cmpwi	cr7, r2, 2 31944 
+	bne	cr7, beq_else7693 31948 
+	b	beq_cont7694 31952 
 beq_else7693:
-	lis	r5, lo16(min_caml_dirvecs) 31964 
-	srwi	r5, r5, 31 31968 
-	addi	r5, r5, ha16(min_caml_dirvecs) 31972 
-	slwi	r5, r5, 16 31976 
-	addi	r5, r5, lo16(min_caml_dirvecs) 31980 
-	lwz	r5, 0(r5) 31984 
-	lwz	r5, 8(r5) 31988 
-	lwz	r6, 4(r3) 31992 
-	lwz	r7, 0(r3) 31996 
-	mflr	r31 32000 
-	mr	r2, r5 32004 
-	mr	r5, r6 32008 
-	mr	r6, r7 32012 
-	stw	r31, 12(r3) 32016 
-	addi	r3, r3, 16 32020 
-	bl	trace_diffuse_rays2995 32024 
-	subi	r3, r3, 16 32028 
-	lwz	r31, 12(r3) 32032 
-	mtlr	r31 32036 
+	lis	r5, lo16(min_caml_dirvecs) 31956 
+	srwi	r5, r5, 31 31960 
+	addi	r5, r5, ha16(min_caml_dirvecs) 31964 
+	slwi	r5, r5, 16 31968 
+	addi	r5, r5, lo16(min_caml_dirvecs) 31972 
+	lwz	r5, 0(r5) 31976 
+	lwz	r5, 8(r5) 31980 
+	lwz	r6, 4(r3) 31984 
+	lwz	r7, 0(r3) 31988 
+	mflr	r31 31992 
+	mr	r2, r5 31996 
+	mr	r5, r6 32000 
+	mr	r6, r7 32004 
+	stw	r31, 12(r3) 32008 
+	addi	r3, r3, 16 32012 
+	bl	trace_diffuse_rays2995 32016 
+	subi	r3, r3, 16 32020 
+	lwz	r31, 12(r3) 32024 
+	mtlr	r31 32028 
 beq_cont7694:
-	lwz	r2, 8(r3) 32040 
-	cmpwi	cr7, r2, 3 32044 
-	bne	cr7, beq_else7695 32048 
-	b	beq_cont7696 32052 
+	lwz	r2, 8(r3) 32032 
+	cmpwi	cr7, r2, 3 32036 
+	bne	cr7, beq_else7695 32040 
+	b	beq_cont7696 32044 
 beq_else7695:
-	lis	r5, lo16(min_caml_dirvecs) 32056 
-	srwi	r5, r5, 31 32060 
-	addi	r5, r5, ha16(min_caml_dirvecs) 32064 
-	slwi	r5, r5, 16 32068 
-	addi	r5, r5, lo16(min_caml_dirvecs) 32072 
-	lwz	r5, 0(r5) 32076 
-	lwz	r5, 12(r5) 32080 
-	lwz	r6, 4(r3) 32084 
-	lwz	r7, 0(r3) 32088 
-	mflr	r31 32092 
-	mr	r2, r5 32096 
-	mr	r5, r6 32100 
-	mr	r6, r7 32104 
-	stw	r31, 12(r3) 32108 
-	addi	r3, r3, 16 32112 
-	bl	trace_diffuse_rays2995 32116 
-	subi	r3, r3, 16 32120 
-	lwz	r31, 12(r3) 32124 
-	mtlr	r31 32128 
+	lis	r5, lo16(min_caml_dirvecs) 32048 
+	srwi	r5, r5, 31 32052 
+	addi	r5, r5, ha16(min_caml_dirvecs) 32056 
+	slwi	r5, r5, 16 32060 
+	addi	r5, r5, lo16(min_caml_dirvecs) 32064 
+	lwz	r5, 0(r5) 32068 
+	lwz	r5, 12(r5) 32072 
+	lwz	r6, 4(r3) 32076 
+	lwz	r7, 0(r3) 32080 
+	mflr	r31 32084 
+	mr	r2, r5 32088 
+	mr	r5, r6 32092 
+	mr	r6, r7 32096 
+	stw	r31, 12(r3) 32100 
+	addi	r3, r3, 16 32104 
+	bl	trace_diffuse_rays2995 32108 
+	subi	r3, r3, 16 32112 
+	lwz	r31, 12(r3) 32116 
+	mtlr	r31 32120 
 beq_cont7696:
-	lwz	r2, 8(r3) 32132 
-	cmpwi	cr7, r2, 4 32136 
-	bne	cr7, beq_else7697 32140 
-	blr 32144 
+	lwz	r2, 8(r3) 32124 
+	cmpwi	cr7, r2, 4 32128 
+	bne	cr7, beq_else7697 32132 
+	blr 32136 
 beq_else7697:
-	lis	r2, lo16(min_caml_dirvecs) 32148 
-	srwi	r2, r2, 31 32152 
-	addi	r2, r2, ha16(min_caml_dirvecs) 32156 
-	slwi	r2, r2, 16 32160 
-	addi	r2, r2, lo16(min_caml_dirvecs) 32164 
-	lwz	r2, 0(r2) 32168 
-	lwz	r2, 16(r2) 32172 
-	lwz	r5, 4(r3) 32176 
-	lwz	r6, 0(r3) 32180 
-	b	trace_diffuse_rays2995 32184 
+	lis	r2, lo16(min_caml_dirvecs) 32140 
+	srwi	r2, r2, 31 32144 
+	addi	r2, r2, ha16(min_caml_dirvecs) 32148 
+	slwi	r2, r2, 16 32152 
+	addi	r2, r2, lo16(min_caml_dirvecs) 32156 
+	lwz	r2, 0(r2) 32160 
+	lwz	r2, 16(r2) 32164 
+	lwz	r5, 4(r3) 32168 
+	lwz	r6, 0(r3) 32172 
+	b	trace_diffuse_rays2995 32176 
 calc_diffuse_using_1point3003:
-	stw	r5, 0(r3) 32188 
-	stw	r2, 4(r3) 32192 
-	mflr	r31 32196 
-	stw	r31, 12(r3) 32200 
-	addi	r3, r3, 16 32204 
-	bl	p_received_ray_20percent2752 32208 
-	subi	r3, r3, 16 32212 
-	lwz	r31, 12(r3) 32216 
-	mtlr	r31 32220 
-	lwz	r5, 4(r3) 32224 
-	stw	r2, 8(r3) 32228 
-	mflr	r31 32232 
-	mr	r2, r5 32236 
-	stw	r31, 12(r3) 32240 
-	addi	r3, r3, 16 32244 
-	bl	p_nvectors2759 32248 
-	subi	r3, r3, 16 32252 
-	lwz	r31, 12(r3) 32256 
-	mtlr	r31 32260 
-	lwz	r5, 4(r3) 32264 
-	stw	r2, 12(r3) 32268 
-	mflr	r31 32272 
-	mr	r2, r5 32276 
-	stw	r31, 20(r3) 32280 
-	addi	r3, r3, 24 32284 
-	bl	p_intersection_points2744 32288 
-	subi	r3, r3, 24 32292 
-	lwz	r31, 20(r3) 32296 
-	mtlr	r31 32300 
-	lwz	r5, 4(r3) 32304 
-	stw	r2, 16(r3) 32308 
-	mflr	r31 32312 
-	mr	r2, r5 32316 
-	stw	r31, 20(r3) 32320 
-	addi	r3, r3, 24 32324 
-	bl	p_energy2750 32328 
-	subi	r3, r3, 24 32332 
-	lwz	r31, 20(r3) 32336 
-	mtlr	r31 32340 
-	lis	r5, lo16(min_caml_diffuse_ray) 32344 
-	srwi	r5, r5, 31 32348 
-	addi	r5, r5, ha16(min_caml_diffuse_ray) 32352 
-	slwi	r5, r5, 16 32356 
-	addi	r5, r5, lo16(min_caml_diffuse_ray) 32360 
-	lwz	r5, 0(r5) 32364 
-	lwz	r6, 0(r3) 32368 
-	slwi	r7, r6, 2 32372 
-	lwz	r8, 8(r3) 32376 
-	lwzx	r7, r8, r7 32380 
-	stw	r2, 20(r3) 32384 
-	mflr	r31 32388 
-	mr	r2, r5 32392 
-	mr	r5, r7 32396 
-	stw	r31, 28(r3) 32400 
-	addi	r3, r3, 32 32404 
-	bl	veccpy2664 32408 
-	subi	r3, r3, 32 32412 
-	lwz	r31, 28(r3) 32416 
-	mtlr	r31 32420 
-	lwz	r2, 4(r3) 32424 
-	mflr	r31 32428 
-	stw	r31, 28(r3) 32432 
-	addi	r3, r3, 32 32436 
-	bl	p_group_id2754 32440 
-	subi	r3, r3, 32 32444 
-	lwz	r31, 28(r3) 32448 
-	mtlr	r31 32452 
-	lwz	r5, 0(r3) 32456 
-	slwi	r6, r5, 2 32460 
-	lwz	r7, 12(r3) 32464 
-	lwzx	r6, r7, r6 32468 
-	slwi	r7, r5, 2 32472 
-	lwz	r8, 16(r3) 32476 
-	lwzx	r7, r8, r7 32480 
-	mflr	r31 32484 
-	mr	r5, r6 32488 
-	mr	r6, r7 32492 
-	stw	r31, 28(r3) 32496 
-	addi	r3, r3, 32 32500 
-	bl	trace_diffuse_ray_80percent2999 32504 
-	subi	r3, r3, 32 32508 
-	lwz	r31, 28(r3) 32512 
-	mtlr	r31 32516 
-	lis	r2, lo16(min_caml_rgb) 32520 
-	srwi	r2, r2, 31 32524 
-	addi	r2, r2, ha16(min_caml_rgb) 32528 
-	slwi	r2, r2, 16 32532 
-	addi	r2, r2, lo16(min_caml_rgb) 32536 
-	lwz	r2, 0(r2) 32540 
-	lwz	r5, 0(r3) 32544 
-	slwi	r5, r5, 2 32548 
-	lwz	r6, 20(r3) 32552 
-	lwzx	r5, r6, r5 32556 
-	lis	r6, lo16(min_caml_diffuse_ray) 32560 
-	srwi	r6, r6, 31 32564 
-	addi	r6, r6, ha16(min_caml_diffuse_ray) 32568 
-	slwi	r6, r6, 16 32572 
-	addi	r6, r6, lo16(min_caml_diffuse_ray) 32576 
-	lwz	r6, 0(r6) 32580 
-	b	vecaccumv2696 32584 
+	stw	r5, 0(r3) 32180 
+	stw	r2, 4(r3) 32184 
+	mflr	r31 32188 
+	stw	r31, 12(r3) 32192 
+	addi	r3, r3, 16 32196 
+	bl	p_received_ray_20percent2752 32200 
+	subi	r3, r3, 16 32204 
+	lwz	r31, 12(r3) 32208 
+	mtlr	r31 32212 
+	lwz	r5, 4(r3) 32216 
+	stw	r2, 8(r3) 32220 
+	mflr	r31 32224 
+	mr	r2, r5 32228 
+	stw	r31, 12(r3) 32232 
+	addi	r3, r3, 16 32236 
+	bl	p_nvectors2759 32240 
+	subi	r3, r3, 16 32244 
+	lwz	r31, 12(r3) 32248 
+	mtlr	r31 32252 
+	lwz	r5, 4(r3) 32256 
+	stw	r2, 12(r3) 32260 
+	mflr	r31 32264 
+	mr	r2, r5 32268 
+	stw	r31, 20(r3) 32272 
+	addi	r3, r3, 24 32276 
+	bl	p_intersection_points2744 32280 
+	subi	r3, r3, 24 32284 
+	lwz	r31, 20(r3) 32288 
+	mtlr	r31 32292 
+	lwz	r5, 4(r3) 32296 
+	stw	r2, 16(r3) 32300 
+	mflr	r31 32304 
+	mr	r2, r5 32308 
+	stw	r31, 20(r3) 32312 
+	addi	r3, r3, 24 32316 
+	bl	p_energy2750 32320 
+	subi	r3, r3, 24 32324 
+	lwz	r31, 20(r3) 32328 
+	mtlr	r31 32332 
+	lis	r5, lo16(min_caml_diffuse_ray) 32336 
+	srwi	r5, r5, 31 32340 
+	addi	r5, r5, ha16(min_caml_diffuse_ray) 32344 
+	slwi	r5, r5, 16 32348 
+	addi	r5, r5, lo16(min_caml_diffuse_ray) 32352 
+	lwz	r5, 0(r5) 32356 
+	lwz	r6, 0(r3) 32360 
+	slwi	r7, r6, 2 32364 
+	lwz	r8, 8(r3) 32368 
+	lwzx	r7, r8, r7 32372 
+	stw	r2, 20(r3) 32376 
+	mflr	r31 32380 
+	mr	r2, r5 32384 
+	mr	r5, r7 32388 
+	stw	r31, 28(r3) 32392 
+	addi	r3, r3, 32 32396 
+	bl	veccpy2664 32400 
+	subi	r3, r3, 32 32404 
+	lwz	r31, 28(r3) 32408 
+	mtlr	r31 32412 
+	lwz	r2, 4(r3) 32416 
+	mflr	r31 32420 
+	stw	r31, 28(r3) 32424 
+	addi	r3, r3, 32 32428 
+	bl	p_group_id2754 32432 
+	subi	r3, r3, 32 32436 
+	lwz	r31, 28(r3) 32440 
+	mtlr	r31 32444 
+	lwz	r5, 0(r3) 32448 
+	slwi	r6, r5, 2 32452 
+	lwz	r7, 12(r3) 32456 
+	lwzx	r6, r7, r6 32460 
+	slwi	r7, r5, 2 32464 
+	lwz	r8, 16(r3) 32468 
+	lwzx	r7, r8, r7 32472 
+	mflr	r31 32476 
+	mr	r5, r6 32480 
+	mr	r6, r7 32484 
+	stw	r31, 28(r3) 32488 
+	addi	r3, r3, 32 32492 
+	bl	trace_diffuse_ray_80percent2999 32496 
+	subi	r3, r3, 32 32500 
+	lwz	r31, 28(r3) 32504 
+	mtlr	r31 32508 
+	lis	r2, lo16(min_caml_rgb) 32512 
+	srwi	r2, r2, 31 32516 
+	addi	r2, r2, ha16(min_caml_rgb) 32520 
+	slwi	r2, r2, 16 32524 
+	addi	r2, r2, lo16(min_caml_rgb) 32528 
+	lwz	r2, 0(r2) 32532 
+	lwz	r5, 0(r3) 32536 
+	slwi	r5, r5, 2 32540 
+	lwz	r6, 20(r3) 32544 
+	lwzx	r5, r6, r5 32548 
+	lis	r6, lo16(min_caml_diffuse_ray) 32552 
+	srwi	r6, r6, 31 32556 
+	addi	r6, r6, ha16(min_caml_diffuse_ray) 32560 
+	slwi	r6, r6, 16 32564 
+	addi	r6, r6, lo16(min_caml_diffuse_ray) 32568 
+	lwz	r6, 0(r6) 32572 
+	b	vecaccumv2696 32576 
 calc_diffuse_using_5points3006:
-	slwi	r9, r2, 2 32588 
-	lwzx	r5, r5, r9 32592 
-	stw	r8, 0(r3) 32596 
-	stw	r7, 4(r3) 32600 
-	stw	r6, 8(r3) 32604 
-	stw	r2, 12(r3) 32608 
-	mflr	r31 32612 
-	mr	r2, r5 32616 
-	stw	r31, 20(r3) 32620 
-	addi	r3, r3, 24 32624 
-	bl	p_received_ray_20percent2752 32628 
-	subi	r3, r3, 24 32632 
-	lwz	r31, 20(r3) 32636 
-	mtlr	r31 32640 
-	lwz	r5, 12(r3) 32644 
-	subi	r6, r5, 1 32648 
-	slwi	r6, r6, 2 32652 
-	lwz	r7, 8(r3) 32656 
-	lwzx	r6, r7, r6 32660 
-	stw	r2, 16(r3) 32664 
-	mflr	r31 32668 
-	mr	r2, r6 32672 
-	stw	r31, 20(r3) 32676 
-	addi	r3, r3, 24 32680 
-	bl	p_received_ray_20percent2752 32684 
-	subi	r3, r3, 24 32688 
-	lwz	r31, 20(r3) 32692 
-	mtlr	r31 32696 
-	lwz	r5, 12(r3) 32700 
-	slwi	r6, r5, 2 32704 
-	lwz	r7, 8(r3) 32708 
-	lwzx	r6, r7, r6 32712 
-	stw	r2, 20(r3) 32716 
-	mflr	r31 32720 
-	mr	r2, r6 32724 
-	stw	r31, 28(r3) 32728 
-	addi	r3, r3, 32 32732 
-	bl	p_received_ray_20percent2752 32736 
-	subi	r3, r3, 32 32740 
-	lwz	r31, 28(r3) 32744 
-	mtlr	r31 32748 
-	lwz	r5, 12(r3) 32752 
-	addi	r6, r5, 1 32756 
-	slwi	r6, r6, 2 32760 
-	lwz	r7, 8(r3) 32764 
-	lwzx	r6, r7, r6 32768 
-	stw	r2, 24(r3) 32772 
-	mflr	r31 32776 
-	mr	r2, r6 32780 
-	stw	r31, 28(r3) 32784 
-	addi	r3, r3, 32 32788 
-	bl	p_received_ray_20percent2752 32792 
-	subi	r3, r3, 32 32796 
-	lwz	r31, 28(r3) 32800 
-	mtlr	r31 32804 
-	lwz	r5, 12(r3) 32808 
-	slwi	r6, r5, 2 32812 
-	lwz	r7, 4(r3) 32816 
-	lwzx	r6, r7, r6 32820 
-	stw	r2, 28(r3) 32824 
-	mflr	r31 32828 
-	mr	r2, r6 32832 
-	stw	r31, 36(r3) 32836 
-	addi	r3, r3, 40 32840 
-	bl	p_received_ray_20percent2752 32844 
-	subi	r3, r3, 40 32848 
-	lwz	r31, 36(r3) 32852 
-	mtlr	r31 32856 
-	lis	r5, lo16(min_caml_diffuse_ray) 32860 
-	srwi	r5, r5, 31 32864 
-	addi	r5, r5, ha16(min_caml_diffuse_ray) 32868 
-	slwi	r5, r5, 16 32872 
-	addi	r5, r5, lo16(min_caml_diffuse_ray) 32876 
-	lwz	r5, 0(r5) 32880 
-	lwz	r6, 0(r3) 32884 
-	slwi	r7, r6, 2 32888 
-	lwz	r8, 16(r3) 32892 
-	lwzx	r7, r8, r7 32896 
-	stw	r2, 32(r3) 32900 
-	mflr	r31 32904 
-	mr	r2, r5 32908 
-	mr	r5, r7 32912 
-	stw	r31, 36(r3) 32916 
-	addi	r3, r3, 40 32920 
-	bl	veccpy2664 32924 
-	subi	r3, r3, 40 32928 
-	lwz	r31, 36(r3) 32932 
-	mtlr	r31 32936 
-	lis	r2, lo16(min_caml_diffuse_ray) 32940 
-	srwi	r2, r2, 31 32944 
-	addi	r2, r2, ha16(min_caml_diffuse_ray) 32948 
-	slwi	r2, r2, 16 32952 
-	addi	r2, r2, lo16(min_caml_diffuse_ray) 32956 
-	lwz	r2, 0(r2) 32960 
-	lwz	r5, 0(r3) 32964 
-	slwi	r6, r5, 2 32968 
-	lwz	r7, 20(r3) 32972 
-	lwzx	r6, r7, r6 32976 
-	mflr	r31 32980 
-	mr	r5, r6 32984 
-	stw	r31, 36(r3) 32988 
-	addi	r3, r3, 40 32992 
-	bl	vecadd2687 32996 
-	subi	r3, r3, 40 33000 
-	lwz	r31, 36(r3) 33004 
-	mtlr	r31 33008 
-	lis	r2, lo16(min_caml_diffuse_ray) 33012 
-	srwi	r2, r2, 31 33016 
-	addi	r2, r2, ha16(min_caml_diffuse_ray) 33020 
-	slwi	r2, r2, 16 33024 
-	addi	r2, r2, lo16(min_caml_diffuse_ray) 33028 
-	lwz	r2, 0(r2) 33032 
-	lwz	r5, 0(r3) 33036 
-	slwi	r6, r5, 2 33040 
-	lwz	r7, 24(r3) 33044 
-	lwzx	r6, r7, r6 33048 
-	mflr	r31 33052 
-	mr	r5, r6 33056 
-	stw	r31, 36(r3) 33060 
-	addi	r3, r3, 40 33064 
-	bl	vecadd2687 33068 
-	subi	r3, r3, 40 33072 
-	lwz	r31, 36(r3) 33076 
-	mtlr	r31 33080 
-	lis	r2, lo16(min_caml_diffuse_ray) 33084 
-	srwi	r2, r2, 31 33088 
-	addi	r2, r2, ha16(min_caml_diffuse_ray) 33092 
-	slwi	r2, r2, 16 33096 
-	addi	r2, r2, lo16(min_caml_diffuse_ray) 33100 
-	lwz	r2, 0(r2) 33104 
-	lwz	r5, 0(r3) 33108 
-	slwi	r6, r5, 2 33112 
-	lwz	r7, 28(r3) 33116 
-	lwzx	r6, r7, r6 33120 
-	mflr	r31 33124 
-	mr	r5, r6 33128 
-	stw	r31, 36(r3) 33132 
-	addi	r3, r3, 40 33136 
-	bl	vecadd2687 33140 
-	subi	r3, r3, 40 33144 
-	lwz	r31, 36(r3) 33148 
-	mtlr	r31 33152 
-	lis	r2, lo16(min_caml_diffuse_ray) 33156 
-	srwi	r2, r2, 31 33160 
-	addi	r2, r2, ha16(min_caml_diffuse_ray) 33164 
-	slwi	r2, r2, 16 33168 
-	addi	r2, r2, lo16(min_caml_diffuse_ray) 33172 
-	lwz	r2, 0(r2) 33176 
-	lwz	r5, 0(r3) 33180 
-	slwi	r6, r5, 2 33184 
-	lwz	r7, 32(r3) 33188 
-	lwzx	r6, r7, r6 33192 
-	mflr	r31 33196 
-	mr	r5, r6 33200 
-	stw	r31, 36(r3) 33204 
-	addi	r3, r3, 40 33208 
-	bl	vecadd2687 33212 
-	subi	r3, r3, 40 33216 
-	lwz	r31, 36(r3) 33220 
-	mtlr	r31 33224 
-	lwz	r2, 12(r3) 33228 
-	slwi	r2, r2, 2 33232 
-	lwz	r5, 8(r3) 33236 
-	lwzx	r2, r5, r2 33240 
-	mflr	r31 33244 
-	stw	r31, 36(r3) 33248 
-	addi	r3, r3, 40 33252 
-	bl	p_energy2750 33256 
-	subi	r3, r3, 40 33260 
-	lwz	r31, 36(r3) 33264 
-	mtlr	r31 33268 
-	lis	r5, lo16(min_caml_rgb) 33272 
-	srwi	r5, r5, 31 33276 
-	addi	r5, r5, ha16(min_caml_rgb) 33280 
-	slwi	r5, r5, 16 33284 
-	addi	r5, r5, lo16(min_caml_rgb) 33288 
-	lwz	r5, 0(r5) 33292 
-	lwz	r6, 0(r3) 33296 
-	slwi	r6, r6, 2 33300 
-	lwzx	r2, r2, r6 33304 
-	lis	r6, lo16(min_caml_diffuse_ray) 33308 
-	srwi	r6, r6, 31 33312 
-	addi	r6, r6, ha16(min_caml_diffuse_ray) 33316 
-	slwi	r6, r6, 16 33320 
-	addi	r6, r6, lo16(min_caml_diffuse_ray) 33324 
-	lwz	r6, 0(r6) 33328 
-	mr	r29, r5 33332 
-	mr	r5, r2 33336 
-	mr	r2, r29 33340 
-	b	vecaccumv2696 33344 
+	slwi	r9, r2, 2 32580 
+	lwzx	r5, r5, r9 32584 
+	stw	r8, 0(r3) 32588 
+	stw	r7, 4(r3) 32592 
+	stw	r6, 8(r3) 32596 
+	stw	r2, 12(r3) 32600 
+	mflr	r31 32604 
+	mr	r2, r5 32608 
+	stw	r31, 20(r3) 32612 
+	addi	r3, r3, 24 32616 
+	bl	p_received_ray_20percent2752 32620 
+	subi	r3, r3, 24 32624 
+	lwz	r31, 20(r3) 32628 
+	mtlr	r31 32632 
+	lwz	r5, 12(r3) 32636 
+	subi	r6, r5, 1 32640 
+	slwi	r6, r6, 2 32644 
+	lwz	r7, 8(r3) 32648 
+	lwzx	r6, r7, r6 32652 
+	stw	r2, 16(r3) 32656 
+	mflr	r31 32660 
+	mr	r2, r6 32664 
+	stw	r31, 20(r3) 32668 
+	addi	r3, r3, 24 32672 
+	bl	p_received_ray_20percent2752 32676 
+	subi	r3, r3, 24 32680 
+	lwz	r31, 20(r3) 32684 
+	mtlr	r31 32688 
+	lwz	r5, 12(r3) 32692 
+	slwi	r6, r5, 2 32696 
+	lwz	r7, 8(r3) 32700 
+	lwzx	r6, r7, r6 32704 
+	stw	r2, 20(r3) 32708 
+	mflr	r31 32712 
+	mr	r2, r6 32716 
+	stw	r31, 28(r3) 32720 
+	addi	r3, r3, 32 32724 
+	bl	p_received_ray_20percent2752 32728 
+	subi	r3, r3, 32 32732 
+	lwz	r31, 28(r3) 32736 
+	mtlr	r31 32740 
+	lwz	r5, 12(r3) 32744 
+	addi	r6, r5, 1 32748 
+	slwi	r6, r6, 2 32752 
+	lwz	r7, 8(r3) 32756 
+	lwzx	r6, r7, r6 32760 
+	stw	r2, 24(r3) 32764 
+	mflr	r31 32768 
+	mr	r2, r6 32772 
+	stw	r31, 28(r3) 32776 
+	addi	r3, r3, 32 32780 
+	bl	p_received_ray_20percent2752 32784 
+	subi	r3, r3, 32 32788 
+	lwz	r31, 28(r3) 32792 
+	mtlr	r31 32796 
+	lwz	r5, 12(r3) 32800 
+	slwi	r6, r5, 2 32804 
+	lwz	r7, 4(r3) 32808 
+	lwzx	r6, r7, r6 32812 
+	stw	r2, 28(r3) 32816 
+	mflr	r31 32820 
+	mr	r2, r6 32824 
+	stw	r31, 36(r3) 32828 
+	addi	r3, r3, 40 32832 
+	bl	p_received_ray_20percent2752 32836 
+	subi	r3, r3, 40 32840 
+	lwz	r31, 36(r3) 32844 
+	mtlr	r31 32848 
+	lis	r5, lo16(min_caml_diffuse_ray) 32852 
+	srwi	r5, r5, 31 32856 
+	addi	r5, r5, ha16(min_caml_diffuse_ray) 32860 
+	slwi	r5, r5, 16 32864 
+	addi	r5, r5, lo16(min_caml_diffuse_ray) 32868 
+	lwz	r5, 0(r5) 32872 
+	lwz	r6, 0(r3) 32876 
+	slwi	r7, r6, 2 32880 
+	lwz	r8, 16(r3) 32884 
+	lwzx	r7, r8, r7 32888 
+	stw	r2, 32(r3) 32892 
+	mflr	r31 32896 
+	mr	r2, r5 32900 
+	mr	r5, r7 32904 
+	stw	r31, 36(r3) 32908 
+	addi	r3, r3, 40 32912 
+	bl	veccpy2664 32916 
+	subi	r3, r3, 40 32920 
+	lwz	r31, 36(r3) 32924 
+	mtlr	r31 32928 
+	lis	r2, lo16(min_caml_diffuse_ray) 32932 
+	srwi	r2, r2, 31 32936 
+	addi	r2, r2, ha16(min_caml_diffuse_ray) 32940 
+	slwi	r2, r2, 16 32944 
+	addi	r2, r2, lo16(min_caml_diffuse_ray) 32948 
+	lwz	r2, 0(r2) 32952 
+	lwz	r5, 0(r3) 32956 
+	slwi	r6, r5, 2 32960 
+	lwz	r7, 20(r3) 32964 
+	lwzx	r6, r7, r6 32968 
+	mflr	r31 32972 
+	mr	r5, r6 32976 
+	stw	r31, 36(r3) 32980 
+	addi	r3, r3, 40 32984 
+	bl	vecadd2687 32988 
+	subi	r3, r3, 40 32992 
+	lwz	r31, 36(r3) 32996 
+	mtlr	r31 33000 
+	lis	r2, lo16(min_caml_diffuse_ray) 33004 
+	srwi	r2, r2, 31 33008 
+	addi	r2, r2, ha16(min_caml_diffuse_ray) 33012 
+	slwi	r2, r2, 16 33016 
+	addi	r2, r2, lo16(min_caml_diffuse_ray) 33020 
+	lwz	r2, 0(r2) 33024 
+	lwz	r5, 0(r3) 33028 
+	slwi	r6, r5, 2 33032 
+	lwz	r7, 24(r3) 33036 
+	lwzx	r6, r7, r6 33040 
+	mflr	r31 33044 
+	mr	r5, r6 33048 
+	stw	r31, 36(r3) 33052 
+	addi	r3, r3, 40 33056 
+	bl	vecadd2687 33060 
+	subi	r3, r3, 40 33064 
+	lwz	r31, 36(r3) 33068 
+	mtlr	r31 33072 
+	lis	r2, lo16(min_caml_diffuse_ray) 33076 
+	srwi	r2, r2, 31 33080 
+	addi	r2, r2, ha16(min_caml_diffuse_ray) 33084 
+	slwi	r2, r2, 16 33088 
+	addi	r2, r2, lo16(min_caml_diffuse_ray) 33092 
+	lwz	r2, 0(r2) 33096 
+	lwz	r5, 0(r3) 33100 
+	slwi	r6, r5, 2 33104 
+	lwz	r7, 28(r3) 33108 
+	lwzx	r6, r7, r6 33112 
+	mflr	r31 33116 
+	mr	r5, r6 33120 
+	stw	r31, 36(r3) 33124 
+	addi	r3, r3, 40 33128 
+	bl	vecadd2687 33132 
+	subi	r3, r3, 40 33136 
+	lwz	r31, 36(r3) 33140 
+	mtlr	r31 33144 
+	lis	r2, lo16(min_caml_diffuse_ray) 33148 
+	srwi	r2, r2, 31 33152 
+	addi	r2, r2, ha16(min_caml_diffuse_ray) 33156 
+	slwi	r2, r2, 16 33160 
+	addi	r2, r2, lo16(min_caml_diffuse_ray) 33164 
+	lwz	r2, 0(r2) 33168 
+	lwz	r5, 0(r3) 33172 
+	slwi	r6, r5, 2 33176 
+	lwz	r7, 32(r3) 33180 
+	lwzx	r6, r7, r6 33184 
+	mflr	r31 33188 
+	mr	r5, r6 33192 
+	stw	r31, 36(r3) 33196 
+	addi	r3, r3, 40 33200 
+	bl	vecadd2687 33204 
+	subi	r3, r3, 40 33208 
+	lwz	r31, 36(r3) 33212 
+	mtlr	r31 33216 
+	lwz	r2, 12(r3) 33220 
+	slwi	r2, r2, 2 33224 
+	lwz	r5, 8(r3) 33228 
+	lwzx	r2, r5, r2 33232 
+	mflr	r31 33236 
+	stw	r31, 36(r3) 33240 
+	addi	r3, r3, 40 33244 
+	bl	p_energy2750 33248 
+	subi	r3, r3, 40 33252 
+	lwz	r31, 36(r3) 33256 
+	mtlr	r31 33260 
+	lis	r5, lo16(min_caml_rgb) 33264 
+	srwi	r5, r5, 31 33268 
+	addi	r5, r5, ha16(min_caml_rgb) 33272 
+	slwi	r5, r5, 16 33276 
+	addi	r5, r5, lo16(min_caml_rgb) 33280 
+	lwz	r5, 0(r5) 33284 
+	lwz	r6, 0(r3) 33288 
+	slwi	r6, r6, 2 33292 
+	lwzx	r2, r2, r6 33296 
+	lis	r6, lo16(min_caml_diffuse_ray) 33300 
+	srwi	r6, r6, 31 33304 
+	addi	r6, r6, ha16(min_caml_diffuse_ray) 33308 
+	slwi	r6, r6, 16 33312 
+	addi	r6, r6, lo16(min_caml_diffuse_ray) 33316 
+	lwz	r6, 0(r6) 33320 
+	mr	r29, r5 33324 
+	mr	r5, r2 33328 
+	mr	r2, r29 33332 
+	b	vecaccumv2696 33336 
 do_without_neighbors3012:
-	cmpwi	cr7, r5, 4 33348 
-	bgt	cr7, ble_else7699 33352 
-	stw	r2, 0(r3) 33356 
-	stw	r5, 4(r3) 33360 
-	mflr	r31 33364 
-	stw	r31, 12(r3) 33368 
-	addi	r3, r3, 16 33372 
-	bl	p_surface_ids2746 33376 
-	subi	r3, r3, 16 33380 
-	lwz	r31, 12(r3) 33384 
-	mtlr	r31 33388 
-	lwz	r5, 4(r3) 33392 
-	slwi	r6, r5, 2 33396 
-	lwzx	r2, r2, r6 33400 
-	cmpwi	cr7, r2, 0 33404 
-	blt	cr7, bge_else7700 33408 
-	lwz	r2, 0(r3) 33412 
-	mflr	r31 33416 
-	stw	r31, 12(r3) 33420 
-	addi	r3, r3, 16 33424 
-	bl	p_calc_diffuse2748 33428 
-	subi	r3, r3, 16 33432 
-	lwz	r31, 12(r3) 33436 
-	mtlr	r31 33440 
-	lwz	r5, 4(r3) 33444 
-	slwi	r6, r5, 2 33448 
-	lwzx	r2, r2, r6 33452 
-	cmpwi	cr7, r2, 0 33456 
-	bne	cr7, beq_else7701 33460 
-	b	beq_cont7702 33464 
+	cmpwi	cr7, r5, 4 33340 
+	bgt	cr7, ble_else7699 33344 
+	stw	r2, 0(r3) 33348 
+	stw	r5, 4(r3) 33352 
+	mflr	r31 33356 
+	stw	r31, 12(r3) 33360 
+	addi	r3, r3, 16 33364 
+	bl	p_surface_ids2746 33368 
+	subi	r3, r3, 16 33372 
+	lwz	r31, 12(r3) 33376 
+	mtlr	r31 33380 
+	lwz	r5, 4(r3) 33384 
+	slwi	r6, r5, 2 33388 
+	lwzx	r2, r2, r6 33392 
+	cmpwi	cr7, r2, 0 33396 
+	blt	cr7, bge_else7700 33400 
+	lwz	r2, 0(r3) 33404 
+	mflr	r31 33408 
+	stw	r31, 12(r3) 33412 
+	addi	r3, r3, 16 33416 
+	bl	p_calc_diffuse2748 33420 
+	subi	r3, r3, 16 33424 
+	lwz	r31, 12(r3) 33428 
+	mtlr	r31 33432 
+	lwz	r5, 4(r3) 33436 
+	slwi	r6, r5, 2 33440 
+	lwzx	r2, r2, r6 33444 
+	cmpwi	cr7, r2, 0 33448 
+	bne	cr7, beq_else7701 33452 
+	b	beq_cont7702 33456 
 beq_else7701:
-	lwz	r2, 0(r3) 33468 
-	mflr	r31 33472 
-	stw	r31, 12(r3) 33476 
-	addi	r3, r3, 16 33480 
-	bl	calc_diffuse_using_1point3003 33484 
-	subi	r3, r3, 16 33488 
-	lwz	r31, 12(r3) 33492 
-	mtlr	r31 33496 
+	lwz	r2, 0(r3) 33460 
+	mflr	r31 33464 
+	stw	r31, 12(r3) 33468 
+	addi	r3, r3, 16 33472 
+	bl	calc_diffuse_using_1point3003 33476 
+	subi	r3, r3, 16 33480 
+	lwz	r31, 12(r3) 33484 
+	mtlr	r31 33488 
 beq_cont7702:
-	lwz	r2, 4(r3) 33500 
-	addi	r5, r2, 1 33504 
-	lwz	r2, 0(r3) 33508 
-	b	do_without_neighbors3012 33512 
+	lwz	r2, 4(r3) 33492 
+	addi	r5, r2, 1 33496 
+	lwz	r2, 0(r3) 33500 
+	b	do_without_neighbors3012 33504 
 bge_else7700:
-	blr 33516 
+	blr 33508 
 ble_else7699:
-	blr 33520 
+	blr 33512 
 neighbors_exist3015:
-	lis	r6, lo16(min_caml_image_size) 33524 
-	srwi	r6, r6, 31 33528 
-	addi	r6, r6, ha16(min_caml_image_size) 33532 
-	slwi	r6, r6, 16 33536 
-	addi	r6, r6, lo16(min_caml_image_size) 33540 
-	lwz	r6, 0(r6) 33544 
-	lwz	r6, 4(r6) 33548 
-	addi	r7, r5, 1 33552 
-	cmpw	cr7, r6, r7 33556 
-	bgt	cr7, ble_else7705 33560 
-	li	r2, 0 33564 
-	blr 33568 
+	lis	r6, lo16(min_caml_image_size) 33516 
+	srwi	r6, r6, 31 33520 
+	addi	r6, r6, ha16(min_caml_image_size) 33524 
+	slwi	r6, r6, 16 33528 
+	addi	r6, r6, lo16(min_caml_image_size) 33532 
+	lwz	r6, 0(r6) 33536 
+	lwz	r6, 4(r6) 33540 
+	addi	r7, r5, 1 33544 
+	cmpw	cr7, r6, r7 33548 
+	bgt	cr7, ble_else7705 33552 
+	li	r2, 0 33556 
+	blr 33560 
 ble_else7705:
-	cmpwi	cr7, r5, 0 33572 
-	bgt	cr7, ble_else7706 33576 
-	li	r2, 0 33580 
-	blr 33584 
+	cmpwi	cr7, r5, 0 33564 
+	bgt	cr7, ble_else7706 33568 
+	li	r2, 0 33572 
+	blr 33576 
 ble_else7706:
-	lis	r5, lo16(min_caml_image_size) 33588 
-	srwi	r5, r5, 31 33592 
-	addi	r5, r5, ha16(min_caml_image_size) 33596 
-	slwi	r5, r5, 16 33600 
-	addi	r5, r5, lo16(min_caml_image_size) 33604 
-	lwz	r5, 0(r5) 33608 
-	lwz	r5, 0(r5) 33612 
-	addi	r6, r2, 1 33616 
-	cmpw	cr7, r5, r6 33620 
-	bgt	cr7, ble_else7707 33624 
-	li	r2, 0 33628 
-	blr 33632 
+	lis	r5, lo16(min_caml_image_size) 33580 
+	srwi	r5, r5, 31 33584 
+	addi	r5, r5, ha16(min_caml_image_size) 33588 
+	slwi	r5, r5, 16 33592 
+	addi	r5, r5, lo16(min_caml_image_size) 33596 
+	lwz	r5, 0(r5) 33600 
+	lwz	r5, 0(r5) 33604 
+	addi	r6, r2, 1 33608 
+	cmpw	cr7, r5, r6 33612 
+	bgt	cr7, ble_else7707 33616 
+	li	r2, 0 33620 
+	blr 33624 
 ble_else7707:
-	cmpwi	cr7, r2, 0 33636 
-	bgt	cr7, ble_else7708 33640 
-	li	r2, 0 33644 
-	blr 33648 
+	cmpwi	cr7, r2, 0 33628 
+	bgt	cr7, ble_else7708 33632 
+	li	r2, 0 33636 
+	blr 33640 
 ble_else7708:
-	li	r2, 1 33652 
-	blr 33656 
+	li	r2, 1 33644 
+	blr 33648 
 get_surface_id3019:
-	stw	r5, 0(r3) 33660 
-	mflr	r31 33664 
-	stw	r31, 4(r3) 33668 
-	addi	r3, r3, 8 33672 
-	bl	p_surface_ids2746 33676 
-	subi	r3, r3, 8 33680 
-	lwz	r31, 4(r3) 33684 
-	mtlr	r31 33688 
-	lwz	r5, 0(r3) 33692 
-	slwi	r5, r5, 2 33696 
-	lwzx	r2, r2, r5 33700 
-	blr 33704 
+	stw	r5, 0(r3) 33652 
+	mflr	r31 33656 
+	stw	r31, 4(r3) 33660 
+	addi	r3, r3, 8 33664 
+	bl	p_surface_ids2746 33668 
+	subi	r3, r3, 8 33672 
+	lwz	r31, 4(r3) 33676 
+	mtlr	r31 33680 
+	lwz	r5, 0(r3) 33684 
+	slwi	r5, r5, 2 33688 
+	lwzx	r2, r2, r5 33692 
+	blr 33696 
 neighbors_are_available3022:
-	slwi	r9, r2, 2 33708 
-	lwzx	r9, r6, r9 33712 
-	stw	r6, 0(r3) 33716 
-	stw	r7, 4(r3) 33720 
-	stw	r8, 8(r3) 33724 
-	stw	r5, 12(r3) 33728 
-	stw	r2, 16(r3) 33732 
-	mflr	r31 33736 
-	mr	r5, r8 33740 
-	mr	r2, r9 33744 
-	stw	r31, 20(r3) 33748 
-	addi	r3, r3, 24 33752 
-	bl	get_surface_id3019 33756 
-	subi	r3, r3, 24 33760 
-	lwz	r31, 20(r3) 33764 
-	mtlr	r31 33768 
-	lwz	r5, 16(r3) 33772 
-	slwi	r6, r5, 2 33776 
-	lwz	r7, 12(r3) 33780 
-	lwzx	r6, r7, r6 33784 
-	lwz	r7, 8(r3) 33788 
-	stw	r2, 20(r3) 33792 
-	mflr	r31 33796 
-	mr	r5, r7 33800 
-	mr	r2, r6 33804 
-	stw	r31, 28(r3) 33808 
-	addi	r3, r3, 32 33812 
-	bl	get_surface_id3019 33816 
-	subi	r3, r3, 32 33820 
-	lwz	r31, 28(r3) 33824 
-	mtlr	r31 33828 
-	lwz	r5, 20(r3) 33832 
-	cmpw	cr7, r2, r5 33836 
-	bne	cr7, beq_else7709 33840 
-	lwz	r2, 16(r3) 33844 
-	slwi	r6, r2, 2 33848 
-	lwz	r7, 4(r3) 33852 
-	lwzx	r6, r7, r6 33856 
-	lwz	r7, 8(r3) 33860 
-	mflr	r31 33864 
-	mr	r5, r7 33868 
-	mr	r2, r6 33872 
-	stw	r31, 28(r3) 33876 
-	addi	r3, r3, 32 33880 
-	bl	get_surface_id3019 33884 
-	subi	r3, r3, 32 33888 
-	lwz	r31, 28(r3) 33892 
-	mtlr	r31 33896 
-	lwz	r5, 20(r3) 33900 
-	cmpw	cr7, r2, r5 33904 
-	bne	cr7, beq_else7710 33908 
-	lwz	r2, 16(r3) 33912 
-	subi	r6, r2, 1 33916 
-	slwi	r6, r6, 2 33920 
-	lwz	r7, 0(r3) 33924 
-	lwzx	r6, r7, r6 33928 
-	lwz	r8, 8(r3) 33932 
-	mflr	r31 33936 
-	mr	r5, r8 33940 
-	mr	r2, r6 33944 
-	stw	r31, 28(r3) 33948 
-	addi	r3, r3, 32 33952 
-	bl	get_surface_id3019 33956 
-	subi	r3, r3, 32 33960 
-	lwz	r31, 28(r3) 33964 
-	mtlr	r31 33968 
-	lwz	r5, 20(r3) 33972 
-	cmpw	cr7, r2, r5 33976 
-	bne	cr7, beq_else7711 33980 
-	lwz	r2, 16(r3) 33984 
-	addi	r2, r2, 1 33988 
-	slwi	r2, r2, 2 33992 
-	lwz	r6, 0(r3) 33996 
-	lwzx	r2, r6, r2 34000 
-	lwz	r6, 8(r3) 34004 
-	mflr	r31 34008 
-	mr	r5, r6 34012 
-	stw	r31, 28(r3) 34016 
-	addi	r3, r3, 32 34020 
-	bl	get_surface_id3019 34024 
-	subi	r3, r3, 32 34028 
-	lwz	r31, 28(r3) 34032 
-	mtlr	r31 34036 
-	lwz	r5, 20(r3) 34040 
-	cmpw	cr7, r2, r5 34044 
-	bne	cr7, beq_else7712 34048 
-	li	r2, 1 34052 
-	blr 34056 
+	slwi	r9, r2, 2 33700 
+	lwzx	r9, r6, r9 33704 
+	stw	r6, 0(r3) 33708 
+	stw	r7, 4(r3) 33712 
+	stw	r8, 8(r3) 33716 
+	stw	r5, 12(r3) 33720 
+	stw	r2, 16(r3) 33724 
+	mflr	r31 33728 
+	mr	r5, r8 33732 
+	mr	r2, r9 33736 
+	stw	r31, 20(r3) 33740 
+	addi	r3, r3, 24 33744 
+	bl	get_surface_id3019 33748 
+	subi	r3, r3, 24 33752 
+	lwz	r31, 20(r3) 33756 
+	mtlr	r31 33760 
+	lwz	r5, 16(r3) 33764 
+	slwi	r6, r5, 2 33768 
+	lwz	r7, 12(r3) 33772 
+	lwzx	r6, r7, r6 33776 
+	lwz	r7, 8(r3) 33780 
+	stw	r2, 20(r3) 33784 
+	mflr	r31 33788 
+	mr	r5, r7 33792 
+	mr	r2, r6 33796 
+	stw	r31, 28(r3) 33800 
+	addi	r3, r3, 32 33804 
+	bl	get_surface_id3019 33808 
+	subi	r3, r3, 32 33812 
+	lwz	r31, 28(r3) 33816 
+	mtlr	r31 33820 
+	lwz	r5, 20(r3) 33824 
+	cmpw	cr7, r2, r5 33828 
+	bne	cr7, beq_else7709 33832 
+	lwz	r2, 16(r3) 33836 
+	slwi	r6, r2, 2 33840 
+	lwz	r7, 4(r3) 33844 
+	lwzx	r6, r7, r6 33848 
+	lwz	r7, 8(r3) 33852 
+	mflr	r31 33856 
+	mr	r5, r7 33860 
+	mr	r2, r6 33864 
+	stw	r31, 28(r3) 33868 
+	addi	r3, r3, 32 33872 
+	bl	get_surface_id3019 33876 
+	subi	r3, r3, 32 33880 
+	lwz	r31, 28(r3) 33884 
+	mtlr	r31 33888 
+	lwz	r5, 20(r3) 33892 
+	cmpw	cr7, r2, r5 33896 
+	bne	cr7, beq_else7710 33900 
+	lwz	r2, 16(r3) 33904 
+	subi	r6, r2, 1 33908 
+	slwi	r6, r6, 2 33912 
+	lwz	r7, 0(r3) 33916 
+	lwzx	r6, r7, r6 33920 
+	lwz	r8, 8(r3) 33924 
+	mflr	r31 33928 
+	mr	r5, r8 33932 
+	mr	r2, r6 33936 
+	stw	r31, 28(r3) 33940 
+	addi	r3, r3, 32 33944 
+	bl	get_surface_id3019 33948 
+	subi	r3, r3, 32 33952 
+	lwz	r31, 28(r3) 33956 
+	mtlr	r31 33960 
+	lwz	r5, 20(r3) 33964 
+	cmpw	cr7, r2, r5 33968 
+	bne	cr7, beq_else7711 33972 
+	lwz	r2, 16(r3) 33976 
+	addi	r2, r2, 1 33980 
+	slwi	r2, r2, 2 33984 
+	lwz	r6, 0(r3) 33988 
+	lwzx	r2, r6, r2 33992 
+	lwz	r6, 8(r3) 33996 
+	mflr	r31 34000 
+	mr	r5, r6 34004 
+	stw	r31, 28(r3) 34008 
+	addi	r3, r3, 32 34012 
+	bl	get_surface_id3019 34016 
+	subi	r3, r3, 32 34020 
+	lwz	r31, 28(r3) 34024 
+	mtlr	r31 34028 
+	lwz	r5, 20(r3) 34032 
+	cmpw	cr7, r2, r5 34036 
+	bne	cr7, beq_else7712 34040 
+	li	r2, 1 34044 
+	blr 34048 
 beq_else7712:
+	li	r2, 0 34052 
+	blr 34056 
+beq_else7711:
 	li	r2, 0 34060 
 	blr 34064 
-beq_else7711:
+beq_else7710:
 	li	r2, 0 34068 
 	blr 34072 
-beq_else7710:
+beq_else7709:
 	li	r2, 0 34076 
 	blr 34080 
-beq_else7709:
-	li	r2, 0 34084 
-	blr 34088 
 try_exploit_neighbors3028:
-	slwi	r10, r2, 2 34092 
-	lwzx	r10, r7, r10 34096 
-	cmpwi	cr7, r9, 4 34100 
-	bgt	cr7, ble_else7713 34104 
-	stw	r5, 0(r3) 34108 
-	stw	r10, 4(r3) 34112 
-	stw	r9, 8(r3) 34116 
-	stw	r8, 12(r3) 34120 
-	stw	r7, 16(r3) 34124 
-	stw	r6, 20(r3) 34128 
-	stw	r2, 24(r3) 34132 
-	mflr	r31 34136 
-	mr	r5, r9 34140 
-	mr	r2, r10 34144 
-	stw	r31, 28(r3) 34148 
-	addi	r3, r3, 32 34152 
-	bl	get_surface_id3019 34156 
-	subi	r3, r3, 32 34160 
-	lwz	r31, 28(r3) 34164 
-	mtlr	r31 34168 
-	cmpwi	cr7, r2, 0 34172 
-	blt	cr7, bge_else7714 34176 
-	lwz	r2, 24(r3) 34180 
-	lwz	r5, 20(r3) 34184 
-	lwz	r6, 16(r3) 34188 
-	lwz	r7, 12(r3) 34192 
-	lwz	r8, 8(r3) 34196 
-	mflr	r31 34200 
-	stw	r31, 28(r3) 34204 
-	addi	r3, r3, 32 34208 
-	bl	neighbors_are_available3022 34212 
-	subi	r3, r3, 32 34216 
-	lwz	r31, 28(r3) 34220 
-	mtlr	r31 34224 
-	cmpwi	cr7, r2, 0 34228 
-	bne	cr7, beq_else7715 34232 
-	lwz	r2, 24(r3) 34236 
-	slwi	r2, r2, 2 34240 
-	lwz	r5, 16(r3) 34244 
-	lwzx	r2, r5, r2 34248 
-	lwz	r5, 8(r3) 34252 
-	b	do_without_neighbors3012 34256 
+	slwi	r10, r2, 2 34084 
+	lwzx	r10, r7, r10 34088 
+	cmpwi	cr7, r9, 4 34092 
+	bgt	cr7, ble_else7713 34096 
+	stw	r5, 0(r3) 34100 
+	stw	r10, 4(r3) 34104 
+	stw	r9, 8(r3) 34108 
+	stw	r8, 12(r3) 34112 
+	stw	r7, 16(r3) 34116 
+	stw	r6, 20(r3) 34120 
+	stw	r2, 24(r3) 34124 
+	mflr	r31 34128 
+	mr	r5, r9 34132 
+	mr	r2, r10 34136 
+	stw	r31, 28(r3) 34140 
+	addi	r3, r3, 32 34144 
+	bl	get_surface_id3019 34148 
+	subi	r3, r3, 32 34152 
+	lwz	r31, 28(r3) 34156 
+	mtlr	r31 34160 
+	cmpwi	cr7, r2, 0 34164 
+	blt	cr7, bge_else7714 34168 
+	lwz	r2, 24(r3) 34172 
+	lwz	r5, 20(r3) 34176 
+	lwz	r6, 16(r3) 34180 
+	lwz	r7, 12(r3) 34184 
+	lwz	r8, 8(r3) 34188 
+	mflr	r31 34192 
+	stw	r31, 28(r3) 34196 
+	addi	r3, r3, 32 34200 
+	bl	neighbors_are_available3022 34204 
+	subi	r3, r3, 32 34208 
+	lwz	r31, 28(r3) 34212 
+	mtlr	r31 34216 
+	cmpwi	cr7, r2, 0 34220 
+	bne	cr7, beq_else7715 34224 
+	lwz	r2, 24(r3) 34228 
+	slwi	r2, r2, 2 34232 
+	lwz	r5, 16(r3) 34236 
+	lwzx	r2, r5, r2 34240 
+	lwz	r5, 8(r3) 34244 
+	b	do_without_neighbors3012 34248 
 beq_else7715:
-	lwz	r2, 4(r3) 34260 
-	mflr	r31 34264 
-	stw	r31, 28(r3) 34268 
-	addi	r3, r3, 32 34272 
-	bl	p_calc_diffuse2748 34276 
-	subi	r3, r3, 32 34280 
-	lwz	r31, 28(r3) 34284 
-	mtlr	r31 34288 
-	lwz	r8, 8(r3) 34292 
-	slwi	r5, r8, 2 34296 
-	lwzx	r2, r2, r5 34300 
-	cmpwi	cr7, r2, 0 34304 
-	bne	cr7, beq_else7716 34308 
-	b	beq_cont7717 34312 
+	lwz	r2, 4(r3) 34252 
+	mflr	r31 34256 
+	stw	r31, 28(r3) 34260 
+	addi	r3, r3, 32 34264 
+	bl	p_calc_diffuse2748 34268 
+	subi	r3, r3, 32 34272 
+	lwz	r31, 28(r3) 34276 
+	mtlr	r31 34280 
+	lwz	r8, 8(r3) 34284 
+	slwi	r5, r8, 2 34288 
+	lwzx	r2, r2, r5 34292 
+	cmpwi	cr7, r2, 0 34296 
+	bne	cr7, beq_else7716 34300 
+	b	beq_cont7717 34304 
 beq_else7716:
-	lwz	r2, 24(r3) 34316 
-	lwz	r5, 20(r3) 34320 
-	lwz	r6, 16(r3) 34324 
-	lwz	r7, 12(r3) 34328 
-	mflr	r31 34332 
-	stw	r31, 28(r3) 34336 
-	addi	r3, r3, 32 34340 
-	bl	calc_diffuse_using_5points3006 34344 
-	subi	r3, r3, 32 34348 
-	lwz	r31, 28(r3) 34352 
-	mtlr	r31 34356 
+	lwz	r2, 24(r3) 34308 
+	lwz	r5, 20(r3) 34312 
+	lwz	r6, 16(r3) 34316 
+	lwz	r7, 12(r3) 34320 
+	mflr	r31 34324 
+	stw	r31, 28(r3) 34328 
+	addi	r3, r3, 32 34332 
+	bl	calc_diffuse_using_5points3006 34336 
+	subi	r3, r3, 32 34340 
+	lwz	r31, 28(r3) 34344 
+	mtlr	r31 34348 
 beq_cont7717:
-	lwz	r2, 8(r3) 34360 
-	addi	r9, r2, 1 34364 
-	lwz	r2, 24(r3) 34368 
-	lwz	r5, 0(r3) 34372 
-	lwz	r6, 20(r3) 34376 
-	lwz	r7, 16(r3) 34380 
-	lwz	r8, 12(r3) 34384 
-	b	try_exploit_neighbors3028 34388 
+	lwz	r2, 8(r3) 34352 
+	addi	r9, r2, 1 34356 
+	lwz	r2, 24(r3) 34360 
+	lwz	r5, 0(r3) 34364 
+	lwz	r6, 20(r3) 34368 
+	lwz	r7, 16(r3) 34372 
+	lwz	r8, 12(r3) 34376 
+	b	try_exploit_neighbors3028 34380 
 bge_else7714:
-	blr 34392 
+	blr 34384 
 ble_else7713:
-	blr 34396 
+	blr 34388 
 write_ppm_header3035:
-	li	r2, 80 34400 
+	li	r2, 80 34392 
+	out	r2 34396 
+	li	r2, 51 34400 
 	out	r2 34404 
-	li	r2, 51 34408 
+	li	r2, 10 34408 
 	out	r2 34412 
-	li	r2, 10 34416 
-	out	r2 34420 
-	lis	r2, lo16(min_caml_image_size) 34424 
-	srwi	r2, r2, 31 34428 
-	addi	r2, r2, ha16(min_caml_image_size) 34432 
-	slwi	r2, r2, 16 34436 
-	addi	r2, r2, lo16(min_caml_image_size) 34440 
-	lwz	r2, 0(r2) 34444 
-	lwz	r2, 0(r2) 34448 
-	mflr	r31 34452 
-	stw	r31, 4(r3) 34456 
-	addi	r3, r3, 8 34460 
-	bl	min_caml_print_int 34464 
-	subi	r3, r3, 8 34468 
-	lwz	r31, 4(r3) 34472 
-	mtlr	r31 34476 
-	li	r2, 32 34480 
-	out	r2 34484 
-	lis	r2, lo16(min_caml_image_size) 34488 
-	srwi	r2, r2, 31 34492 
-	addi	r2, r2, ha16(min_caml_image_size) 34496 
-	slwi	r2, r2, 16 34500 
-	addi	r2, r2, lo16(min_caml_image_size) 34504 
-	lwz	r2, 0(r2) 34508 
-	lwz	r2, 4(r2) 34512 
-	mflr	r31 34516 
-	stw	r31, 4(r3) 34520 
-	addi	r3, r3, 8 34524 
-	bl	min_caml_print_int 34528 
-	subi	r3, r3, 8 34532 
-	lwz	r31, 4(r3) 34536 
-	mtlr	r31 34540 
-	li	r2, 32 34544 
-	out	r2 34548 
-	li	r2, 255 34552 
-	mflr	r31 34556 
-	stw	r31, 4(r3) 34560 
-	addi	r3, r3, 8 34564 
-	bl	min_caml_print_int 34568 
-	subi	r3, r3, 8 34572 
-	lwz	r31, 4(r3) 34576 
-	mtlr	r31 34580 
-	li	r2, 10 34584 
-	out	r2 34588 
-	blr 34592 
+	lis	r2, lo16(min_caml_image_size) 34416 
+	srwi	r2, r2, 31 34420 
+	addi	r2, r2, ha16(min_caml_image_size) 34424 
+	slwi	r2, r2, 16 34428 
+	addi	r2, r2, lo16(min_caml_image_size) 34432 
+	lwz	r2, 0(r2) 34436 
+	lwz	r2, 0(r2) 34440 
+	mflr	r31 34444 
+	stw	r31, 4(r3) 34448 
+	addi	r3, r3, 8 34452 
+	bl	min_caml_print_int 34456 
+	subi	r3, r3, 8 34460 
+	lwz	r31, 4(r3) 34464 
+	mtlr	r31 34468 
+	li	r2, 32 34472 
+	out	r2 34476 
+	lis	r2, lo16(min_caml_image_size) 34480 
+	srwi	r2, r2, 31 34484 
+	addi	r2, r2, ha16(min_caml_image_size) 34488 
+	slwi	r2, r2, 16 34492 
+	addi	r2, r2, lo16(min_caml_image_size) 34496 
+	lwz	r2, 0(r2) 34500 
+	lwz	r2, 4(r2) 34504 
+	mflr	r31 34508 
+	stw	r31, 4(r3) 34512 
+	addi	r3, r3, 8 34516 
+	bl	min_caml_print_int 34520 
+	subi	r3, r3, 8 34524 
+	lwz	r31, 4(r3) 34528 
+	mtlr	r31 34532 
+	li	r2, 32 34536 
+	out	r2 34540 
+	li	r2, 255 34544 
+	mflr	r31 34548 
+	stw	r31, 4(r3) 34552 
+	addi	r3, r3, 8 34556 
+	bl	min_caml_print_int 34560 
+	subi	r3, r3, 8 34564 
+	lwz	r31, 4(r3) 34568 
+	mtlr	r31 34572 
+	li	r2, 10 34576 
+	out	r2 34580 
+	blr 34584 
 write_rgb_element3037:
-	ftoi	r2, f0 34596 
-	cmpwi	cr7, r2, 255 34600 
-	bgt	cr7, ble_else7721 34604 
-	cmpwi	cr7, r2, 0 34608 
-	blt	cr7, bge_else7723 34612 
-	b	bge_cont7724 34616 
+	ftoi	r2, f0 34588 
+	cmpwi	cr7, r2, 255 34592 
+	bgt	cr7, ble_else7721 34596 
+	cmpwi	cr7, r2, 0 34600 
+	blt	cr7, bge_else7723 34604 
+	b	bge_cont7724 34608 
 bge_else7723:
-	li	r2, 0 34620 
+	li	r2, 0 34612 
 bge_cont7724:
-	b	ble_cont7722 34624 
+	b	ble_cont7722 34616 
 ble_else7721:
-	li	r2, 255 34628 
+	li	r2, 255 34620 
 ble_cont7722:
-	b	min_caml_print_int 34632 
+	b	min_caml_print_int 34624 
 write_rgb3039:
-	lis	r2, lo16(min_caml_rgb) 34636 
-	srwi	r2, r2, 31 34640 
-	addi	r2, r2, ha16(min_caml_rgb) 34644 
-	slwi	r2, r2, 16 34648 
-	addi	r2, r2, lo16(min_caml_rgb) 34652 
-	lwz	r2, 0(r2) 34656 
-	lfd	f0, 0(r2) 34660 
-	mflr	r31 34664 
-	stw	r31, 4(r3) 34668 
-	addi	r3, r3, 8 34672 
-	bl	write_rgb_element3037 34676 
-	subi	r3, r3, 8 34680 
-	lwz	r31, 4(r3) 34684 
-	mtlr	r31 34688 
-	li	r2, 32 34692 
-	out	r2 34696 
-	lis	r2, lo16(min_caml_rgb) 34700 
-	srwi	r2, r2, 31 34704 
-	addi	r2, r2, ha16(min_caml_rgb) 34708 
-	slwi	r2, r2, 16 34712 
-	addi	r2, r2, lo16(min_caml_rgb) 34716 
-	lwz	r2, 0(r2) 34720 
-	lfd	f0, 4(r2) 34724 
-	mflr	r31 34728 
-	stw	r31, 4(r3) 34732 
-	addi	r3, r3, 8 34736 
-	bl	write_rgb_element3037 34740 
-	subi	r3, r3, 8 34744 
-	lwz	r31, 4(r3) 34748 
-	mtlr	r31 34752 
-	li	r2, 32 34756 
-	out	r2 34760 
-	lis	r2, lo16(min_caml_rgb) 34764 
-	srwi	r2, r2, 31 34768 
-	addi	r2, r2, ha16(min_caml_rgb) 34772 
-	slwi	r2, r2, 16 34776 
-	addi	r2, r2, lo16(min_caml_rgb) 34780 
-	lwz	r2, 0(r2) 34784 
-	lfd	f0, 8(r2) 34788 
-	mflr	r31 34792 
-	stw	r31, 4(r3) 34796 
-	addi	r3, r3, 8 34800 
-	bl	write_rgb_element3037 34804 
-	subi	r3, r3, 8 34808 
-	lwz	r31, 4(r3) 34812 
-	mtlr	r31 34816 
-	li	r2, 10 34820 
-	out	r2 34824 
-	blr 34828 
+	lis	r2, lo16(min_caml_rgb) 34628 
+	srwi	r2, r2, 31 34632 
+	addi	r2, r2, ha16(min_caml_rgb) 34636 
+	slwi	r2, r2, 16 34640 
+	addi	r2, r2, lo16(min_caml_rgb) 34644 
+	lwz	r2, 0(r2) 34648 
+	lfd	f0, 0(r2) 34652 
+	mflr	r31 34656 
+	stw	r31, 4(r3) 34660 
+	addi	r3, r3, 8 34664 
+	bl	write_rgb_element3037 34668 
+	subi	r3, r3, 8 34672 
+	lwz	r31, 4(r3) 34676 
+	mtlr	r31 34680 
+	li	r2, 32 34684 
+	out	r2 34688 
+	lis	r2, lo16(min_caml_rgb) 34692 
+	srwi	r2, r2, 31 34696 
+	addi	r2, r2, ha16(min_caml_rgb) 34700 
+	slwi	r2, r2, 16 34704 
+	addi	r2, r2, lo16(min_caml_rgb) 34708 
+	lwz	r2, 0(r2) 34712 
+	lfd	f0, 4(r2) 34716 
+	mflr	r31 34720 
+	stw	r31, 4(r3) 34724 
+	addi	r3, r3, 8 34728 
+	bl	write_rgb_element3037 34732 
+	subi	r3, r3, 8 34736 
+	lwz	r31, 4(r3) 34740 
+	mtlr	r31 34744 
+	li	r2, 32 34748 
+	out	r2 34752 
+	lis	r2, lo16(min_caml_rgb) 34756 
+	srwi	r2, r2, 31 34760 
+	addi	r2, r2, ha16(min_caml_rgb) 34764 
+	slwi	r2, r2, 16 34768 
+	addi	r2, r2, lo16(min_caml_rgb) 34772 
+	lwz	r2, 0(r2) 34776 
+	lfd	f0, 8(r2) 34780 
+	mflr	r31 34784 
+	stw	r31, 4(r3) 34788 
+	addi	r3, r3, 8 34792 
+	bl	write_rgb_element3037 34796 
+	subi	r3, r3, 8 34800 
+	lwz	r31, 4(r3) 34804 
+	mtlr	r31 34808 
+	li	r2, 10 34812 
+	out	r2 34816 
+	blr 34820 
 pretrace_diffuse_rays3041:
-	cmpwi	cr7, r5, 4 34832 
-	bgt	cr7, ble_else7726 34836 
-	stw	r5, 0(r3) 34840 
-	stw	r2, 4(r3) 34844 
-	mflr	r31 34848 
-	stw	r31, 12(r3) 34852 
-	addi	r3, r3, 16 34856 
-	bl	get_surface_id3019 34860 
-	subi	r3, r3, 16 34864 
-	lwz	r31, 12(r3) 34868 
-	mtlr	r31 34872 
-	cmpwi	cr7, r2, 0 34876 
-	blt	cr7, bge_else7727 34880 
-	lwz	r2, 4(r3) 34884 
-	mflr	r31 34888 
-	stw	r31, 12(r3) 34892 
-	addi	r3, r3, 16 34896 
-	bl	p_calc_diffuse2748 34900 
-	subi	r3, r3, 16 34904 
-	lwz	r31, 12(r3) 34908 
-	mtlr	r31 34912 
-	lwz	r5, 0(r3) 34916 
-	slwi	r6, r5, 2 34920 
-	lwzx	r2, r2, r6 34924 
-	cmpwi	cr7, r2, 0 34928 
-	bne	cr7, beq_else7728 34932 
-	b	beq_cont7729 34936 
+	cmpwi	cr7, r5, 4 34824 
+	bgt	cr7, ble_else7726 34828 
+	stw	r5, 0(r3) 34832 
+	stw	r2, 4(r3) 34836 
+	mflr	r31 34840 
+	stw	r31, 12(r3) 34844 
+	addi	r3, r3, 16 34848 
+	bl	get_surface_id3019 34852 
+	subi	r3, r3, 16 34856 
+	lwz	r31, 12(r3) 34860 
+	mtlr	r31 34864 
+	cmpwi	cr7, r2, 0 34868 
+	blt	cr7, bge_else7727 34872 
+	lwz	r2, 4(r3) 34876 
+	mflr	r31 34880 
+	stw	r31, 12(r3) 34884 
+	addi	r3, r3, 16 34888 
+	bl	p_calc_diffuse2748 34892 
+	subi	r3, r3, 16 34896 
+	lwz	r31, 12(r3) 34900 
+	mtlr	r31 34904 
+	lwz	r5, 0(r3) 34908 
+	slwi	r6, r5, 2 34912 
+	lwzx	r2, r2, r6 34916 
+	cmpwi	cr7, r2, 0 34920 
+	bne	cr7, beq_else7728 34924 
+	b	beq_cont7729 34928 
 beq_else7728:
-	lwz	r2, 4(r3) 34940 
-	mflr	r31 34944 
-	stw	r31, 12(r3) 34948 
-	addi	r3, r3, 16 34952 
-	bl	p_group_id2754 34956 
-	subi	r3, r3, 16 34960 
-	lwz	r31, 12(r3) 34964 
-	mtlr	r31 34968 
-	lis	r5, lo16(min_caml_diffuse_ray) 34972 
-	srwi	r5, r5, 31 34976 
-	addi	r5, r5, ha16(min_caml_diffuse_ray) 34980 
-	slwi	r5, r5, 16 34984 
-	addi	r5, r5, lo16(min_caml_diffuse_ray) 34988 
-	lwz	r5, 0(r5) 34992 
-	stw	r2, 8(r3) 34996 
-	mflr	r31 35000 
-	mr	r2, r5 35004 
-	stw	r31, 12(r3) 35008 
-	addi	r3, r3, 16 35012 
-	bl	vecbzero2662 35016 
-	subi	r3, r3, 16 35020 
-	lwz	r31, 12(r3) 35024 
-	mtlr	r31 35028 
-	lwz	r2, 4(r3) 35032 
-	mflr	r31 35036 
-	stw	r31, 12(r3) 35040 
-	addi	r3, r3, 16 35044 
-	bl	p_nvectors2759 35048 
-	subi	r3, r3, 16 35052 
-	lwz	r31, 12(r3) 35056 
-	mtlr	r31 35060 
-	lwz	r5, 4(r3) 35064 
-	stw	r2, 12(r3) 35068 
-	mflr	r31 35072 
-	mr	r2, r5 35076 
-	stw	r31, 20(r3) 35080 
-	addi	r3, r3, 24 35084 
-	bl	p_intersection_points2744 35088 
-	subi	r3, r3, 24 35092 
-	lwz	r31, 20(r3) 35096 
-	mtlr	r31 35100 
-	lis	r5, lo16(min_caml_dirvecs) 35104 
-	srwi	r5, r5, 31 35108 
-	addi	r5, r5, ha16(min_caml_dirvecs) 35112 
-	slwi	r5, r5, 16 35116 
-	addi	r5, r5, lo16(min_caml_dirvecs) 35120 
-	lwz	r5, 0(r5) 35124 
-	lwz	r6, 8(r3) 35128 
-	slwi	r6, r6, 2 35132 
-	lwzx	r5, r5, r6 35136 
-	lwz	r6, 0(r3) 35140 
-	slwi	r7, r6, 2 35144 
-	lwz	r8, 12(r3) 35148 
-	lwzx	r7, r8, r7 35152 
-	slwi	r8, r6, 2 35156 
-	lwzx	r2, r2, r8 35160 
-	mflr	r31 35164 
-	mr	r6, r2 35168 
-	mr	r2, r5 35172 
-	mr	r5, r7 35176 
-	stw	r31, 20(r3) 35180 
-	addi	r3, r3, 24 35184 
-	bl	trace_diffuse_rays2995 35188 
-	subi	r3, r3, 24 35192 
-	lwz	r31, 20(r3) 35196 
-	mtlr	r31 35200 
-	lwz	r2, 4(r3) 35204 
-	mflr	r31 35208 
-	stw	r31, 20(r3) 35212 
-	addi	r3, r3, 24 35216 
-	bl	p_received_ray_20percent2752 35220 
-	subi	r3, r3, 24 35224 
-	lwz	r31, 20(r3) 35228 
-	mtlr	r31 35232 
-	lwz	r5, 0(r3) 35236 
-	slwi	r6, r5, 2 35240 
-	lwzx	r2, r2, r6 35244 
-	lis	r6, lo16(min_caml_diffuse_ray) 35248 
-	srwi	r6, r6, 31 35252 
-	addi	r6, r6, ha16(min_caml_diffuse_ray) 35256 
-	slwi	r6, r6, 16 35260 
-	addi	r6, r6, lo16(min_caml_diffuse_ray) 35264 
-	lwz	r6, 0(r6) 35268 
-	mflr	r31 35272 
-	mr	r5, r6 35276 
-	stw	r31, 20(r3) 35280 
-	addi	r3, r3, 24 35284 
-	bl	veccpy2664 35288 
-	subi	r3, r3, 24 35292 
-	lwz	r31, 20(r3) 35296 
-	mtlr	r31 35300 
+	lwz	r2, 4(r3) 34932 
+	mflr	r31 34936 
+	stw	r31, 12(r3) 34940 
+	addi	r3, r3, 16 34944 
+	bl	p_group_id2754 34948 
+	subi	r3, r3, 16 34952 
+	lwz	r31, 12(r3) 34956 
+	mtlr	r31 34960 
+	lis	r5, lo16(min_caml_diffuse_ray) 34964 
+	srwi	r5, r5, 31 34968 
+	addi	r5, r5, ha16(min_caml_diffuse_ray) 34972 
+	slwi	r5, r5, 16 34976 
+	addi	r5, r5, lo16(min_caml_diffuse_ray) 34980 
+	lwz	r5, 0(r5) 34984 
+	stw	r2, 8(r3) 34988 
+	mflr	r31 34992 
+	mr	r2, r5 34996 
+	stw	r31, 12(r3) 35000 
+	addi	r3, r3, 16 35004 
+	bl	vecbzero2662 35008 
+	subi	r3, r3, 16 35012 
+	lwz	r31, 12(r3) 35016 
+	mtlr	r31 35020 
+	lwz	r2, 4(r3) 35024 
+	mflr	r31 35028 
+	stw	r31, 12(r3) 35032 
+	addi	r3, r3, 16 35036 
+	bl	p_nvectors2759 35040 
+	subi	r3, r3, 16 35044 
+	lwz	r31, 12(r3) 35048 
+	mtlr	r31 35052 
+	lwz	r5, 4(r3) 35056 
+	stw	r2, 12(r3) 35060 
+	mflr	r31 35064 
+	mr	r2, r5 35068 
+	stw	r31, 20(r3) 35072 
+	addi	r3, r3, 24 35076 
+	bl	p_intersection_points2744 35080 
+	subi	r3, r3, 24 35084 
+	lwz	r31, 20(r3) 35088 
+	mtlr	r31 35092 
+	lis	r5, lo16(min_caml_dirvecs) 35096 
+	srwi	r5, r5, 31 35100 
+	addi	r5, r5, ha16(min_caml_dirvecs) 35104 
+	slwi	r5, r5, 16 35108 
+	addi	r5, r5, lo16(min_caml_dirvecs) 35112 
+	lwz	r5, 0(r5) 35116 
+	lwz	r6, 8(r3) 35120 
+	slwi	r6, r6, 2 35124 
+	lwzx	r5, r5, r6 35128 
+	lwz	r6, 0(r3) 35132 
+	slwi	r7, r6, 2 35136 
+	lwz	r8, 12(r3) 35140 
+	lwzx	r7, r8, r7 35144 
+	slwi	r8, r6, 2 35148 
+	lwzx	r2, r2, r8 35152 
+	mflr	r31 35156 
+	mr	r6, r2 35160 
+	mr	r2, r5 35164 
+	mr	r5, r7 35168 
+	stw	r31, 20(r3) 35172 
+	addi	r3, r3, 24 35176 
+	bl	trace_diffuse_rays2995 35180 
+	subi	r3, r3, 24 35184 
+	lwz	r31, 20(r3) 35188 
+	mtlr	r31 35192 
+	lwz	r2, 4(r3) 35196 
+	mflr	r31 35200 
+	stw	r31, 20(r3) 35204 
+	addi	r3, r3, 24 35208 
+	bl	p_received_ray_20percent2752 35212 
+	subi	r3, r3, 24 35216 
+	lwz	r31, 20(r3) 35220 
+	mtlr	r31 35224 
+	lwz	r5, 0(r3) 35228 
+	slwi	r6, r5, 2 35232 
+	lwzx	r2, r2, r6 35236 
+	lis	r6, lo16(min_caml_diffuse_ray) 35240 
+	srwi	r6, r6, 31 35244 
+	addi	r6, r6, ha16(min_caml_diffuse_ray) 35248 
+	slwi	r6, r6, 16 35252 
+	addi	r6, r6, lo16(min_caml_diffuse_ray) 35256 
+	lwz	r6, 0(r6) 35260 
+	mflr	r31 35264 
+	mr	r5, r6 35268 
+	stw	r31, 20(r3) 35272 
+	addi	r3, r3, 24 35276 
+	bl	veccpy2664 35280 
+	subi	r3, r3, 24 35284 
+	lwz	r31, 20(r3) 35288 
+	mtlr	r31 35292 
 beq_cont7729:
-	lwz	r2, 0(r3) 35304 
-	addi	r5, r2, 1 35308 
-	lwz	r2, 4(r3) 35312 
-	b	pretrace_diffuse_rays3041 35316 
+	lwz	r2, 0(r3) 35296 
+	addi	r5, r2, 1 35300 
+	lwz	r2, 4(r3) 35304 
+	b	pretrace_diffuse_rays3041 35308 
 bge_else7727:
-	blr 35320 
+	blr 35312 
 ble_else7726:
-	blr 35324 
+	blr 35316 
 pretrace_pixels3044:
-	cmpwi	cr7, r5, 0 35328 
-	blt	cr7, bge_else7732 35332 
-	lis	r7, lo16(min_caml_scan_pitch) 35336 
-	srwi	r7, r7, 31 35340 
-	addi	r7, r7, ha16(min_caml_scan_pitch) 35344 
-	slwi	r7, r7, 16 35348 
-	addi	r7, r7, lo16(min_caml_scan_pitch) 35352 
-	lwz	r7, 0(r7) 35356 
-	lfd	f3, 0(r7) 35360 
-	lis	r7, lo16(min_caml_image_center) 35364 
-	srwi	r7, r7, 31 35368 
-	addi	r7, r7, ha16(min_caml_image_center) 35372 
-	slwi	r7, r7, 16 35376 
-	addi	r7, r7, lo16(min_caml_image_center) 35380 
-	lwz	r7, 0(r7) 35384 
-	lwz	r7, 0(r7) 35388 
-	sub	r7, r5, r7 35392 
-	itof	f4, r7 35396 
-	fmul	f3, f3, f4 35400 
-	lis	r7, lo16(min_caml_ptrace_dirvec) 35404 
-	srwi	r7, r7, 31 35408 
-	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35412 
-	slwi	r7, r7, 16 35416 
-	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35420 
-	lwz	r7, 0(r7) 35424 
-	lis	r8, lo16(min_caml_screenx_dir) 35428 
-	srwi	r8, r8, 31 35432 
-	addi	r8, r8, ha16(min_caml_screenx_dir) 35436 
-	slwi	r8, r8, 16 35440 
-	addi	r8, r8, lo16(min_caml_screenx_dir) 35444 
-	lwz	r8, 0(r8) 35448 
-	lfd	f4, 0(r8) 35452 
-	fmul	f4, f3, f4 35456 
-	fadd	f4, f4, f0 35460 
-	stfd	f4, 0(r7) 35464 
-	lis	r7, lo16(min_caml_ptrace_dirvec) 35468 
-	srwi	r7, r7, 31 35472 
-	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35476 
-	slwi	r7, r7, 16 35480 
-	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35484 
-	lwz	r7, 0(r7) 35488 
-	lis	r8, lo16(min_caml_screenx_dir) 35492 
-	srwi	r8, r8, 31 35496 
-	addi	r8, r8, ha16(min_caml_screenx_dir) 35500 
-	slwi	r8, r8, 16 35504 
-	addi	r8, r8, lo16(min_caml_screenx_dir) 35508 
-	lwz	r8, 0(r8) 35512 
-	lfd	f4, 4(r8) 35516 
-	fmul	f4, f3, f4 35520 
-	fadd	f4, f4, f1 35524 
-	stfd	f4, 4(r7) 35528 
-	lis	r7, lo16(min_caml_ptrace_dirvec) 35532 
-	srwi	r7, r7, 31 35536 
-	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35540 
-	slwi	r7, r7, 16 35544 
-	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35548 
-	lwz	r7, 0(r7) 35552 
-	lis	r8, lo16(min_caml_screenx_dir) 35556 
-	srwi	r8, r8, 31 35560 
-	addi	r8, r8, ha16(min_caml_screenx_dir) 35564 
-	slwi	r8, r8, 16 35568 
-	addi	r8, r8, lo16(min_caml_screenx_dir) 35572 
-	lwz	r8, 0(r8) 35576 
-	lfd	f4, 8(r8) 35580 
-	fmul	f3, f3, f4 35584 
-	fadd	f3, f3, f2 35588 
-	stfd	f3, 8(r7) 35592 
-	lis	r7, lo16(min_caml_ptrace_dirvec) 35596 
-	srwi	r7, r7, 31 35600 
-	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35604 
-	slwi	r7, r7, 16 35608 
-	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35612 
-	lwz	r7, 0(r7) 35616 
-	li	r8, 0 35620 
-	stfd	f2, 0(r3) 35624 
-	stfd	f1, 8(r3) 35628 
-	stfd	f0, 16(r3) 35632 
-	stw	r6, 24(r3) 35636 
-	stw	r2, 28(r3) 35640 
-	stw	r5, 32(r3) 35644 
-	mflr	r31 35648 
-	mr	r5, r8 35652 
-	mr	r2, r7 35656 
-	stw	r31, 36(r3) 35660 
-	addi	r3, r3, 40 35664 
-	bl	vecunit_sgn2672 35668 
-	subi	r3, r3, 40 35672 
-	lwz	r31, 36(r3) 35676 
-	mtlr	r31 35680 
-	lis	r2, lo16(min_caml_rgb) 35684 
-	srwi	r2, r2, 31 35688 
-	addi	r2, r2, ha16(min_caml_rgb) 35692 
-	slwi	r2, r2, 16 35696 
-	addi	r2, r2, lo16(min_caml_rgb) 35700 
-	lwz	r2, 0(r2) 35704 
-	mflr	r31 35708 
-	stw	r31, 36(r3) 35712 
-	addi	r3, r3, 40 35716 
-	bl	vecbzero2662 35720 
-	subi	r3, r3, 40 35724 
-	lwz	r31, 36(r3) 35728 
-	mtlr	r31 35732 
-	lis	r2, lo16(min_caml_startp) 35736 
-	srwi	r2, r2, 31 35740 
-	addi	r2, r2, ha16(min_caml_startp) 35744 
-	slwi	r2, r2, 16 35748 
-	addi	r2, r2, lo16(min_caml_startp) 35752 
-	lwz	r2, 0(r2) 35756 
-	lis	r5, lo16(min_caml_viewpoint) 35760 
-	srwi	r5, r5, 31 35764 
-	addi	r5, r5, ha16(min_caml_viewpoint) 35768 
-	slwi	r5, r5, 16 35772 
-	addi	r5, r5, lo16(min_caml_viewpoint) 35776 
-	lwz	r5, 0(r5) 35780 
-	mflr	r31 35784 
-	stw	r31, 36(r3) 35788 
-	addi	r3, r3, 40 35792 
-	bl	veccpy2664 35796 
-	subi	r3, r3, 40 35800 
-	lwz	r31, 36(r3) 35804 
-	mtlr	r31 35808 
-	li	r2, 0 35812 
-	lis	r31, lo16(l5591) 35816 
-	srwi	r31, r31, 31 35820 
-	addi	r31, r31, ha16(l5591) 35824 
-	slwi	r31, r31, 16 35828 
-	addi	r31, r31, lo16(l5591) 35832 
-	lfd	f0, 0(r31) 35836 
-	lis	r5, lo16(min_caml_ptrace_dirvec) 35840 
-	srwi	r5, r5, 31 35844 
-	addi	r5, r5, ha16(min_caml_ptrace_dirvec) 35848 
-	slwi	r5, r5, 16 35852 
-	addi	r5, r5, lo16(min_caml_ptrace_dirvec) 35856 
-	lwz	r5, 0(r5) 35860 
-	lwz	r6, 32(r3) 35864 
-	slwi	r7, r6, 2 35868 
-	lwz	r8, 28(r3) 35872 
-	lwzx	r7, r8, r7 35876 
-	lis	r31, lo16(l5590) 35880 
-	srwi	r31, r31, 31 35884 
-	addi	r31, r31, ha16(l5590) 35888 
-	slwi	r31, r31, 16 35892 
-	addi	r31, r31, lo16(l5590) 35896 
-	lfd	f1, 0(r31) 35900 
-	mflr	r31 35904 
-	mr	r6, r7 35908 
-	stw	r31, 36(r3) 35912 
-	addi	r3, r3, 40 35916 
-	bl	trace_ray2981 35920 
-	subi	r3, r3, 40 35924 
-	lwz	r31, 36(r3) 35928 
-	mtlr	r31 35932 
-	lwz	r2, 32(r3) 35936 
-	slwi	r5, r2, 2 35940 
-	lwz	r6, 28(r3) 35944 
-	lwzx	r5, r6, r5 35948 
-	mflr	r31 35952 
-	mr	r2, r5 35956 
-	stw	r31, 36(r3) 35960 
-	addi	r3, r3, 40 35964 
-	bl	p_rgb2742 35968 
-	subi	r3, r3, 40 35972 
-	lwz	r31, 36(r3) 35976 
-	mtlr	r31 35980 
-	lis	r5, lo16(min_caml_rgb) 35984 
-	srwi	r5, r5, 31 35988 
-	addi	r5, r5, ha16(min_caml_rgb) 35992 
-	slwi	r5, r5, 16 35996 
-	addi	r5, r5, lo16(min_caml_rgb) 36000 
-	lwz	r5, 0(r5) 36004 
-	mflr	r31 36008 
-	stw	r31, 36(r3) 36012 
-	addi	r3, r3, 40 36016 
-	bl	veccpy2664 36020 
-	subi	r3, r3, 40 36024 
-	lwz	r31, 36(r3) 36028 
-	mtlr	r31 36032 
-	lwz	r2, 32(r3) 36036 
-	slwi	r5, r2, 2 36040 
-	lwz	r6, 28(r3) 36044 
-	lwzx	r5, r6, r5 36048 
-	lwz	r7, 24(r3) 36052 
-	mflr	r31 36056 
-	mr	r2, r5 36060 
-	mr	r5, r7 36064 
-	stw	r31, 36(r3) 36068 
-	addi	r3, r3, 40 36072 
-	bl	p_set_group_id2756 36076 
-	subi	r3, r3, 40 36080 
-	lwz	r31, 36(r3) 36084 
-	mtlr	r31 36088 
-	lwz	r2, 32(r3) 36092 
-	slwi	r5, r2, 2 36096 
-	lwz	r6, 28(r3) 36100 
-	lwzx	r5, r6, r5 36104 
-	li	r7, 0 36108 
-	mflr	r31 36112 
-	mr	r2, r5 36116 
-	mr	r5, r7 36120 
-	stw	r31, 36(r3) 36124 
-	addi	r3, r3, 40 36128 
-	bl	pretrace_diffuse_rays3041 36132 
-	subi	r3, r3, 40 36136 
-	lwz	r31, 36(r3) 36140 
-	mtlr	r31 36144 
-	lwz	r2, 32(r3) 36148 
-	subi	r2, r2, 1 36152 
-	li	r5, 1 36156 
-	lwz	r6, 24(r3) 36160 
-	stw	r2, 36(r3) 36164 
-	mflr	r31 36168 
-	mr	r2, r6 36172 
-	stw	r31, 44(r3) 36176 
-	addi	r3, r3, 48 36180 
-	bl	add_mod52651 36184 
-	subi	r3, r3, 48 36188 
-	lwz	r31, 44(r3) 36192 
-	mr	r6, r2 36196 
-	mtlr	r31 36200 
-	lfd	f0, 16(r3) 36204 
-	lfd	f1, 8(r3) 36208 
-	lfd	f2, 0(r3) 36212 
-	lwz	r2, 28(r3) 36216 
-	lwz	r5, 36(r3) 36220 
-	b	pretrace_pixels3044 36224 
+	cmpwi	cr7, r5, 0 35320 
+	blt	cr7, bge_else7732 35324 
+	lis	r7, lo16(min_caml_scan_pitch) 35328 
+	srwi	r7, r7, 31 35332 
+	addi	r7, r7, ha16(min_caml_scan_pitch) 35336 
+	slwi	r7, r7, 16 35340 
+	addi	r7, r7, lo16(min_caml_scan_pitch) 35344 
+	lwz	r7, 0(r7) 35348 
+	lfd	f3, 0(r7) 35352 
+	lis	r7, lo16(min_caml_image_center) 35356 
+	srwi	r7, r7, 31 35360 
+	addi	r7, r7, ha16(min_caml_image_center) 35364 
+	slwi	r7, r7, 16 35368 
+	addi	r7, r7, lo16(min_caml_image_center) 35372 
+	lwz	r7, 0(r7) 35376 
+	lwz	r7, 0(r7) 35380 
+	sub	r7, r5, r7 35384 
+	itof	f4, r7 35388 
+	fmul	f3, f3, f4 35392 
+	lis	r7, lo16(min_caml_ptrace_dirvec) 35396 
+	srwi	r7, r7, 31 35400 
+	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35404 
+	slwi	r7, r7, 16 35408 
+	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35412 
+	lwz	r7, 0(r7) 35416 
+	lis	r8, lo16(min_caml_screenx_dir) 35420 
+	srwi	r8, r8, 31 35424 
+	addi	r8, r8, ha16(min_caml_screenx_dir) 35428 
+	slwi	r8, r8, 16 35432 
+	addi	r8, r8, lo16(min_caml_screenx_dir) 35436 
+	lwz	r8, 0(r8) 35440 
+	lfd	f4, 0(r8) 35444 
+	fmul	f4, f3, f4 35448 
+	fadd	f4, f4, f0 35452 
+	stfd	f4, 0(r7) 35456 
+	lis	r7, lo16(min_caml_ptrace_dirvec) 35460 
+	srwi	r7, r7, 31 35464 
+	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35468 
+	slwi	r7, r7, 16 35472 
+	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35476 
+	lwz	r7, 0(r7) 35480 
+	lis	r8, lo16(min_caml_screenx_dir) 35484 
+	srwi	r8, r8, 31 35488 
+	addi	r8, r8, ha16(min_caml_screenx_dir) 35492 
+	slwi	r8, r8, 16 35496 
+	addi	r8, r8, lo16(min_caml_screenx_dir) 35500 
+	lwz	r8, 0(r8) 35504 
+	lfd	f4, 4(r8) 35508 
+	fmul	f4, f3, f4 35512 
+	fadd	f4, f4, f1 35516 
+	stfd	f4, 4(r7) 35520 
+	lis	r7, lo16(min_caml_ptrace_dirvec) 35524 
+	srwi	r7, r7, 31 35528 
+	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35532 
+	slwi	r7, r7, 16 35536 
+	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35540 
+	lwz	r7, 0(r7) 35544 
+	lis	r8, lo16(min_caml_screenx_dir) 35548 
+	srwi	r8, r8, 31 35552 
+	addi	r8, r8, ha16(min_caml_screenx_dir) 35556 
+	slwi	r8, r8, 16 35560 
+	addi	r8, r8, lo16(min_caml_screenx_dir) 35564 
+	lwz	r8, 0(r8) 35568 
+	lfd	f4, 8(r8) 35572 
+	fmul	f3, f3, f4 35576 
+	fadd	f3, f3, f2 35580 
+	stfd	f3, 8(r7) 35584 
+	lis	r7, lo16(min_caml_ptrace_dirvec) 35588 
+	srwi	r7, r7, 31 35592 
+	addi	r7, r7, ha16(min_caml_ptrace_dirvec) 35596 
+	slwi	r7, r7, 16 35600 
+	addi	r7, r7, lo16(min_caml_ptrace_dirvec) 35604 
+	lwz	r7, 0(r7) 35608 
+	li	r8, 0 35612 
+	stfd	f2, 0(r3) 35616 
+	stfd	f1, 8(r3) 35620 
+	stfd	f0, 16(r3) 35624 
+	stw	r6, 24(r3) 35628 
+	stw	r2, 28(r3) 35632 
+	stw	r5, 32(r3) 35636 
+	mflr	r31 35640 
+	mr	r5, r8 35644 
+	mr	r2, r7 35648 
+	stw	r31, 36(r3) 35652 
+	addi	r3, r3, 40 35656 
+	bl	vecunit_sgn2672 35660 
+	subi	r3, r3, 40 35664 
+	lwz	r31, 36(r3) 35668 
+	mtlr	r31 35672 
+	lis	r2, lo16(min_caml_rgb) 35676 
+	srwi	r2, r2, 31 35680 
+	addi	r2, r2, ha16(min_caml_rgb) 35684 
+	slwi	r2, r2, 16 35688 
+	addi	r2, r2, lo16(min_caml_rgb) 35692 
+	lwz	r2, 0(r2) 35696 
+	mflr	r31 35700 
+	stw	r31, 36(r3) 35704 
+	addi	r3, r3, 40 35708 
+	bl	vecbzero2662 35712 
+	subi	r3, r3, 40 35716 
+	lwz	r31, 36(r3) 35720 
+	mtlr	r31 35724 
+	lis	r2, lo16(min_caml_startp) 35728 
+	srwi	r2, r2, 31 35732 
+	addi	r2, r2, ha16(min_caml_startp) 35736 
+	slwi	r2, r2, 16 35740 
+	addi	r2, r2, lo16(min_caml_startp) 35744 
+	lwz	r2, 0(r2) 35748 
+	lis	r5, lo16(min_caml_viewpoint) 35752 
+	srwi	r5, r5, 31 35756 
+	addi	r5, r5, ha16(min_caml_viewpoint) 35760 
+	slwi	r5, r5, 16 35764 
+	addi	r5, r5, lo16(min_caml_viewpoint) 35768 
+	lwz	r5, 0(r5) 35772 
+	mflr	r31 35776 
+	stw	r31, 36(r3) 35780 
+	addi	r3, r3, 40 35784 
+	bl	veccpy2664 35788 
+	subi	r3, r3, 40 35792 
+	lwz	r31, 36(r3) 35796 
+	mtlr	r31 35800 
+	li	r2, 0 35804 
+	lis	r31, lo16(l5591) 35808 
+	srwi	r31, r31, 31 35812 
+	addi	r31, r31, ha16(l5591) 35816 
+	slwi	r31, r31, 16 35820 
+	addi	r31, r31, lo16(l5591) 35824 
+	lfd	f0, 0(r31) 35828 
+	lis	r5, lo16(min_caml_ptrace_dirvec) 35832 
+	srwi	r5, r5, 31 35836 
+	addi	r5, r5, ha16(min_caml_ptrace_dirvec) 35840 
+	slwi	r5, r5, 16 35844 
+	addi	r5, r5, lo16(min_caml_ptrace_dirvec) 35848 
+	lwz	r5, 0(r5) 35852 
+	lwz	r6, 32(r3) 35856 
+	slwi	r7, r6, 2 35860 
+	lwz	r8, 28(r3) 35864 
+	lwzx	r7, r8, r7 35868 
+	lis	r31, lo16(l5590) 35872 
+	srwi	r31, r31, 31 35876 
+	addi	r31, r31, ha16(l5590) 35880 
+	slwi	r31, r31, 16 35884 
+	addi	r31, r31, lo16(l5590) 35888 
+	lfd	f1, 0(r31) 35892 
+	mflr	r31 35896 
+	mr	r6, r7 35900 
+	stw	r31, 36(r3) 35904 
+	addi	r3, r3, 40 35908 
+	bl	trace_ray2981 35912 
+	subi	r3, r3, 40 35916 
+	lwz	r31, 36(r3) 35920 
+	mtlr	r31 35924 
+	lwz	r2, 32(r3) 35928 
+	slwi	r5, r2, 2 35932 
+	lwz	r6, 28(r3) 35936 
+	lwzx	r5, r6, r5 35940 
+	mflr	r31 35944 
+	mr	r2, r5 35948 
+	stw	r31, 36(r3) 35952 
+	addi	r3, r3, 40 35956 
+	bl	p_rgb2742 35960 
+	subi	r3, r3, 40 35964 
+	lwz	r31, 36(r3) 35968 
+	mtlr	r31 35972 
+	lis	r5, lo16(min_caml_rgb) 35976 
+	srwi	r5, r5, 31 35980 
+	addi	r5, r5, ha16(min_caml_rgb) 35984 
+	slwi	r5, r5, 16 35988 
+	addi	r5, r5, lo16(min_caml_rgb) 35992 
+	lwz	r5, 0(r5) 35996 
+	mflr	r31 36000 
+	stw	r31, 36(r3) 36004 
+	addi	r3, r3, 40 36008 
+	bl	veccpy2664 36012 
+	subi	r3, r3, 40 36016 
+	lwz	r31, 36(r3) 36020 
+	mtlr	r31 36024 
+	lwz	r2, 32(r3) 36028 
+	slwi	r5, r2, 2 36032 
+	lwz	r6, 28(r3) 36036 
+	lwzx	r5, r6, r5 36040 
+	lwz	r7, 24(r3) 36044 
+	mflr	r31 36048 
+	mr	r2, r5 36052 
+	mr	r5, r7 36056 
+	stw	r31, 36(r3) 36060 
+	addi	r3, r3, 40 36064 
+	bl	p_set_group_id2756 36068 
+	subi	r3, r3, 40 36072 
+	lwz	r31, 36(r3) 36076 
+	mtlr	r31 36080 
+	lwz	r2, 32(r3) 36084 
+	slwi	r5, r2, 2 36088 
+	lwz	r6, 28(r3) 36092 
+	lwzx	r5, r6, r5 36096 
+	li	r7, 0 36100 
+	mflr	r31 36104 
+	mr	r2, r5 36108 
+	mr	r5, r7 36112 
+	stw	r31, 36(r3) 36116 
+	addi	r3, r3, 40 36120 
+	bl	pretrace_diffuse_rays3041 36124 
+	subi	r3, r3, 40 36128 
+	lwz	r31, 36(r3) 36132 
+	mtlr	r31 36136 
+	lwz	r2, 32(r3) 36140 
+	subi	r2, r2, 1 36144 
+	li	r5, 1 36148 
+	lwz	r6, 24(r3) 36152 
+	stw	r2, 36(r3) 36156 
+	mflr	r31 36160 
+	mr	r2, r6 36164 
+	stw	r31, 44(r3) 36168 
+	addi	r3, r3, 48 36172 
+	bl	add_mod52651 36176 
+	subi	r3, r3, 48 36180 
+	lwz	r31, 44(r3) 36184 
+	mr	r6, r2 36188 
+	mtlr	r31 36192 
+	lfd	f0, 16(r3) 36196 
+	lfd	f1, 8(r3) 36200 
+	lfd	f2, 0(r3) 36204 
+	lwz	r2, 28(r3) 36208 
+	lwz	r5, 36(r3) 36212 
+	b	pretrace_pixels3044 36216 
 bge_else7732:
-	blr 36228 
+	blr 36220 
 pretrace_line3051:
-	lis	r7, lo16(min_caml_scan_pitch) 36232 
-	srwi	r7, r7, 31 36236 
-	addi	r7, r7, ha16(min_caml_scan_pitch) 36240 
-	slwi	r7, r7, 16 36244 
-	addi	r7, r7, lo16(min_caml_scan_pitch) 36248 
-	lwz	r7, 0(r7) 36252 
-	lfd	f0, 0(r7) 36256 
-	lis	r7, lo16(min_caml_image_center) 36260 
-	srwi	r7, r7, 31 36264 
-	addi	r7, r7, ha16(min_caml_image_center) 36268 
-	slwi	r7, r7, 16 36272 
-	addi	r7, r7, lo16(min_caml_image_center) 36276 
-	lwz	r7, 0(r7) 36280 
-	lwz	r7, 4(r7) 36284 
-	sub	r5, r5, r7 36288 
-	itof	f1, r5 36292 
-	fmul	f0, f0, f1 36296 
-	lis	r5, lo16(min_caml_screeny_dir) 36300 
-	srwi	r5, r5, 31 36304 
-	addi	r5, r5, ha16(min_caml_screeny_dir) 36308 
-	slwi	r5, r5, 16 36312 
-	addi	r5, r5, lo16(min_caml_screeny_dir) 36316 
-	lwz	r5, 0(r5) 36320 
-	lfd	f1, 0(r5) 36324 
-	fmul	f1, f0, f1 36328 
-	lis	r5, lo16(min_caml_screenz_dir) 36332 
-	srwi	r5, r5, 31 36336 
-	addi	r5, r5, ha16(min_caml_screenz_dir) 36340 
-	slwi	r5, r5, 16 36344 
-	addi	r5, r5, lo16(min_caml_screenz_dir) 36348 
-	lwz	r5, 0(r5) 36352 
-	lfd	f2, 0(r5) 36356 
-	fadd	f1, f1, f2 36360 
-	lis	r5, lo16(min_caml_screeny_dir) 36364 
-	srwi	r5, r5, 31 36368 
-	addi	r5, r5, ha16(min_caml_screeny_dir) 36372 
-	slwi	r5, r5, 16 36376 
-	addi	r5, r5, lo16(min_caml_screeny_dir) 36380 
-	lwz	r5, 0(r5) 36384 
-	lfd	f2, 4(r5) 36388 
-	fmul	f2, f0, f2 36392 
-	lis	r5, lo16(min_caml_screenz_dir) 36396 
-	srwi	r5, r5, 31 36400 
-	addi	r5, r5, ha16(min_caml_screenz_dir) 36404 
-	slwi	r5, r5, 16 36408 
-	addi	r5, r5, lo16(min_caml_screenz_dir) 36412 
-	lwz	r5, 0(r5) 36416 
-	lfd	f3, 4(r5) 36420 
-	fadd	f2, f2, f3 36424 
-	lis	r5, lo16(min_caml_screeny_dir) 36428 
-	srwi	r5, r5, 31 36432 
-	addi	r5, r5, ha16(min_caml_screeny_dir) 36436 
-	slwi	r5, r5, 16 36440 
-	addi	r5, r5, lo16(min_caml_screeny_dir) 36444 
-	lwz	r5, 0(r5) 36448 
-	lfd	f3, 8(r5) 36452 
-	fmul	f0, f0, f3 36456 
-	lis	r5, lo16(min_caml_screenz_dir) 36460 
-	srwi	r5, r5, 31 36464 
-	addi	r5, r5, ha16(min_caml_screenz_dir) 36468 
-	slwi	r5, r5, 16 36472 
-	addi	r5, r5, lo16(min_caml_screenz_dir) 36476 
-	lwz	r5, 0(r5) 36480 
-	lfd	f3, 8(r5) 36484 
-	fadd	f0, f0, f3 36488 
-	lis	r5, lo16(min_caml_image_size) 36492 
-	srwi	r5, r5, 31 36496 
-	addi	r5, r5, ha16(min_caml_image_size) 36500 
-	slwi	r5, r5, 16 36504 
-	addi	r5, r5, lo16(min_caml_image_size) 36508 
-	lwz	r5, 0(r5) 36512 
-	lwz	r5, 0(r5) 36516 
-	subi	r5, r5, 1 36520 
-	fmr	f31, f2 36524 
-	fmr	f2, f0 36528 
-	fmr	f0, f1 36532 
-	fmr	f1, f31 36536 
-	b	pretrace_pixels3044 36540 
+	lis	r7, lo16(min_caml_scan_pitch) 36224 
+	srwi	r7, r7, 31 36228 
+	addi	r7, r7, ha16(min_caml_scan_pitch) 36232 
+	slwi	r7, r7, 16 36236 
+	addi	r7, r7, lo16(min_caml_scan_pitch) 36240 
+	lwz	r7, 0(r7) 36244 
+	lfd	f0, 0(r7) 36248 
+	lis	r7, lo16(min_caml_image_center) 36252 
+	srwi	r7, r7, 31 36256 
+	addi	r7, r7, ha16(min_caml_image_center) 36260 
+	slwi	r7, r7, 16 36264 
+	addi	r7, r7, lo16(min_caml_image_center) 36268 
+	lwz	r7, 0(r7) 36272 
+	lwz	r7, 4(r7) 36276 
+	sub	r5, r5, r7 36280 
+	itof	f1, r5 36284 
+	fmul	f0, f0, f1 36288 
+	lis	r5, lo16(min_caml_screeny_dir) 36292 
+	srwi	r5, r5, 31 36296 
+	addi	r5, r5, ha16(min_caml_screeny_dir) 36300 
+	slwi	r5, r5, 16 36304 
+	addi	r5, r5, lo16(min_caml_screeny_dir) 36308 
+	lwz	r5, 0(r5) 36312 
+	lfd	f1, 0(r5) 36316 
+	fmul	f1, f0, f1 36320 
+	lis	r5, lo16(min_caml_screenz_dir) 36324 
+	srwi	r5, r5, 31 36328 
+	addi	r5, r5, ha16(min_caml_screenz_dir) 36332 
+	slwi	r5, r5, 16 36336 
+	addi	r5, r5, lo16(min_caml_screenz_dir) 36340 
+	lwz	r5, 0(r5) 36344 
+	lfd	f2, 0(r5) 36348 
+	fadd	f1, f1, f2 36352 
+	lis	r5, lo16(min_caml_screeny_dir) 36356 
+	srwi	r5, r5, 31 36360 
+	addi	r5, r5, ha16(min_caml_screeny_dir) 36364 
+	slwi	r5, r5, 16 36368 
+	addi	r5, r5, lo16(min_caml_screeny_dir) 36372 
+	lwz	r5, 0(r5) 36376 
+	lfd	f2, 4(r5) 36380 
+	fmul	f2, f0, f2 36384 
+	lis	r5, lo16(min_caml_screenz_dir) 36388 
+	srwi	r5, r5, 31 36392 
+	addi	r5, r5, ha16(min_caml_screenz_dir) 36396 
+	slwi	r5, r5, 16 36400 
+	addi	r5, r5, lo16(min_caml_screenz_dir) 36404 
+	lwz	r5, 0(r5) 36408 
+	lfd	f3, 4(r5) 36412 
+	fadd	f2, f2, f3 36416 
+	lis	r5, lo16(min_caml_screeny_dir) 36420 
+	srwi	r5, r5, 31 36424 
+	addi	r5, r5, ha16(min_caml_screeny_dir) 36428 
+	slwi	r5, r5, 16 36432 
+	addi	r5, r5, lo16(min_caml_screeny_dir) 36436 
+	lwz	r5, 0(r5) 36440 
+	lfd	f3, 8(r5) 36444 
+	fmul	f0, f0, f3 36448 
+	lis	r5, lo16(min_caml_screenz_dir) 36452 
+	srwi	r5, r5, 31 36456 
+	addi	r5, r5, ha16(min_caml_screenz_dir) 36460 
+	slwi	r5, r5, 16 36464 
+	addi	r5, r5, lo16(min_caml_screenz_dir) 36468 
+	lwz	r5, 0(r5) 36472 
+	lfd	f3, 8(r5) 36476 
+	fadd	f0, f0, f3 36480 
+	lis	r5, lo16(min_caml_image_size) 36484 
+	srwi	r5, r5, 31 36488 
+	addi	r5, r5, ha16(min_caml_image_size) 36492 
+	slwi	r5, r5, 16 36496 
+	addi	r5, r5, lo16(min_caml_image_size) 36500 
+	lwz	r5, 0(r5) 36504 
+	lwz	r5, 0(r5) 36508 
+	subi	r5, r5, 1 36512 
+	fmr	f31, f2 36516 
+	fmr	f2, f0 36520 
+	fmr	f0, f1 36524 
+	fmr	f1, f31 36528 
+	b	pretrace_pixels3044 36532 
 scan_pixel3055:
-	lis	r9, lo16(min_caml_image_size) 36544 
-	srwi	r9, r9, 31 36548 
-	addi	r9, r9, ha16(min_caml_image_size) 36552 
-	slwi	r9, r9, 16 36556 
-	addi	r9, r9, lo16(min_caml_image_size) 36560 
-	lwz	r9, 0(r9) 36564 
-	lwz	r9, 0(r9) 36568 
-	cmpw	cr7, r9, r2 36572 
-	bgt	cr7, ble_else7734 36576 
-	blr 36580 
+	lis	r9, lo16(min_caml_image_size) 36536 
+	srwi	r9, r9, 31 36540 
+	addi	r9, r9, ha16(min_caml_image_size) 36544 
+	slwi	r9, r9, 16 36548 
+	addi	r9, r9, lo16(min_caml_image_size) 36552 
+	lwz	r9, 0(r9) 36556 
+	lwz	r9, 0(r9) 36560 
+	cmpw	cr7, r9, r2 36564 
+	bgt	cr7, ble_else7734 36568 
+	blr 36572 
 ble_else7734:
-	lis	r9, lo16(min_caml_rgb) 36584 
-	srwi	r9, r9, 31 36588 
-	addi	r9, r9, ha16(min_caml_rgb) 36592 
-	slwi	r9, r9, 16 36596 
-	addi	r9, r9, lo16(min_caml_rgb) 36600 
-	lwz	r9, 0(r9) 36604 
-	slwi	r10, r2, 2 36608 
-	lwzx	r10, r7, r10 36612 
-	stw	r6, 0(r3) 36616 
-	stw	r7, 4(r3) 36620 
-	stw	r8, 8(r3) 36624 
-	stw	r5, 12(r3) 36628 
-	stw	r2, 16(r3) 36632 
-	stw	r9, 20(r3) 36636 
-	mflr	r31 36640 
-	mr	r2, r10 36644 
-	stw	r31, 28(r3) 36648 
-	addi	r3, r3, 32 36652 
-	bl	p_rgb2742 36656 
-	subi	r3, r3, 32 36660 
-	lwz	r31, 28(r3) 36664 
-	mr	r5, r2 36668 
-	mtlr	r31 36672 
-	lwz	r2, 20(r3) 36676 
-	mflr	r31 36680 
-	stw	r31, 28(r3) 36684 
-	addi	r3, r3, 32 36688 
-	bl	veccpy2664 36692 
-	subi	r3, r3, 32 36696 
-	lwz	r31, 28(r3) 36700 
-	mtlr	r31 36704 
-	lwz	r2, 16(r3) 36708 
-	lwz	r5, 12(r3) 36712 
-	lwz	r6, 8(r3) 36716 
-	mflr	r31 36720 
-	stw	r31, 28(r3) 36724 
-	addi	r3, r3, 32 36728 
-	bl	neighbors_exist3015 36732 
-	subi	r3, r3, 32 36736 
-	lwz	r31, 28(r3) 36740 
-	mtlr	r31 36744 
-	cmpwi	cr7, r2, 0 36748 
-	bne	cr7, beq_else7736 36752 
-	lwz	r2, 16(r3) 36756 
-	slwi	r5, r2, 2 36760 
-	lwz	r6, 4(r3) 36764 
-	lwzx	r5, r6, r5 36768 
-	li	r7, 0 36772 
-	mflr	r31 36776 
-	mr	r2, r5 36780 
-	mr	r5, r7 36784 
-	stw	r31, 28(r3) 36788 
-	addi	r3, r3, 32 36792 
-	bl	do_without_neighbors3012 36796 
-	subi	r3, r3, 32 36800 
-	lwz	r31, 28(r3) 36804 
-	mtlr	r31 36808 
-	b	beq_cont7737 36812 
+	lis	r9, lo16(min_caml_rgb) 36576 
+	srwi	r9, r9, 31 36580 
+	addi	r9, r9, ha16(min_caml_rgb) 36584 
+	slwi	r9, r9, 16 36588 
+	addi	r9, r9, lo16(min_caml_rgb) 36592 
+	lwz	r9, 0(r9) 36596 
+	slwi	r10, r2, 2 36600 
+	lwzx	r10, r7, r10 36604 
+	stw	r6, 0(r3) 36608 
+	stw	r7, 4(r3) 36612 
+	stw	r8, 8(r3) 36616 
+	stw	r5, 12(r3) 36620 
+	stw	r2, 16(r3) 36624 
+	stw	r9, 20(r3) 36628 
+	mflr	r31 36632 
+	mr	r2, r10 36636 
+	stw	r31, 28(r3) 36640 
+	addi	r3, r3, 32 36644 
+	bl	p_rgb2742 36648 
+	subi	r3, r3, 32 36652 
+	lwz	r31, 28(r3) 36656 
+	mr	r5, r2 36660 
+	mtlr	r31 36664 
+	lwz	r2, 20(r3) 36668 
+	mflr	r31 36672 
+	stw	r31, 28(r3) 36676 
+	addi	r3, r3, 32 36680 
+	bl	veccpy2664 36684 
+	subi	r3, r3, 32 36688 
+	lwz	r31, 28(r3) 36692 
+	mtlr	r31 36696 
+	lwz	r2, 16(r3) 36700 
+	lwz	r5, 12(r3) 36704 
+	lwz	r6, 8(r3) 36708 
+	mflr	r31 36712 
+	stw	r31, 28(r3) 36716 
+	addi	r3, r3, 32 36720 
+	bl	neighbors_exist3015 36724 
+	subi	r3, r3, 32 36728 
+	lwz	r31, 28(r3) 36732 
+	mtlr	r31 36736 
+	cmpwi	cr7, r2, 0 36740 
+	bne	cr7, beq_else7736 36744 
+	lwz	r2, 16(r3) 36748 
+	slwi	r5, r2, 2 36752 
+	lwz	r6, 4(r3) 36756 
+	lwzx	r5, r6, r5 36760 
+	li	r7, 0 36764 
+	mflr	r31 36768 
+	mr	r2, r5 36772 
+	mr	r5, r7 36776 
+	stw	r31, 28(r3) 36780 
+	addi	r3, r3, 32 36784 
+	bl	do_without_neighbors3012 36788 
+	subi	r3, r3, 32 36792 
+	lwz	r31, 28(r3) 36796 
+	mtlr	r31 36800 
+	b	beq_cont7737 36804 
 beq_else7736:
-	li	r9, 0 36816 
-	lwz	r2, 16(r3) 36820 
-	lwz	r5, 12(r3) 36824 
-	lwz	r6, 0(r3) 36828 
-	lwz	r7, 4(r3) 36832 
-	lwz	r8, 8(r3) 36836 
-	mflr	r31 36840 
-	stw	r31, 28(r3) 36844 
-	addi	r3, r3, 32 36848 
-	bl	try_exploit_neighbors3028 36852 
-	subi	r3, r3, 32 36856 
-	lwz	r31, 28(r3) 36860 
-	mtlr	r31 36864 
+	li	r9, 0 36808 
+	lwz	r2, 16(r3) 36812 
+	lwz	r5, 12(r3) 36816 
+	lwz	r6, 0(r3) 36820 
+	lwz	r7, 4(r3) 36824 
+	lwz	r8, 8(r3) 36828 
+	mflr	r31 36832 
+	stw	r31, 28(r3) 36836 
+	addi	r3, r3, 32 36840 
+	bl	try_exploit_neighbors3028 36844 
+	subi	r3, r3, 32 36848 
+	lwz	r31, 28(r3) 36852 
+	mtlr	r31 36856 
 beq_cont7737:
-	mflr	r31 36868 
-	stw	r31, 28(r3) 36872 
-	addi	r3, r3, 32 36876 
-	bl	write_rgb3039 36880 
-	subi	r3, r3, 32 36884 
-	lwz	r31, 28(r3) 36888 
-	mtlr	r31 36892 
-	lwz	r2, 16(r3) 36896 
-	addi	r2, r2, 1 36900 
-	lwz	r5, 12(r3) 36904 
-	lwz	r6, 0(r3) 36908 
-	lwz	r7, 4(r3) 36912 
-	lwz	r8, 8(r3) 36916 
-	b	scan_pixel3055 36920 
+	mflr	r31 36860 
+	stw	r31, 28(r3) 36864 
+	addi	r3, r3, 32 36868 
+	bl	write_rgb3039 36872 
+	subi	r3, r3, 32 36876 
+	lwz	r31, 28(r3) 36880 
+	mtlr	r31 36884 
+	lwz	r2, 16(r3) 36888 
+	addi	r2, r2, 1 36892 
+	lwz	r5, 12(r3) 36896 
+	lwz	r6, 0(r3) 36900 
+	lwz	r7, 4(r3) 36904 
+	lwz	r8, 8(r3) 36908 
+	b	scan_pixel3055 36912 
 scan_line3061:
-	lis	r9, lo16(min_caml_image_size) 36924 
-	srwi	r9, r9, 31 36928 
-	addi	r9, r9, ha16(min_caml_image_size) 36932 
-	slwi	r9, r9, 16 36936 
-	addi	r9, r9, lo16(min_caml_image_size) 36940 
-	lwz	r9, 0(r9) 36944 
-	lwz	r9, 4(r9) 36948 
-	cmpw	cr7, r9, r2 36952 
-	bgt	cr7, ble_else7738 36956 
-	blr 36960 
+	lis	r9, lo16(min_caml_image_size) 36916 
+	srwi	r9, r9, 31 36920 
+	addi	r9, r9, ha16(min_caml_image_size) 36924 
+	slwi	r9, r9, 16 36928 
+	addi	r9, r9, lo16(min_caml_image_size) 36932 
+	lwz	r9, 0(r9) 36936 
+	lwz	r9, 4(r9) 36940 
+	cmpw	cr7, r9, r2 36944 
+	bgt	cr7, ble_else7738 36948 
+	blr 36952 
 ble_else7738:
-	lis	r9, lo16(min_caml_image_size) 36964 
-	srwi	r9, r9, 31 36968 
-	addi	r9, r9, ha16(min_caml_image_size) 36972 
-	slwi	r9, r9, 16 36976 
-	addi	r9, r9, lo16(min_caml_image_size) 36980 
-	lwz	r9, 0(r9) 36984 
-	lwz	r9, 4(r9) 36988 
-	subi	r9, r9, 1 36992 
-	stw	r8, 0(r3) 36996 
-	stw	r7, 4(r3) 37000 
-	stw	r6, 8(r3) 37004 
-	stw	r5, 12(r3) 37008 
-	stw	r2, 16(r3) 37012 
-	cmpw	cr7, r9, r2 37016 
-	bgt	cr7, ble_else7740 37020 
-	b	ble_cont7741 37024 
+	lis	r9, lo16(min_caml_image_size) 36956 
+	srwi	r9, r9, 31 36960 
+	addi	r9, r9, ha16(min_caml_image_size) 36964 
+	slwi	r9, r9, 16 36968 
+	addi	r9, r9, lo16(min_caml_image_size) 36972 
+	lwz	r9, 0(r9) 36976 
+	lwz	r9, 4(r9) 36980 
+	subi	r9, r9, 1 36984 
+	stw	r8, 0(r3) 36988 
+	stw	r7, 4(r3) 36992 
+	stw	r6, 8(r3) 36996 
+	stw	r5, 12(r3) 37000 
+	stw	r2, 16(r3) 37004 
+	cmpw	cr7, r9, r2 37008 
+	bgt	cr7, ble_else7740 37012 
+	b	ble_cont7741 37016 
 ble_else7740:
-	addi	r9, r2, 1 37028 
-	mflr	r31 37032 
-	mr	r6, r8 37036 
-	mr	r5, r9 37040 
-	mr	r2, r7 37044 
-	stw	r31, 20(r3) 37048 
-	addi	r3, r3, 24 37052 
-	bl	pretrace_line3051 37056 
-	subi	r3, r3, 24 37060 
-	lwz	r31, 20(r3) 37064 
-	mtlr	r31 37068 
+	addi	r9, r2, 1 37020 
+	mflr	r31 37024 
+	mr	r6, r8 37028 
+	mr	r5, r9 37032 
+	mr	r2, r7 37036 
+	stw	r31, 20(r3) 37040 
+	addi	r3, r3, 24 37044 
+	bl	pretrace_line3051 37048 
+	subi	r3, r3, 24 37052 
+	lwz	r31, 20(r3) 37056 
+	mtlr	r31 37060 
 ble_cont7741:
-	li	r2, 0 37072 
-	lwz	r5, 16(r3) 37076 
-	lwz	r6, 12(r3) 37080 
-	lwz	r7, 8(r3) 37084 
-	lwz	r8, 4(r3) 37088 
-	mflr	r31 37092 
-	stw	r31, 20(r3) 37096 
-	addi	r3, r3, 24 37100 
-	bl	scan_pixel3055 37104 
-	subi	r3, r3, 24 37108 
-	lwz	r31, 20(r3) 37112 
-	mtlr	r31 37116 
-	lwz	r2, 16(r3) 37120 
-	addi	r2, r2, 1 37124 
-	li	r5, 2 37128 
-	lwz	r6, 0(r3) 37132 
-	stw	r2, 20(r3) 37136 
-	mflr	r31 37140 
-	mr	r2, r6 37144 
-	stw	r31, 28(r3) 37148 
-	addi	r3, r3, 32 37152 
-	bl	add_mod52651 37156 
-	subi	r3, r3, 32 37160 
-	lwz	r31, 28(r3) 37164 
-	mr	r8, r2 37168 
-	mtlr	r31 37172 
-	lwz	r2, 20(r3) 37176 
-	lwz	r5, 8(r3) 37180 
-	lwz	r6, 4(r3) 37184 
-	lwz	r7, 12(r3) 37188 
-	b	scan_line3061 37192 
+	li	r2, 0 37064 
+	lwz	r5, 16(r3) 37068 
+	lwz	r6, 12(r3) 37072 
+	lwz	r7, 8(r3) 37076 
+	lwz	r8, 4(r3) 37080 
+	mflr	r31 37084 
+	stw	r31, 20(r3) 37088 
+	addi	r3, r3, 24 37092 
+	bl	scan_pixel3055 37096 
+	subi	r3, r3, 24 37100 
+	lwz	r31, 20(r3) 37104 
+	mtlr	r31 37108 
+	lwz	r2, 16(r3) 37112 
+	addi	r2, r2, 1 37116 
+	li	r5, 2 37120 
+	lwz	r6, 0(r3) 37124 
+	stw	r2, 20(r3) 37128 
+	mflr	r31 37132 
+	mr	r2, r6 37136 
+	stw	r31, 28(r3) 37140 
+	addi	r3, r3, 32 37144 
+	bl	add_mod52651 37148 
+	subi	r3, r3, 32 37152 
+	lwz	r31, 28(r3) 37156 
+	mr	r8, r2 37160 
+	mtlr	r31 37164 
+	lwz	r2, 20(r3) 37168 
+	lwz	r5, 8(r3) 37172 
+	lwz	r6, 4(r3) 37176 
+	lwz	r7, 12(r3) 37180 
+	b	scan_line3061 37184 
 create_float5x3array3067:
-	li	r2, 3 37196 
-	lis	r31, lo16(l5590) 37200 
-	srwi	r31, r31, 31 37204 
-	addi	r31, r31, ha16(l5590) 37208 
-	slwi	r31, r31, 16 37212 
-	addi	r31, r31, lo16(l5590) 37216 
-	lfd	f0, 0(r31) 37220 
-	mflr	r31 37224 
-	stw	r31, 4(r3) 37228 
-	addi	r3, r3, 8 37232 
-	bl	min_caml_create_float_array 37236 
-	subi	r3, r3, 8 37240 
-	lwz	r31, 4(r3) 37244 
-	mr	r5, r2 37248 
-	mtlr	r31 37252 
-	li	r2, 5 37256 
-	mflr	r31 37260 
-	stw	r31, 4(r3) 37264 
-	addi	r3, r3, 8 37268 
-	bl	min_caml_create_array 37272 
-	subi	r3, r3, 8 37276 
-	lwz	r31, 4(r3) 37280 
-	mtlr	r31 37284 
-	li	r5, 3 37288 
-	lis	r31, lo16(l5590) 37292 
-	srwi	r31, r31, 31 37296 
-	addi	r31, r31, ha16(l5590) 37300 
-	slwi	r31, r31, 16 37304 
-	addi	r31, r31, lo16(l5590) 37308 
-	lfd	f0, 0(r31) 37312 
-	stw	r2, 0(r3) 37316 
-	mflr	r31 37320 
-	mr	r2, r5 37324 
-	stw	r31, 4(r3) 37328 
-	addi	r3, r3, 8 37332 
-	bl	min_caml_create_float_array 37336 
-	subi	r3, r3, 8 37340 
-	lwz	r31, 4(r3) 37344 
-	mtlr	r31 37348 
-	lwz	r5, 0(r3) 37352 
-	stw	r2, 4(r5) 37356 
-	li	r2, 3 37360 
-	lis	r31, lo16(l5590) 37364 
-	srwi	r31, r31, 31 37368 
-	addi	r31, r31, ha16(l5590) 37372 
-	slwi	r31, r31, 16 37376 
-	addi	r31, r31, lo16(l5590) 37380 
-	lfd	f0, 0(r31) 37384 
-	mflr	r31 37388 
-	stw	r31, 4(r3) 37392 
-	addi	r3, r3, 8 37396 
-	bl	min_caml_create_float_array 37400 
-	subi	r3, r3, 8 37404 
-	lwz	r31, 4(r3) 37408 
-	mtlr	r31 37412 
-	lwz	r5, 0(r3) 37416 
-	stw	r2, 8(r5) 37420 
-	li	r2, 3 37424 
-	lis	r31, lo16(l5590) 37428 
-	srwi	r31, r31, 31 37432 
-	addi	r31, r31, ha16(l5590) 37436 
-	slwi	r31, r31, 16 37440 
-	addi	r31, r31, lo16(l5590) 37444 
-	lfd	f0, 0(r31) 37448 
-	mflr	r31 37452 
-	stw	r31, 4(r3) 37456 
-	addi	r3, r3, 8 37460 
-	bl	min_caml_create_float_array 37464 
-	subi	r3, r3, 8 37468 
-	lwz	r31, 4(r3) 37472 
-	mtlr	r31 37476 
-	lwz	r5, 0(r3) 37480 
-	stw	r2, 12(r5) 37484 
-	li	r2, 3 37488 
-	lis	r31, lo16(l5590) 37492 
-	srwi	r31, r31, 31 37496 
-	addi	r31, r31, ha16(l5590) 37500 
-	slwi	r31, r31, 16 37504 
-	addi	r31, r31, lo16(l5590) 37508 
-	lfd	f0, 0(r31) 37512 
-	mflr	r31 37516 
-	stw	r31, 4(r3) 37520 
-	addi	r3, r3, 8 37524 
-	bl	min_caml_create_float_array 37528 
-	subi	r3, r3, 8 37532 
-	lwz	r31, 4(r3) 37536 
-	mtlr	r31 37540 
-	lwz	r5, 0(r3) 37544 
-	stw	r2, 16(r5) 37548 
-	mr	r2, r5 37552 
-	blr 37556 
+	li	r2, 3 37188 
+	lis	r31, lo16(l5590) 37192 
+	srwi	r31, r31, 31 37196 
+	addi	r31, r31, ha16(l5590) 37200 
+	slwi	r31, r31, 16 37204 
+	addi	r31, r31, lo16(l5590) 37208 
+	lfd	f0, 0(r31) 37212 
+	mflr	r31 37216 
+	stw	r31, 4(r3) 37220 
+	addi	r3, r3, 8 37224 
+	bl	min_caml_create_float_array 37228 
+	subi	r3, r3, 8 37232 
+	lwz	r31, 4(r3) 37236 
+	mr	r5, r2 37240 
+	mtlr	r31 37244 
+	li	r2, 5 37248 
+	mflr	r31 37252 
+	stw	r31, 4(r3) 37256 
+	addi	r3, r3, 8 37260 
+	bl	min_caml_create_array 37264 
+	subi	r3, r3, 8 37268 
+	lwz	r31, 4(r3) 37272 
+	mtlr	r31 37276 
+	li	r5, 3 37280 
+	lis	r31, lo16(l5590) 37284 
+	srwi	r31, r31, 31 37288 
+	addi	r31, r31, ha16(l5590) 37292 
+	slwi	r31, r31, 16 37296 
+	addi	r31, r31, lo16(l5590) 37300 
+	lfd	f0, 0(r31) 37304 
+	stw	r2, 0(r3) 37308 
+	mflr	r31 37312 
+	mr	r2, r5 37316 
+	stw	r31, 4(r3) 37320 
+	addi	r3, r3, 8 37324 
+	bl	min_caml_create_float_array 37328 
+	subi	r3, r3, 8 37332 
+	lwz	r31, 4(r3) 37336 
+	mtlr	r31 37340 
+	lwz	r5, 0(r3) 37344 
+	stw	r2, 4(r5) 37348 
+	li	r2, 3 37352 
+	lis	r31, lo16(l5590) 37356 
+	srwi	r31, r31, 31 37360 
+	addi	r31, r31, ha16(l5590) 37364 
+	slwi	r31, r31, 16 37368 
+	addi	r31, r31, lo16(l5590) 37372 
+	lfd	f0, 0(r31) 37376 
+	mflr	r31 37380 
+	stw	r31, 4(r3) 37384 
+	addi	r3, r3, 8 37388 
+	bl	min_caml_create_float_array 37392 
+	subi	r3, r3, 8 37396 
+	lwz	r31, 4(r3) 37400 
+	mtlr	r31 37404 
+	lwz	r5, 0(r3) 37408 
+	stw	r2, 8(r5) 37412 
+	li	r2, 3 37416 
+	lis	r31, lo16(l5590) 37420 
+	srwi	r31, r31, 31 37424 
+	addi	r31, r31, ha16(l5590) 37428 
+	slwi	r31, r31, 16 37432 
+	addi	r31, r31, lo16(l5590) 37436 
+	lfd	f0, 0(r31) 37440 
+	mflr	r31 37444 
+	stw	r31, 4(r3) 37448 
+	addi	r3, r3, 8 37452 
+	bl	min_caml_create_float_array 37456 
+	subi	r3, r3, 8 37460 
+	lwz	r31, 4(r3) 37464 
+	mtlr	r31 37468 
+	lwz	r5, 0(r3) 37472 
+	stw	r2, 12(r5) 37476 
+	li	r2, 3 37480 
+	lis	r31, lo16(l5590) 37484 
+	srwi	r31, r31, 31 37488 
+	addi	r31, r31, ha16(l5590) 37492 
+	slwi	r31, r31, 16 37496 
+	addi	r31, r31, lo16(l5590) 37500 
+	lfd	f0, 0(r31) 37504 
+	mflr	r31 37508 
+	stw	r31, 4(r3) 37512 
+	addi	r3, r3, 8 37516 
+	bl	min_caml_create_float_array 37520 
+	subi	r3, r3, 8 37524 
+	lwz	r31, 4(r3) 37528 
+	mtlr	r31 37532 
+	lwz	r5, 0(r3) 37536 
+	stw	r2, 16(r5) 37540 
+	mr	r2, r5 37544 
+	blr 37548 
 create_pixel3069:
-	li	r2, 3 37560 
-	lis	r31, lo16(l5590) 37564 
-	srwi	r31, r31, 31 37568 
-	addi	r31, r31, ha16(l5590) 37572 
-	slwi	r31, r31, 16 37576 
-	addi	r31, r31, lo16(l5590) 37580 
-	lfd	f0, 0(r31) 37584 
-	mflr	r31 37588 
-	stw	r31, 4(r3) 37592 
-	addi	r3, r3, 8 37596 
-	bl	min_caml_create_float_array 37600 
-	subi	r3, r3, 8 37604 
-	lwz	r31, 4(r3) 37608 
-	mtlr	r31 37612 
-	stw	r2, 0(r3) 37616 
-	mflr	r31 37620 
-	stw	r31, 4(r3) 37624 
-	addi	r3, r3, 8 37628 
-	bl	create_float5x3array3067 37632 
-	subi	r3, r3, 8 37636 
-	lwz	r31, 4(r3) 37640 
-	mtlr	r31 37644 
-	li	r5, 5 37648 
-	li	r6, 0 37652 
-	stw	r2, 4(r3) 37656 
-	mflr	r31 37660 
-	mr	r2, r5 37664 
-	mr	r5, r6 37668 
-	stw	r31, 12(r3) 37672 
-	addi	r3, r3, 16 37676 
-	bl	min_caml_create_array 37680 
-	subi	r3, r3, 16 37684 
-	lwz	r31, 12(r3) 37688 
-	mtlr	r31 37692 
-	li	r5, 5 37696 
-	li	r6, 0 37700 
-	stw	r2, 8(r3) 37704 
-	mflr	r31 37708 
-	mr	r2, r5 37712 
-	mr	r5, r6 37716 
-	stw	r31, 12(r3) 37720 
-	addi	r3, r3, 16 37724 
-	bl	min_caml_create_array 37728 
-	subi	r3, r3, 16 37732 
-	lwz	r31, 12(r3) 37736 
-	mtlr	r31 37740 
-	stw	r2, 12(r3) 37744 
-	mflr	r31 37748 
-	stw	r31, 20(r3) 37752 
-	addi	r3, r3, 24 37756 
-	bl	create_float5x3array3067 37760 
-	subi	r3, r3, 24 37764 
-	lwz	r31, 20(r3) 37768 
-	mtlr	r31 37772 
-	stw	r2, 16(r3) 37776 
-	mflr	r31 37780 
-	stw	r31, 20(r3) 37784 
-	addi	r3, r3, 24 37788 
-	bl	create_float5x3array3067 37792 
-	subi	r3, r3, 24 37796 
-	lwz	r31, 20(r3) 37800 
-	mtlr	r31 37804 
-	li	r5, 1 37808 
-	li	r6, 0 37812 
-	stw	r2, 20(r3) 37816 
-	mflr	r31 37820 
-	mr	r2, r5 37824 
-	mr	r5, r6 37828 
-	stw	r31, 28(r3) 37832 
-	addi	r3, r3, 32 37836 
-	bl	min_caml_create_array 37840 
-	subi	r3, r3, 32 37844 
-	lwz	r31, 28(r3) 37848 
-	mtlr	r31 37852 
-	stw	r2, 24(r3) 37856 
-	mflr	r31 37860 
-	stw	r31, 28(r3) 37864 
-	addi	r3, r3, 32 37868 
-	bl	create_float5x3array3067 37872 
-	subi	r3, r3, 32 37876 
-	lwz	r31, 28(r3) 37880 
-	mtlr	r31 37884 
-	mr	r5, r4 37888 
-	addi	r4, r4, 32 37892 
-	stw	r2, 28(r5) 37896 
-	lwz	r2, 24(r3) 37900 
-	stw	r2, 24(r5) 37904 
-	lwz	r2, 20(r3) 37908 
-	stw	r2, 20(r5) 37912 
-	lwz	r2, 16(r3) 37916 
-	stw	r2, 16(r5) 37920 
-	lwz	r2, 12(r3) 37924 
-	stw	r2, 12(r5) 37928 
-	lwz	r2, 8(r3) 37932 
-	stw	r2, 8(r5) 37936 
-	lwz	r2, 4(r3) 37940 
-	stw	r2, 4(r5) 37944 
-	lwz	r2, 0(r3) 37948 
-	stw	r2, 0(r5) 37952 
-	mr	r2, r5 37956 
-	blr 37960 
+	li	r2, 3 37552 
+	lis	r31, lo16(l5590) 37556 
+	srwi	r31, r31, 31 37560 
+	addi	r31, r31, ha16(l5590) 37564 
+	slwi	r31, r31, 16 37568 
+	addi	r31, r31, lo16(l5590) 37572 
+	lfd	f0, 0(r31) 37576 
+	mflr	r31 37580 
+	stw	r31, 4(r3) 37584 
+	addi	r3, r3, 8 37588 
+	bl	min_caml_create_float_array 37592 
+	subi	r3, r3, 8 37596 
+	lwz	r31, 4(r3) 37600 
+	mtlr	r31 37604 
+	stw	r2, 0(r3) 37608 
+	mflr	r31 37612 
+	stw	r31, 4(r3) 37616 
+	addi	r3, r3, 8 37620 
+	bl	create_float5x3array3067 37624 
+	subi	r3, r3, 8 37628 
+	lwz	r31, 4(r3) 37632 
+	mtlr	r31 37636 
+	li	r5, 5 37640 
+	li	r6, 0 37644 
+	stw	r2, 4(r3) 37648 
+	mflr	r31 37652 
+	mr	r2, r5 37656 
+	mr	r5, r6 37660 
+	stw	r31, 12(r3) 37664 
+	addi	r3, r3, 16 37668 
+	bl	min_caml_create_array 37672 
+	subi	r3, r3, 16 37676 
+	lwz	r31, 12(r3) 37680 
+	mtlr	r31 37684 
+	li	r5, 5 37688 
+	li	r6, 0 37692 
+	stw	r2, 8(r3) 37696 
+	mflr	r31 37700 
+	mr	r2, r5 37704 
+	mr	r5, r6 37708 
+	stw	r31, 12(r3) 37712 
+	addi	r3, r3, 16 37716 
+	bl	min_caml_create_array 37720 
+	subi	r3, r3, 16 37724 
+	lwz	r31, 12(r3) 37728 
+	mtlr	r31 37732 
+	stw	r2, 12(r3) 37736 
+	mflr	r31 37740 
+	stw	r31, 20(r3) 37744 
+	addi	r3, r3, 24 37748 
+	bl	create_float5x3array3067 37752 
+	subi	r3, r3, 24 37756 
+	lwz	r31, 20(r3) 37760 
+	mtlr	r31 37764 
+	stw	r2, 16(r3) 37768 
+	mflr	r31 37772 
+	stw	r31, 20(r3) 37776 
+	addi	r3, r3, 24 37780 
+	bl	create_float5x3array3067 37784 
+	subi	r3, r3, 24 37788 
+	lwz	r31, 20(r3) 37792 
+	mtlr	r31 37796 
+	li	r5, 1 37800 
+	li	r6, 0 37804 
+	stw	r2, 20(r3) 37808 
+	mflr	r31 37812 
+	mr	r2, r5 37816 
+	mr	r5, r6 37820 
+	stw	r31, 28(r3) 37824 
+	addi	r3, r3, 32 37828 
+	bl	min_caml_create_array 37832 
+	subi	r3, r3, 32 37836 
+	lwz	r31, 28(r3) 37840 
+	mtlr	r31 37844 
+	stw	r2, 24(r3) 37848 
+	mflr	r31 37852 
+	stw	r31, 28(r3) 37856 
+	addi	r3, r3, 32 37860 
+	bl	create_float5x3array3067 37864 
+	subi	r3, r3, 32 37868 
+	lwz	r31, 28(r3) 37872 
+	mtlr	r31 37876 
+	mr	r5, r4 37880 
+	addi	r4, r4, 32 37884 
+	stw	r2, 28(r5) 37888 
+	lwz	r2, 24(r3) 37892 
+	stw	r2, 24(r5) 37896 
+	lwz	r2, 20(r3) 37900 
+	stw	r2, 20(r5) 37904 
+	lwz	r2, 16(r3) 37908 
+	stw	r2, 16(r5) 37912 
+	lwz	r2, 12(r3) 37916 
+	stw	r2, 12(r5) 37920 
+	lwz	r2, 8(r3) 37924 
+	stw	r2, 8(r5) 37928 
+	lwz	r2, 4(r3) 37932 
+	stw	r2, 4(r5) 37936 
+	lwz	r2, 0(r3) 37940 
+	stw	r2, 0(r5) 37944 
+	mr	r2, r5 37948 
+	blr 37952 
 init_line_elements3071:
-	cmpwi	cr7, r5, 0 37964 
-	blt	cr7, bge_else7742 37968 
-	stw	r2, 0(r3) 37972 
-	stw	r5, 4(r3) 37976 
-	mflr	r31 37980 
-	stw	r31, 12(r3) 37984 
-	addi	r3, r3, 16 37988 
-	bl	create_pixel3069 37992 
-	subi	r3, r3, 16 37996 
-	lwz	r31, 12(r3) 38000 
-	mtlr	r31 38004 
-	lwz	r5, 4(r3) 38008 
-	slwi	r6, r5, 2 38012 
-	lwz	r7, 0(r3) 38016 
-	stwx	r2, r7, r6 38020 
-	subi	r5, r5, 1 38024 
-	mr	r2, r7 38028 
-	b	init_line_elements3071 38032 
+	cmpwi	cr7, r5, 0 37956 
+	blt	cr7, bge_else7742 37960 
+	stw	r2, 0(r3) 37964 
+	stw	r5, 4(r3) 37968 
+	mflr	r31 37972 
+	stw	r31, 12(r3) 37976 
+	addi	r3, r3, 16 37980 
+	bl	create_pixel3069 37984 
+	subi	r3, r3, 16 37988 
+	lwz	r31, 12(r3) 37992 
+	mtlr	r31 37996 
+	lwz	r5, 4(r3) 38000 
+	slwi	r6, r5, 2 38004 
+	lwz	r7, 0(r3) 38008 
+	stwx	r2, r7, r6 38012 
+	subi	r5, r5, 1 38016 
+	mr	r2, r7 38020 
+	b	init_line_elements3071 38024 
 bge_else7742:
-	blr 38036 
+	blr 38028 
 create_pixelline3074:
-	lis	r2, lo16(min_caml_image_size) 38040 
-	srwi	r2, r2, 31 38044 
-	addi	r2, r2, ha16(min_caml_image_size) 38048 
-	slwi	r2, r2, 16 38052 
-	addi	r2, r2, lo16(min_caml_image_size) 38056 
-	lwz	r2, 0(r2) 38060 
-	lwz	r2, 0(r2) 38064 
-	stw	r2, 0(r3) 38068 
-	mflr	r31 38072 
-	stw	r31, 4(r3) 38076 
-	addi	r3, r3, 8 38080 
-	bl	create_pixel3069 38084 
-	subi	r3, r3, 8 38088 
-	lwz	r31, 4(r3) 38092 
-	mr	r5, r2 38096 
-	mtlr	r31 38100 
-	lwz	r2, 0(r3) 38104 
-	mflr	r31 38108 
-	stw	r31, 4(r3) 38112 
-	addi	r3, r3, 8 38116 
-	bl	min_caml_create_array 38120 
-	subi	r3, r3, 8 38124 
-	lwz	r31, 4(r3) 38128 
-	mtlr	r31 38132 
-	lis	r5, lo16(min_caml_image_size) 38136 
-	srwi	r5, r5, 31 38140 
-	addi	r5, r5, ha16(min_caml_image_size) 38144 
-	slwi	r5, r5, 16 38148 
-	addi	r5, r5, lo16(min_caml_image_size) 38152 
-	lwz	r5, 0(r5) 38156 
-	lwz	r5, 0(r5) 38160 
-	subi	r5, r5, 2 38164 
-	b	init_line_elements3071 38168 
+	lis	r2, lo16(min_caml_image_size) 38032 
+	srwi	r2, r2, 31 38036 
+	addi	r2, r2, ha16(min_caml_image_size) 38040 
+	slwi	r2, r2, 16 38044 
+	addi	r2, r2, lo16(min_caml_image_size) 38048 
+	lwz	r2, 0(r2) 38052 
+	lwz	r2, 0(r2) 38056 
+	stw	r2, 0(r3) 38060 
+	mflr	r31 38064 
+	stw	r31, 4(r3) 38068 
+	addi	r3, r3, 8 38072 
+	bl	create_pixel3069 38076 
+	subi	r3, r3, 8 38080 
+	lwz	r31, 4(r3) 38084 
+	mr	r5, r2 38088 
+	mtlr	r31 38092 
+	lwz	r2, 0(r3) 38096 
+	mflr	r31 38100 
+	stw	r31, 4(r3) 38104 
+	addi	r3, r3, 8 38108 
+	bl	min_caml_create_array 38112 
+	subi	r3, r3, 8 38116 
+	lwz	r31, 4(r3) 38120 
+	mtlr	r31 38124 
+	lis	r5, lo16(min_caml_image_size) 38128 
+	srwi	r5, r5, 31 38132 
+	addi	r5, r5, ha16(min_caml_image_size) 38136 
+	slwi	r5, r5, 16 38140 
+	addi	r5, r5, lo16(min_caml_image_size) 38144 
+	lwz	r5, 0(r5) 38148 
+	lwz	r5, 0(r5) 38152 
+	subi	r5, r5, 2 38156 
+	b	init_line_elements3071 38160 
 tan3076:
-	stfd	f0, 0(r3) 38172 
-	mflr	r31 38176 
-	stw	r31, 12(r3) 38180 
-	addi	r3, r3, 16 38184 
-	bl	min_caml_sin 38188 
-	subi	r3, r3, 16 38192 
-	lwz	r31, 12(r3) 38196 
-	mtlr	r31 38200 
-	lfd	f1, 0(r3) 38204 
-	stfd	f0, 8(r3) 38208 
-	mflr	r31 38212 
-	fmr	f0, f1 38216 
-	stw	r31, 20(r3) 38220 
-	addi	r3, r3, 24 38224 
-	bl	min_caml_cos 38228 
-	subi	r3, r3, 24 38232 
-	lwz	r31, 20(r3) 38236 
-	mtlr	r31 38240 
-	lfd	f1, 8(r3) 38244 
-	fdiv	f0, f1, f0 38248 
-	blr 38252 
+	stfd	f0, 0(r3) 38164 
+	mflr	r31 38168 
+	stw	r31, 12(r3) 38172 
+	addi	r3, r3, 16 38176 
+	bl	min_caml_sin 38180 
+	subi	r3, r3, 16 38184 
+	lwz	r31, 12(r3) 38188 
+	mtlr	r31 38192 
+	lfd	f1, 0(r3) 38196 
+	stfd	f0, 8(r3) 38200 
+	mflr	r31 38204 
+	fmr	f0, f1 38208 
+	stw	r31, 20(r3) 38212 
+	addi	r3, r3, 24 38216 
+	bl	min_caml_cos 38220 
+	subi	r3, r3, 24 38224 
+	lwz	r31, 20(r3) 38228 
+	mtlr	r31 38232 
+	lfd	f1, 8(r3) 38236 
+	fdiv	f0, f1, f0 38240 
+	blr 38244 
 adjust_position3078:
-	fmul	f0, f0, f0 38256 
-	lis	r31, lo16(l6055) 38260 
-	srwi	r31, r31, 31 38264 
-	addi	r31, r31, ha16(l6055) 38268 
-	slwi	r31, r31, 16 38272 
-	addi	r31, r31, lo16(l6055) 38276 
-	lfd	f2, 0(r31) 38280 
-	fadd	f0, f0, f2 38284 
-	fsqrt	f0, f0 38288 
-	lis	r31, lo16(l5591) 38292 
-	srwi	r31, r31, 31 38296 
-	addi	r31, r31, ha16(l5591) 38300 
-	slwi	r31, r31, 16 38304 
-	addi	r31, r31, lo16(l5591) 38308 
-	lfd	f2, 0(r31) 38312 
-	fdiv	f2, f2, f0 38316 
-	stfd	f0, 0(r3) 38320 
-	stfd	f1, 8(r3) 38324 
-	mflr	r31 38328 
-	fmr	f0, f2 38332 
-	stw	r31, 20(r3) 38336 
-	addi	r3, r3, 24 38340 
-	bl	min_caml_atan 38344 
-	subi	r3, r3, 24 38348 
-	lwz	r31, 20(r3) 38352 
-	mtlr	r31 38356 
-	lfd	f1, 8(r3) 38360 
-	fmul	f0, f0, f1 38364 
-	mflr	r31 38368 
-	stw	r31, 20(r3) 38372 
-	addi	r3, r3, 24 38376 
-	bl	tan3076 38380 
-	subi	r3, r3, 24 38384 
-	lwz	r31, 20(r3) 38388 
-	mtlr	r31 38392 
-	lfd	f1, 0(r3) 38396 
-	fmul	f0, f0, f1 38400 
-	blr 38404 
+	fmul	f0, f0, f0 38248 
+	lis	r31, lo16(l6055) 38252 
+	srwi	r31, r31, 31 38256 
+	addi	r31, r31, ha16(l6055) 38260 
+	slwi	r31, r31, 16 38264 
+	addi	r31, r31, lo16(l6055) 38268 
+	lfd	f2, 0(r31) 38272 
+	fadd	f0, f0, f2 38276 
+	fsqrt	f0, f0 38280 
+	lis	r31, lo16(l5591) 38284 
+	srwi	r31, r31, 31 38288 
+	addi	r31, r31, ha16(l5591) 38292 
+	slwi	r31, r31, 16 38296 
+	addi	r31, r31, lo16(l5591) 38300 
+	lfd	f2, 0(r31) 38304 
+	fdiv	f2, f2, f0 38308 
+	stfd	f0, 0(r3) 38312 
+	stfd	f1, 8(r3) 38316 
+	mflr	r31 38320 
+	fmr	f0, f2 38324 
+	stw	r31, 20(r3) 38328 
+	addi	r3, r3, 24 38332 
+	bl	min_caml_atan 38336 
+	subi	r3, r3, 24 38340 
+	lwz	r31, 20(r3) 38344 
+	mtlr	r31 38348 
+	lfd	f1, 8(r3) 38352 
+	fmul	f0, f0, f1 38356 
+	mflr	r31 38360 
+	stw	r31, 20(r3) 38364 
+	addi	r3, r3, 24 38368 
+	bl	tan3076 38372 
+	subi	r3, r3, 24 38376 
+	lwz	r31, 20(r3) 38380 
+	mtlr	r31 38384 
+	lfd	f1, 0(r3) 38388 
+	fmul	f0, f0, f1 38392 
+	blr 38396 
 calc_dirvec3081:
-	cmpwi	cr7, r2, 5 38408 
-	blt	cr7, bge_else7743 38412 
-	fmul	f2, f0, f0 38416 
-	fmul	f3, f1, f1 38420 
-	fadd	f2, f2, f3 38424 
-	lis	r31, lo16(l5591) 38428 
-	srwi	r31, r31, 31 38432 
-	addi	r31, r31, ha16(l5591) 38436 
-	slwi	r31, r31, 16 38440 
-	addi	r31, r31, lo16(l5591) 38444 
-	lfd	f3, 0(r31) 38448 
-	fadd	f2, f2, f3 38452 
-	fsqrt	f2, f2 38456 
-	fdiv	f0, f0, f2 38460 
-	fdiv	f1, f1, f2 38464 
-	lis	r31, lo16(l5591) 38468 
-	srwi	r31, r31, 31 38472 
-	addi	r31, r31, ha16(l5591) 38476 
-	slwi	r31, r31, 16 38480 
-	addi	r31, r31, lo16(l5591) 38484 
-	lfd	f3, 0(r31) 38488 
-	fdiv	f2, f3, f2 38492 
-	lis	r2, lo16(min_caml_dirvecs) 38496 
-	srwi	r2, r2, 31 38500 
-	addi	r2, r2, ha16(min_caml_dirvecs) 38504 
-	slwi	r2, r2, 16 38508 
-	addi	r2, r2, lo16(min_caml_dirvecs) 38512 
-	lwz	r2, 0(r2) 38516 
-	slwi	r5, r5, 2 38520 
-	lwzx	r2, r2, r5 38524 
-	slwi	r5, r6, 2 38528 
-	lwzx	r5, r2, r5 38532 
-	stw	r2, 0(r3) 38536 
-	stw	r6, 4(r3) 38540 
-	stfd	f2, 8(r3) 38544 
-	stfd	f1, 16(r3) 38548 
-	stfd	f0, 24(r3) 38552 
-	mflr	r31 38556 
-	mr	r2, r5 38560 
-	stw	r31, 36(r3) 38564 
-	addi	r3, r3, 40 38568 
-	bl	d_vec2761 38572 
-	subi	r3, r3, 40 38576 
-	lwz	r31, 36(r3) 38580 
-	mtlr	r31 38584 
-	lfd	f0, 24(r3) 38588 
-	lfd	f1, 16(r3) 38592 
-	lfd	f2, 8(r3) 38596 
-	mflr	r31 38600 
-	stw	r31, 36(r3) 38604 
-	addi	r3, r3, 40 38608 
-	bl	vecset2654 38612 
-	subi	r3, r3, 40 38616 
-	lwz	r31, 36(r3) 38620 
-	mtlr	r31 38624 
-	lwz	r2, 4(r3) 38628 
-	addi	r5, r2, 40 38632 
-	slwi	r5, r5, 2 38636 
-	lwz	r6, 0(r3) 38640 
-	lwzx	r5, r6, r5 38644 
-	mflr	r31 38648 
-	mr	r2, r5 38652 
-	stw	r31, 36(r3) 38656 
-	addi	r3, r3, 40 38660 
-	bl	d_vec2761 38664 
-	subi	r3, r3, 40 38668 
-	lwz	r31, 36(r3) 38672 
-	mtlr	r31 38676 
-	lfd	f0, 16(r3) 38680 
-	fneg	f2, f0 38684 
-	lfd	f1, 24(r3) 38688 
-	lfd	f3, 8(r3) 38692 
-	mflr	r31 38696 
-	fmr	f0, f1 38700 
-	fmr	f1, f3 38704 
-	stw	r31, 36(r3) 38708 
-	addi	r3, r3, 40 38712 
-	bl	vecset2654 38716 
-	subi	r3, r3, 40 38720 
-	lwz	r31, 36(r3) 38724 
-	mtlr	r31 38728 
-	lwz	r2, 4(r3) 38732 
-	addi	r5, r2, 80 38736 
-	slwi	r5, r5, 2 38740 
-	lwz	r6, 0(r3) 38744 
-	lwzx	r5, r6, r5 38748 
-	mflr	r31 38752 
-	mr	r2, r5 38756 
-	stw	r31, 36(r3) 38760 
-	addi	r3, r3, 40 38764 
-	bl	d_vec2761 38768 
-	subi	r3, r3, 40 38772 
-	lwz	r31, 36(r3) 38776 
-	mtlr	r31 38780 
-	lfd	f0, 24(r3) 38784 
-	fneg	f1, f0 38788 
-	lfd	f2, 16(r3) 38792 
-	fneg	f3, f2 38796 
-	lfd	f4, 8(r3) 38800 
-	mflr	r31 38804 
-	fmr	f2, f3 38808 
-	fmr	f0, f4 38812 
-	stw	r31, 36(r3) 38816 
-	addi	r3, r3, 40 38820 
-	bl	vecset2654 38824 
-	subi	r3, r3, 40 38828 
-	lwz	r31, 36(r3) 38832 
-	mtlr	r31 38836 
-	lwz	r2, 4(r3) 38840 
-	addi	r5, r2, 1 38844 
-	slwi	r5, r5, 2 38848 
-	lwz	r6, 0(r3) 38852 
-	lwzx	r5, r6, r5 38856 
-	mflr	r31 38860 
-	mr	r2, r5 38864 
-	stw	r31, 36(r3) 38868 
-	addi	r3, r3, 40 38872 
-	bl	d_vec2761 38876 
-	subi	r3, r3, 40 38880 
-	lwz	r31, 36(r3) 38884 
-	mtlr	r31 38888 
-	lfd	f0, 24(r3) 38892 
-	fneg	f1, f0 38896 
-	lfd	f2, 16(r3) 38900 
-	fneg	f3, f2 38904 
-	lfd	f4, 8(r3) 38908 
-	fneg	f5, f4 38912 
-	mflr	r31 38916 
-	fmr	f2, f5 38920 
-	fmr	f0, f1 38924 
-	fmr	f1, f3 38928 
-	stw	r31, 36(r3) 38932 
-	addi	r3, r3, 40 38936 
-	bl	vecset2654 38940 
-	subi	r3, r3, 40 38944 
-	lwz	r31, 36(r3) 38948 
-	mtlr	r31 38952 
-	lwz	r2, 4(r3) 38956 
-	addi	r5, r2, 41 38960 
-	slwi	r5, r5, 2 38964 
-	lwz	r6, 0(r3) 38968 
-	lwzx	r5, r6, r5 38972 
-	mflr	r31 38976 
-	mr	r2, r5 38980 
-	stw	r31, 36(r3) 38984 
-	addi	r3, r3, 40 38988 
-	bl	d_vec2761 38992 
-	subi	r3, r3, 40 38996 
-	lwz	r31, 36(r3) 39000 
-	mtlr	r31 39004 
-	lfd	f0, 24(r3) 39008 
-	fneg	f1, f0 39012 
-	lfd	f2, 8(r3) 39016 
-	fneg	f3, f2 39020 
-	lfd	f4, 16(r3) 39024 
-	mflr	r31 39028 
-	fmr	f2, f4 39032 
-	fmr	f0, f1 39036 
-	fmr	f1, f3 39040 
-	stw	r31, 36(r3) 39044 
-	addi	r3, r3, 40 39048 
-	bl	vecset2654 39052 
-	subi	r3, r3, 40 39056 
-	lwz	r31, 36(r3) 39060 
-	mtlr	r31 39064 
-	lwz	r2, 4(r3) 39068 
-	addi	r2, r2, 81 39072 
-	slwi	r2, r2, 2 39076 
-	lwz	r5, 0(r3) 39080 
-	lwzx	r2, r5, r2 39084 
-	mflr	r31 39088 
-	stw	r31, 36(r3) 39092 
-	addi	r3, r3, 40 39096 
-	bl	d_vec2761 39100 
-	subi	r3, r3, 40 39104 
-	lwz	r31, 36(r3) 39108 
-	mtlr	r31 39112 
-	lfd	f0, 8(r3) 39116 
-	fneg	f0, f0 39120 
-	lfd	f1, 24(r3) 39124 
-	lfd	f2, 16(r3) 39128 
-	b	vecset2654 39132 
+	cmpwi	cr7, r2, 5 38400 
+	blt	cr7, bge_else7743 38404 
+	fmul	f2, f0, f0 38408 
+	fmul	f3, f1, f1 38412 
+	fadd	f2, f2, f3 38416 
+	lis	r31, lo16(l5591) 38420 
+	srwi	r31, r31, 31 38424 
+	addi	r31, r31, ha16(l5591) 38428 
+	slwi	r31, r31, 16 38432 
+	addi	r31, r31, lo16(l5591) 38436 
+	lfd	f3, 0(r31) 38440 
+	fadd	f2, f2, f3 38444 
+	fsqrt	f2, f2 38448 
+	fdiv	f0, f0, f2 38452 
+	fdiv	f1, f1, f2 38456 
+	lis	r31, lo16(l5591) 38460 
+	srwi	r31, r31, 31 38464 
+	addi	r31, r31, ha16(l5591) 38468 
+	slwi	r31, r31, 16 38472 
+	addi	r31, r31, lo16(l5591) 38476 
+	lfd	f3, 0(r31) 38480 
+	fdiv	f2, f3, f2 38484 
+	lis	r2, lo16(min_caml_dirvecs) 38488 
+	srwi	r2, r2, 31 38492 
+	addi	r2, r2, ha16(min_caml_dirvecs) 38496 
+	slwi	r2, r2, 16 38500 
+	addi	r2, r2, lo16(min_caml_dirvecs) 38504 
+	lwz	r2, 0(r2) 38508 
+	slwi	r5, r5, 2 38512 
+	lwzx	r2, r2, r5 38516 
+	slwi	r5, r6, 2 38520 
+	lwzx	r5, r2, r5 38524 
+	stw	r2, 0(r3) 38528 
+	stw	r6, 4(r3) 38532 
+	stfd	f2, 8(r3) 38536 
+	stfd	f1, 16(r3) 38540 
+	stfd	f0, 24(r3) 38544 
+	mflr	r31 38548 
+	mr	r2, r5 38552 
+	stw	r31, 36(r3) 38556 
+	addi	r3, r3, 40 38560 
+	bl	d_vec2761 38564 
+	subi	r3, r3, 40 38568 
+	lwz	r31, 36(r3) 38572 
+	mtlr	r31 38576 
+	lfd	f0, 24(r3) 38580 
+	lfd	f1, 16(r3) 38584 
+	lfd	f2, 8(r3) 38588 
+	mflr	r31 38592 
+	stw	r31, 36(r3) 38596 
+	addi	r3, r3, 40 38600 
+	bl	vecset2654 38604 
+	subi	r3, r3, 40 38608 
+	lwz	r31, 36(r3) 38612 
+	mtlr	r31 38616 
+	lwz	r2, 4(r3) 38620 
+	addi	r5, r2, 40 38624 
+	slwi	r5, r5, 2 38628 
+	lwz	r6, 0(r3) 38632 
+	lwzx	r5, r6, r5 38636 
+	mflr	r31 38640 
+	mr	r2, r5 38644 
+	stw	r31, 36(r3) 38648 
+	addi	r3, r3, 40 38652 
+	bl	d_vec2761 38656 
+	subi	r3, r3, 40 38660 
+	lwz	r31, 36(r3) 38664 
+	mtlr	r31 38668 
+	lfd	f0, 16(r3) 38672 
+	fneg	f2, f0 38676 
+	lfd	f1, 24(r3) 38680 
+	lfd	f3, 8(r3) 38684 
+	mflr	r31 38688 
+	fmr	f0, f1 38692 
+	fmr	f1, f3 38696 
+	stw	r31, 36(r3) 38700 
+	addi	r3, r3, 40 38704 
+	bl	vecset2654 38708 
+	subi	r3, r3, 40 38712 
+	lwz	r31, 36(r3) 38716 
+	mtlr	r31 38720 
+	lwz	r2, 4(r3) 38724 
+	addi	r5, r2, 80 38728 
+	slwi	r5, r5, 2 38732 
+	lwz	r6, 0(r3) 38736 
+	lwzx	r5, r6, r5 38740 
+	mflr	r31 38744 
+	mr	r2, r5 38748 
+	stw	r31, 36(r3) 38752 
+	addi	r3, r3, 40 38756 
+	bl	d_vec2761 38760 
+	subi	r3, r3, 40 38764 
+	lwz	r31, 36(r3) 38768 
+	mtlr	r31 38772 
+	lfd	f0, 24(r3) 38776 
+	fneg	f1, f0 38780 
+	lfd	f2, 16(r3) 38784 
+	fneg	f3, f2 38788 
+	lfd	f4, 8(r3) 38792 
+	mflr	r31 38796 
+	fmr	f2, f3 38800 
+	fmr	f0, f4 38804 
+	stw	r31, 36(r3) 38808 
+	addi	r3, r3, 40 38812 
+	bl	vecset2654 38816 
+	subi	r3, r3, 40 38820 
+	lwz	r31, 36(r3) 38824 
+	mtlr	r31 38828 
+	lwz	r2, 4(r3) 38832 
+	addi	r5, r2, 1 38836 
+	slwi	r5, r5, 2 38840 
+	lwz	r6, 0(r3) 38844 
+	lwzx	r5, r6, r5 38848 
+	mflr	r31 38852 
+	mr	r2, r5 38856 
+	stw	r31, 36(r3) 38860 
+	addi	r3, r3, 40 38864 
+	bl	d_vec2761 38868 
+	subi	r3, r3, 40 38872 
+	lwz	r31, 36(r3) 38876 
+	mtlr	r31 38880 
+	lfd	f0, 24(r3) 38884 
+	fneg	f1, f0 38888 
+	lfd	f2, 16(r3) 38892 
+	fneg	f3, f2 38896 
+	lfd	f4, 8(r3) 38900 
+	fneg	f5, f4 38904 
+	mflr	r31 38908 
+	fmr	f2, f5 38912 
+	fmr	f0, f1 38916 
+	fmr	f1, f3 38920 
+	stw	r31, 36(r3) 38924 
+	addi	r3, r3, 40 38928 
+	bl	vecset2654 38932 
+	subi	r3, r3, 40 38936 
+	lwz	r31, 36(r3) 38940 
+	mtlr	r31 38944 
+	lwz	r2, 4(r3) 38948 
+	addi	r5, r2, 41 38952 
+	slwi	r5, r5, 2 38956 
+	lwz	r6, 0(r3) 38960 
+	lwzx	r5, r6, r5 38964 
+	mflr	r31 38968 
+	mr	r2, r5 38972 
+	stw	r31, 36(r3) 38976 
+	addi	r3, r3, 40 38980 
+	bl	d_vec2761 38984 
+	subi	r3, r3, 40 38988 
+	lwz	r31, 36(r3) 38992 
+	mtlr	r31 38996 
+	lfd	f0, 24(r3) 39000 
+	fneg	f1, f0 39004 
+	lfd	f2, 8(r3) 39008 
+	fneg	f3, f2 39012 
+	lfd	f4, 16(r3) 39016 
+	mflr	r31 39020 
+	fmr	f2, f4 39024 
+	fmr	f0, f1 39028 
+	fmr	f1, f3 39032 
+	stw	r31, 36(r3) 39036 
+	addi	r3, r3, 40 39040 
+	bl	vecset2654 39044 
+	subi	r3, r3, 40 39048 
+	lwz	r31, 36(r3) 39052 
+	mtlr	r31 39056 
+	lwz	r2, 4(r3) 39060 
+	addi	r2, r2, 81 39064 
+	slwi	r2, r2, 2 39068 
+	lwz	r5, 0(r3) 39072 
+	lwzx	r2, r5, r2 39076 
+	mflr	r31 39080 
+	stw	r31, 36(r3) 39084 
+	addi	r3, r3, 40 39088 
+	bl	d_vec2761 39092 
+	subi	r3, r3, 40 39096 
+	lwz	r31, 36(r3) 39100 
+	mtlr	r31 39104 
+	lfd	f0, 8(r3) 39108 
+	fneg	f0, f0 39112 
+	lfd	f1, 24(r3) 39116 
+	lfd	f2, 16(r3) 39120 
+	b	vecset2654 39124 
 bge_else7743:
-	stfd	f2, 32(r3) 39136 
-	stw	r6, 4(r3) 39140 
-	stw	r5, 40(r3) 39144 
-	stfd	f3, 48(r3) 39148 
-	stw	r2, 56(r3) 39152 
-	mflr	r31 39156 
-	fmr	f0, f1 39160 
-	fmr	f1, f2 39164 
-	stw	r31, 60(r3) 39168 
-	addi	r3, r3, 64 39172 
-	bl	adjust_position3078 39176 
-	subi	r3, r3, 64 39180 
-	lwz	r31, 60(r3) 39184 
-	mtlr	r31 39188 
-	lwz	r2, 56(r3) 39192 
-	addi	r2, r2, 1 39196 
-	lfd	f1, 48(r3) 39200 
-	stfd	f0, 64(r3) 39204 
-	stw	r2, 72(r3) 39208 
-	mflr	r31 39212 
-	stw	r31, 76(r3) 39216 
-	addi	r3, r3, 80 39220 
-	bl	adjust_position3078 39224 
-	subi	r3, r3, 80 39228 
-	lwz	r31, 76(r3) 39232 
-	fmr	f1, f0 39236 
-	mtlr	r31 39240 
-	lfd	f0, 64(r3) 39244 
-	lfd	f2, 32(r3) 39248 
-	lfd	f3, 48(r3) 39252 
-	lwz	r2, 72(r3) 39256 
-	lwz	r5, 40(r3) 39260 
-	lwz	r6, 4(r3) 39264 
-	b	calc_dirvec3081 39268 
+	stfd	f2, 32(r3) 39128 
+	stw	r6, 4(r3) 39132 
+	stw	r5, 40(r3) 39136 
+	stfd	f3, 48(r3) 39140 
+	stw	r2, 56(r3) 39144 
+	mflr	r31 39148 
+	fmr	f0, f1 39152 
+	fmr	f1, f2 39156 
+	stw	r31, 60(r3) 39160 
+	addi	r3, r3, 64 39164 
+	bl	adjust_position3078 39168 
+	subi	r3, r3, 64 39172 
+	lwz	r31, 60(r3) 39176 
+	mtlr	r31 39180 
+	lwz	r2, 56(r3) 39184 
+	addi	r2, r2, 1 39188 
+	lfd	f1, 48(r3) 39192 
+	stfd	f0, 64(r3) 39196 
+	stw	r2, 72(r3) 39200 
+	mflr	r31 39204 
+	stw	r31, 76(r3) 39208 
+	addi	r3, r3, 80 39212 
+	bl	adjust_position3078 39216 
+	subi	r3, r3, 80 39220 
+	lwz	r31, 76(r3) 39224 
+	fmr	f1, f0 39228 
+	mtlr	r31 39232 
+	lfd	f0, 64(r3) 39236 
+	lfd	f2, 32(r3) 39240 
+	lfd	f3, 48(r3) 39244 
+	lwz	r2, 72(r3) 39248 
+	lwz	r5, 40(r3) 39252 
+	lwz	r6, 4(r3) 39256 
+	b	calc_dirvec3081 39260 
 calc_dirvecs3089:
-	cmpwi	cr7, r2, 0 39272 
-	blt	cr7, bge_else7746 39276 
-	itof	f1, r2 39280 
-	lis	r31, lo16(l6167) 39284 
-	srwi	r31, r31, 31 39288 
-	addi	r31, r31, ha16(l6167) 39292 
-	slwi	r31, r31, 16 39296 
-	addi	r31, r31, lo16(l6167) 39300 
-	lfd	f2, 0(r31) 39304 
-	fmul	f1, f1, f2 39308 
-	lis	r31, lo16(l6168) 39312 
-	srwi	r31, r31, 31 39316 
-	addi	r31, r31, ha16(l6168) 39320 
-	slwi	r31, r31, 16 39324 
-	addi	r31, r31, lo16(l6168) 39328 
-	lfd	f2, 0(r31) 39332 
-	fsub	f2, f1, f2 39336 
-	li	r7, 0 39340 
-	lis	r31, lo16(l5590) 39344 
-	srwi	r31, r31, 31 39348 
-	addi	r31, r31, ha16(l5590) 39352 
-	slwi	r31, r31, 16 39356 
-	addi	r31, r31, lo16(l5590) 39360 
-	lfd	f1, 0(r31) 39364 
-	lis	r31, lo16(l5590) 39368 
-	srwi	r31, r31, 31 39372 
-	addi	r31, r31, ha16(l5590) 39376 
-	slwi	r31, r31, 16 39380 
-	addi	r31, r31, lo16(l5590) 39384 
-	lfd	f3, 0(r31) 39388 
-	stfd	f0, 0(r3) 39392 
-	stw	r5, 8(r3) 39396 
-	stw	r6, 12(r3) 39400 
-	stw	r2, 16(r3) 39404 
-	mflr	r31 39408 
-	mr	r2, r7 39412 
-	fmr	f31, f3 39416 
-	fmr	f3, f0 39420 
-	fmr	f0, f1 39424 
-	fmr	f1, f31 39428 
-	stw	r31, 20(r3) 39432 
-	addi	r3, r3, 24 39436 
-	bl	calc_dirvec3081 39440 
-	subi	r3, r3, 24 39444 
-	lwz	r31, 20(r3) 39448 
-	mtlr	r31 39452 
-	lwz	r2, 16(r3) 39456 
-	itof	f0, r2 39460 
-	lis	r31, lo16(l6167) 39464 
-	srwi	r31, r31, 31 39468 
-	addi	r31, r31, ha16(l6167) 39472 
-	slwi	r31, r31, 16 39476 
-	addi	r31, r31, lo16(l6167) 39480 
-	lfd	f1, 0(r31) 39484 
-	fmul	f0, f0, f1 39488 
-	lis	r31, lo16(l6055) 39492 
-	srwi	r31, r31, 31 39496 
-	addi	r31, r31, ha16(l6055) 39500 
-	slwi	r31, r31, 16 39504 
-	addi	r31, r31, lo16(l6055) 39508 
-	lfd	f1, 0(r31) 39512 
-	fadd	f2, f0, f1 39516 
-	li	r5, 0 39520 
-	lis	r31, lo16(l5590) 39524 
-	srwi	r31, r31, 31 39528 
-	addi	r31, r31, ha16(l5590) 39532 
-	slwi	r31, r31, 16 39536 
-	addi	r31, r31, lo16(l5590) 39540 
-	lfd	f0, 0(r31) 39544 
-	lis	r31, lo16(l5590) 39548 
-	srwi	r31, r31, 31 39552 
-	addi	r31, r31, ha16(l5590) 39556 
-	slwi	r31, r31, 16 39560 
-	addi	r31, r31, lo16(l5590) 39564 
-	lfd	f1, 0(r31) 39568 
-	lwz	r6, 12(r3) 39572 
-	addi	r7, r6, 2 39576 
-	lfd	f3, 0(r3) 39580 
-	lwz	r8, 8(r3) 39584 
-	mflr	r31 39588 
-	mr	r6, r7 39592 
-	mr	r2, r5 39596 
-	mr	r5, r8 39600 
-	stw	r31, 20(r3) 39604 
-	addi	r3, r3, 24 39608 
-	bl	calc_dirvec3081 39612 
-	subi	r3, r3, 24 39616 
-	lwz	r31, 20(r3) 39620 
-	mtlr	r31 39624 
-	lwz	r2, 16(r3) 39628 
-	subi	r2, r2, 1 39632 
-	li	r5, 1 39636 
-	lwz	r6, 8(r3) 39640 
-	stw	r2, 20(r3) 39644 
-	mflr	r31 39648 
-	mr	r2, r6 39652 
-	stw	r31, 28(r3) 39656 
-	addi	r3, r3, 32 39660 
-	bl	add_mod52651 39664 
-	subi	r3, r3, 32 39668 
-	lwz	r31, 28(r3) 39672 
-	mr	r5, r2 39676 
-	mtlr	r31 39680 
-	lfd	f0, 0(r3) 39684 
-	lwz	r2, 20(r3) 39688 
-	lwz	r6, 12(r3) 39692 
-	b	calc_dirvecs3089 39696 
+	cmpwi	cr7, r2, 0 39264 
+	blt	cr7, bge_else7746 39268 
+	itof	f1, r2 39272 
+	lis	r31, lo16(l6167) 39276 
+	srwi	r31, r31, 31 39280 
+	addi	r31, r31, ha16(l6167) 39284 
+	slwi	r31, r31, 16 39288 
+	addi	r31, r31, lo16(l6167) 39292 
+	lfd	f2, 0(r31) 39296 
+	fmul	f1, f1, f2 39300 
+	lis	r31, lo16(l6168) 39304 
+	srwi	r31, r31, 31 39308 
+	addi	r31, r31, ha16(l6168) 39312 
+	slwi	r31, r31, 16 39316 
+	addi	r31, r31, lo16(l6168) 39320 
+	lfd	f2, 0(r31) 39324 
+	fsub	f2, f1, f2 39328 
+	li	r7, 0 39332 
+	lis	r31, lo16(l5590) 39336 
+	srwi	r31, r31, 31 39340 
+	addi	r31, r31, ha16(l5590) 39344 
+	slwi	r31, r31, 16 39348 
+	addi	r31, r31, lo16(l5590) 39352 
+	lfd	f1, 0(r31) 39356 
+	lis	r31, lo16(l5590) 39360 
+	srwi	r31, r31, 31 39364 
+	addi	r31, r31, ha16(l5590) 39368 
+	slwi	r31, r31, 16 39372 
+	addi	r31, r31, lo16(l5590) 39376 
+	lfd	f3, 0(r31) 39380 
+	stfd	f0, 0(r3) 39384 
+	stw	r5, 8(r3) 39388 
+	stw	r6, 12(r3) 39392 
+	stw	r2, 16(r3) 39396 
+	mflr	r31 39400 
+	mr	r2, r7 39404 
+	fmr	f31, f3 39408 
+	fmr	f3, f0 39412 
+	fmr	f0, f1 39416 
+	fmr	f1, f31 39420 
+	stw	r31, 20(r3) 39424 
+	addi	r3, r3, 24 39428 
+	bl	calc_dirvec3081 39432 
+	subi	r3, r3, 24 39436 
+	lwz	r31, 20(r3) 39440 
+	mtlr	r31 39444 
+	lwz	r2, 16(r3) 39448 
+	itof	f0, r2 39452 
+	lis	r31, lo16(l6167) 39456 
+	srwi	r31, r31, 31 39460 
+	addi	r31, r31, ha16(l6167) 39464 
+	slwi	r31, r31, 16 39468 
+	addi	r31, r31, lo16(l6167) 39472 
+	lfd	f1, 0(r31) 39476 
+	fmul	f0, f0, f1 39480 
+	lis	r31, lo16(l6055) 39484 
+	srwi	r31, r31, 31 39488 
+	addi	r31, r31, ha16(l6055) 39492 
+	slwi	r31, r31, 16 39496 
+	addi	r31, r31, lo16(l6055) 39500 
+	lfd	f1, 0(r31) 39504 
+	fadd	f2, f0, f1 39508 
+	li	r5, 0 39512 
+	lis	r31, lo16(l5590) 39516 
+	srwi	r31, r31, 31 39520 
+	addi	r31, r31, ha16(l5590) 39524 
+	slwi	r31, r31, 16 39528 
+	addi	r31, r31, lo16(l5590) 39532 
+	lfd	f0, 0(r31) 39536 
+	lis	r31, lo16(l5590) 39540 
+	srwi	r31, r31, 31 39544 
+	addi	r31, r31, ha16(l5590) 39548 
+	slwi	r31, r31, 16 39552 
+	addi	r31, r31, lo16(l5590) 39556 
+	lfd	f1, 0(r31) 39560 
+	lwz	r6, 12(r3) 39564 
+	addi	r7, r6, 2 39568 
+	lfd	f3, 0(r3) 39572 
+	lwz	r8, 8(r3) 39576 
+	mflr	r31 39580 
+	mr	r6, r7 39584 
+	mr	r2, r5 39588 
+	mr	r5, r8 39592 
+	stw	r31, 20(r3) 39596 
+	addi	r3, r3, 24 39600 
+	bl	calc_dirvec3081 39604 
+	subi	r3, r3, 24 39608 
+	lwz	r31, 20(r3) 39612 
+	mtlr	r31 39616 
+	lwz	r2, 16(r3) 39620 
+	subi	r2, r2, 1 39624 
+	li	r5, 1 39628 
+	lwz	r6, 8(r3) 39632 
+	stw	r2, 20(r3) 39636 
+	mflr	r31 39640 
+	mr	r2, r6 39644 
+	stw	r31, 28(r3) 39648 
+	addi	r3, r3, 32 39652 
+	bl	add_mod52651 39656 
+	subi	r3, r3, 32 39660 
+	lwz	r31, 28(r3) 39664 
+	mr	r5, r2 39668 
+	mtlr	r31 39672 
+	lfd	f0, 0(r3) 39676 
+	lwz	r2, 20(r3) 39680 
+	lwz	r6, 12(r3) 39684 
+	b	calc_dirvecs3089 39688 
 bge_else7746:
-	blr 39700 
+	blr 39692 
 calc_dirvec_rows3094:
-	cmpwi	cr7, r2, 0 39704 
-	blt	cr7, bge_else7748 39708 
-	itof	f0, r2 39712 
-	lis	r31, lo16(l6167) 39716 
-	srwi	r31, r31, 31 39720 
-	addi	r31, r31, ha16(l6167) 39724 
-	slwi	r31, r31, 16 39728 
-	addi	r31, r31, lo16(l6167) 39732 
-	lfd	f1, 0(r31) 39736 
-	fmul	f0, f0, f1 39740 
-	lis	r31, lo16(l6168) 39744 
-	srwi	r31, r31, 31 39748 
-	addi	r31, r31, ha16(l6168) 39752 
-	slwi	r31, r31, 16 39756 
-	addi	r31, r31, lo16(l6168) 39760 
-	lfd	f1, 0(r31) 39764 
-	fsub	f0, f0, f1 39768 
-	li	r7, 4 39772 
-	stw	r6, 0(r3) 39776 
-	stw	r5, 4(r3) 39780 
-	stw	r2, 8(r3) 39784 
-	mflr	r31 39788 
-	mr	r2, r7 39792 
-	stw	r31, 12(r3) 39796 
-	addi	r3, r3, 16 39800 
-	bl	calc_dirvecs3089 39804 
-	subi	r3, r3, 16 39808 
-	lwz	r31, 12(r3) 39812 
-	mtlr	r31 39816 
-	lwz	r2, 8(r3) 39820 
-	subi	r2, r2, 1 39824 
-	li	r5, 2 39828 
-	lwz	r6, 4(r3) 39832 
-	stw	r2, 12(r3) 39836 
-	mflr	r31 39840 
-	mr	r2, r6 39844 
-	stw	r31, 20(r3) 39848 
-	addi	r3, r3, 24 39852 
-	bl	add_mod52651 39856 
-	subi	r3, r3, 24 39860 
-	lwz	r31, 20(r3) 39864 
-	mr	r5, r2 39868 
-	mtlr	r31 39872 
-	lwz	r2, 0(r3) 39876 
-	addi	r6, r2, 4 39880 
-	lwz	r2, 12(r3) 39884 
-	b	calc_dirvec_rows3094 39888 
+	cmpwi	cr7, r2, 0 39696 
+	blt	cr7, bge_else7748 39700 
+	itof	f0, r2 39704 
+	lis	r31, lo16(l6167) 39708 
+	srwi	r31, r31, 31 39712 
+	addi	r31, r31, ha16(l6167) 39716 
+	slwi	r31, r31, 16 39720 
+	addi	r31, r31, lo16(l6167) 39724 
+	lfd	f1, 0(r31) 39728 
+	fmul	f0, f0, f1 39732 
+	lis	r31, lo16(l6168) 39736 
+	srwi	r31, r31, 31 39740 
+	addi	r31, r31, ha16(l6168) 39744 
+	slwi	r31, r31, 16 39748 
+	addi	r31, r31, lo16(l6168) 39752 
+	lfd	f1, 0(r31) 39756 
+	fsub	f0, f0, f1 39760 
+	li	r7, 4 39764 
+	stw	r6, 0(r3) 39768 
+	stw	r5, 4(r3) 39772 
+	stw	r2, 8(r3) 39776 
+	mflr	r31 39780 
+	mr	r2, r7 39784 
+	stw	r31, 12(r3) 39788 
+	addi	r3, r3, 16 39792 
+	bl	calc_dirvecs3089 39796 
+	subi	r3, r3, 16 39800 
+	lwz	r31, 12(r3) 39804 
+	mtlr	r31 39808 
+	lwz	r2, 8(r3) 39812 
+	subi	r2, r2, 1 39816 
+	li	r5, 2 39820 
+	lwz	r6, 4(r3) 39824 
+	stw	r2, 12(r3) 39828 
+	mflr	r31 39832 
+	mr	r2, r6 39836 
+	stw	r31, 20(r3) 39840 
+	addi	r3, r3, 24 39844 
+	bl	add_mod52651 39848 
+	subi	r3, r3, 24 39852 
+	lwz	r31, 20(r3) 39856 
+	mr	r5, r2 39860 
+	mtlr	r31 39864 
+	lwz	r2, 0(r3) 39868 
+	addi	r6, r2, 4 39872 
+	lwz	r2, 12(r3) 39876 
+	b	calc_dirvec_rows3094 39880 
 bge_else7748:
-	blr 39892 
+	blr 39884 
 create_dirvec3098:
-	li	r2, 3 39896 
-	lis	r31, lo16(l5590) 39900 
-	srwi	r31, r31, 31 39904 
-	addi	r31, r31, ha16(l5590) 39908 
-	slwi	r31, r31, 16 39912 
-	addi	r31, r31, lo16(l5590) 39916 
-	lfd	f0, 0(r31) 39920 
-	mflr	r31 39924 
-	stw	r31, 4(r3) 39928 
-	addi	r3, r3, 8 39932 
-	bl	min_caml_create_float_array 39936 
-	subi	r3, r3, 8 39940 
-	lwz	r31, 4(r3) 39944 
-	mr	r5, r2 39948 
-	mtlr	r31 39952 
-	lis	r2, lo16(min_caml_n_objects) 39956 
-	srwi	r2, r2, 31 39960 
-	addi	r2, r2, ha16(min_caml_n_objects) 39964 
-	slwi	r2, r2, 16 39968 
-	addi	r2, r2, lo16(min_caml_n_objects) 39972 
-	lwz	r2, 0(r2) 39976 
-	lwz	r2, 0(r2) 39980 
-	stw	r5, 0(r3) 39984 
-	mflr	r31 39988 
-	stw	r31, 4(r3) 39992 
-	addi	r3, r3, 8 39996 
-	bl	min_caml_create_array 40000 
-	subi	r3, r3, 8 40004 
-	lwz	r31, 4(r3) 40008 
-	mtlr	r31 40012 
-	mr	r5, r4 40016 
-	addi	r4, r4, 8 40020 
-	stw	r2, 4(r5) 40024 
-	lwz	r2, 0(r3) 40028 
-	stw	r2, 0(r5) 40032 
-	mr	r2, r5 40036 
-	blr 40040 
+	li	r2, 3 39888 
+	lis	r31, lo16(l5590) 39892 
+	srwi	r31, r31, 31 39896 
+	addi	r31, r31, ha16(l5590) 39900 
+	slwi	r31, r31, 16 39904 
+	addi	r31, r31, lo16(l5590) 39908 
+	lfd	f0, 0(r31) 39912 
+	mflr	r31 39916 
+	stw	r31, 4(r3) 39920 
+	addi	r3, r3, 8 39924 
+	bl	min_caml_create_float_array 39928 
+	subi	r3, r3, 8 39932 
+	lwz	r31, 4(r3) 39936 
+	mr	r5, r2 39940 
+	mtlr	r31 39944 
+	lis	r2, lo16(min_caml_n_objects) 39948 
+	srwi	r2, r2, 31 39952 
+	addi	r2, r2, ha16(min_caml_n_objects) 39956 
+	slwi	r2, r2, 16 39960 
+	addi	r2, r2, lo16(min_caml_n_objects) 39964 
+	lwz	r2, 0(r2) 39968 
+	lwz	r2, 0(r2) 39972 
+	stw	r5, 0(r3) 39976 
+	mflr	r31 39980 
+	stw	r31, 4(r3) 39984 
+	addi	r3, r3, 8 39988 
+	bl	min_caml_create_array 39992 
+	subi	r3, r3, 8 39996 
+	lwz	r31, 4(r3) 40000 
+	mtlr	r31 40004 
+	mr	r5, r4 40008 
+	addi	r4, r4, 8 40012 
+	stw	r2, 4(r5) 40016 
+	lwz	r2, 0(r3) 40020 
+	stw	r2, 0(r5) 40024 
+	mr	r2, r5 40028 
+	blr 40032 
 create_dirvec_elements3100:
-	cmpwi	cr7, r5, 0 40044 
-	blt	cr7, bge_else7750 40048 
-	stw	r2, 0(r3) 40052 
-	stw	r5, 4(r3) 40056 
-	mflr	r31 40060 
-	stw	r31, 12(r3) 40064 
-	addi	r3, r3, 16 40068 
-	bl	create_dirvec3098 40072 
-	subi	r3, r3, 16 40076 
-	lwz	r31, 12(r3) 40080 
-	mtlr	r31 40084 
-	lwz	r5, 4(r3) 40088 
-	slwi	r6, r5, 2 40092 
-	lwz	r7, 0(r3) 40096 
-	stwx	r2, r7, r6 40100 
-	subi	r5, r5, 1 40104 
-	mr	r2, r7 40108 
-	b	create_dirvec_elements3100 40112 
+	cmpwi	cr7, r5, 0 40036 
+	blt	cr7, bge_else7750 40040 
+	stw	r2, 0(r3) 40044 
+	stw	r5, 4(r3) 40048 
+	mflr	r31 40052 
+	stw	r31, 12(r3) 40056 
+	addi	r3, r3, 16 40060 
+	bl	create_dirvec3098 40064 
+	subi	r3, r3, 16 40068 
+	lwz	r31, 12(r3) 40072 
+	mtlr	r31 40076 
+	lwz	r5, 4(r3) 40080 
+	slwi	r6, r5, 2 40084 
+	lwz	r7, 0(r3) 40088 
+	stwx	r2, r7, r6 40092 
+	subi	r5, r5, 1 40096 
+	mr	r2, r7 40100 
+	b	create_dirvec_elements3100 40104 
 bge_else7750:
-	blr 40116 
+	blr 40108 
 create_dirvecs3103:
-	cmpwi	cr7, r2, 0 40120 
-	blt	cr7, bge_else7752 40124 
-	lis	r5, lo16(min_caml_dirvecs) 40128 
-	srwi	r5, r5, 31 40132 
-	addi	r5, r5, ha16(min_caml_dirvecs) 40136 
-	slwi	r5, r5, 16 40140 
-	addi	r5, r5, lo16(min_caml_dirvecs) 40144 
-	lwz	r5, 0(r5) 40148 
-	li	r6, 120 40152 
-	stw	r5, 0(r3) 40156 
-	stw	r2, 4(r3) 40160 
-	stw	r6, 8(r3) 40164 
-	mflr	r31 40168 
-	stw	r31, 12(r3) 40172 
-	addi	r3, r3, 16 40176 
-	bl	create_dirvec3098 40180 
-	subi	r3, r3, 16 40184 
-	lwz	r31, 12(r3) 40188 
-	mr	r5, r2 40192 
-	mtlr	r31 40196 
-	lwz	r2, 8(r3) 40200 
-	mflr	r31 40204 
-	stw	r31, 12(r3) 40208 
-	addi	r3, r3, 16 40212 
-	bl	min_caml_create_array 40216 
-	subi	r3, r3, 16 40220 
-	lwz	r31, 12(r3) 40224 
-	mtlr	r31 40228 
-	lwz	r5, 4(r3) 40232 
-	slwi	r6, r5, 2 40236 
-	lwz	r7, 0(r3) 40240 
-	stwx	r2, r7, r6 40244 
-	lis	r2, lo16(min_caml_dirvecs) 40248 
-	srwi	r2, r2, 31 40252 
-	addi	r2, r2, ha16(min_caml_dirvecs) 40256 
-	slwi	r2, r2, 16 40260 
-	addi	r2, r2, lo16(min_caml_dirvecs) 40264 
-	lwz	r2, 0(r2) 40268 
-	slwi	r6, r5, 2 40272 
-	lwzx	r2, r2, r6 40276 
-	li	r6, 118 40280 
-	mflr	r31 40284 
-	mr	r5, r6 40288 
-	stw	r31, 12(r3) 40292 
-	addi	r3, r3, 16 40296 
-	bl	create_dirvec_elements3100 40300 
-	subi	r3, r3, 16 40304 
-	lwz	r31, 12(r3) 40308 
-	mtlr	r31 40312 
-	lwz	r2, 4(r3) 40316 
-	subi	r2, r2, 1 40320 
-	b	create_dirvecs3103 40324 
+	cmpwi	cr7, r2, 0 40112 
+	blt	cr7, bge_else7752 40116 
+	lis	r5, lo16(min_caml_dirvecs) 40120 
+	srwi	r5, r5, 31 40124 
+	addi	r5, r5, ha16(min_caml_dirvecs) 40128 
+	slwi	r5, r5, 16 40132 
+	addi	r5, r5, lo16(min_caml_dirvecs) 40136 
+	lwz	r5, 0(r5) 40140 
+	li	r6, 120 40144 
+	stw	r5, 0(r3) 40148 
+	stw	r2, 4(r3) 40152 
+	stw	r6, 8(r3) 40156 
+	mflr	r31 40160 
+	stw	r31, 12(r3) 40164 
+	addi	r3, r3, 16 40168 
+	bl	create_dirvec3098 40172 
+	subi	r3, r3, 16 40176 
+	lwz	r31, 12(r3) 40180 
+	mr	r5, r2 40184 
+	mtlr	r31 40188 
+	lwz	r2, 8(r3) 40192 
+	mflr	r31 40196 
+	stw	r31, 12(r3) 40200 
+	addi	r3, r3, 16 40204 
+	bl	min_caml_create_array 40208 
+	subi	r3, r3, 16 40212 
+	lwz	r31, 12(r3) 40216 
+	mtlr	r31 40220 
+	lwz	r5, 4(r3) 40224 
+	slwi	r6, r5, 2 40228 
+	lwz	r7, 0(r3) 40232 
+	stwx	r2, r7, r6 40236 
+	lis	r2, lo16(min_caml_dirvecs) 40240 
+	srwi	r2, r2, 31 40244 
+	addi	r2, r2, ha16(min_caml_dirvecs) 40248 
+	slwi	r2, r2, 16 40252 
+	addi	r2, r2, lo16(min_caml_dirvecs) 40256 
+	lwz	r2, 0(r2) 40260 
+	slwi	r6, r5, 2 40264 
+	lwzx	r2, r2, r6 40268 
+	li	r6, 118 40272 
+	mflr	r31 40276 
+	mr	r5, r6 40280 
+	stw	r31, 12(r3) 40284 
+	addi	r3, r3, 16 40288 
+	bl	create_dirvec_elements3100 40292 
+	subi	r3, r3, 16 40296 
+	lwz	r31, 12(r3) 40300 
+	mtlr	r31 40304 
+	lwz	r2, 4(r3) 40308 
+	subi	r2, r2, 1 40312 
+	b	create_dirvecs3103 40316 
 bge_else7752:
-	blr 40328 
+	blr 40320 
 init_dirvec_constants3105:
-	cmpwi	cr7, r5, 0 40332 
-	blt	cr7, bge_else7754 40336 
-	slwi	r6, r5, 2 40340 
-	lwzx	r6, r2, r6 40344 
-	stw	r2, 0(r3) 40348 
-	stw	r5, 4(r3) 40352 
-	mflr	r31 40356 
-	mr	r2, r6 40360 
-	stw	r31, 12(r3) 40364 
-	addi	r3, r3, 16 40368 
-	bl	setup_dirvec_constants2890 40372 
-	subi	r3, r3, 16 40376 
-	lwz	r31, 12(r3) 40380 
-	mtlr	r31 40384 
-	lwz	r2, 4(r3) 40388 
-	subi	r5, r2, 1 40392 
-	lwz	r2, 0(r3) 40396 
-	b	init_dirvec_constants3105 40400 
+	cmpwi	cr7, r5, 0 40324 
+	blt	cr7, bge_else7754 40328 
+	slwi	r6, r5, 2 40332 
+	lwzx	r6, r2, r6 40336 
+	stw	r2, 0(r3) 40340 
+	stw	r5, 4(r3) 40344 
+	mflr	r31 40348 
+	mr	r2, r6 40352 
+	stw	r31, 12(r3) 40356 
+	addi	r3, r3, 16 40360 
+	bl	setup_dirvec_constants2890 40364 
+	subi	r3, r3, 16 40368 
+	lwz	r31, 12(r3) 40372 
+	mtlr	r31 40376 
+	lwz	r2, 4(r3) 40380 
+	subi	r5, r2, 1 40384 
+	lwz	r2, 0(r3) 40388 
+	b	init_dirvec_constants3105 40392 
 bge_else7754:
-	blr 40404 
+	blr 40396 
 init_vecset_constants3108:
-	cmpwi	cr7, r2, 0 40408 
-	blt	cr7, bge_else7756 40412 
-	lis	r5, lo16(min_caml_dirvecs) 40416 
-	srwi	r5, r5, 31 40420 
-	addi	r5, r5, ha16(min_caml_dirvecs) 40424 
-	slwi	r5, r5, 16 40428 
-	addi	r5, r5, lo16(min_caml_dirvecs) 40432 
-	lwz	r5, 0(r5) 40436 
-	slwi	r6, r2, 2 40440 
-	lwzx	r5, r5, r6 40444 
-	li	r6, 119 40448 
-	stw	r2, 0(r3) 40452 
-	mflr	r31 40456 
-	mr	r2, r5 40460 
-	mr	r5, r6 40464 
-	stw	r31, 4(r3) 40468 
-	addi	r3, r3, 8 40472 
-	bl	init_dirvec_constants3105 40476 
-	subi	r3, r3, 8 40480 
-	lwz	r31, 4(r3) 40484 
-	mtlr	r31 40488 
-	lwz	r2, 0(r3) 40492 
-	subi	r2, r2, 1 40496 
-	b	init_vecset_constants3108 40500 
+	cmpwi	cr7, r2, 0 40400 
+	blt	cr7, bge_else7756 40404 
+	lis	r5, lo16(min_caml_dirvecs) 40408 
+	srwi	r5, r5, 31 40412 
+	addi	r5, r5, ha16(min_caml_dirvecs) 40416 
+	slwi	r5, r5, 16 40420 
+	addi	r5, r5, lo16(min_caml_dirvecs) 40424 
+	lwz	r5, 0(r5) 40428 
+	slwi	r6, r2, 2 40432 
+	lwzx	r5, r5, r6 40436 
+	li	r6, 119 40440 
+	stw	r2, 0(r3) 40444 
+	mflr	r31 40448 
+	mr	r2, r5 40452 
+	mr	r5, r6 40456 
+	stw	r31, 4(r3) 40460 
+	addi	r3, r3, 8 40464 
+	bl	init_dirvec_constants3105 40468 
+	subi	r3, r3, 8 40472 
+	lwz	r31, 4(r3) 40476 
+	mtlr	r31 40480 
+	lwz	r2, 0(r3) 40484 
+	subi	r2, r2, 1 40488 
+	b	init_vecset_constants3108 40492 
 bge_else7756:
-	blr 40504 
+	blr 40496 
 init_dirvecs3110:
-	li	r2, 4 40508 
-	mflr	r31 40512 
-	stw	r31, 4(r3) 40516 
-	addi	r3, r3, 8 40520 
-	bl	create_dirvecs3103 40524 
-	subi	r3, r3, 8 40528 
-	lwz	r31, 4(r3) 40532 
-	mtlr	r31 40536 
-	li	r2, 9 40540 
-	li	r5, 0 40544 
-	li	r6, 0 40548 
-	mflr	r31 40552 
-	stw	r31, 4(r3) 40556 
-	addi	r3, r3, 8 40560 
-	bl	calc_dirvec_rows3094 40564 
-	subi	r3, r3, 8 40568 
-	lwz	r31, 4(r3) 40572 
-	mtlr	r31 40576 
-	li	r2, 4 40580 
-	b	init_vecset_constants3108 40584 
+	li	r2, 4 40500 
+	mflr	r31 40504 
+	stw	r31, 4(r3) 40508 
+	addi	r3, r3, 8 40512 
+	bl	create_dirvecs3103 40516 
+	subi	r3, r3, 8 40520 
+	lwz	r31, 4(r3) 40524 
+	mtlr	r31 40528 
+	li	r2, 9 40532 
+	li	r5, 0 40536 
+	li	r6, 0 40540 
+	mflr	r31 40544 
+	stw	r31, 4(r3) 40548 
+	addi	r3, r3, 8 40552 
+	bl	calc_dirvec_rows3094 40556 
+	subi	r3, r3, 8 40560 
+	lwz	r31, 4(r3) 40564 
+	mtlr	r31 40568 
+	li	r2, 4 40572 
+	b	init_vecset_constants3108 40576 
 add_reflection3112:
-	stw	r2, 0(r3) 40588 
-	stw	r5, 4(r3) 40592 
-	stfd	f0, 8(r3) 40596 
-	stfd	f3, 16(r3) 40600 
-	stfd	f2, 24(r3) 40604 
-	stfd	f1, 32(r3) 40608 
-	mflr	r31 40612 
-	stw	r31, 44(r3) 40616 
-	addi	r3, r3, 48 40620 
-	bl	create_dirvec3098 40624 
-	subi	r3, r3, 48 40628 
-	lwz	r31, 44(r3) 40632 
-	mtlr	r31 40636 
-	stw	r2, 40(r3) 40640 
-	mflr	r31 40644 
-	stw	r31, 44(r3) 40648 
-	addi	r3, r3, 48 40652 
-	bl	d_vec2761 40656 
-	subi	r3, r3, 48 40660 
-	lwz	r31, 44(r3) 40664 
-	mtlr	r31 40668 
-	lfd	f0, 32(r3) 40672 
-	lfd	f1, 24(r3) 40676 
-	lfd	f2, 16(r3) 40680 
-	mflr	r31 40684 
-	stw	r31, 44(r3) 40688 
-	addi	r3, r3, 48 40692 
-	bl	vecset2654 40696 
-	subi	r3, r3, 48 40700 
-	lwz	r31, 44(r3) 40704 
-	mtlr	r31 40708 
-	lwz	r2, 40(r3) 40712 
-	mflr	r31 40716 
-	stw	r31, 44(r3) 40720 
-	addi	r3, r3, 48 40724 
-	bl	setup_dirvec_constants2890 40728 
-	subi	r3, r3, 48 40732 
-	lwz	r31, 44(r3) 40736 
-	mtlr	r31 40740 
-	lis	r2, lo16(min_caml_reflections) 40744 
-	srwi	r2, r2, 31 40748 
-	addi	r2, r2, ha16(min_caml_reflections) 40752 
-	slwi	r2, r2, 16 40756 
-	addi	r2, r2, lo16(min_caml_reflections) 40760 
-	lwz	r2, 0(r2) 40764 
-	mr	r5, r4 40768 
-	addi	r4, r4, 16 40772 
-	lfd	f0, 8(r3) 40776 
-	stfd	f0, 8(r5) 40780 
-	lwz	r6, 40(r3) 40784 
-	stw	r6, 4(r5) 40788 
-	lwz	r6, 4(r3) 40792 
-	stw	r6, 0(r5) 40796 
-	lwz	r6, 0(r3) 40800 
-	slwi	r6, r6, 2 40804 
-	stwx	r5, r2, r6 40808 
-	blr 40812 
+	stw	r2, 0(r3) 40580 
+	stw	r5, 4(r3) 40584 
+	stfd	f0, 8(r3) 40588 
+	stfd	f3, 16(r3) 40592 
+	stfd	f2, 24(r3) 40596 
+	stfd	f1, 32(r3) 40600 
+	mflr	r31 40604 
+	stw	r31, 44(r3) 40608 
+	addi	r3, r3, 48 40612 
+	bl	create_dirvec3098 40616 
+	subi	r3, r3, 48 40620 
+	lwz	r31, 44(r3) 40624 
+	mtlr	r31 40628 
+	stw	r2, 40(r3) 40632 
+	mflr	r31 40636 
+	stw	r31, 44(r3) 40640 
+	addi	r3, r3, 48 40644 
+	bl	d_vec2761 40648 
+	subi	r3, r3, 48 40652 
+	lwz	r31, 44(r3) 40656 
+	mtlr	r31 40660 
+	lfd	f0, 32(r3) 40664 
+	lfd	f1, 24(r3) 40668 
+	lfd	f2, 16(r3) 40672 
+	mflr	r31 40676 
+	stw	r31, 44(r3) 40680 
+	addi	r3, r3, 48 40684 
+	bl	vecset2654 40688 
+	subi	r3, r3, 48 40692 
+	lwz	r31, 44(r3) 40696 
+	mtlr	r31 40700 
+	lwz	r2, 40(r3) 40704 
+	mflr	r31 40708 
+	stw	r31, 44(r3) 40712 
+	addi	r3, r3, 48 40716 
+	bl	setup_dirvec_constants2890 40720 
+	subi	r3, r3, 48 40724 
+	lwz	r31, 44(r3) 40728 
+	mtlr	r31 40732 
+	lis	r2, lo16(min_caml_reflections) 40736 
+	srwi	r2, r2, 31 40740 
+	addi	r2, r2, ha16(min_caml_reflections) 40744 
+	slwi	r2, r2, 16 40748 
+	addi	r2, r2, lo16(min_caml_reflections) 40752 
+	lwz	r2, 0(r2) 40756 
+	mr	r5, r4 40760 
+	addi	r4, r4, 16 40764 
+	lfd	f0, 8(r3) 40768 
+	stfd	f0, 8(r5) 40772 
+	lwz	r6, 40(r3) 40776 
+	stw	r6, 4(r5) 40780 
+	lwz	r6, 4(r3) 40784 
+	stw	r6, 0(r5) 40788 
+	lwz	r6, 0(r3) 40792 
+	slwi	r6, r6, 2 40796 
+	stwx	r5, r2, r6 40800 
+	blr 40804 
 setup_rect_reflection3119:
-	li	r6, 4 40816 
-	slw	r2, r2, r6 40820 
-	lis	r6, lo16(min_caml_n_reflections) 40824 
-	srwi	r6, r6, 31 40828 
-	addi	r6, r6, ha16(min_caml_n_reflections) 40832 
-	slwi	r6, r6, 16 40836 
-	addi	r6, r6, lo16(min_caml_n_reflections) 40840 
-	lwz	r6, 0(r6) 40844 
-	lwz	r6, 0(r6) 40848 
-	lis	r31, lo16(l5591) 40852 
-	srwi	r31, r31, 31 40856 
-	addi	r31, r31, ha16(l5591) 40860 
-	slwi	r31, r31, 16 40864 
-	addi	r31, r31, lo16(l5591) 40868 
-	lfd	f0, 0(r31) 40872 
-	stw	r6, 0(r3) 40876 
-	stw	r2, 4(r3) 40880 
-	stfd	f0, 8(r3) 40884 
-	mflr	r31 40888 
-	mr	r2, r5 40892 
-	stw	r31, 20(r3) 40896 
-	addi	r3, r3, 24 40900 
-	bl	o_diffuse2724 40904 
-	subi	r3, r3, 24 40908 
-	lwz	r31, 20(r3) 40912 
-	mtlr	r31 40916 
-	lfd	f1, 8(r3) 40920 
-	fsub	f0, f1, f0 40924 
-	lis	r2, lo16(min_caml_light) 40928 
-	srwi	r2, r2, 31 40932 
-	addi	r2, r2, ha16(min_caml_light) 40936 
-	slwi	r2, r2, 16 40940 
-	addi	r2, r2, lo16(min_caml_light) 40944 
-	lwz	r2, 0(r2) 40948 
-	lfd	f1, 0(r2) 40952 
-	fneg	f1, f1 40956 
-	lis	r2, lo16(min_caml_light) 40960 
-	srwi	r2, r2, 31 40964 
-	addi	r2, r2, ha16(min_caml_light) 40968 
-	slwi	r2, r2, 16 40972 
-	addi	r2, r2, lo16(min_caml_light) 40976 
-	lwz	r2, 0(r2) 40980 
-	lfd	f2, 4(r2) 40984 
-	fneg	f2, f2 40988 
-	lis	r2, lo16(min_caml_light) 40992 
-	srwi	r2, r2, 31 40996 
-	addi	r2, r2, ha16(min_caml_light) 41000 
-	slwi	r2, r2, 16 41004 
-	addi	r2, r2, lo16(min_caml_light) 41008 
-	lwz	r2, 0(r2) 41012 
-	lfd	f3, 8(r2) 41016 
-	fneg	f3, f3 41020 
-	lwz	r2, 4(r3) 41024 
-	addi	r5, r2, 1 41028 
-	lis	r6, lo16(min_caml_light) 41032 
-	srwi	r6, r6, 31 41036 
-	addi	r6, r6, ha16(min_caml_light) 41040 
-	slwi	r6, r6, 16 41044 
-	addi	r6, r6, lo16(min_caml_light) 41048 
-	lwz	r6, 0(r6) 41052 
-	lfd	f4, 0(r6) 41056 
-	lwz	r6, 0(r3) 41060 
-	stfd	f2, 16(r3) 41064 
-	stfd	f3, 24(r3) 41068 
-	stfd	f1, 32(r3) 41072 
-	stfd	f0, 40(r3) 41076 
-	mflr	r31 41080 
-	mr	r2, r6 41084 
-	fmr	f1, f4 41088 
-	stw	r31, 52(r3) 41092 
-	addi	r3, r3, 56 41096 
-	bl	add_reflection3112 41100 
-	subi	r3, r3, 56 41104 
-	lwz	r31, 52(r3) 41108 
-	mtlr	r31 41112 
-	lwz	r2, 0(r3) 41116 
-	addi	r5, r2, 1 41120 
-	lwz	r6, 4(r3) 41124 
-	addi	r7, r6, 2 41128 
-	lis	r8, lo16(min_caml_light) 41132 
-	srwi	r8, r8, 31 41136 
-	addi	r8, r8, ha16(min_caml_light) 41140 
-	slwi	r8, r8, 16 41144 
-	addi	r8, r8, lo16(min_caml_light) 41148 
-	lwz	r8, 0(r8) 41152 
-	lfd	f2, 4(r8) 41156 
-	lfd	f0, 40(r3) 41160 
-	lfd	f1, 32(r3) 41164 
-	lfd	f3, 24(r3) 41168 
-	mflr	r31 41172 
-	mr	r2, r5 41176 
-	mr	r5, r7 41180 
-	stw	r31, 52(r3) 41184 
-	addi	r3, r3, 56 41188 
-	bl	add_reflection3112 41192 
-	subi	r3, r3, 56 41196 
-	lwz	r31, 52(r3) 41200 
-	mtlr	r31 41204 
-	lwz	r2, 0(r3) 41208 
-	addi	r5, r2, 2 41212 
-	lwz	r6, 4(r3) 41216 
-	addi	r6, r6, 3 41220 
-	lis	r7, lo16(min_caml_light) 41224 
-	srwi	r7, r7, 31 41228 
-	addi	r7, r7, ha16(min_caml_light) 41232 
-	slwi	r7, r7, 16 41236 
-	addi	r7, r7, lo16(min_caml_light) 41240 
-	lwz	r7, 0(r7) 41244 
-	lfd	f3, 8(r7) 41248 
-	lfd	f0, 40(r3) 41252 
-	lfd	f1, 32(r3) 41256 
-	lfd	f2, 16(r3) 41260 
-	mflr	r31 41264 
-	mr	r2, r5 41268 
-	mr	r5, r6 41272 
-	stw	r31, 52(r3) 41276 
-	addi	r3, r3, 56 41280 
-	bl	add_reflection3112 41284 
-	subi	r3, r3, 56 41288 
-	lwz	r31, 52(r3) 41292 
-	mtlr	r31 41296 
-	lis	r2, lo16(min_caml_n_reflections) 41300 
-	srwi	r2, r2, 31 41304 
-	addi	r2, r2, ha16(min_caml_n_reflections) 41308 
-	slwi	r2, r2, 16 41312 
-	addi	r2, r2, lo16(min_caml_n_reflections) 41316 
-	lwz	r2, 0(r2) 41320 
-	lwz	r5, 0(r3) 41324 
-	addi	r5, r5, 3 41328 
-	stw	r5, 0(r2) 41332 
-	blr 41336 
+	slwi	r2, r2, 2 40808 
+	lis	r6, lo16(min_caml_n_reflections) 40812 
+	srwi	r6, r6, 31 40816 
+	addi	r6, r6, ha16(min_caml_n_reflections) 40820 
+	slwi	r6, r6, 16 40824 
+	addi	r6, r6, lo16(min_caml_n_reflections) 40828 
+	lwz	r6, 0(r6) 40832 
+	lwz	r6, 0(r6) 40836 
+	lis	r31, lo16(l5591) 40840 
+	srwi	r31, r31, 31 40844 
+	addi	r31, r31, ha16(l5591) 40848 
+	slwi	r31, r31, 16 40852 
+	addi	r31, r31, lo16(l5591) 40856 
+	lfd	f0, 0(r31) 40860 
+	stw	r6, 0(r3) 40864 
+	stw	r2, 4(r3) 40868 
+	stfd	f0, 8(r3) 40872 
+	mflr	r31 40876 
+	mr	r2, r5 40880 
+	stw	r31, 20(r3) 40884 
+	addi	r3, r3, 24 40888 
+	bl	o_diffuse2724 40892 
+	subi	r3, r3, 24 40896 
+	lwz	r31, 20(r3) 40900 
+	mtlr	r31 40904 
+	lfd	f1, 8(r3) 40908 
+	fsub	f0, f1, f0 40912 
+	lis	r2, lo16(min_caml_light) 40916 
+	srwi	r2, r2, 31 40920 
+	addi	r2, r2, ha16(min_caml_light) 40924 
+	slwi	r2, r2, 16 40928 
+	addi	r2, r2, lo16(min_caml_light) 40932 
+	lwz	r2, 0(r2) 40936 
+	lfd	f1, 0(r2) 40940 
+	fneg	f1, f1 40944 
+	lis	r2, lo16(min_caml_light) 40948 
+	srwi	r2, r2, 31 40952 
+	addi	r2, r2, ha16(min_caml_light) 40956 
+	slwi	r2, r2, 16 40960 
+	addi	r2, r2, lo16(min_caml_light) 40964 
+	lwz	r2, 0(r2) 40968 
+	lfd	f2, 4(r2) 40972 
+	fneg	f2, f2 40976 
+	lis	r2, lo16(min_caml_light) 40980 
+	srwi	r2, r2, 31 40984 
+	addi	r2, r2, ha16(min_caml_light) 40988 
+	slwi	r2, r2, 16 40992 
+	addi	r2, r2, lo16(min_caml_light) 40996 
+	lwz	r2, 0(r2) 41000 
+	lfd	f3, 8(r2) 41004 
+	fneg	f3, f3 41008 
+	lwz	r2, 4(r3) 41012 
+	addi	r5, r2, 1 41016 
+	lis	r6, lo16(min_caml_light) 41020 
+	srwi	r6, r6, 31 41024 
+	addi	r6, r6, ha16(min_caml_light) 41028 
+	slwi	r6, r6, 16 41032 
+	addi	r6, r6, lo16(min_caml_light) 41036 
+	lwz	r6, 0(r6) 41040 
+	lfd	f4, 0(r6) 41044 
+	lwz	r6, 0(r3) 41048 
+	stfd	f2, 16(r3) 41052 
+	stfd	f3, 24(r3) 41056 
+	stfd	f1, 32(r3) 41060 
+	stfd	f0, 40(r3) 41064 
+	mflr	r31 41068 
+	mr	r2, r6 41072 
+	fmr	f1, f4 41076 
+	stw	r31, 52(r3) 41080 
+	addi	r3, r3, 56 41084 
+	bl	add_reflection3112 41088 
+	subi	r3, r3, 56 41092 
+	lwz	r31, 52(r3) 41096 
+	mtlr	r31 41100 
+	lwz	r2, 0(r3) 41104 
+	addi	r5, r2, 1 41108 
+	lwz	r6, 4(r3) 41112 
+	addi	r7, r6, 2 41116 
+	lis	r8, lo16(min_caml_light) 41120 
+	srwi	r8, r8, 31 41124 
+	addi	r8, r8, ha16(min_caml_light) 41128 
+	slwi	r8, r8, 16 41132 
+	addi	r8, r8, lo16(min_caml_light) 41136 
+	lwz	r8, 0(r8) 41140 
+	lfd	f2, 4(r8) 41144 
+	lfd	f0, 40(r3) 41148 
+	lfd	f1, 32(r3) 41152 
+	lfd	f3, 24(r3) 41156 
+	mflr	r31 41160 
+	mr	r2, r5 41164 
+	mr	r5, r7 41168 
+	stw	r31, 52(r3) 41172 
+	addi	r3, r3, 56 41176 
+	bl	add_reflection3112 41180 
+	subi	r3, r3, 56 41184 
+	lwz	r31, 52(r3) 41188 
+	mtlr	r31 41192 
+	lwz	r2, 0(r3) 41196 
+	addi	r5, r2, 2 41200 
+	lwz	r6, 4(r3) 41204 
+	addi	r6, r6, 3 41208 
+	lis	r7, lo16(min_caml_light) 41212 
+	srwi	r7, r7, 31 41216 
+	addi	r7, r7, ha16(min_caml_light) 41220 
+	slwi	r7, r7, 16 41224 
+	addi	r7, r7, lo16(min_caml_light) 41228 
+	lwz	r7, 0(r7) 41232 
+	lfd	f3, 8(r7) 41236 
+	lfd	f0, 40(r3) 41240 
+	lfd	f1, 32(r3) 41244 
+	lfd	f2, 16(r3) 41248 
+	mflr	r31 41252 
+	mr	r2, r5 41256 
+	mr	r5, r6 41260 
+	stw	r31, 52(r3) 41264 
+	addi	r3, r3, 56 41268 
+	bl	add_reflection3112 41272 
+	subi	r3, r3, 56 41276 
+	lwz	r31, 52(r3) 41280 
+	mtlr	r31 41284 
+	lis	r2, lo16(min_caml_n_reflections) 41288 
+	srwi	r2, r2, 31 41292 
+	addi	r2, r2, ha16(min_caml_n_reflections) 41296 
+	slwi	r2, r2, 16 41300 
+	addi	r2, r2, lo16(min_caml_n_reflections) 41304 
+	lwz	r2, 0(r2) 41308 
+	lwz	r5, 0(r3) 41312 
+	addi	r5, r5, 3 41316 
+	stw	r5, 0(r2) 41320 
+	blr 41324 
 setup_surface_reflection3122:
-	li	r6, 4 41340 
-	slw	r2, r2, r6 41344 
-	addi	r2, r2, 1 41348 
-	lis	r6, lo16(min_caml_n_reflections) 41352 
-	srwi	r6, r6, 31 41356 
-	addi	r6, r6, ha16(min_caml_n_reflections) 41360 
-	slwi	r6, r6, 16 41364 
-	addi	r6, r6, lo16(min_caml_n_reflections) 41368 
-	lwz	r6, 0(r6) 41372 
-	lwz	r6, 0(r6) 41376 
-	lis	r31, lo16(l5591) 41380 
-	srwi	r31, r31, 31 41384 
-	addi	r31, r31, ha16(l5591) 41388 
-	slwi	r31, r31, 16 41392 
-	addi	r31, r31, lo16(l5591) 41396 
-	lfd	f0, 0(r31) 41400 
-	stw	r2, 0(r3) 41404 
-	stw	r6, 4(r3) 41408 
-	stw	r5, 8(r3) 41412 
-	stfd	f0, 16(r3) 41416 
-	mflr	r31 41420 
-	mr	r2, r5 41424 
-	stw	r31, 28(r3) 41428 
-	addi	r3, r3, 32 41432 
-	bl	o_diffuse2724 41436 
-	subi	r3, r3, 32 41440 
-	lwz	r31, 28(r3) 41444 
-	mtlr	r31 41448 
-	lfd	f1, 16(r3) 41452 
-	fsub	f0, f1, f0 41456 
-	lis	r2, lo16(min_caml_light) 41460 
-	srwi	r2, r2, 31 41464 
-	addi	r2, r2, ha16(min_caml_light) 41468 
-	slwi	r2, r2, 16 41472 
-	addi	r2, r2, lo16(min_caml_light) 41476 
-	lwz	r2, 0(r2) 41480 
-	lwz	r5, 8(r3) 41484 
-	stfd	f0, 24(r3) 41488 
-	stw	r2, 32(r3) 41492 
-	mflr	r31 41496 
-	mr	r2, r5 41500 
-	stw	r31, 36(r3) 41504 
-	addi	r3, r3, 40 41508 
-	bl	o_param_abc2716 41512 
-	subi	r3, r3, 40 41516 
-	lwz	r31, 36(r3) 41520 
-	mr	r5, r2 41524 
-	mtlr	r31 41528 
-	lwz	r2, 32(r3) 41532 
-	mflr	r31 41536 
-	stw	r31, 36(r3) 41540 
-	addi	r3, r3, 40 41544 
-	bl	veciprod2675 41548 
-	subi	r3, r3, 40 41552 
-	lwz	r31, 36(r3) 41556 
-	mtlr	r31 41560 
-	lis	r31, lo16(l5718) 41564 
-	srwi	r31, r31, 31 41568 
-	addi	r31, r31, ha16(l5718) 41572 
-	slwi	r31, r31, 16 41576 
-	addi	r31, r31, lo16(l5718) 41580 
-	lfd	f1, 0(r31) 41584 
-	lwz	r2, 8(r3) 41588 
-	stfd	f0, 40(r3) 41592 
-	stfd	f1, 48(r3) 41596 
-	mflr	r31 41600 
-	stw	r31, 60(r3) 41604 
-	addi	r3, r3, 64 41608 
-	bl	o_param_a2710 41612 
-	subi	r3, r3, 64 41616 
-	lwz	r31, 60(r3) 41620 
-	mtlr	r31 41624 
-	lfd	f1, 48(r3) 41628 
-	fmul	f0, f1, f0 41632 
-	lfd	f1, 40(r3) 41636 
-	fmul	f0, f0, f1 41640 
-	lis	r2, lo16(min_caml_light) 41644 
-	srwi	r2, r2, 31 41648 
-	addi	r2, r2, ha16(min_caml_light) 41652 
-	slwi	r2, r2, 16 41656 
-	addi	r2, r2, lo16(min_caml_light) 41660 
-	lwz	r2, 0(r2) 41664 
-	lfd	f2, 0(r2) 41668 
-	fsub	f0, f0, f2 41672 
-	lis	r31, lo16(l5718) 41676 
-	srwi	r31, r31, 31 41680 
-	addi	r31, r31, ha16(l5718) 41684 
-	slwi	r31, r31, 16 41688 
-	addi	r31, r31, lo16(l5718) 41692 
-	lfd	f2, 0(r31) 41696 
-	lwz	r2, 8(r3) 41700 
-	stfd	f0, 56(r3) 41704 
-	stfd	f2, 64(r3) 41708 
-	mflr	r31 41712 
-	stw	r31, 76(r3) 41716 
-	addi	r3, r3, 80 41720 
-	bl	o_param_b2712 41724 
-	subi	r3, r3, 80 41728 
-	lwz	r31, 76(r3) 41732 
-	mtlr	r31 41736 
-	lfd	f1, 64(r3) 41740 
-	fmul	f0, f1, f0 41744 
-	lfd	f1, 40(r3) 41748 
-	fmul	f0, f0, f1 41752 
-	lis	r2, lo16(min_caml_light) 41756 
-	srwi	r2, r2, 31 41760 
-	addi	r2, r2, ha16(min_caml_light) 41764 
-	slwi	r2, r2, 16 41768 
-	addi	r2, r2, lo16(min_caml_light) 41772 
-	lwz	r2, 0(r2) 41776 
-	lfd	f2, 4(r2) 41780 
-	fsub	f0, f0, f2 41784 
-	lis	r31, lo16(l5718) 41788 
-	srwi	r31, r31, 31 41792 
-	addi	r31, r31, ha16(l5718) 41796 
-	slwi	r31, r31, 16 41800 
-	addi	r31, r31, lo16(l5718) 41804 
-	lfd	f2, 0(r31) 41808 
-	lwz	r2, 8(r3) 41812 
-	stfd	f0, 72(r3) 41816 
-	stfd	f2, 80(r3) 41820 
-	mflr	r31 41824 
-	stw	r31, 92(r3) 41828 
-	addi	r3, r3, 96 41832 
-	bl	o_param_c2714 41836 
-	subi	r3, r3, 96 41840 
-	lwz	r31, 92(r3) 41844 
-	mtlr	r31 41848 
-	lfd	f1, 80(r3) 41852 
-	fmul	f0, f1, f0 41856 
-	lfd	f1, 40(r3) 41860 
-	fmul	f0, f0, f1 41864 
-	lis	r2, lo16(min_caml_light) 41868 
-	srwi	r2, r2, 31 41872 
-	addi	r2, r2, ha16(min_caml_light) 41876 
-	slwi	r2, r2, 16 41880 
-	addi	r2, r2, lo16(min_caml_light) 41884 
-	lwz	r2, 0(r2) 41888 
-	lfd	f1, 8(r2) 41892 
-	fsub	f3, f0, f1 41896 
-	lfd	f0, 24(r3) 41900 
-	lfd	f1, 56(r3) 41904 
-	lfd	f2, 72(r3) 41908 
-	lwz	r2, 4(r3) 41912 
-	lwz	r5, 0(r3) 41916 
-	mflr	r31 41920 
-	stw	r31, 92(r3) 41924 
-	addi	r3, r3, 96 41928 
-	bl	add_reflection3112 41932 
-	subi	r3, r3, 96 41936 
-	lwz	r31, 92(r3) 41940 
-	mtlr	r31 41944 
-	lis	r2, lo16(min_caml_n_reflections) 41948 
-	srwi	r2, r2, 31 41952 
-	addi	r2, r2, ha16(min_caml_n_reflections) 41956 
-	slwi	r2, r2, 16 41960 
-	addi	r2, r2, lo16(min_caml_n_reflections) 41964 
-	lwz	r2, 0(r2) 41968 
-	lwz	r5, 4(r3) 41972 
-	addi	r5, r5, 1 41976 
-	stw	r5, 0(r2) 41980 
-	blr 41984 
+	slwi	r2, r2, 2 41328 
+	addi	r2, r2, 1 41332 
+	lis	r6, lo16(min_caml_n_reflections) 41336 
+	srwi	r6, r6, 31 41340 
+	addi	r6, r6, ha16(min_caml_n_reflections) 41344 
+	slwi	r6, r6, 16 41348 
+	addi	r6, r6, lo16(min_caml_n_reflections) 41352 
+	lwz	r6, 0(r6) 41356 
+	lwz	r6, 0(r6) 41360 
+	lis	r31, lo16(l5591) 41364 
+	srwi	r31, r31, 31 41368 
+	addi	r31, r31, ha16(l5591) 41372 
+	slwi	r31, r31, 16 41376 
+	addi	r31, r31, lo16(l5591) 41380 
+	lfd	f0, 0(r31) 41384 
+	stw	r2, 0(r3) 41388 
+	stw	r6, 4(r3) 41392 
+	stw	r5, 8(r3) 41396 
+	stfd	f0, 16(r3) 41400 
+	mflr	r31 41404 
+	mr	r2, r5 41408 
+	stw	r31, 28(r3) 41412 
+	addi	r3, r3, 32 41416 
+	bl	o_diffuse2724 41420 
+	subi	r3, r3, 32 41424 
+	lwz	r31, 28(r3) 41428 
+	mtlr	r31 41432 
+	lfd	f1, 16(r3) 41436 
+	fsub	f0, f1, f0 41440 
+	lis	r2, lo16(min_caml_light) 41444 
+	srwi	r2, r2, 31 41448 
+	addi	r2, r2, ha16(min_caml_light) 41452 
+	slwi	r2, r2, 16 41456 
+	addi	r2, r2, lo16(min_caml_light) 41460 
+	lwz	r2, 0(r2) 41464 
+	lwz	r5, 8(r3) 41468 
+	stfd	f0, 24(r3) 41472 
+	stw	r2, 32(r3) 41476 
+	mflr	r31 41480 
+	mr	r2, r5 41484 
+	stw	r31, 36(r3) 41488 
+	addi	r3, r3, 40 41492 
+	bl	o_param_abc2716 41496 
+	subi	r3, r3, 40 41500 
+	lwz	r31, 36(r3) 41504 
+	mr	r5, r2 41508 
+	mtlr	r31 41512 
+	lwz	r2, 32(r3) 41516 
+	mflr	r31 41520 
+	stw	r31, 36(r3) 41524 
+	addi	r3, r3, 40 41528 
+	bl	veciprod2675 41532 
+	subi	r3, r3, 40 41536 
+	lwz	r31, 36(r3) 41540 
+	mtlr	r31 41544 
+	lis	r31, lo16(l5718) 41548 
+	srwi	r31, r31, 31 41552 
+	addi	r31, r31, ha16(l5718) 41556 
+	slwi	r31, r31, 16 41560 
+	addi	r31, r31, lo16(l5718) 41564 
+	lfd	f1, 0(r31) 41568 
+	lwz	r2, 8(r3) 41572 
+	stfd	f0, 40(r3) 41576 
+	stfd	f1, 48(r3) 41580 
+	mflr	r31 41584 
+	stw	r31, 60(r3) 41588 
+	addi	r3, r3, 64 41592 
+	bl	o_param_a2710 41596 
+	subi	r3, r3, 64 41600 
+	lwz	r31, 60(r3) 41604 
+	mtlr	r31 41608 
+	lfd	f1, 48(r3) 41612 
+	fmul	f0, f1, f0 41616 
+	lfd	f1, 40(r3) 41620 
+	fmul	f0, f0, f1 41624 
+	lis	r2, lo16(min_caml_light) 41628 
+	srwi	r2, r2, 31 41632 
+	addi	r2, r2, ha16(min_caml_light) 41636 
+	slwi	r2, r2, 16 41640 
+	addi	r2, r2, lo16(min_caml_light) 41644 
+	lwz	r2, 0(r2) 41648 
+	lfd	f2, 0(r2) 41652 
+	fsub	f0, f0, f2 41656 
+	lis	r31, lo16(l5718) 41660 
+	srwi	r31, r31, 31 41664 
+	addi	r31, r31, ha16(l5718) 41668 
+	slwi	r31, r31, 16 41672 
+	addi	r31, r31, lo16(l5718) 41676 
+	lfd	f2, 0(r31) 41680 
+	lwz	r2, 8(r3) 41684 
+	stfd	f0, 56(r3) 41688 
+	stfd	f2, 64(r3) 41692 
+	mflr	r31 41696 
+	stw	r31, 76(r3) 41700 
+	addi	r3, r3, 80 41704 
+	bl	o_param_b2712 41708 
+	subi	r3, r3, 80 41712 
+	lwz	r31, 76(r3) 41716 
+	mtlr	r31 41720 
+	lfd	f1, 64(r3) 41724 
+	fmul	f0, f1, f0 41728 
+	lfd	f1, 40(r3) 41732 
+	fmul	f0, f0, f1 41736 
+	lis	r2, lo16(min_caml_light) 41740 
+	srwi	r2, r2, 31 41744 
+	addi	r2, r2, ha16(min_caml_light) 41748 
+	slwi	r2, r2, 16 41752 
+	addi	r2, r2, lo16(min_caml_light) 41756 
+	lwz	r2, 0(r2) 41760 
+	lfd	f2, 4(r2) 41764 
+	fsub	f0, f0, f2 41768 
+	lis	r31, lo16(l5718) 41772 
+	srwi	r31, r31, 31 41776 
+	addi	r31, r31, ha16(l5718) 41780 
+	slwi	r31, r31, 16 41784 
+	addi	r31, r31, lo16(l5718) 41788 
+	lfd	f2, 0(r31) 41792 
+	lwz	r2, 8(r3) 41796 
+	stfd	f0, 72(r3) 41800 
+	stfd	f2, 80(r3) 41804 
+	mflr	r31 41808 
+	stw	r31, 92(r3) 41812 
+	addi	r3, r3, 96 41816 
+	bl	o_param_c2714 41820 
+	subi	r3, r3, 96 41824 
+	lwz	r31, 92(r3) 41828 
+	mtlr	r31 41832 
+	lfd	f1, 80(r3) 41836 
+	fmul	f0, f1, f0 41840 
+	lfd	f1, 40(r3) 41844 
+	fmul	f0, f0, f1 41848 
+	lis	r2, lo16(min_caml_light) 41852 
+	srwi	r2, r2, 31 41856 
+	addi	r2, r2, ha16(min_caml_light) 41860 
+	slwi	r2, r2, 16 41864 
+	addi	r2, r2, lo16(min_caml_light) 41868 
+	lwz	r2, 0(r2) 41872 
+	lfd	f1, 8(r2) 41876 
+	fsub	f3, f0, f1 41880 
+	lfd	f0, 24(r3) 41884 
+	lfd	f1, 56(r3) 41888 
+	lfd	f2, 72(r3) 41892 
+	lwz	r2, 4(r3) 41896 
+	lwz	r5, 0(r3) 41900 
+	mflr	r31 41904 
+	stw	r31, 92(r3) 41908 
+	addi	r3, r3, 96 41912 
+	bl	add_reflection3112 41916 
+	subi	r3, r3, 96 41920 
+	lwz	r31, 92(r3) 41924 
+	mtlr	r31 41928 
+	lis	r2, lo16(min_caml_n_reflections) 41932 
+	srwi	r2, r2, 31 41936 
+	addi	r2, r2, ha16(min_caml_n_reflections) 41940 
+	slwi	r2, r2, 16 41944 
+	addi	r2, r2, lo16(min_caml_n_reflections) 41948 
+	lwz	r2, 0(r2) 41952 
+	lwz	r5, 4(r3) 41956 
+	addi	r5, r5, 1 41960 
+	stw	r5, 0(r2) 41964 
+	blr 41968 
 setup_reflections3125:
-	cmpwi	cr7, r2, 0 41988 
-	blt	cr7, bge_else7763 41992 
-	lis	r5, lo16(min_caml_objects) 41996 
-	srwi	r5, r5, 31 42000 
-	addi	r5, r5, ha16(min_caml_objects) 42004 
-	slwi	r5, r5, 16 42008 
-	addi	r5, r5, lo16(min_caml_objects) 42012 
-	lwz	r5, 0(r5) 42016 
-	slwi	r6, r2, 2 42020 
-	lwzx	r5, r5, r6 42024 
-	stw	r2, 0(r3) 42028 
-	stw	r5, 4(r3) 42032 
-	mflr	r31 42036 
-	mr	r2, r5 42040 
-	stw	r31, 12(r3) 42044 
-	addi	r3, r3, 16 42048 
-	bl	o_reflectiontype2704 42052 
-	subi	r3, r3, 16 42056 
-	lwz	r31, 12(r3) 42060 
-	mtlr	r31 42064 
-	cmpwi	cr7, r2, 2 42068 
-	bne	cr7, beq_else7764 42072 
-	lis	r31, lo16(l5591) 42076 
-	srwi	r31, r31, 31 42080 
-	addi	r31, r31, ha16(l5591) 42084 
-	slwi	r31, r31, 16 42088 
-	addi	r31, r31, lo16(l5591) 42092 
-	lfd	f0, 0(r31) 42096 
-	lwz	r2, 4(r3) 42100 
-	stfd	f0, 8(r3) 42104 
-	mflr	r31 42108 
-	stw	r31, 20(r3) 42112 
-	addi	r3, r3, 24 42116 
-	bl	o_diffuse2724 42120 
-	subi	r3, r3, 24 42124 
-	lwz	r31, 20(r3) 42128 
-	mtlr	r31 42132 
-	lfd	f1, 8(r3) 42136 
-	fcmpu	cr7, f1, f0 42140 
-	bgt	cr7, ble_else7765 42144 
-	blr 42148 
+	cmpwi	cr7, r2, 0 41972 
+	blt	cr7, bge_else7763 41976 
+	lis	r5, lo16(min_caml_objects) 41980 
+	srwi	r5, r5, 31 41984 
+	addi	r5, r5, ha16(min_caml_objects) 41988 
+	slwi	r5, r5, 16 41992 
+	addi	r5, r5, lo16(min_caml_objects) 41996 
+	lwz	r5, 0(r5) 42000 
+	slwi	r6, r2, 2 42004 
+	lwzx	r5, r5, r6 42008 
+	stw	r2, 0(r3) 42012 
+	stw	r5, 4(r3) 42016 
+	mflr	r31 42020 
+	mr	r2, r5 42024 
+	stw	r31, 12(r3) 42028 
+	addi	r3, r3, 16 42032 
+	bl	o_reflectiontype2704 42036 
+	subi	r3, r3, 16 42040 
+	lwz	r31, 12(r3) 42044 
+	mtlr	r31 42048 
+	cmpwi	cr7, r2, 2 42052 
+	bne	cr7, beq_else7764 42056 
+	lis	r31, lo16(l5591) 42060 
+	srwi	r31, r31, 31 42064 
+	addi	r31, r31, ha16(l5591) 42068 
+	slwi	r31, r31, 16 42072 
+	addi	r31, r31, lo16(l5591) 42076 
+	lfd	f0, 0(r31) 42080 
+	lwz	r2, 4(r3) 42084 
+	stfd	f0, 8(r3) 42088 
+	mflr	r31 42092 
+	stw	r31, 20(r3) 42096 
+	addi	r3, r3, 24 42100 
+	bl	o_diffuse2724 42104 
+	subi	r3, r3, 24 42108 
+	lwz	r31, 20(r3) 42112 
+	mtlr	r31 42116 
+	lfd	f1, 8(r3) 42120 
+	fcmpu	cr7, f1, f0 42124 
+	bgt	cr7, ble_else7765 42128 
+	blr 42132 
 ble_else7765:
-	lwz	r2, 4(r3) 42152 
-	mflr	r31 42156 
-	stw	r31, 20(r3) 42160 
-	addi	r3, r3, 24 42164 
-	bl	o_form2702 42168 
-	subi	r3, r3, 24 42172 
-	lwz	r31, 20(r3) 42176 
-	mtlr	r31 42180 
-	cmpwi	cr7, r2, 1 42184 
-	bne	cr7, beq_else7767 42188 
-	lwz	r2, 0(r3) 42192 
-	lwz	r5, 4(r3) 42196 
-	b	setup_rect_reflection3119 42200 
+	lwz	r2, 4(r3) 42136 
+	mflr	r31 42140 
+	stw	r31, 20(r3) 42144 
+	addi	r3, r3, 24 42148 
+	bl	o_form2702 42152 
+	subi	r3, r3, 24 42156 
+	lwz	r31, 20(r3) 42160 
+	mtlr	r31 42164 
+	cmpwi	cr7, r2, 1 42168 
+	bne	cr7, beq_else7767 42172 
+	lwz	r2, 0(r3) 42176 
+	lwz	r5, 4(r3) 42180 
+	b	setup_rect_reflection3119 42184 
 beq_else7767:
-	cmpwi	cr7, r2, 2 42204 
-	bne	cr7, beq_else7768 42208 
-	lwz	r2, 0(r3) 42212 
-	lwz	r5, 4(r3) 42216 
-	b	setup_surface_reflection3122 42220 
+	cmpwi	cr7, r2, 2 42188 
+	bne	cr7, beq_else7768 42192 
+	lwz	r2, 0(r3) 42196 
+	lwz	r5, 4(r3) 42200 
+	b	setup_surface_reflection3122 42204 
 beq_else7768:
-	blr 42224 
+	blr 42208 
 beq_else7764:
-	blr 42228 
+	blr 42212 
 bge_else7763:
-	blr 42232 
+	blr 42216 
 rt3127:
-	lis	r6, lo16(min_caml_image_size) 42236 
-	srwi	r6, r6, 31 42240 
-	addi	r6, r6, ha16(min_caml_image_size) 42244 
-	slwi	r6, r6, 16 42248 
-	addi	r6, r6, lo16(min_caml_image_size) 42252 
-	lwz	r6, 0(r6) 42256 
-	stw	r2, 0(r6) 42260 
-	lis	r6, lo16(min_caml_image_size) 42264 
-	srwi	r6, r6, 31 42268 
-	addi	r6, r6, ha16(min_caml_image_size) 42272 
-	slwi	r6, r6, 16 42276 
-	addi	r6, r6, lo16(min_caml_image_size) 42280 
-	lwz	r6, 0(r6) 42284 
-	stw	r5, 4(r6) 42288 
-	lis	r6, lo16(min_caml_image_center) 42292 
-	srwi	r6, r6, 31 42296 
-	addi	r6, r6, ha16(min_caml_image_center) 42300 
-	slwi	r6, r6, 16 42304 
-	addi	r6, r6, lo16(min_caml_image_center) 42308 
-	lwz	r6, 0(r6) 42312 
-	li	r7, 2 42316 
-	srw	r7, r2, r7 42320 
-	stw	r7, 0(r6) 42324 
-	lis	r6, lo16(min_caml_image_center) 42328 
-	srwi	r6, r6, 31 42332 
-	addi	r6, r6, ha16(min_caml_image_center) 42336 
-	slwi	r6, r6, 16 42340 
-	addi	r6, r6, lo16(min_caml_image_center) 42344 
-	lwz	r6, 0(r6) 42348 
-	li	r7, 2 42352 
-	srw	r5, r5, r7 42356 
-	stw	r5, 4(r6) 42360 
-	lis	r5, lo16(min_caml_scan_pitch) 42364 
-	srwi	r5, r5, 31 42368 
-	addi	r5, r5, ha16(min_caml_scan_pitch) 42372 
-	slwi	r5, r5, 16 42376 
-	addi	r5, r5, lo16(min_caml_scan_pitch) 42380 
-	lwz	r5, 0(r5) 42384 
-	lis	r31, lo16(l6201) 42388 
-	srwi	r31, r31, 31 42392 
-	addi	r31, r31, ha16(l6201) 42396 
-	slwi	r31, r31, 16 42400 
-	addi	r31, r31, lo16(l6201) 42404 
-	lfd	f0, 0(r31) 42408 
-	itof	f1, r2 42412 
-	fdiv	f0, f0, f1 42416 
-	stfd	f0, 0(r5) 42420 
-	mflr	r31 42424 
-	stw	r31, 4(r3) 42428 
-	addi	r3, r3, 8 42432 
-	bl	create_pixelline3074 42436 
-	subi	r3, r3, 8 42440 
-	lwz	r31, 4(r3) 42444 
-	mtlr	r31 42448 
-	stw	r2, 0(r3) 42452 
-	mflr	r31 42456 
-	stw	r31, 4(r3) 42460 
-	addi	r3, r3, 8 42464 
-	bl	create_pixelline3074 42468 
-	subi	r3, r3, 8 42472 
-	lwz	r31, 4(r3) 42476 
-	mtlr	r31 42480 
-	stw	r2, 4(r3) 42484 
-	mflr	r31 42488 
-	stw	r31, 12(r3) 42492 
-	addi	r3, r3, 16 42496 
-	bl	create_pixelline3074 42500 
-	subi	r3, r3, 16 42504 
-	lwz	r31, 12(r3) 42508 
-	mtlr	r31 42512 
-	stw	r2, 8(r3) 42516 
-	mflr	r31 42520 
-	stw	r31, 12(r3) 42524 
-	addi	r3, r3, 16 42528 
-	bl	read_parameter2792 42532 
-	subi	r3, r3, 16 42536 
-	lwz	r31, 12(r3) 42540 
-	mtlr	r31 42544 
-	mflr	r31 42548 
-	stw	r31, 12(r3) 42552 
-	addi	r3, r3, 16 42556 
-	bl	write_ppm_header3035 42560 
-	subi	r3, r3, 16 42564 
-	lwz	r31, 12(r3) 42568 
-	mtlr	r31 42572 
-	mflr	r31 42576 
-	stw	r31, 12(r3) 42580 
-	addi	r3, r3, 16 42584 
-	bl	init_dirvecs3110 42588 
-	subi	r3, r3, 16 42592 
-	lwz	r31, 12(r3) 42596 
-	mtlr	r31 42600 
-	lis	r2, lo16(min_caml_light_dirvec) 42604 
-	srwi	r2, r2, 31 42608 
-	addi	r2, r2, ha16(min_caml_light_dirvec) 42612 
-	slwi	r2, r2, 16 42616 
-	addi	r2, r2, lo16(min_caml_light_dirvec) 42620 
-	lwz	r2, 0(r2) 42624 
-	mflr	r31 42628 
-	stw	r31, 12(r3) 42632 
-	addi	r3, r3, 16 42636 
-	bl	d_vec2761 42640 
-	subi	r3, r3, 16 42644 
-	lwz	r31, 12(r3) 42648 
-	mtlr	r31 42652 
-	lis	r5, lo16(min_caml_light) 42656 
-	srwi	r5, r5, 31 42660 
-	addi	r5, r5, ha16(min_caml_light) 42664 
-	slwi	r5, r5, 16 42668 
-	addi	r5, r5, lo16(min_caml_light) 42672 
-	lwz	r5, 0(r5) 42676 
-	mflr	r31 42680 
-	stw	r31, 12(r3) 42684 
-	addi	r3, r3, 16 42688 
-	bl	veccpy2664 42692 
-	subi	r3, r3, 16 42696 
-	lwz	r31, 12(r3) 42700 
-	mtlr	r31 42704 
-	lis	r2, lo16(min_caml_light_dirvec) 42708 
-	srwi	r2, r2, 31 42712 
-	addi	r2, r2, ha16(min_caml_light_dirvec) 42716 
-	slwi	r2, r2, 16 42720 
-	addi	r2, r2, lo16(min_caml_light_dirvec) 42724 
-	lwz	r2, 0(r2) 42728 
-	mflr	r31 42732 
-	stw	r31, 12(r3) 42736 
-	addi	r3, r3, 16 42740 
-	bl	setup_dirvec_constants2890 42744 
-	subi	r3, r3, 16 42748 
-	lwz	r31, 12(r3) 42752 
-	mtlr	r31 42756 
-	lis	r2, lo16(min_caml_n_objects) 42760 
-	srwi	r2, r2, 31 42764 
-	addi	r2, r2, ha16(min_caml_n_objects) 42768 
-	slwi	r2, r2, 16 42772 
-	addi	r2, r2, lo16(min_caml_n_objects) 42776 
-	lwz	r2, 0(r2) 42780 
-	lwz	r2, 0(r2) 42784 
-	subi	r2, r2, 1 42788 
-	mflr	r31 42792 
-	stw	r31, 12(r3) 42796 
-	addi	r3, r3, 16 42800 
-	bl	setup_reflections3125 42804 
-	subi	r3, r3, 16 42808 
-	lwz	r31, 12(r3) 42812 
-	mtlr	r31 42816 
-	li	r5, 0 42820 
-	li	r6, 0 42824 
-	lwz	r2, 4(r3) 42828 
-	mflr	r31 42832 
-	stw	r31, 12(r3) 42836 
-	addi	r3, r3, 16 42840 
-	bl	pretrace_line3051 42844 
-	subi	r3, r3, 16 42848 
-	lwz	r31, 12(r3) 42852 
-	mtlr	r31 42856 
-	li	r2, 0 42860 
-	li	r8, 2 42864 
-	lwz	r5, 0(r3) 42868 
-	lwz	r6, 4(r3) 42872 
-	lwz	r7, 8(r3) 42876 
-	b	scan_line3061 42880 
+	lis	r6, lo16(min_caml_image_size) 42220 
+	srwi	r6, r6, 31 42224 
+	addi	r6, r6, ha16(min_caml_image_size) 42228 
+	slwi	r6, r6, 16 42232 
+	addi	r6, r6, lo16(min_caml_image_size) 42236 
+	lwz	r6, 0(r6) 42240 
+	stw	r2, 0(r6) 42244 
+	lis	r6, lo16(min_caml_image_size) 42248 
+	srwi	r6, r6, 31 42252 
+	addi	r6, r6, ha16(min_caml_image_size) 42256 
+	slwi	r6, r6, 16 42260 
+	addi	r6, r6, lo16(min_caml_image_size) 42264 
+	lwz	r6, 0(r6) 42268 
+	stw	r5, 4(r6) 42272 
+	lis	r6, lo16(min_caml_image_center) 42276 
+	srwi	r6, r6, 31 42280 
+	addi	r6, r6, ha16(min_caml_image_center) 42284 
+	slwi	r6, r6, 16 42288 
+	addi	r6, r6, lo16(min_caml_image_center) 42292 
+	lwz	r6, 0(r6) 42296 
+	srwi	r7, r2, 1 42300 
+	stw	r7, 0(r6) 42304 
+	lis	r6, lo16(min_caml_image_center) 42308 
+	srwi	r6, r6, 31 42312 
+	addi	r6, r6, ha16(min_caml_image_center) 42316 
+	slwi	r6, r6, 16 42320 
+	addi	r6, r6, lo16(min_caml_image_center) 42324 
+	lwz	r6, 0(r6) 42328 
+	srwi	r5, r5, 1 42332 
+	stw	r5, 4(r6) 42336 
+	lis	r5, lo16(min_caml_scan_pitch) 42340 
+	srwi	r5, r5, 31 42344 
+	addi	r5, r5, ha16(min_caml_scan_pitch) 42348 
+	slwi	r5, r5, 16 42352 
+	addi	r5, r5, lo16(min_caml_scan_pitch) 42356 
+	lwz	r5, 0(r5) 42360 
+	lis	r31, lo16(l6201) 42364 
+	srwi	r31, r31, 31 42368 
+	addi	r31, r31, ha16(l6201) 42372 
+	slwi	r31, r31, 16 42376 
+	addi	r31, r31, lo16(l6201) 42380 
+	lfd	f0, 0(r31) 42384 
+	itof	f1, r2 42388 
+	fdiv	f0, f0, f1 42392 
+	stfd	f0, 0(r5) 42396 
+	mflr	r31 42400 
+	stw	r31, 4(r3) 42404 
+	addi	r3, r3, 8 42408 
+	bl	create_pixelline3074 42412 
+	subi	r3, r3, 8 42416 
+	lwz	r31, 4(r3) 42420 
+	mtlr	r31 42424 
+	stw	r2, 0(r3) 42428 
+	mflr	r31 42432 
+	stw	r31, 4(r3) 42436 
+	addi	r3, r3, 8 42440 
+	bl	create_pixelline3074 42444 
+	subi	r3, r3, 8 42448 
+	lwz	r31, 4(r3) 42452 
+	mtlr	r31 42456 
+	stw	r2, 4(r3) 42460 
+	mflr	r31 42464 
+	stw	r31, 12(r3) 42468 
+	addi	r3, r3, 16 42472 
+	bl	create_pixelline3074 42476 
+	subi	r3, r3, 16 42480 
+	lwz	r31, 12(r3) 42484 
+	mtlr	r31 42488 
+	stw	r2, 8(r3) 42492 
+	mflr	r31 42496 
+	stw	r31, 12(r3) 42500 
+	addi	r3, r3, 16 42504 
+	bl	read_parameter2792 42508 
+	subi	r3, r3, 16 42512 
+	lwz	r31, 12(r3) 42516 
+	mtlr	r31 42520 
+	mflr	r31 42524 
+	stw	r31, 12(r3) 42528 
+	addi	r3, r3, 16 42532 
+	bl	write_ppm_header3035 42536 
+	subi	r3, r3, 16 42540 
+	lwz	r31, 12(r3) 42544 
+	mtlr	r31 42548 
+	mflr	r31 42552 
+	stw	r31, 12(r3) 42556 
+	addi	r3, r3, 16 42560 
+	bl	init_dirvecs3110 42564 
+	subi	r3, r3, 16 42568 
+	lwz	r31, 12(r3) 42572 
+	mtlr	r31 42576 
+	lis	r2, lo16(min_caml_light_dirvec) 42580 
+	srwi	r2, r2, 31 42584 
+	addi	r2, r2, ha16(min_caml_light_dirvec) 42588 
+	slwi	r2, r2, 16 42592 
+	addi	r2, r2, lo16(min_caml_light_dirvec) 42596 
+	lwz	r2, 0(r2) 42600 
+	mflr	r31 42604 
+	stw	r31, 12(r3) 42608 
+	addi	r3, r3, 16 42612 
+	bl	d_vec2761 42616 
+	subi	r3, r3, 16 42620 
+	lwz	r31, 12(r3) 42624 
+	mtlr	r31 42628 
+	lis	r5, lo16(min_caml_light) 42632 
+	srwi	r5, r5, 31 42636 
+	addi	r5, r5, ha16(min_caml_light) 42640 
+	slwi	r5, r5, 16 42644 
+	addi	r5, r5, lo16(min_caml_light) 42648 
+	lwz	r5, 0(r5) 42652 
+	mflr	r31 42656 
+	stw	r31, 12(r3) 42660 
+	addi	r3, r3, 16 42664 
+	bl	veccpy2664 42668 
+	subi	r3, r3, 16 42672 
+	lwz	r31, 12(r3) 42676 
+	mtlr	r31 42680 
+	lis	r2, lo16(min_caml_light_dirvec) 42684 
+	srwi	r2, r2, 31 42688 
+	addi	r2, r2, ha16(min_caml_light_dirvec) 42692 
+	slwi	r2, r2, 16 42696 
+	addi	r2, r2, lo16(min_caml_light_dirvec) 42700 
+	lwz	r2, 0(r2) 42704 
+	mflr	r31 42708 
+	stw	r31, 12(r3) 42712 
+	addi	r3, r3, 16 42716 
+	bl	setup_dirvec_constants2890 42720 
+	subi	r3, r3, 16 42724 
+	lwz	r31, 12(r3) 42728 
+	mtlr	r31 42732 
+	lis	r2, lo16(min_caml_n_objects) 42736 
+	srwi	r2, r2, 31 42740 
+	addi	r2, r2, ha16(min_caml_n_objects) 42744 
+	slwi	r2, r2, 16 42748 
+	addi	r2, r2, lo16(min_caml_n_objects) 42752 
+	lwz	r2, 0(r2) 42756 
+	lwz	r2, 0(r2) 42760 
+	subi	r2, r2, 1 42764 
+	mflr	r31 42768 
+	stw	r31, 12(r3) 42772 
+	addi	r3, r3, 16 42776 
+	bl	setup_reflections3125 42780 
+	subi	r3, r3, 16 42784 
+	lwz	r31, 12(r3) 42788 
+	mtlr	r31 42792 
+	li	r5, 0 42796 
+	li	r6, 0 42800 
+	lwz	r2, 4(r3) 42804 
+	mflr	r31 42808 
+	stw	r31, 12(r3) 42812 
+	addi	r3, r3, 16 42816 
+	bl	pretrace_line3051 42820 
+	subi	r3, r3, 16 42824 
+	lwz	r31, 12(r3) 42828 
+	mtlr	r31 42832 
+	li	r2, 0 42836 
+	li	r8, 2 42840 
+	lwz	r5, 0(r3) 42844 
+	lwz	r6, 4(r3) 42848 
+	lwz	r7, 8(r3) 42852 
+	b	scan_line3061 42856 
 min_caml_fin:

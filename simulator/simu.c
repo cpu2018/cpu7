@@ -966,12 +966,13 @@ void fsqrt(int code,CPU *cpu,int *a){
 }
 
 void print_reg(CPU *cpu){
-  for(int i=0;i<9;i++){
+  for(int i=0;i<16;i++){
     int t = (cpu->reg)[i];
     int k = (cpu->freg)[i];
     float f = *(float *)&k;
-    printf("r%d -> %d ::: f%d -> %f %d\n",i,t,i,f,k);
+    printf("r%d -> %d\t:::\t\tf%d -> %f %d\n",i,t,i,f,k);
   }
+  printf("r%d -> %d\n", 31, (cpu->reg)[31]);
   printf("lr %d\n",(cpu->lr));
   for(int i=0;i<4;i++){
     printf("cr%d -> %d cr%d -> %d\n",2*i,(cpu->cr)[2*i],2*i+1,(cpu->cr)[2*i+1]);
