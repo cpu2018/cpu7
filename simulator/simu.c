@@ -1208,7 +1208,9 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   printf("in finごとにscanfを挟むなら1 挟まないなら0 : ");
   scanf("%d",&inflag);
   int uu=0;
+  int insnum=0;
   while(1){
+    insnum+=1;
 
 
     /*if((fggg==1)&&((cpu->memory)[8/4]==1065353216)){
@@ -1433,6 +1435,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       scanf("%d",&stopaddr);
     }
   }
+  printf("%d回命令を実行\n",insnum);
 }    
 
 int main(int argc,char **argv){
