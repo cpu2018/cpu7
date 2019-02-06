@@ -42,8 +42,8 @@ void init_cpu(CPU *cpu){
   (cpu->reg)[3]=100000;
 }
 
-void read_memory(CPU *cpu,int *memory,int len){
-  for(int i=0;i<len;i++){
+void read_memory(CPU *cpu,int *memory){
+  for(int i=0;i<M;i++){
     //printf("%d\n",i);
     int x = memory[i];
     int x1 = x & 0xff;
@@ -1448,7 +1448,7 @@ int main(int argc,char **argv){
   fseek(file,0,SEEK_END);
   int size=ftell(file);
   rewind(file);
-  int *memory_sub = (int *) malloc(size/4);
+  int *memory_sub = (int *) malloc(size);
   fread(memory_sub,sizeof(int),size/4,file);
   fclose(file);
 
@@ -1459,7 +1459,7 @@ int main(int argc,char **argv){
   printf(">>> 最後にメモリを表示するならy, しないならnを入力: ");
   scanf("%c", &print_flag);
   printf("%d\n",memory_sub[3]);
-  read_memory(&cpu,memory_sub,size/4);
+  read_memory(&cpu,memory_sub);
   printf("a\n");
   
   FILE *file2;
