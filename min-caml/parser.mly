@@ -122,9 +122,9 @@ exp: /* (* ∞Ï»Ã§Œº∞ (caml2html: parser_exp) *) */
 | exp MINUS exp
     { Sub($1, $3) }
 | exp AST exp
-	{ Mul($1, $3) }
+	{ ShiftIL($1, Int (2, getpos ())) }
 | exp SLASH exp
-	{ Div($1, $3) }
+	{ ShiftIR($1, Int (1, getpos ())) }
 | exp SFTL exp
 	{ ShiftIL($1, $3) }
 | exp SFTR exp

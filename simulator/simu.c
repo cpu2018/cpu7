@@ -987,12 +987,17 @@ void fsqrt(int code,CPU *cpu,int *a){
 }
 
 void print_reg(CPU *cpu){
+<<<<<<< HEAD
   for(int i=0;i<10;i++){
+=======
+  for(int i=0;i<16;i++){
+>>>>>>> 4026857e2fb8b3b8ec36ad3d3c744cf1d0b9d362
     int t = (cpu->reg)[i];
     int k = (cpu->freg)[i];
     float f = *(float *)&k;
-    printf("r%d -> %d ::: f%d -> %f %d\n",i,t,i,f,k);
+    printf("r%d -> %d\t:::\t\tf%d -> %f %d\n",i,t,i,f,k);
   }
+  printf("r%d -> %d\n", 31, (cpu->reg)[31]);
   printf("lr %d\n",(cpu->lr));
   for(int i=0;i<4;i++){
     printf("cr%d -> %d cr%d -> %d\n",2*i,(cpu->cr)[2*i],2*i+1,(cpu->cr)[2*i+1]);
