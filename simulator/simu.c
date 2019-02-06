@@ -109,7 +109,7 @@ void out(int code,CPU *cpu,int *a,FILE *file){
   fwrite(&x,sizeof(x),1,file);
   *a+=4;
   h+=1;
-  printf("out %c ---- %d\n",x,*a-4);
+  //printf("out %c ---- %d\n",x,*a-4);
 }
 
 void cmpi(int code,CPU *cpu,int *a){
@@ -979,7 +979,7 @@ void print_reg(CPU *cpu){
 
 void print_memory(CPU *cpu){
   for(int i=0;i<M;i++){
-    if(cpu->memory[i]!=0){
+    if(cpu->memory[i]!=0 && i < 100000){
       printf("%d		%d		%f \n",i*4,cpu->memory[i], *(float*)&(cpu->memory[i]));
     }
   }
@@ -1194,7 +1194,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int uu=0;
   while(1){
     if(addr==3280){
-      printf("%d\n",(cpu->reg)[2]);
+      //printf("%d\n",(cpu->reg)[2]);
     }
     if(addr == stopaddr){
       pflag=1;

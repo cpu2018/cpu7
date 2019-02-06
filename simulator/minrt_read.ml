@@ -2295,6 +2295,87 @@ in
    全体の制御
  *****************************************************************************)
 
+let rec btoi x = if x then 1 else 0 in
+
+let rec print_screen _ = 
+	print_int (int_of_float screen.(0));
+	print_char 32;
+	print_int (int_of_float screen.(1));
+	print_char 32;
+	print_int (int_of_float screen.(2));
+	print_char 10;
+	
+	print_int (int_of_float screenz_dir.(0));
+	print_char 32;
+	print_int (int_of_float screenz_dir.(0));
+	print_char 32;
+	print_int (int_of_float screenz_dir.(0));
+	print_char 10;
+
+	print_int (int_of_float screenx_dir.(0));
+	print_char 32;
+	print_int (int_of_float screenx_dir.(0));
+	print_char 32;
+	print_int (int_of_float screenx_dir.(0));
+	print_char 10;
+
+	print_int (int_of_float screeny_dir.(0));
+	print_char 32;
+	print_int (int_of_float screeny_dir.(0));
+	print_char 32;
+	print_int (int_of_float screeny_dir.(0));
+	print_char 10
+in
+
+let rec print_light _ =
+	print_int (int_of_float light.(0));
+	print_char 32;
+	print_int (int_of_float light.(1));
+	print_char 32;
+	print_int (int_of_float light.(2));
+	print_char 32;
+	print_int (int_of_float beam.(0));
+	print_char 10
+in
+
+let rec print_obj x =
+	let (a, b, c, d, e, f, g, h, i, j, k) = objects.(x) in
+	(
+		print_int a; 
+		print_char 32;
+		print_int b;
+		print_char 32;
+		print_int c;
+		print_char 32;
+		print_int d;
+		print_char 32;
+		print_int (int_of_float e.(0));
+		print_char 32;
+		print_int (int_of_float e.(1));
+		print_char 32;
+		print_int (int_of_float e.(2));
+		print_char 32;
+		print_int (int_of_float f.(0));
+		print_char 32;
+		print_int (int_of_float f.(1));
+		print_char 32;
+		print_int (int_of_float f.(2));
+		print_char 32;
+		print_int (btoi g);
+		print_char 32;
+		print_int (int_of_float h.(0));
+		print_char 32;
+		print_int (int_of_float h.(1));
+		print_char 32;
+		print_int (int_of_float i.(0));
+		print_char 32;
+		print_int (int_of_float i.(1));
+		print_char 32;
+		print_int (int_of_float i.(2));
+		print_char 10
+	)
+in
+
 (* レイトレの各ステップを行う関数を順次呼び出す *)
 let rec rt size_x size_y =
 (
@@ -2307,13 +2388,17 @@ let rec rt size_x size_y =
  let cur  = create_pixelline () in
  let next = create_pixelline () in
  read_parameter();
+ print_screen ();
+ print_light ();
+ print_obj 0;
+ print_obj 1
+ (*
  write_ppm_header ();
  init_dirvecs();
  veccpy (d_vec light_dirvec) light;
  setup_dirvec_constants light_dirvec;
  setup_reflections (n_objects.(0) - 1);
  pretrace_line cur 0 0;
- (*
  scan_line 0 prev cur next 2
  *)
 )
