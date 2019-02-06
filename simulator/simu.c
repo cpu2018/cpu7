@@ -957,7 +957,8 @@ void fsqrt(int code,CPU *cpu,int *a){
   int code_11_15 = (code >> 16) & 0x1F;
   int f = (cpu->freg)[code_11_15];
   float ff = *(float *)&f;
-  int x = sqrtf(ff);
+  float fff = sqrtf(ff);
+  int x = *(float *)&fff;
   (cpu->reg)[code_6_10]=x;
   *a+=4;
 }
@@ -966,7 +967,7 @@ void print_reg(CPU *cpu){
   for(int i=0;i<9;i++){
     int t = (cpu->reg)[i];
     int k = (cpu->freg)[i];
-    float f = *(float *)&t;
+    float f = *(float *)&k;
     printf("r%d -> %d ::: f%d -> %f %d\n",i,t,i,f,k);
   }
   printf("lr %d\n",(cpu->lr));
@@ -1210,6 +1211,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   int uu=0;
   int insnum=0;
   while(1){
+   
     insnum+=1;
 
 
