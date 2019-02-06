@@ -981,7 +981,7 @@ void fsqrt(int code,CPU *cpu,int *a){
   int f = (cpu->freg)[code_11_15];
   float ff = *(float *)&f;
   float fff = sqrtf(ff);
-  int x = *(float *)&fff;
+  int x = *(int *)&fff;
   (cpu->freg)[code_6_10]=x;
   *a+=4;
 }
