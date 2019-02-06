@@ -1,0 +1,14 @@
+print_int (int_of_float (100.0 *. sqrt 1.0));
+print_char 10;
+print_int (int_of_float (100.0 *. sqrt 2.0));
+print_char 10;
+print_int (int_of_float (100.0 *. sqrt 3.0));
+print_char 10;
+print_int (int_of_float (100.0 *. sqrt 4.0));
+print_char 10;
+print_int (int_of_float (100.0 *. sqrt 5.0));
+print_char 10;
+print_int (int_of_float (100.0 *. sqrt 6.0));
+print_char 10;
+print_int (int_of_float (100.0 *. sqrt 7.0));
+print_char 10;

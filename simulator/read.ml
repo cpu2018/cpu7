@@ -609,46 +609,46 @@ in
 let rec read_nth_object n =
 
   let texture = read_int () in
-  print_int texture; print_char 32;
+  print_int texture; print_char 9;
   if texture <> -1 then
     (
       let form = read_int () in
-  print_int form; print_char 32;
+  print_int form; print_char 9;
       let refltype = read_int () in
-  print_int refltype; print_char 32;
+  print_int refltype; print_char 9;
       let isrot_p = read_int () in
-  print_int isrot_p; print_char 32;
+  print_int isrot_p; print_char 9;
 
       let abc = create_array 3 0.0 in
       abc.(0) <- read_float ();
-  print_int (int_of_float abc.(0)); print_char 32;
+  print_int (int_of_float abc.(0)); print_char 9;
       abc.(1) <- read_float (); (* 5 *)
-  print_int (int_of_float abc.(1)); print_char 32;
+  print_int (int_of_float abc.(1)); print_char 9;
       abc.(2) <- read_float ();
-  print_int (int_of_float abc.(2)); print_char 32;
+  print_int (int_of_float abc.(2)); print_char 9;
 
       let xyz = create_array 3 0.0 in
       xyz.(0) <- read_float ();
-  print_int (int_of_float xyz.(0)); print_char 32;
+  print_int (int_of_float xyz.(0)); print_char 9;
       xyz.(1) <- read_float ();
-  print_int (int_of_float xyz.(1)); print_char 32;
+  print_int (int_of_float xyz.(1)); print_char 9;
       xyz.(2) <- read_float ();
-  print_int (int_of_float xyz.(2)); print_char 32;
+  print_int (int_of_float xyz.(2)); print_char 9;
 
       let m_invert = fisneg (read_float ()) in (* 10 *)
-  print_int (btoi m_invert); print_char 32;
+  print_int (btoi m_invert); print_char 9;
 
       let reflparam = create_array 2 0.0 in
       reflparam.(0) <- read_float (); (* diffuse *)
-  print_int (int_of_float reflparam.(0)); print_char 32;
+  print_int (int_of_float reflparam.(0)); print_char 9;
       reflparam.(1) <- read_float (); (* hilight *)
-  print_int (int_of_float reflparam.(1)); print_char 32;
+  print_int (int_of_float reflparam.(1)); print_char 9;
 
       let color = create_array 3 0.0 in
       color.(0) <- read_float ();
-  print_int (int_of_float color.(0)); print_char 32;
+  print_int (int_of_float color.(0)); print_char 9;
       color.(1) <- read_float ();
-  print_int (int_of_float color.(1)); print_char 32;
+  print_int (int_of_float color.(1)); print_char 9;
       color.(2) <- read_float (); (* 15 *)
   print_int (int_of_float color.(2)); print_char 10;
 
@@ -701,7 +701,7 @@ let rec read_nth_object n =
       true
      )
   else
-    false (* データの終了 *)
+    (print_char 10; false) (* データの終了 *)
 in
 
 (**** 物体データ全体の読み込み ****)
@@ -723,8 +723,8 @@ in
 (* ネットワーク1つを読み込みベクトルにして返す *)
 let rec read_net_item length =
   let item = read_int () in
-  print_int item; print_char 32;
-  if item = -1 then create_array (length + 1) (-1)
+  print_int item; print_char 9;
+  if item = -1 then print_char 10; create_array (length + 1) (-1)
   else
     let v = read_net_item (length + 1) in
     (v.(length) <- item; v)
@@ -2329,41 +2329,41 @@ in
 
 let rec print_screen _ = 
 	print_int (int_of_float screen.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screen.(1));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screen.(2));
 	print_char 10;
 	
 	print_int (int_of_float screenz_dir.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screenz_dir.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screenz_dir.(0));
 	print_char 10;
 
 	print_int (int_of_float screenx_dir.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screenx_dir.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screenx_dir.(0));
 	print_char 10;
 
 	print_int (int_of_float screeny_dir.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screeny_dir.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float screeny_dir.(0));
 	print_char 10
 in
 
 let rec print_light _ =
 	print_int (int_of_float light.(0));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float light.(1));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float light.(2));
-	print_char 32;
+	print_char 9;
 	print_int (int_of_float beam.(0));
 	print_char 10
 in
@@ -2372,35 +2372,35 @@ let rec print_obj x =
 	let (a, b, c, d, e, f, g, h, i, j, k) = objects.(x) in
 	(
 		print_int a; 
-		print_char 32;
+		print_char 9;
 		print_int b;
-		print_char 32;
+		print_char 9;
 		print_int c;
-		print_char 32;
+		print_char 9;
 		print_int d;
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float e.(0));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float e.(1));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float e.(2));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float f.(0));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float f.(1));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float f.(2));
-		print_char 32;
+		print_char 9;
 		print_int (btoi g);
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float h.(0));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float h.(1));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float i.(0));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float i.(1));
-		print_char 32;
+		print_char 9;
 		print_int (int_of_float i.(2));
 		print_char 10
 	)

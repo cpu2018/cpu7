@@ -55,7 +55,7 @@ min_caml_dirvecs:
 	53056
 min_caml_light_dirvec:
 	53096
-min_caml_reflecrions:
+min_caml_reflections:
 	53600
 min_caml_n_reflections:
 	56480
