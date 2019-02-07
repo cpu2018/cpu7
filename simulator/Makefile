@@ -27,7 +27,7 @@ do_casm: $(ML_TESTS:%.ml=%)
 .PRECIOUS: %.s %.txt
 
 %.s: %.ml
-	-./$(MIN_CAML) $*
+	-./$(MIN_CAML) -inline_size 60 $*
 
 %: %.s
 	-./assembler $^
