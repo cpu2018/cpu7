@@ -9,18 +9,6 @@
 (*                                                              *)
 (****************************************************************)
 
-(* ここからglobals *)
-(* 光源光の前処理済み方向ベクトル *)
-(*
-let light_dirvec =
-  let dummyf2 = create_array 0 0.0 in
-  let v3 = create_array 3 0.0 in
-  let consts = create_array 60 dummyf2 in
-  (v3, consts)
-in
-*)
-(* ここまでglobals *)
-
 (*NOMINCAML open MiniMLRuntime;;*)
 (*NOMINCAML open Globals;;*)
 (*MINCAML*) (* let true = 1 in *)
