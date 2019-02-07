@@ -8,8 +8,8 @@ gcc -o simulator simu.c finv1.c finv2.c fsqrt\_table.c fsqrtinv\_table.c
 gcc -o assembler as.c
 でコンパイル
 
-使い方。
-./assembler ファイル.s
+### 使い方。
+- ./assembler ファイル.s
 この時出力される命令とアドレスの対応をあとで使うので別のファイルにうつしといた方が良いかも
 
 - ./assembler \[ファイル.s\] > \[test.txt\]
@@ -35,16 +35,33 @@ gcc -o assembler as.c
 
 上と逆なので注意。ずっと1命令で実行して、レジスタの表示をしたいときは1を連打してくれれば良い。
 
+### Makefile の使い方
+
+- make
+	makeをすると、sldコンバータ、アセンブラ、シミュレータがコンパイルされ、Makefile の ML\_TESTSに書いてある名前(記述する際は拡張子はいらない)の.mlファイルが全てバイナリに変換されます。また、ASM\_TESTSに書いてある名前の.sファイルが全てバイナリに変換されます。
+
+- make do\_casm
+	ML\_TESTにある.mlファイルをバイナリにコンパイルします。
+
+- make do\_asm
+	ASM\_TESTSにあるアセンブリファイルをバイナリにコンパイルします。
+
+- make rma
+	サンプルコードのアセンブリが全て削除される
+
+- make rmb
+	サンプルコードのバイナリが全て削除される
+
+- make rm
+	アセンブリファイル、バイナリファイルが全て削除されます。
+
+- make clean
+	sldコンバータ、シミュレータ、アセンブラの実行ファイルも含めて削除されます。
+
+
 ## サンプルコード
 
 - passedに入っているものは合格
 - unpassedに入っているものは不合格または未検査
-
-## Makefileの使い方
-
-- ML\_TESTSに確認したい.mlファイルを入れて、makeまたはmake do\_casmをすると、自動でコンパイルとアセンブルをしてくれて、アセンブリファイルとバイナリファイルが出来上がる。
-- ASM\_TESTSに確認したアセンブリを入れて、makeまたはmake do\_asmをすると、自動でアセンブルしてくれる。
-- make rm\_assemblyをすると、アセンブリが全部消える
-- make rm\_binaryをすると、バイナリが全部消える
 
 ## 備考
