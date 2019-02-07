@@ -1235,7 +1235,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   printf("in finごとにscanfを挟むなら1 挟まないなら0 : ");
   scanf("%d",&inflag);
   int uu=0;
-  int insnum=0;
+  long long int insnum=0;
   while(1){
     if((cpu->reg)[3]>(cpu->reg)[4]){
       printf("スタックがヒープに入る %d\n",addr);
@@ -1478,7 +1478,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
       }
     }
   }
-  printf("%d回命令を実行\n",insnum);
+  printf("%lld回命令を実行\n",insnum);
 }    
 
 int main(int argc,char **argv){
