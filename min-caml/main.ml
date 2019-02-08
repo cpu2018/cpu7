@@ -30,8 +30,9 @@ let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 			(ConstFold.f 
 				(Inline.f !inline_flag 
 					(Assoc.f 
-						(Beta.f !beta_flag 
-								e))))) in
+						(Beta.f !beta_flag
+							(ComSubExp.f !cse_flag
+								e)))))) in
 	if e = e' then e else
 	iter (n - 1) e'
 

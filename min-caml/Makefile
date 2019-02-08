@@ -36,6 +36,7 @@ fun2letrec.ml \
 typing.mli typing.ml \
 kNormal.mli kNormal.ml \
 alpha.mli alpha.ml \
+comSubExp.mli comSubExp.ml \
 beta.mli beta.ml \
 assoc.mli assoc.ml \
 inline.mli inline.ml \
