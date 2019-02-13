@@ -185,9 +185,9 @@ let rec g env = function
 		let t = Type.gentyp () in
 		extenv := M.add x t !extenv;
 		t
-	| MakeCls ((x, Type.Fun (ty_args, ty_ret)), {entry = Id.L(entry); actual_fv = fvs}, e) -> 
+	| MakeCls ((x, Type.Cls (ty_args, ty_fvs, ty_ret)), {entry = Id.L(entry); actual_fv = fvs}, e) -> 
 		(try
-			unify (Type.Fun (ty_args, ty_ret)) (find entry env)
+			unify (Type.Cls (ty_args, ty_fvs, ty_ret)) (find entry env)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
 			print_string ("in MakeCls \n");
@@ -209,7 +209,7 @@ let rec g env = function
 		let fun_ty = 
 			(try M.find x !env 
 			with Not_found -> Type.gentyp ()) in
-		env := if fun_ty = Type.gentyp () then M.add x (Type.gentyp ()) !env else !env;
+		env := if fun_ty = Type.Var {contents = None} then M.add x fun_ty !env else !env;
 		(try 
 			unify (find x env) (Type.Fun (List.map (fun x -> find x env) xs, t))
 		with Unify (t1, t2) -> 

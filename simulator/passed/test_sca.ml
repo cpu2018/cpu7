@@ -1,7 +1,7 @@
-let pi = 3.14152865358979 in
+let pi = 3.1415926535897932 in
 print_int (int_of_float (100.0 *. sin (0.0)));
 print_char 10;
-print_int (int_of_float (100.0 *. sin (pi /. 3.0)));
+print_int (int_of_float (100.0 *. sin (pi /. 6.0)));
 print_char 10;
 print_int (int_of_float (100.0 *. sin (pi /. 2.0)));
 print_char 10;

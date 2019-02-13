@@ -335,6 +335,9 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 		 List.iter
 			 (fun (Id.L(x), d) ->
 				 Printf.fprintf oc "%s:\n" x;
+				 (*
+				 Printf.fprintf oc "%s:\t # %f\n" x d;
+				 *)
 				 Printf.fprintf oc "\t%ld\n" (getfloat d))
 			 data);
 	(* 本処理の開始 *)

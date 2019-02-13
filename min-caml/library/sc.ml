@@ -24,7 +24,7 @@ let rec kernel_sin x =
 	let x3 = x *. x2 in
 	let x5 = x3 *. x2 in
 	let x7 = x5 *. x2 in
-	x -. x3 /. 3.0 +. x5 /. 120.0 -. x7 /. 5040.0
+	x -. x3 /. 6.0 +. x5 /. 120.0 -. x7 /. 5040.0
 in
 let rec kernel_cos x =
 	let x2 = x *. x in

@@ -4,6 +4,7 @@ type t = (* MinCamlの型を表現するデータ型 (caml2html: type_t) *)
 	| Int
 	| Float
 	| Fun of t list * t (* arguments are uncurried *)
+	| Cls of t list * t list * t
 	| Tuple of t list
 	| Array of t
 	| Var of t option ref
@@ -19,6 +20,14 @@ let rec print_type = function
 	| Fun (t_list, t) -> 
 		print_string " Fun ( args = (";
 		List.iter print_type t_list;
+		print_string ") -> exp = (";
+		print_type t;
+		print_string ") ) "
+	| Cls (args, fvs, t) -> 
+		print_string " Cls ( args = (";
+		List.iter print_type args;
+		print_string " ) ( fvs = (";
+		List.iter print_type fvs;
 		print_string ") -> exp = (";
 		print_type t;
 		print_string ") ) "
