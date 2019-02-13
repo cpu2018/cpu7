@@ -13,7 +13,7 @@ type t = (* MinCamlの型を表現するデータ型 (caml2html: type_t) *)
 let gentyp () = Var(ref None) (* 新しい型変数を作る *)
 
 let rec convert = function
-	| Fun (args, ret) -> Cls (args, [], ret)
+	| Fun (args, ret) -> Cls (List.map convert args, [], convert ret)
 	| e -> e
 
 let rec print_type = function
