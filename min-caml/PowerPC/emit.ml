@@ -163,7 +163,13 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprime) *)
 		Printf.fprintf oc "\tfin\t%s\n" (reg x)
 	| NonTail(x), Lfd(y, V(z)) -> Printf.fprintf oc "\tlfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
 	| NonTail(x), Lfd(y, C(z)) -> Printf.fprintf oc "\tlfd\t%s, %d(%s)\n" (reg x) z (reg y)
+	| NonTail(_), Stfd(x, y, V(z)) -> Printf.fprintf oc 
+	"\tadd\t%s, %s, %s\n\tstfd\t%s, 0(%s)\n" 
+	(reg reg_tmp) (reg y) (reg z) 
+	(reg x) (reg reg_tmp)
+	(*
 	| NonTail(_), Stfd(x, y, V(z)) -> Printf.fprintf oc "\tstfdx\t%s, %s, %s\n" (reg x) (reg y) (reg z)
+	*)
 	| NonTail(_), Stfd(x, y, C(z)) -> Printf.fprintf oc "\tstfd\t%s, %d(%s)\n" (reg x) z (reg y)
 	| NonTail(_), Comment(s) -> Printf.fprintf oc "#\t%s\n" s
 	(* 退避の仮想命令の実装 (caml2html: emit_save) *)
