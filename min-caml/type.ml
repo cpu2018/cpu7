@@ -12,6 +12,10 @@ type t = (* MinCamlの型を表現するデータ型 (caml2html: type_t) *)
 
 let gentyp () = Var(ref None) (* 新しい型変数を作る *)
 
+let rec convert = function
+	| Fun (args, ret) -> Cls (args, [], ret)
+	| e -> e
+
 let rec print_type = function
 	| Unit  -> print_string " Unit "
 	| Bool  -> print_string " Bool "
@@ -26,9 +30,9 @@ let rec print_type = function
 	| Cls (args, fvs, t) -> 
 		print_string " Cls ( args = (";
 		List.iter print_type args;
-		print_string " ) ( fvs = (";
+		print_string ") [fvs = (";
 		List.iter print_type fvs;
-		print_string ") -> exp = (";
+		print_string ")] -> exp = (";
 		print_type t;
 		print_string ") ) "
 	| Tuple t_list -> 

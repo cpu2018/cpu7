@@ -57,7 +57,7 @@ let rec fv = function
 
 (* 関数が全て入る *)
 let toplevel : fundef list ref = ref []
-(* M:型環境 ->  ->  *)
+(* M.t -> KNormal.t -> Closure.t *)
 let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure_g) *)
 	| KNormal.Unit -> Unit
 	| KNormal.Int(i) -> Int(i)
@@ -80,14 +80,15 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
 	| KNormal.ItoF(x) -> ItoF(x)
 	| KNormal.IfEq(x, y, e1, e2) -> IfEq(x, y, g env known e1, g env known e2)
 	| KNormal.IfLE(x, y, e1, e2) -> IfLE(x, y, g env known e1, g env known e2)
-	| KNormal.Let((x, t), e1, e2) -> Let((x, t), g env known e1, g (M.add x t env) known e2)
+	| KNormal.Let((x, t), e1, e2) -> Let((x, Type.convert t), g env known e1, g (M.add x (Type.convert t) env) known e2)
 	| KNormal.Var(x) -> Var(x)
 	| KNormal.LetRec({ KNormal.name = (x, t); KNormal.args = yts; KNormal.body = e1 }, e2) -> (* 関数定義の場合 (caml2html: closure_letrec) *)
 			(* 関数定義let rec x y1 ... yn = e1 in e2の場合は、
 				 xに自由変数がない(closureを介さずdirectに呼び出せる)
 				 と仮定し、knownに追加してe1をクロージャ変換してみる *)
+			let Type.Fun (ty_args, ty_ret) = t in
 			let toplevel_backup = !toplevel in
-			let env' = M.add x t env in
+			let env' = M.add x (Type.Cls (ty_args, [], ty_ret)) env in
 			let known' = S.add x known in
 			let e1' = g (M.add_list yts env') known' e1 in
 			(* 本当に自由変数がなかったか、変換結果e1'を確認する *)
@@ -100,14 +101,15 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
 				(Format.eprintf "free variable(s) %s found in function %s@." (Id.pp_list (S.elements zs)) x;
 				 Format.eprintf "function %s cannot be directly applied in fact@." x;
 				 toplevel := toplevel_backup;
-				 let e1' = g (M.add_list yts env') known e1 in (* knownを戻したものでもう一回closure変換する *)
+				 let e1' = g (M.add_list (List.map (fun (x, t) -> (x, Type.convert t)) yts) env') known e1 in (* knownを戻したものでもう一回closure変換する *)
 				 known, e1') in
 			let zs = S.elements (S.diff (fv e1') (S.add x (S.of_list (List.map fst yts)))) in (* 自由変数のリスト *)
 			let zts = List.map (fun z -> (z, M.find z env')) zs in (* ここで自由変数zの型を引くために引数envが必要 *)
-			toplevel := { name = (Id.L(x), t); args = yts; formal_fv = zts; body = e1' } :: !toplevel; (* トップレベル関数を追加 *)
+			let ty_fvs = List.map snd zts in
+			toplevel := { name = (Id.L(x), Type.Cls (ty_args, ty_fvs, ty_ret)); args = yts; formal_fv = zts; body = e1' } :: !toplevel; (* トップレベル関数を追加 *)
 			let e2' = g env' known' e2 in 
 			if S.mem x (fv e2') then (* xが変数としてe2'に出現するか *) (* x が S の元かどうか *)
-				MakeCls((x, t), { entry = Id.L(x); actual_fv = zs }, e2') (* 出現していたら削除しない *) (* xはclosureとして呼び出すことにする *)
+				MakeCls((x, Type.Cls (ty_args, ty_fvs, ty_ret)), { entry = Id.L(x); actual_fv = zs }, e2') (* 出現していたら削除しない *) (* xはclosureとして呼び出すことにする *)
 			else
 				(Format.eprintf "eliminating closure(s) %s@." x;
 				 e2') (* 出現しなければMakeClsを削除 *)
@@ -116,7 +118,9 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
 			AppDir(Id.L(x), ys)
 	| KNormal.App(f, xs) -> AppCls(f, xs)
 	| KNormal.Tuple(xs) -> Tuple(xs)
-	| KNormal.LetTuple(xts, y, e) -> LetTuple(xts, y, g (M.add_list xts env) known e)
+	| KNormal.LetTuple(xts, y, e) -> 
+		let xclss = List.map (fun (x, t) -> (x, Type.convert t)) xts in 
+		LetTuple(xclss, y, g (M.add_list xclss env) known e)
 	| KNormal.Get(x, y) -> Get(x, y)
 	| KNormal.Put(x, y, z) -> Put(x, y, z)
 	| KNormal.ExtArray(x) -> ExtArray(Id.L(x))

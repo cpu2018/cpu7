@@ -15,6 +15,7 @@ let print_error t1 t2 =
 
 let rec deref_typ = function (* 型変数を中身でおきかえる関数 (caml2html: typing_deref) *)
 	| Type.Fun(t1s, t2) -> Type.Fun(List.map deref_typ t1s, deref_typ t2)
+	| Type.Cls(args, fvs, ret) -> Type.Cls(List.map deref_typ args, List.map deref_typ fvs, deref_typ ret)
 	| Type.Tuple(ts) -> Type.Tuple(List.map deref_typ ts)
 	| Type.Array(t) -> Type.Array(deref_typ t)
 	| Type.Var({ contents = None } as r) ->
@@ -29,6 +30,7 @@ let rec deref_typ = function (* 型変数を中身でおきかえる関数 (caml
 
 let rec occur r1 = function (* occur check (caml2html: typing_occur) *)
 	| Type.Fun(t2s, t2) -> List.exists (occur r1) t2s || occur r1 t2
+	| Type.Cls(args, fvs, ret) -> List.exists (occur r1) args || List.exists (occur r1) fvs || occur r1 ret
 	| Type.Tuple(t2s) -> List.exists (occur r1) t2s
 	| Type.Array(t2) -> occur r1 t2
 	| Type.Var(r2) when r1 == r2 -> true
@@ -46,6 +48,12 @@ let rec unify t1 t2 = (* 型が合うように、型変数への代入をする 
 			(try List.iter2 unify t1s t2s
 			with Invalid_argument(_) -> raise (Unify(t1, t2)));
 			unify t1' t2'
+	| Type.Cls(args1, fvs1, ret1), Type.Cls(args2, fvs2, ret2) ->
+			(try 
+				List.iter2 unify args1 args2;
+				List.iter2 unify fvs1 fvs2
+			with Invalid_argument(_) -> raise (Unify (t1, t2)));
+			unify ret1 ret2
 	| Type.Tuple(t1s), Type.Tuple(t2s) ->
 			(try List.iter2 unify t1s t2s
 			with Invalid_argument(_) -> raise (Unify(t1, t2)))
@@ -196,14 +204,15 @@ let rec g env = function
 		g env e
 	| AppCls (x, xs) -> 
 		let t = Type.gentyp () in
+		let Type.Cls (ty_args, ty_fvs, ty_ret) = find x env in
 		(try
-			unify (find x env) (Type.Fun (List.map (fun x -> find x env) xs, t))
+			List.iter2 unify ty_args (List.map (fun x -> find x env) xs)
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
 			print_string ("in AppCls \n");
 			print_string "appfun Type is "; Type.print_code (find x env);
 			raise (Error (deref_typ t1, deref_typ t2)));
-		t
+		ty_ret
 	| AppDir (Id.L(x), xs) -> 
 		let t = Type.gentyp () in
 		let fun_ty = 
@@ -211,7 +220,7 @@ let rec g env = function
 			with Not_found -> Type.gentyp ()) in
 		env := if fun_ty = Type.Var {contents = None} then M.add x fun_ty !env else !env;
 		(try 
-			unify (find x env) (Type.Fun (List.map (fun x -> find x env) xs, t))
+			unify (find x env) (Type.Cls (List.map (fun x -> find x env) xs, [], t))
 		with Unify (t1, t2) -> 
 			print_error t1 t2;
 			print_string ("in AppDir \n");
@@ -290,7 +299,7 @@ let rec h env {name = (Id.L(x), fun_type); args = args; formal_fv = fvs; body = 
 		env := M.add_list fvs !env;
 		env := M.add_list args !env;
 		env := M.add x fun_type !env;
-		unify fun_type (Type.Fun (List.map snd args, (g env e)))
+		unify fun_type (Type.Cls (List.map snd args, List.map snd fvs, (g env e)))
 	with Unify (t1, t2) -> 
 		print_error t1 t2;
 		raise (Error (deref_typ t1, deref_typ t2)));
