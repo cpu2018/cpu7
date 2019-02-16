@@ -2081,7 +2081,7 @@ module fsqrt(
   assign m1 = x1[22:0];
 
   wire [7:0] eabs, ehalf, e;
-  assign eabs = (e1[7:7]) ? e1 - 8'b01111111 : 8'b01111111 - e1;
+  assign eabs = (e1[7:7]) ? e1 - 8'b01111111 : 8'b01111111 - e1 + 1;
   assign ehalf = eabs >> 1;
   assign e = (e1[7:7]) ? 8'b01111111 + ehalf : 8'b01111111 - ehalf;
   
