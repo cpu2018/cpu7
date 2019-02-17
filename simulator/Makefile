@@ -3,7 +3,7 @@ CPP = g++
 CFLAGS = -Wall -O2
 CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
-SIMU_SOURCE = simu.c finv1.c finv2.c fsqrt_table.c fsqrtinv_table.c
+SIMU_SOURCE = simu.c
 ML_TESTS = \
 mandelbrot
 ASM_TESTS =

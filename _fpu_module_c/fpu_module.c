@@ -10805,3 +10805,7 @@ void floor_(int x1, int *y) { // float to float
     m = m_25 & bit(23);
   *y = (s << 31) | (e << 23) | m;
 }
+
+int main(){
+  printf("a\n");
+}
