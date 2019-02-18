@@ -4,9 +4,10 @@
 
 module decode (
   input wire clk,
+  input wire rstn,
 
   input wire decode_en,
-  output reg execute_en = 0,
+  output reg execute_en,
 
   (* mark_debug = "true" *) input wire [31:0] instr,
   (* mark_debug = "true" *) input wire [18:0] pc,
@@ -32,30 +33,30 @@ module decode (
   //output reg  [4:0]  f_wreg_reg,
   output reg  f_we_reg,
 
-  output reg  w_byte = 0,
+  output reg  w_byte,
 
   //input  wire [31:0] lr_rdata,
-  output reg  [31:0] lr_wdata = 0,
-  output reg  lr_we_reg = 0,
-  output reg  mflr = 0,
+  output reg  [31:0] lr_wdata,
+  output reg  lr_we_reg,
+  output reg  mflr,
 
   output reg  [2:0] cr_field,
-  output reg  cr_we_reg = 0,
+  output reg  cr_we_reg,
   output reg  cmp_src,
   //output reg  [1:0] cr_bit = 0,
 
   output reg  input_reg,
   output reg  output_reg,
 
-  output reg  mem_access_reg = 0,
+  output reg  mem_access_reg,
   output reg  [31:0] mem_addr,
-  output reg  mem_we_reg = 0,
+  output reg  mem_we_reg,
   output reg signed [31:0] mem_wdata,
 
-  output reg  branch = 0,
-  output reg  [18:0] b_addr = 1,
-  output reg  [4:0] b_cond = 0,
-  output reg  bclr = 0,
+  output reg  branch,
+  output reg  [18:0] b_addr,
+  output reg  [4:0] b_cond,
+  output reg  bclr,
 
   output reg  [2:0] alu_op_reg,
   output reg  [4:0] shift_reg,
@@ -160,113 +161,7 @@ module decode (
                  (opcode == 6'd31 && xopcode == `XOP_MTLR);
 
   always @(posedge clk) begin
-    if (decode_en) begin
-      data1_reg <= rdata1;
-      data2_reg <= (use_imms) ? imms :
-                   (use_imm) ? imm : rdata2;
-      reg_we_reg <= reg_we;
-      f_data1_reg <= f_rdata1;
-      f_data2_reg <= f_rdata2;
-      f_we_reg <= f_we;
-      //execute_en <= 1; //TODO: execute mem_access in/out で分ける?
-      lr_we_reg <= lr_we;
-      wreg_reg <= wreg;
-      cr_we_reg <= cr_we;
-      alu_op_reg <= alu_op;
-      shift_reg <= shift;
-      float_op_reg <= float_op;
-      mem_access_reg <= mem_access;
-      mem_we_reg <= mem_we;
-      if (opcode == `OP_IN) begin
-        input_reg <= 1;
-        w_byte <= 1;
-      end else if (opcode == `OP_OUT) begin
-        output_reg <= 1;
-      end else if (opcode == `OP_FIN) begin
-        input_reg <= 1;
-        w_byte <= 1;
-      end else if (opcode == `OP_B) begin
-        execute_en <= 1;
-        branch <= 1;
-        b_cond <= 5'b10000;
-        if (instr[0:0]) begin
-          lr_wdata <= {11'd0, (pc + 19'd1), 2'd0};
-        end
-      end else if (opcode == `OP_BC) begin
-        execute_en <= 1;
-        branch <= 1;
-        b_cond <= instr[25:21];
-      end else if (opcode == `OP_BCLR) begin
-        execute_en <= 1;
-        bclr <= 1;
-        b_cond <= instr[25:21];
-      end else if (opcode == `OP_LWZ) begin
-        mem_addr <= rdata1 + {imm[31:2],2'b00};
-      end else if (opcode == `OP_LFD) begin
-        mem_addr <= rdata1 + {imm[31:2],2'b00};
-      end else if (opcode == 6'd31 && xopcode == `XOP_LFDX) begin
-        mem_addr <= {(rdata1[31:2] + rdata2[31:2]),2'b00};
-      end else if (opcode == 6'd31 && xopcode == `XOP_LWZX) begin
-        mem_addr <= {(rdata1[31:2] + rdata2[31:2]),2'b00};
-      end else if (opcode == `OP_STW) begin
-        mem_addr <= rdata1 + {imm[31:2],2'b00};
-        mem_wdata <= rdata2;
-      end else if (opcode == `OP_STFD) begin
-        mem_addr <= rdata1 + {imm[31:2],2'b00};
-        mem_wdata <= f_rdata2;
-      end else if (opcode == `OP_ADDI) begin
-        execute_en <= 1;
-      end else if (opcode == `OP_ADDIS) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd31 && xopcode == `XOP_ADD) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd31 && xopcode == `XOP_SUB) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd31 && xopcode == `XOP_OR) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd31 && xopcode == `XOP_CMP) begin
-        execute_en <= 1;
-        cmp_src <= 0;
-      end else if (opcode == `OP_CMPI) begin
-        execute_en <= 1;
-        cmp_src <= 0;
-      end else if (opcode == `OP_SLWI) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd31 && xopcode == `XOP_MFLR) begin
-        execute_en <= 1;
-        mflr <= 1;
-      end else if (opcode == 6'd31 && xopcode == `XOP_MTLR) begin
-        execute_en <= 1;
-        lr_wdata <= rdata2;
-      end else if (opcode == 6'd31 && xopcode == `XOP_ITOF) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FABS) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FADD) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FSUB) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FMUL) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FDIV) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FTOI) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FLOOR) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FSQRT) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FNEG) begin
-        execute_en <= 1;
-      end else if (opcode == `OP_FSLWI) begin
-        execute_en <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FCMPU) begin
-        execute_en <= 1;
-        cmp_src <= 1;
-      end else if (opcode == 6'd63 && xopcode == `XOP_FMR) begin
-        execute_en <= 1;
-      end
-    end else begin
+    if (~rstn) begin
       reg_we_reg <= 0;
       f_we_reg <= 0;
       cr_we_reg <= 0;
@@ -280,6 +175,137 @@ module decode (
       mflr <= 0;
       lr_we_reg <= 0;
       w_byte <= 0;
+    end else begin
+      if (decode_en) begin
+        data1_reg <= rdata1;
+        data2_reg <= (use_imms) ? imms :
+                     (use_imm) ? imm : rdata2;
+        reg_we_reg <= reg_we;
+        f_data1_reg <= f_rdata1;
+        f_data2_reg <= f_rdata2;
+        f_we_reg <= f_we;
+        //execute_en <= 1; //TODO: execute mem_access in/out で分ける?
+        lr_we_reg <= lr_we;
+        wreg_reg <= wreg;
+        cr_we_reg <= cr_we;
+        alu_op_reg <= alu_op;
+        shift_reg <= shift;
+        float_op_reg <= float_op;
+        mem_access_reg <= mem_access;
+        mem_we_reg <= mem_we;
+        if (opcode == `OP_IN) begin
+          input_reg <= 1;
+          w_byte <= 1;
+          //execute_en <= 1;
+        end else if (opcode == `OP_OUT) begin
+          output_reg <= 1;
+          //execute_en <= 1;
+        end else if (opcode == `OP_FIN) begin
+          input_reg <= 1;
+          w_byte <= 1;
+          //execute_en <= 1;
+        end else if (opcode == `OP_B) begin
+          execute_en <= 1;
+          branch <= 1;
+          b_cond <= 5'b10000;
+          if (instr[0:0]) begin
+            lr_wdata <= {11'd0, (pc + 19'd1), 2'd0};
+          end
+        end else if (opcode == `OP_BC) begin
+          execute_en <= 1;
+          branch <= 1;
+          b_cond <= instr[25:21];
+        end else if (opcode == `OP_BCLR) begin
+          execute_en <= 1;
+          bclr <= 1;
+          b_cond <= instr[25:21];
+        end else if (opcode == `OP_LWZ) begin
+          mem_addr <= rdata1 + {imm[31:2],2'b00};
+          //execute_en <= 1;
+        end else if (opcode == `OP_LFD) begin
+          mem_addr <= rdata1 + {imm[31:2],2'b00};
+          //execute_en <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_LFDX) begin
+          mem_addr <= {(rdata1[31:2] + rdata2[31:2]),2'b00};
+          //execute_en <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_LWZX) begin
+          mem_addr <= {(rdata1[31:2] + rdata2[31:2]),2'b00};
+          //execute_en <= 1;
+        end else if (opcode == `OP_STW) begin
+          mem_addr <= rdata1 + {imm[31:2],2'b00};
+          mem_wdata <= rdata2;
+          //execute_en <= 1;
+        end else if (opcode == `OP_STFD) begin
+          mem_addr <= rdata1 + {imm[31:2],2'b00};
+          mem_wdata <= f_rdata2;
+          //execute_en <= 1;
+        end else if (opcode == `OP_ADDI) begin
+          execute_en <= 1;
+        end else if (opcode == `OP_ADDIS) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_ADD) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_SUB) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_OR) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_CMP) begin
+          execute_en <= 1;
+          cmp_src <= 0;
+        end else if (opcode == `OP_CMPI) begin
+          execute_en <= 1;
+          cmp_src <= 0;
+        end else if (opcode == `OP_SLWI) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_MFLR) begin
+          execute_en <= 1;
+          mflr <= 1;
+        end else if (opcode == 6'd31 && xopcode == `XOP_MTLR) begin
+          execute_en <= 1;
+          lr_wdata <= rdata2;
+        end else if (opcode == 6'd31 && xopcode == `XOP_ITOF) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FABS) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FADD) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FSUB) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FMUL) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FDIV) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FTOI) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FLOOR) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FSQRT) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FNEG) begin
+          execute_en <= 1;
+        end else if (opcode == `OP_FSLWI) begin
+          execute_en <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FCMPU) begin
+          execute_en <= 1;
+          cmp_src <= 1;
+        end else if (opcode == 6'd63 && xopcode == `XOP_FMR) begin
+          execute_en <= 1;
+        end
+      end else begin
+        reg_we_reg <= 0;
+        f_we_reg <= 0;
+        cr_we_reg <= 0;
+        execute_en <= 0;
+        input_reg <= 0;
+        output_reg <= 0;
+        bclr <= 0;
+        branch <= 0;
+        mem_access_reg <= 0;
+        mem_we_reg <= 0;
+        mflr <= 0;
+        lr_we_reg <= 0;
+        w_byte <= 0;
+      end
     end
   end
 

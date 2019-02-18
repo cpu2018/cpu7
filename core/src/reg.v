@@ -56,10 +56,6 @@ module fpr (
   assign rdata1 = fr[rreg1];
   assign rdata2 = fr[rreg2];
 
-  initial begin
-    fr[0] <= 32'd0;
-  end
-
   always @ (posedge clk) begin
     if (w_en) begin
       if (w_byte) begin
@@ -83,9 +79,6 @@ module cr (
   reg [3:0] r [7:0]; //4bitのレジスタ8個
   assign cr_rdata = r[cr_field];
   always @ (posedge clk) begin
-//    if (rst) begin
-      //r <= 32'd0;
-//    end else if (cr_w_en) begin
     if (cr_w_en) begin
       r[cr_field] <= cr_wdata;
     end

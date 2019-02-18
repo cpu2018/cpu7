@@ -2,9 +2,10 @@
 
 module execute(
   input wire clk,
+  input wire rstn,
 
   input wire execute_en,
-  output reg writeback_en = 0,
+  output reg writeback_en,
 
   (* mark_debug = "true" *) input wire signed [31:0] data1,
   (* mark_debug = "true" *) input wire signed [31:0] data2,
@@ -21,7 +22,11 @@ module execute(
   input  wire [3:0] float_op,
 
   input wire cmp_src,
-  output reg [3:0] cr_wdata
+  output reg [3:0] cr_wdata,
+
+  input wire mem_access,
+  input wire in_en,
+  input wire out_en
   );
 
   wire [31:0] alu_out;
@@ -68,13 +73,19 @@ module execute(
                    (float_op == `FLOAT_FSLWI) ? (f_data1 << 8) : f_data2;
 
   always @(posedge clk) begin
-    if (execute_en) begin
-      writeback_en <= 1;
-      cr_wdata <= (cmp_src) ? fcmp_data : cmp_data;
-      dout <=  (alu_op == 3'd7) ? ftoi_out : alu_out;
-      f_dout <= fpu_out;
-    end else begin
+    if (~rstn) begin
       writeback_en <= 0;
+    end else begin
+      if (execute_en) begin
+        cr_wdata <= (cmp_src) ? fcmp_data : cmp_data;
+        dout <=  (alu_op == 3'd7) ? ftoi_out : alu_out;
+        f_dout <= fpu_out;
+        if (~mem_access && ~in_en && ~out_en) begin
+          writeback_en <= 1;
+        end
+      end else begin
+        writeback_en <= 0;
+      end
     end
   end
 
