@@ -5,7 +5,8 @@ CONV_SOURCE = sld_converter.cpp
 AS_SOURCE = as.c
 SIMU_SOURCE = simu.c
 ML_TESTS = \
-mandelbrot
+minrt
+#mandelbrot
 ASM_TESTS =
 MIN_CAML = min-caml # シミュレータでfloatの実装が完成したら、min-camlにすると、float関係のライブラリが読み込まれます
 
