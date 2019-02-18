@@ -51,12 +51,12 @@ module cpu (
   reg [1:0] uart_io_state = s_io_wait;
   reg rcv_state = 0;
   reg [2:0] trans_state = 0;
-  reg [7:0] rcv_buf [3:0];
+  reg [7:0] rcv_buf [7:0];
   reg [1:0] rbuf_in = 0;
   reg [1:0] rbuf_out = 0;
-  reg [7:0] trans_buf [3:0];
-  reg [1:0] tbuf_in = 0;
-  reg [1:0] tbuf_out = 0;
+  reg [7:0] trans_buf [7:0];
+  reg [3:0] tbuf_in = 0;
+  reg [3:0] tbuf_out = 0;
   wire in_en;
   wire out_en;
   always @(posedge clk) begin
@@ -73,7 +73,7 @@ module cpu (
       if (m_axi_rready && m_axi_rvalid) begin
         m_axi_rready <= 0;
         rcv_state <= 0;
-        if (m_axi_rdata[0] == 1 && (rbuf_in + 1 != rbuf_out)) begin
+        if (m_axi_rdata[0] == 1 && (((rbuf_in + 1) & (4'b0111)) != rbuf_out)) begin
           uart_io_state <= s_io_rcv;
         end else if (m_axi_rdata[3] == 0 && (tbuf_in != tbuf_out)) begin
           uart_io_state <= s_io_trans;
@@ -94,7 +94,7 @@ module cpu (
         rcv_state <= 0;
         uart_io_state <= s_io_wait;
         rcv_buf[rbuf_in] <= m_axi_rdata[7:0];
-        rbuf_in <= rbuf_in + 1;
+        rbuf_in <= ((rbuf_in + 1) & (4'b0111));
       end
     end
     if (uart_io_state == s_io_trans) begin
@@ -120,7 +120,7 @@ module cpu (
         m_axi_bready <= 0;
         uart_io_state <= s_io_wait;
         trans_state <= 0;
-        tbuf_out <= tbuf_out + 1;
+        tbuf_out <= ((tbuf_out + 1) & (4'b0111));
       end
     end
   end
@@ -138,7 +138,7 @@ module cpu (
   reg [4:0] ex_wreg = 0;
 
   wire [31:0] reg_wdata;
-  reg_file gpr(.clk(clk), .rreg1(rreg1), .rreg2(rreg2), .wreg(ex_wreg), .wdata(reg_wdata), .w_en(ex_reg_we && writeback_en), .rdata1(rdata1), .rdata2(rdata2));
+  gpr gpr(.clk(clk), .rreg1(rreg1), .rreg2(rreg2), .wreg(ex_wreg), .wdata(reg_wdata), .w_en(ex_reg_we && writeback_en), .w_byte(ex_w_byte), .rdata1(rdata1), .rdata2(rdata2));
 
   reg fetch_en = 0;
   wire decode_en;
@@ -162,6 +162,7 @@ module cpu (
   wire decode_mflr;
   wire [2:0] decode_cr_field;
   wire decode_cr_we;
+  wire cmp_src;
   //wire [1:0] decode_cr_bit;
   wire decode_bclr;
   wire decode_mem_access;
@@ -169,7 +170,15 @@ module cpu (
   wire decode_mem_we;
   wire [2:0] alu_op;
   wire [4:0] shift;
-  decode decode(.clk(clk), .decode_en(decode_en), .execute_en(execute_en), .instr(mem_rdata), .pc(pc), .rdata1(rdata1), .rdata2(rdata2), .rreg1(rreg1), .rreg2(rreg2), .wreg_reg(decode_wreg), .reg_we(decode_reg_we), .lr_wdata(decode_lr_wdata), .lr_we(decode_lr_we), .mflr(decode_mflr), .cr_field(decode_cr_field), .cr_we(decode_cr_we), .input_reg(in_en), .output_reg(out_en), .mem_access(decode_mem_access), .mem_addr(decode_mem_addr), .mem_we(decode_mem_we), .data1_reg(decode_data1), .data2_reg(decode_data2), .branch(decode_branch), .b_addr(decode_b_addr), .b_cond(decode_b_cond), .bclr(decode_bclr), .alu_op(alu_op), .shift(shift));
+  //wire f_we;
+  wire [31:0] f_rdata1;
+  wire [31:0] f_rdata2;
+  wire decode_f_we;
+  wire [31:0] decode_f_data1;
+  wire [31:0] decode_f_data2;
+  wire [3:0]  float_op;
+  wire decode_w_byte;
+  decode decode(.clk(clk), .decode_en(decode_en), .execute_en(execute_en), .instr(mem_rdata), .pc(pc), .rdata1(rdata1), .rdata2(rdata2), .rreg1(rreg1), .rreg2(rreg2), .wreg_reg(decode_wreg), .reg_we_reg(decode_reg_we), .f_rdata1(f_rdata1), .f_rdata2(f_rdata2), .f_data1_reg(decode_f_data1), .f_data2_reg(decode_f_data2), .f_we_reg(decode_f_we), .w_byte(decode_w_byte), .lr_wdata(decode_lr_wdata), .lr_we_reg(decode_lr_we), .mflr(decode_mflr), .cr_field(decode_cr_field), .cr_we_reg(decode_cr_we), .cmp_src(cmp_src), .input_reg(in_en), .output_reg(out_en), .mem_access_reg(decode_mem_access), .mem_addr(decode_mem_addr), .mem_we_reg(decode_mem_we), .mem_wdata(mem_wdata), .data1_reg(decode_data1), .data2_reg(decode_data2), .branch(decode_branch), .b_addr(decode_b_addr), .b_cond(decode_b_cond), .bclr(decode_bclr), .alu_op_reg(alu_op), .shift_reg(shift), .float_op_reg(float_op));
 
   //execute mem_access I/O
 
@@ -187,8 +196,9 @@ module cpu (
   reg ex_mflr = 0;
   reg [2:0] ex_cr_field = 0;
   reg ex_cr_we = 0;
-  //reg [1:0] ex_cr_bit = 0;
   reg ex_mem_access = 0;
+  reg ex_f_we = 0;
+  reg ex_w_byte = 0;
   always @(posedge clk) begin
     if (execute_en || in_en || out_en || decode_mem_access) begin
       ex_reg_we <= decode_reg_we;
@@ -202,19 +212,21 @@ module cpu (
       ex_mflr <= decode_mflr;
       ex_cr_field <= decode_cr_field;
       ex_cr_we <= decode_cr_we;
-      //ex_cr_bit <= decode_cr_bit;
       ex_mem_access <= decode_mem_access;
+      ex_f_we <= decode_f_we;
+      ex_w_byte <= decode_w_byte;
     end
   end
 
   wire [31:0] dout;
+  wire [31:0] f_dout;
   wire [3:0] cr_wdata;
-  execute execute(.clk(clk), .execute_en(execute_en), .writeback_en(writeback_en1), .data1(decode_data1), .data2(decode_data2), .dout(dout), .alu_op(alu_op), .shift(shift), .cr_wdata(cr_wdata));
+  execute execute(.clk(clk), .execute_en(execute_en), .writeback_en(writeback_en1), .data1(decode_data1), .data2(decode_data2), .f_data1(decode_f_data1), .f_data2(decode_f_data2), .dout(dout), .f_dout(f_dout), .alu_op(alu_op), .shift(shift), .float_op(float_op), .cmp_src(cmp_src), .cr_wdata(cr_wdata));
 
 //mem_access
   assign mem_addr = (decode_mem_access) ? decode_mem_addr[20:2] : pc;
   assign mem_we = decode_mem_we;
-  assign mem_wdata = decode_data2;
+  //assign mem_wdata = decode_data2;
   always @(posedge clk) begin
     if (decode_mem_access) begin
       writeback_en2 <= 1;
@@ -226,18 +238,18 @@ module cpu (
 //in・out命令
   reg in_wait = 0;
   reg out_wait = 0;
-  reg [31:0] inputdata_reg;
+  reg [7:0] inputdata_reg;
   reg input_reg = 0;
   always @(posedge clk) begin
     if ((in_en || in_wait) && (rbuf_in != rbuf_out)) begin
-      inputdata_reg <= {decode_data1[31:8], rcv_buf[rbuf_out]};
-      rbuf_out <= rbuf_out + 1;
+      inputdata_reg <= rcv_buf[rbuf_out];
+      rbuf_out <= ((rbuf_out + 1) & (4'b0111));
       writeback_en3 <= 1;
       in_wait <= 0;
       input_reg <= 1;
-    end else if ((out_en || out_wait) && ((tbuf_in + 1) != tbuf_out)) begin
+    end else if ((out_en || out_wait) && (((tbuf_in + 1) & (4'b0111)) != tbuf_out)) begin
       trans_buf[tbuf_in] <= decode_data2[7:0];
-      tbuf_in <= tbuf_in + 1;
+      tbuf_in <= ((tbuf_in + 1) & (4'b0111));
       writeback_en3 <= 1;
       out_wait <= 0;
       input_reg <= 0;
@@ -252,14 +264,17 @@ module cpu (
     end
   end
 
-  wire [31:0] lr_rdata;
-  assign reg_wdata = (ex_mem_access) ? mem_rdata :
-                     (input_reg) ? inputdata_reg :
-                     (ex_mflr) ? lr_rdata : dout;
   assign writeback_en = writeback_en1 || writeback_en2 || writeback_en3;
 
   //writeback
+  wire [31:0] lr_rdata;
+  assign reg_wdata = (ex_mem_access) ? mem_rdata :
+                     (input_reg) ? {24'd0, inputdata_reg} :
+                     (ex_mflr) ? lr_rdata : dout;
 
+  wire [31:0] f_wdata;
+  assign f_wdata = (ex_mem_access) ? mem_rdata :
+                   (input_reg) ? {24'd0, inputdata_reg} : f_dout;
   always @(posedge clk) begin
     if (writeback_en || start) begin
       fetch_en <= 1;
@@ -271,6 +286,7 @@ module cpu (
   lr lr(.clk(clk), .lr_wdata(ex_lr_wdata), .lr_w_en((ex_lr_we) && writeback_en), .lr_rdata(lr_rdata));
   wire [3:0]  cr_rdata;
   cr cr(.clk(clk), .cr_field(ex_cr_field), .cr_wdata(cr_wdata), .cr_w_en((ex_cr_we) && writeback_en), .cr_rdata(cr_rdata));
+  fpr fpr(.clk(clk), .rreg1(rreg1), .rreg2(rreg2), .wreg(ex_wreg), .wdata(f_wdata), .w_en(ex_f_we && writeback_en), .w_byte(ex_w_byte), .rdata1(f_rdata1), .rdata2(f_rdata2));
 
   wire  [18:0] offset;
   wire cond_ok;
@@ -287,8 +303,12 @@ module cpu (
     end
   end
 
-  assign led[7:0] = (mem_rdata == 0) ? 8'b11111111 : 8'b00000000;
-
+  reg [24:0] counter = 0;
+  always @(posedge clk) begin
+    counter <= counter + 1;
+  end
+  assign led[7:0] = ((mem_rdata == 0 || counter[24:24]) &&  (~fetch_en && ~decode_en && ~execute_en && ~in_en && ~out_en && ~writeback_en && ~decode_mem_access && ~in_wait && ~out_wait)) ? 8'b11111111 : 8'b00000000; //実機で実験するときはcounter[24]にする
+  //assign led[7:0] = {8{(~fetch_en && ~decode_en && ~execute_en && ~in_en && ~out_en && ~writeback_en && ~decode_mem_access && ~in_wait && ~out_wait)}} & pc[7:0];
 
 
 endmodule // cpu
