@@ -24,7 +24,6 @@ lib_float_value.ml \
 lib_sc.ml \
 lib_atan.ml \
 lib_create_array.ml \
-lib_read.ml \
 lib_print_int.ml \
 lib_extarr.ml \
 type.ml \

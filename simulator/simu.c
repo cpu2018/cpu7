@@ -48,8 +48,8 @@ void init_cpu(CPU *cpu){
     (cpu->cr)[i]=0;
   }
   (cpu->cor)=0;
-  (cpu->reg)[4]=100000;
-  (cpu->reg)[3]=100000;
+  (cpu->reg)[4]=300000;
+  (cpu->reg)[3]=180000;
 }
 
 void read_memory(CPU *cpu,int *memory,int len){
@@ -1268,11 +1268,17 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
   scanf("%d",&inflag);
   int uu=0;
   long long int insnum=0;
+  int sp_max = 0;
+  int hp_max = 0;
   while(1){
+	/*
     if((cpu->reg)[3]>(cpu->reg)[4]){
       printf("スタックがヒープに入る %d\n",addr);
       exit(1);
     }
+	*/
+	if (sp_max < (cpu->reg)[3]) sp_max = (cpu->reg)[3];
+	if (hp_max < (cpu->reg)[4]) hp_max = (cpu->reg)[4];
     insnum+=1;
     if(flagj==1){
       //printf("入力 :");
@@ -1511,6 +1517,8 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     }
   }
   printf("%lld回命令を実行\n",insnum);
+  printf("sp_max = %d\n", sp_max);
+  printf("hp_max = %d\n", hp_max);
 }    
 
 int main(int argc,char **argv){
