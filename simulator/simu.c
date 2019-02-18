@@ -70,6 +70,8 @@ void read_memory(CPU *cpu,int *memory,int len){
   printf("b\n");
 }
 
+static int slwn = 0;
+
 void slw(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -81,8 +83,10 @@ void slw(int code,CPU *cpu,int *a){
   unsigned int ns = s << b;
   (cpu->reg)[code_6_10]=*(int *)&ns;
   *a+=4;
+  slwn+=1;
 }/*ok*/
 
+static int srwn = 0;
 void srw(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -94,6 +98,7 @@ void srw(int code,CPU *cpu,int *a){
   unsigned int ns = s >> b;
   (cpu->reg)[code_6_10]=*(int *)&ns;
   *a+=4;
+  srwn+=1;
 }/*ok*/
 
 
@@ -113,6 +118,7 @@ int make_mask(int mb,int me){
   return t;
 }
 
+static int outn = 0;
 static int h=0;
 void out(int code,CPU *cpu,int *a,FILE *file){
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
@@ -121,10 +127,12 @@ void out(int code,CPU *cpu,int *a,FILE *file){
   fwrite(&x,sizeof(x),1,file);
   *a+=4;
   h+=1;
+  outn+=1;
   //printf("%d\n",h);
   //printf("out %c ---- %d\n",x,*a-4);
 }
 
+static int cmpin = 0;
 void cmpi(int code,CPU *cpu,int *a){
   int code_6_8 = (code >> 23) & 0x7;/*bf*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -143,8 +151,10 @@ void cmpi(int code,CPU *cpu,int *a){
     (cpu->cr)[code_6_8]=4;/*"0100"*/;
   }
   *a += 4;
+  cmpin+=1;
 }/*ok*/
 
+static fcmpun = 0;
 void fcmpu(int code,CPU *cpu,int *a){
   int code_6_8 = (code >> 23) & 0x7;/*bf*/
   //int code_10 = (code >> 21) & 0x1;
@@ -164,8 +174,10 @@ void fcmpu(int code,CPU *cpu,int *a){
     (cpu->cr)[code_6_8]=4;/*"0100"*/;
   }  
   *a+=4;
+  fcmpun += 1;
 }/*ok*/
 
+static int cmpn = 0;
 void cmp(int code,CPU *cpu,int *a){
   int code_6_8 = (code >> 23) & 0x7;/*bf*/
   //int code_10 = (code >> 21) & 0x1;
@@ -183,9 +195,10 @@ void cmp(int code,CPU *cpu,int *a){
     (cpu->cr)[code_6_8]=4;/*"0100"*/;
   }
   *a+=4;
+  cmpn += 1;
 }/*ok*/
   
-
+static int bnen = 0;
 void bne(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;/*cr*/
@@ -200,8 +213,10 @@ void bne(int code,CPU *cpu,int *a){
   else{
     *a+=j*4;
   }
+  bnen += 1;
 }/*ok*/
 
+static int bgtn = 0;
 void bgt(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;/*cr*/
@@ -216,8 +231,10 @@ void bgt(int code,CPU *cpu,int *a){
   else{
     *a+=j*4;
   }
+  bgtn += 1;
 }/*ok*/
 
+static int beqn = 0;
 void beq(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;/*cr*/
@@ -232,10 +249,11 @@ void beq(int code,CPU *cpu,int *a){
   else{
     *a+=j*4;
   }
+  beqn += 1;
 }/*ok*/
 
 
-
+static int bltn = 0;
 void blt(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;/*cr*/
@@ -250,8 +268,10 @@ void blt(int code,CPU *cpu,int *a){
   else{
     *a+=j*4;
   }
+  bltn += 1;
 }/*ok*/
 
+static int inn = 0;
 /*1byteの読み込み*/
 void in(int code,CPU *cpu,int *a,FILE *file){
   unsigned char x;
@@ -262,8 +282,10 @@ void in(int code,CPU *cpu,int *a,FILE *file){
   (cpu->reg)[code_6_10] = (k & 0xFFFFFF00)+y;
   *a+=4;
   printf("in %d %d\n",y,*a-4);
+  inn += 1;
 }
 
+static int finn = 0;
 void fin(int code,CPU *cpu,int *a,FILE *file){
   unsigned char x;
   fread(&x,sizeof(x),1,file);
@@ -273,8 +295,10 @@ void fin(int code,CPU *cpu,int *a,FILE *file){
   (cpu->freg)[code_6_10] = (k & 0xFFFFFF00) + y;
   *a+=4;
   printf("fin %d %d\n",y,*a-4);
+  finn += 1;
 }
 
+static int addin = 0;
 void addi(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -291,8 +315,10 @@ void addi(int code,CPU *cpu,int *a){
     (cpu->reg)[code_6_10]=y;    
   }
   *a+=4;
+  addin += 1;
 }/*ok*/
 
+static int fabsn = 0;
 void fabs2(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frd*/
   int code_11_15 = (code >> 16) & 0x1F;/*fra*/
@@ -300,8 +326,10 @@ void fabs2(int code,CPU *cpu,int *a){
   int y = x & 0x7FFFFFFF;
   (cpu->freg)[code_6_10]=y;
   *a+=4;
+  fabsn += 1;
 }/*ok*/
 
+static int negn = 0;
 void neg(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rd*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -309,8 +337,10 @@ void neg(int code,CPU *cpu,int *a){
   int y = -x;
   (cpu->reg)[code_6_10]=y;
   *a+=4;
+  negn += 1;
 }/*ok*/
 
+static int fnegn = 0;
 void fneg(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frd*/
   int code_16_20 = (code >> 11) & 0x1F;/*fra*/
@@ -327,10 +357,11 @@ void fneg(int code,CPU *cpu,int *a){
   }
   (cpu->freg)[code_6_10]=y;
   *a+=4;
+  fnegn += 1;
 }/*ok*/
 
   
-
+static int lisn = 0;
 void lis(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_16_31 = code & 0xFFFF;
@@ -340,13 +371,17 @@ void lis(int code,CPU *cpu,int *a){
   int ns = si << 16;
   (cpu->reg)[code_6_10]=ns;
   *a+=4;
+  lisn += 1;
 }/*ok 論理シフト*/
 
+static int blrn = 0;
 void blr(int code,CPU *cpu,int *addr){
   int x = (cpu->lr);
   *addr = x;
+  blrn += 1;
 }/*ok*/
 
+static int stfdn = 0;
 void stfd(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -372,8 +407,10 @@ void stfd(int code,CPU *cpu,int *a){
   if(ea==82952){
     //printf("%d %f\n",*a-4,*(float *)&x);
   }
+  stfdn += 1;
 }/*ok*/
 
+static int stfdxn = 0;
 void stfdx(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -393,8 +430,10 @@ void stfdx(int code,CPU *cpu,int *a){
   }
   (cpu_memory)[b/4]=x;
   *a+=4;
+  stfdxn += 1;
 }/*ok*/
 
+static int stwxn = 0;
 void stwx(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >>16) & 0x1F;/*ra*/
@@ -414,8 +453,10 @@ void stwx(int code,CPU *cpu,int *a){
   }
   (cpu_memory)[b/4]=x;
   *a+=4;
+  stwxn += 1;
 }/*ok*/
 
+static int stwn = 0;
 void stw(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -438,28 +479,36 @@ void stw(int code,CPU *cpu,int *a){
   }
   (cpu_memory)[ea/4]=x;
   *a+=4;
+  stwn += 1;
 }/*ok*/
 
+static int mflrn = 0;
 void mflr(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*fd*/
   (cpu->reg)[code_6_10]=(cpu->lr);
   *a+=4;
+  mflrn += 1;
 }/*ok*/
 
+static int fmrn = 0;
 void fmr(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_16_20 = (code >> 11) & 0x1F;/*ra*/
   (cpu->freg)[code_6_10]=(cpu->freg)[code_16_20];
   *a+=4;
+  fmrn += 1;
 }/*ok*/
 
+static int mrn = 0;
 void mr(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
   (cpu->reg)[code_11_15]=(cpu->reg)[code_6_10];
   *a+=4;
+  mrn += 1;
 }/*ok*/
 
+static int addn = 0;
 void add(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -469,8 +518,10 @@ void add(int code,CPU *cpu,int *a){
   int z = x + y;
   (cpu->reg)[code_6_10]=z;
   *a+=4;
+  addn += 1;
 }/*ok*/
 
+static int subfn = 0;
 void subf(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -480,8 +531,10 @@ void subf(int code,CPU *cpu,int *a){
   int z = y - x;
   (cpu->reg)[code_6_10]=z;
   *a+=4;
+  subfn += 1;
 }/*ok*/
 
+static int bn = 0;
 void b(int code,CPU *cpu,int *a){
   int code_6_29 = (code >> 2) & 0xFFFFFF;
   int x;
@@ -493,8 +546,10 @@ void b(int code,CPU *cpu,int *a){
   }
   int target = x * 4;
   *a=target+*a;
+  bn += 1;
 }/*ok*/
 
+static int bctrn = 0;
 void bctr(int code,CPU *cpu,int *a){
   int addr = *a;
   int code_31 = code & 0x1;
@@ -503,11 +558,12 @@ void bctr(int code,CPU *cpu,int *a){
   }
   int next = (cpu->cor);
   *a=next;
+  bctrn += 1;
 }/*ok*/
 
 
   
-
+static int bln = 0;
 void bl(int code,CPU *cpu,int *a){
   int addr = *a;
   int code_6_29 = (code >> 2) & 0xFFFFFF;
@@ -521,8 +577,10 @@ void bl(int code,CPU *cpu,int *a){
   int target = x * 4;
   (cpu->lr) = addr + 4;
   *a=target+*a;
+  bln += 1;
 }/*ok*/
 
+static lfdn = 0;
 void lfd(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -541,8 +599,10 @@ void lfd(int code,CPU *cpu,int *a){
   int x = (cpu_memory)[ea/4];
   (cpu->freg)[code_6_10]=x;
   *a+=4;
+  lfdn += 1;
 }/*ok*/
 
+static int lfdxn = 0;
 void lfdx(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -558,8 +618,10 @@ void lfdx(int code,CPU *cpu,int *a){
   int x = (cpu_memory)[b/4];
   (cpu->freg)[code_6_10]=x;
   *a+=4;
+  lfdxn += 1;
 }/*ok*/
 
+static int lwzxn = 0;
 void lwzx(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -575,8 +637,10 @@ void lwzx(int code,CPU *cpu,int *a){
   int x = (cpu_memory)[b/4];
   (cpu->reg)[code_6_10]=x;
   *a+=4;
+  lwzxn += 1;
 }/*ok*/
 
+static int lwzn = 0;
 void lwz(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -595,20 +659,26 @@ void lwz(int code,CPU *cpu,int *a){
   int x = (cpu_memory)[ea/4];
   (cpu->reg)[code_6_10] = x;
   *a+=4;
+  lwzn += 1;
 }/*ok*/
 
+static int mtctrn = 0;
 void mtctr(int code,CPU *cpu,int *addr){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   (cpu->cor) = (cpu->reg)[code_6_10];
   *addr+=4;
+  mtctrn += 1;
 }/*ok*/
 
+static int mtlrn = 0;
 void mtlr(int code,CPU *cpu,int *addr){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   (cpu->lr) = (cpu->reg)[code_6_10];
   *addr+=4;
+  mtlrn += 1;
 }/*ok*/
 
+static int stmwn = 0;
 void stmw(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -632,8 +702,10 @@ void stmw(int code,CPU *cpu,int *a){
     ea+=4;
   }
   *a+=4;
+  stmwn += 1;
 }/*ok*/
 
+static int fslwin = 0;
 void fslwi(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;
@@ -643,8 +715,10 @@ void fslwi(int code,CPU *cpu,int *a){
   int x = (cpu->freg)[code_6_10] << n;
   (cpu->freg)[code_11_15]=x;
   *a+=4;
+  fslwin += 1;
 }
 
+static int fslwi_subn = 0;
 void fslwi_sub(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -659,8 +733,10 @@ void fslwi_sub(int code,CPU *cpu,int *a){
   int ra_c = rc & mask;
   (cpu->freg)[code_11_15]=ra_c;
   *a+=4;
+  fslwi_subn += 1;
 }/*ok*/
 
+static int rlwinmn = 0;
 void rlwinm(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -677,9 +753,10 @@ void rlwinm(int code,CPU *cpu,int *a){
   int ra_c = rc & mask;
   (cpu->reg)[code_11_15]=ra_c;
   *a+=4;
+  rlwinmn += 1;
 }/*ok*/
   
-
+static int stwun = 0;
 void stwu(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rs*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -703,8 +780,10 @@ void stwu(int code,CPU *cpu,int *a){
   (cpu_memory)[ea/4]=x;
   (cpu->reg)[code_11_15]=ea;
   *a+=4;
+  stwun += 1;
 }/*ok*/
 
+static int lmwn = 0;
 void lmw(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*rt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -728,6 +807,7 @@ void lmw(int code,CPU *cpu,int *a){
     r+=1;
   }
   *a+=4;
+  lmwn += 1;
 }/*ok*/
 
 /*itof rft ra*/
@@ -745,6 +825,7 @@ void lmw(int code,CPU *cpu,int *a){
   *a+=4;
   }*/
 
+static int itofn = 0;
 void itof(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*ra*/
@@ -755,6 +836,7 @@ void itof(int code,CPU *cpu,int *a){
   itof2(x,&f2);
   (cpu->freg)[code_6_10]=f2;
   *a+=4;
+  itofn += 1;
 }/*ok*/
 
 /*ftoi rft ra*/
@@ -770,6 +852,7 @@ void itof(int code,CPU *cpu,int *a){
   *a+=4;
   }*/
 
+static ftoin = 0;
 void ftoi(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;
@@ -780,6 +863,7 @@ void ftoi(int code,CPU *cpu,int *a){
   ftoi2(f,&x);
   (cpu->reg)[code_6_10]=x;
   *a+=4;
+  ftoin += 1;
 }/*ok*/
 /*本物
 void ftoi(int code,CPU *cpu,int *a){
@@ -812,6 +896,7 @@ void ftoi(int code,CPU *cpu,int *a){
   *a+=4;
   }*/
 
+static int floor2n = 0;
 void floor2(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;
@@ -823,8 +908,10 @@ void floor2(int code,CPU *cpu,int *a){
   floor_(f,&x2);
   (cpu->freg)[code_6_10]=x2;
   *a+=4;
+  floor2n += 1;
 }
 
+static int faddn = 0;
 void fadd(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*fra*/
@@ -840,8 +927,10 @@ void fadd(int code,CPU *cpu,int *a){
   fadd2(f1,f2,&f3,&ovf);
   (cpu->freg)[code_6_10]=f3;
   *a+=4;
+  faddn += 1;
 }/*ok*/
 
+static int fsubn = 0;
 void fsub(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*fra*/
@@ -857,6 +946,7 @@ void fsub(int code,CPU *cpu,int *a){
   fsub2(f1,f2,&f3,&ovf);
   (cpu->freg)[code_6_10]=f3;
   *a+=4;
+  fsubn += 1;
 }/*ok*/
 /*
 void fmul(int code,CPU *cpu,int *a){
@@ -971,6 +1061,7 @@ void fsub(int code,CPU *cpu,int *a){
   printf("fsub f%d, f%d, f%d\n",frt,fra,frb);
   }*/
 
+static int fmuln = 0;
 void fmul(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*fra*/
@@ -985,9 +1076,11 @@ void fmul(int code,CPU *cpu,int *a){
   int ovf;
   fmul2(f1,f2,&f3,&ovf);
   (cpu->freg)[code_6_10]=f3;
+  fmuln += 1;
   *a+=4;
 }
 
+static int fdivn = 0;
 void fdiv(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;/*frt*/
   int code_11_15 = (code >> 16) & 0x1F;/*fra*/
@@ -1003,9 +1096,10 @@ void fdiv(int code,CPU *cpu,int *a){
   fdiv2(f1,f2,&f3,&ovf);
   (cpu->freg)[code_6_10]=f3;
   *a+=4;
+  fdivn += 1;
 }
 
-
+static int fsqrtn = 0;
 void fsqrt(int code,CPU *cpu,int *a){
   int code_6_10 = (code >> 21) & 0x1F;
   int code_11_15 = (code >> 16) & 0x1F;
@@ -1017,6 +1111,13 @@ void fsqrt(int code,CPU *cpu,int *a){
   fsqrt2(f,&x);
   (cpu->freg)[code_6_10]=x;
   *a+=4;
+  fsqrtn += 1;
+}
+
+void print_insnum(){
+  printf("slw %d回\n",slwn);
+  printf("srw %d回\n",srwn);
+  printf("slw %d回\n",slwn);
 }
 
 void print_reg(CPU *cpu){
