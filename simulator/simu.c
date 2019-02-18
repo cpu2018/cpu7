@@ -369,6 +369,9 @@ void stfd(int code,CPU *cpu,int *a){
   }
   (cpu_memory)[ea/4]=x;
   *a+=4;
+  if(ea==82952){
+    //printf("%d %f\n",*a-4,*(float *)&x);
+  }
 }/*ok*/
 
 void stfdx(int code,CPU *cpu,int *a){
@@ -1278,7 +1281,7 @@ void exec(CPU *cpu,FILE *file2,FILE *file3){
     }
     if(addr==36944){
       yy+=1;
-      printf("%d\n",yy);
+      //printf("%d\n",yy);
     }
 
 
