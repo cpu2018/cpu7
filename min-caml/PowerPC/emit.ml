@@ -369,15 +369,34 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "_min_caml_start:\n";
 	stackset := S.empty;
 	stackmap := [];
-	Printf.fprintf oc "\taddi\tr4, r4, 25000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 25000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 25000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 25000\n";
+	(* sp 初期化 *)
+	Printf.fprintf oc "\tli\tr3, 30000\n";
+	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
+	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
+	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
+	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
+	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
+	(* hp 初期化 *)
+	Printf.fprintf oc "\tli\tr4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	(* light_dirvec 初期化 *)
 	Printf.fprintf oc "\tli\tr2, 30000\n";
 	Printf.fprintf oc "\taddi\tr2, r2, 30000\n";
+	Printf.fprintf oc "\taddi\tr2, r2, 30000\n";
+	Printf.fprintf oc "\taddi\tr2, r2, 10000\n";
 	Printf.fprintf oc "\taddi\tr2, r2, 23096\n";
 	Printf.fprintf oc "\tli\tr5, 30000\n";
 	Printf.fprintf oc "\taddi\tr5, r5, 30000\n";
+	Printf.fprintf oc "\taddi\tr5, r5, 30000\n";
+	Printf.fprintf oc "\taddi\tr5, r5, 10000\n";
 	Printf.fprintf oc "\taddi\tr5, r5, 23104\n";
 	Printf.fprintf oc "\tstw\tr5, 0(r2)\n";
 	Printf.fprintf oc "\taddi\tr5, r5, 12\n";
@@ -388,7 +407,6 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	(if sca_flag = 1 then Lib_sc.print_external_methods oc);
 	(if sca_flag = 1 then Lib_atan.print_external_methods oc);
 	(if array_flag = 1 then Lib_create_array.print_external_methods oc);
-	(if read_flag = 1 then Lib_read.print_external_methods oc);
 	(if print_flag = 1 then Lib_print_int.print_external_methods oc);
 	(* プログラム内で定義された関数の記述 *)
 	List.iter (fun fundef -> h oc fundef) fundefs;

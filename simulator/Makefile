@@ -27,7 +27,7 @@ do_casm: $(ML_TESTS:%.ml=%)
 .PRECIOUS: %.s %.txt
 
 %.s: %.ml
-	-./$(MIN_CAML) -inline_size 60 $*
+	-./$(MIN_CAML) -inline_size 100 $*
 
 %: %.s
 	-./assembler $^
@@ -38,7 +38,7 @@ do_asm: $(ASM_TESTS:%.s=%)
 	-./assembler $^
 
 rm:
-	-rm -f $(ML_TESTS:%=%.s) $(ASM_TESTS:%=%.s) $(ML_TESTS) $(ASM_TESTS)
+	-rm -f $(ML_TESTS:%=%.s) $(ML_TESTS:%=%.txt) $(ASM_TESTS:%=%.s) $(ML_TESTS) $(ASM_TESTS)
 
 rma:
 	-rm -f $(ML_TESTS:%=%.s) $(ASM_TESTS:%=%.s)
@@ -47,4 +47,4 @@ rmb:
 	-rm -f $(ML_TESTS) $(ASM_TESTS)
 
 clean:
-	-rm -f assembler simulator $(ML_TESTS) $(ML_TESTS:%=%.s) $(ASM_TESTS)
+	-rm -f assembler simulator $(ML_TESTS) $(ML_TESTS:%=%.s) $(ML_TESTS:%=%.txt) $(ASM_TESTS)
