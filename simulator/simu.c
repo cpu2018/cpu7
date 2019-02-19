@@ -53,8 +53,10 @@ void init_cpu(CPU *cpu){
 }
 
 void read_memory(CPU *cpu,int *memory,int len){
+  printf("%d\n",memory[40000]);
   for(int i=0;i<len;i++){
-    //printf("%d\n",i);
+    printf("len %d\n",len);
+    printf("%d\n",i);
     int x = memory[i];
     int x1 = x & 0xff;
     int x2 = x & 0xff00;
@@ -1629,8 +1631,11 @@ int main(int argc,char **argv){
   int size=ftell(file);
   printf("%d\n",size);
   rewind(file);
-  int *memory_sub = (int *) malloc(size);
+  //int *memory_sub = (int *) malloc(size);
+  int memory_sub[50000];
   fread(memory_sub,sizeof(int),size,file);
+  printf("aaaaaaa\n");
+  printf("%ld\n",sizeof(memory_sub));
   fclose(file);
 
   CPU cpu;
