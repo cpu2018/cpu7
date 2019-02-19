@@ -351,6 +351,7 @@ void change_arg_cr(char *arg,char *x){
 
 void change_arg_im(char *arg,char *x){
   int k = atoi(arg);
+  printf("ここを確認 %d\n",k);
   change_ibit_f(k,x,32);
 }
 
