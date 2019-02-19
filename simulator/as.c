@@ -145,7 +145,10 @@ void change_num(char s[33],long l){
     }
   }
   else{
-    int l2 = ~l;
+    printf("表示%ld\n",l);
+    long ll = ~l;
+    int l2 = (int) ll;
+    printf("表示%d\n",l2);
     for(int j=0;j<32;j++){
       int x1 = l2 >> j;
       int x2 = (l2 >> (j+1)) << 1;
@@ -351,7 +354,7 @@ void change_arg_cr(char *arg,char *x){
 
 void change_arg_im(char *arg,char *x){
   int k = atoi(arg);
-  printf("ここを確認 %d\n",k);
+  //printf("ここを確認 %d\n",k);
   change_ibit_f(k,x,32);
 }
 

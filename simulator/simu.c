@@ -274,7 +274,7 @@ void blt(int code,CPU *cpu,int *a){
 static int inn = 0;
 /*1byteの読み込み*/
 void in(int code,CPU *cpu,int *a,FILE *file){
-  unsigned char x;
+  unsigned char x = 0;
   fread(&x,sizeof(x),1,file);
   int y=(int) x;
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
@@ -287,7 +287,7 @@ void in(int code,CPU *cpu,int *a,FILE *file){
 
 static int finn = 0;
 void fin(int code,CPU *cpu,int *a,FILE *file){
-  unsigned char x;
+  unsigned char x = 0;
   fread(&x,sizeof(x),1,file);
   int y=(int) x;
   int code_6_10 = (code >> 21) & 0x1F;/*ra*/
@@ -1636,7 +1636,7 @@ int main(int argc,char **argv){
   CPU cpu;
   init_cpu(&cpu);
 
-  char print_flag;
+  char print_flag = 0;
   printf(">>> 最後にメモリを表示するならy, しないならnを入力: ");
   scanf("%c", &print_flag);
   read_memory(&cpu,memory_sub,size);
