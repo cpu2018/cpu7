@@ -48,8 +48,8 @@ void init_cpu(CPU *cpu){
     (cpu->cr)[i]=0;
   }
   (cpu->cor)=0;
-  (cpu->reg)[4]=300000;
-  (cpu->reg)[3]=180000;
+  (cpu->reg)[4]=0;
+  (cpu->reg)[3]=0;
 }
 
 void read_memory(CPU *cpu,int *memory,int len){

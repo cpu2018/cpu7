@@ -374,19 +374,13 @@ let f oc float_value_flag float_flag sca_flag array_flag read_flag print_flag (P
 	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
 	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
 	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
-	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
-	Printf.fprintf oc "\taddi\tr3, r3, 30000\n";
+	Printf.fprintf oc "\taddi\tr3, r3, 10000\n";
 	(* hp 初期化 *)
 	Printf.fprintf oc "\tli\tr4, 30000\n";
 	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
 	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
 	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
-	Printf.fprintf oc "\taddi\tr4, r4, 30000\n";
+	Printf.fprintf oc "\taddi\tr4, r4, 11000\n";
 	(* light_dirvec 初期化 *)
 	Printf.fprintf oc "\tli\tr2, 30000\n";
 	Printf.fprintf oc "\taddi\tr2, r2, 30000\n";
