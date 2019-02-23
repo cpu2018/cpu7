@@ -149,12 +149,11 @@ void change_num(char s[33],long l){
     long ll = ~l;
     int l2 = (int) ll;
     printf("表示%d\n",l2);
-    for(int j=0;j<31;j++){
+    for(int j=0;j<32;j++){
       int x1 = l2 >> j;
       int x2 = (l2 >> (j+1)) << 1;
       int x = x1 - x2;
       char n = '0' + x;
-      printf("%c\n",n);
       if(n=='0'){
         s[(32-1)-j]='1';
       }
@@ -162,8 +161,6 @@ void change_num(char s[33],long l){
         s[(32-1)-j] = '0';
       }
     }
-    s[0]='1';
-    printf("表示%s\n",s);
   }
 }
   

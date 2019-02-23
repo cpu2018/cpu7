@@ -60,7 +60,7 @@ let rec g env = function
 	| App (Var("fneg", _), arg::[]) when not (M.mem "fneg" env) -> 
 		FNeg (g env arg)
 	| App (Var("fless", _), arg1::arg2::[]) when not (M.mem "fless" env) -> 
-		Not (LE (g env arg1, g env arg2))
+		Not (LE (g env arg2, g env arg1))
 	| App (Var("print_char", _), arg::[]) when not (M.mem "print_char" env) -> 
 		Out (g env arg)
 	| App (e, es) -> App (g env e, List.map (g env) es)

@@ -1931,6 +1931,9 @@ top level has type :
 .   .   <IF>
 .   .   .   <NOT> 
 .   .   .   .   <LE> 
+.   .   .   .   .   <GET> 
+.   .   .   .   .   .   <VAR> abc
+.   .   .   .   .   .   <VAR> i1
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   <FADD> 
@@ -1958,13 +1961,13 @@ top level has type :
 .   .   .   .   .   .   .   .   .   <VAR> dirvec
 .   .   .   .   .   .   .   .   .   <VAR> i1
 .   .   .   .   .   .   .   <VAR> b1
-.   .   .   .   .   <GET> 
-.   .   .   .   .   .   <VAR> abc
-.   .   .   .   .   .   <VAR> i1
 .   .   <THEN>
 .   .   .   <IF>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
+.   .   .   .   .   .   <GET> 
+.   .   .   .   .   .   .   <VAR> abc
+.   .   .   .   .   .   .   <VAR> i2
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   <FADD> 
@@ -1992,9 +1995,6 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   <VAR> dirvec
 .   .   .   .   .   .   .   .   .   .   <VAR> i2
 .   .   .   .   .   .   .   .   <VAR> b2
-.   .   .   .   .   .   <GET> 
-.   .   .   .   .   .   .   <VAR> abc
-.   .   .   .   .   .   .   <VAR> i2
 .   .   .   <THEN>
 .   .   .   .   <LET> Tu73 ------ Type :  Unit 
 .   .   .   .   .   <PUT> 
@@ -2457,6 +2457,10 @@ top level has type :
 .   .   <IF>
 .   .   .   <NOT> 
 .   .   .   .   <LE> 
+.   .   .   .   .   <APP> 
+.   .   .   .   .   .   <VAR> o_param_b
+.   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   <FADD> 
@@ -2484,14 +2488,14 @@ top level has type :
 .   .   .   .   .   .   .   .   .   <VAR> v
 .   .   .   .   .   .   .   .   .   <INT> 1
 .   .   .   .   .   .   .   <VAR> b1
-.   .   .   .   .   <APP> 
-.   .   .   .   .   .   <VAR> o_param_b
-.   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   <VAR> m
 .   .   <THEN>
 .   .   .   <IF>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
+.   .   .   .   .   .   <APP> 
+.   .   .   .   .   .   .   <VAR> o_param_c
+.   .   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   <FADD> 
@@ -2519,10 +2523,6 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   <VAR> v
 .   .   .   .   .   .   .   .   .   .   <INT> 2
 .   .   .   .   .   .   .   .   <VAR> b2
-.   .   .   .   .   .   <APP> 
-.   .   .   .   .   .   .   <VAR> o_param_c
-.   .   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   <THEN>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <EQ> 
@@ -2558,6 +2558,10 @@ top level has type :
 .   .   .   <IF>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
+.   .   .   .   .   .   <APP> 
+.   .   .   .   .   .   .   <VAR> o_param_a
+.   .   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   <FADD> 
@@ -2585,14 +2589,14 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   <VAR> v
 .   .   .   .   .   .   .   .   .   .   <INT> 0
 .   .   .   .   .   .   .   .   <VAR> b0
-.   .   .   .   .   .   <APP> 
-.   .   .   .   .   .   .   <VAR> o_param_a
-.   .   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   <THEN>
 .   .   .   .   <IF>
 .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   <LE> 
+.   .   .   .   .   .   .   <APP> 
+.   .   .   .   .   .   .   .   <VAR> o_param_c
+.   .   .   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   .   <FADD> 
@@ -2620,10 +2624,6 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   .   <VAR> v
 .   .   .   .   .   .   .   .   .   .   .   <INT> 2
 .   .   .   .   .   .   .   .   .   <VAR> b2
-.   .   .   .   .   .   .   <APP> 
-.   .   .   .   .   .   .   .   <VAR> o_param_c
-.   .   .   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   <THEN>
 .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   <EQ> 
@@ -2659,6 +2659,10 @@ top level has type :
 .   .   .   .   <IF>
 .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   <LE> 
+.   .   .   .   .   .   .   <APP> 
+.   .   .   .   .   .   .   .   <VAR> o_param_a
+.   .   .   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   .   <FADD> 
@@ -2686,14 +2690,14 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   .   <VAR> v
 .   .   .   .   .   .   .   .   .   .   .   <INT> 0
 .   .   .   .   .   .   .   .   .   <VAR> b0
-.   .   .   .   .   .   .   <APP> 
-.   .   .   .   .   .   .   .   <VAR> o_param_a
-.   .   .   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   <THEN>
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   <LE> 
+.   .   .   .   .   .   .   .   <APP> 
+.   .   .   .   .   .   .   .   .   <VAR> o_param_b
+.   .   .   .   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   .   .   <FADD> 
@@ -2721,10 +2725,6 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   .   .   <VAR> v
 .   .   .   .   .   .   .   .   .   .   .   .   <INT> 1
 .   .   .   .   .   .   .   .   .   .   <VAR> b1
-.   .   .   .   .   .   .   .   <APP> 
-.   .   .   .   .   .   .   .   .   <VAR> o_param_b
-.   .   .   .   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   <THEN>
 .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   <EQ> 
@@ -3863,6 +3863,10 @@ top level has type :
 .   .   <IF>
 .   .   .   <NOT> 
 .   .   .   .   <LE> 
+.   .   .   .   .   <APP> 
+.   .   .   .   .   .   <VAR> o_param_a
+.   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   <VAR> p0
@@ -3872,14 +3876,14 @@ top level has type :
 .   .   .   .   .   .   .   <VAR> p0
 .   .   .   .   .   <ELSE>
 .   .   .   .   .   .   <VAR> p0
-.   .   .   .   .   <APP> 
-.   .   .   .   .   .   <VAR> o_param_a
-.   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   <VAR> m
 .   .   <THEN>
 .   .   .   <IF>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
+.   .   .   .   .   .   <APP> 
+.   .   .   .   .   .   .   <VAR> o_param_b
+.   .   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   <VAR> p1
@@ -3889,13 +3893,13 @@ top level has type :
 .   .   .   .   .   .   .   .   <VAR> p1
 .   .   .   .   .   .   <ELSE>
 .   .   .   .   .   .   .   <VAR> p1
-.   .   .   .   .   .   <APP> 
-.   .   .   .   .   .   .   <VAR> o_param_b
-.   .   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   <THEN>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
+.   .   .   .   .   .   <APP> 
+.   .   .   .   .   .   .   <VAR> o_param_c
+.   .   .   .   .   .   .   <ARGS> 
+.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   <VAR> p2
@@ -3905,10 +3909,6 @@ top level has type :
 .   .   .   .   .   .   .   .   <VAR> p2
 .   .   .   .   .   .   <ELSE>
 .   .   .   .   .   .   .   <VAR> p2
-.   .   .   .   .   .   <APP> 
-.   .   .   .   .   .   .   <VAR> o_param_c
-.   .   .   .   .   .   .   <ARGS> 
-.   .   .   .   .   .   .   .   <VAR> m
 .   .   .   <ELSE>
 .   .   .   .   <BOOL> false
 .   .   <ELSE>
@@ -4135,8 +4135,8 @@ top level has type :
 .   .   .   <THEN>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
-.   .   .   .   .   .   <VAR> t0p
 .   .   .   .   .   .   <FLOAT> -0.2
+.   .   .   .   .   .   <VAR> t0p
 .   .   .   <ELSE>
 .   .   .   .   <BOOL> false
 .   .   <THEN>
@@ -4301,10 +4301,10 @@ top level has type :
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   <LE> 
+.   .   .   .   .   .   .   .   <FLOAT> -0.1
 .   .   .   .   .   .   .   .   <GET> 
 .   .   .   .   .   .   .   .   .   <VAR> solver_dist
 .   .   .   .   .   .   .   .   .   <INT> 0
-.   .   .   .   .   .   .   .   <FLOAT> -0.1
 .   .   .   .   .   <THEN>
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <APP> 
@@ -4384,16 +4384,16 @@ top level has type :
 .   .   .   .   <IF>
 .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   <LE> 
-.   .   .   .   .   .   .   <FLOAT> 0.
 .   .   .   .   .   .   .   <VAR> t0p
+.   .   .   .   .   .   .   <FLOAT> 0.
 .   .   .   .   <THEN>
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   <LE> 
-.   .   .   .   .   .   .   .   <VAR> t0p
 .   .   .   .   .   .   .   .   <GET> 
 .   .   .   .   .   .   .   .   .   <VAR> tmin
 .   .   .   .   .   .   .   .   .   <INT> 0
+.   .   .   .   .   .   .   .   <VAR> t0p
 .   .   .   .   .   <THEN>
 .   .   .   .   .   .   <LET> t ------ Type :  Float 
 .   .   .   .   .   .   .   <FADD> 
@@ -4596,10 +4596,10 @@ top level has type :
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   <LE> 
-.   .   .   .   .   .   .   .   <VAR> tp
 .   .   .   .   .   .   .   .   <GET> 
 .   .   .   .   .   .   .   .   .   <VAR> tmin
 .   .   .   .   .   .   .   .   .   <INT> 0
+.   .   .   .   .   .   .   .   <VAR> tp
 .   .   .   .   .   <THEN>
 .   .   .   .   .   .   <APP> 
 .   .   .   .   .   .   .   <VAR> solve_one_or_network
@@ -4647,13 +4647,13 @@ top level has type :
 .   <IF>
 .   .   <NOT> 
 .   .   .   <LE> 
-.   .   .   .   <FLOAT> -0.1
 .   .   .   .   <VAR> t
+.   .   .   .   <FLOAT> -0.1
 .   <THEN>
 .   .   <NOT> 
 .   .   .   <LE> 
-.   .   .   .   <VAR> t
 .   .   .   .   <FLOAT> 100000000.
+.   .   .   .   <VAR> t
 .   <ELSE>
 .   .   <BOOL> false
 <IN>
@@ -4700,16 +4700,16 @@ top level has type :
 .   .   .   .   <IF>
 .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   <LE> 
-.   .   .   .   .   .   .   <FLOAT> 0.
 .   .   .   .   .   .   .   <VAR> t0p
+.   .   .   .   .   .   .   <FLOAT> 0.
 .   .   .   .   <THEN>
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   <LE> 
-.   .   .   .   .   .   .   .   <VAR> t0p
 .   .   .   .   .   .   .   .   <GET> 
 .   .   .   .   .   .   .   .   .   <VAR> tmin
 .   .   .   .   .   .   .   .   .   <INT> 0
+.   .   .   .   .   .   .   .   <VAR> t0p
 .   .   .   .   .   <THEN>
 .   .   .   .   .   .   <LET> t ------ Type :  Float 
 .   .   .   .   .   .   .   <FADD> 
@@ -4911,10 +4911,10 @@ top level has type :
 .   .   .   .   .   <IF>
 .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   <LE> 
-.   .   .   .   .   .   .   .   <VAR> tp
 .   .   .   .   .   .   .   .   <GET> 
 .   .   .   .   .   .   .   .   .   <VAR> tmin
 .   .   .   .   .   .   .   .   .   <INT> 0
+.   .   .   .   .   .   .   .   <VAR> tp
 .   .   .   .   .   <THEN>
 .   .   .   .   .   .   <APP> 
 .   .   .   .   .   .   .   <VAR> solve_one_or_network_fast
@@ -4962,13 +4962,13 @@ top level has type :
 .   <IF>
 .   .   <NOT> 
 .   .   .   <LE> 
-.   .   .   .   <FLOAT> -0.1
 .   .   .   .   <VAR> t
+.   .   .   .   <FLOAT> -0.1
 .   <THEN>
 .   .   <NOT> 
 .   .   .   <LE> 
-.   .   .   .   <VAR> t
 .   .   .   .   <FLOAT> 100000000.
+.   .   .   .   <VAR> t
 .   <ELSE>
 .   .   <BOOL> false
 <IN>
@@ -5281,10 +5281,10 @@ top level has type :
 .   .   .   <IN>
 .   .   .   <NOT> 
 .   .   .   .   <LE> 
+.   .   .   .   .   <FLOAT> 10.
 .   .   .   .   .   <FSUB> 
 .   .   .   .   .   .   <VAR> w1
 .   .   .   .   .   .   <VAR> d1
-.   .   .   .   .   <FLOAT> 10.
 .   .   <IN>
 .   .   <LET> w3 ------ Type :  Float 
 .   .   .   <FSUB> 
@@ -5307,10 +5307,10 @@ top level has type :
 .   .   .   <IN>
 .   .   .   <NOT> 
 .   .   .   .   <LE> 
+.   .   .   .   .   <FLOAT> 10.
 .   .   .   .   .   <FSUB> 
 .   .   .   .   .   .   <VAR> w3
 .   .   .   .   .   .   <VAR> d2
-.   .   .   .   .   <FLOAT> 10.
 .   .   <IN>
 .   .   <PUT> 
 .   .   .   <VAR> texture_color
@@ -5496,6 +5496,7 @@ top level has type :
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   .   <LE> 
+.   .   .   .   .   .   .   .   .   <FLOAT> 0.0001
 .   .   .   .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   .   .   .   <VAR> w1
@@ -5505,7 +5506,6 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   .   <VAR> w1
 .   .   .   .   .   .   .   .   .   <ELSE>
 .   .   .   .   .   .   .   .   .   .   <VAR> w1
-.   .   .   .   .   .   .   .   .   <FLOAT> 0.0001
 .   .   .   .   .   .   <THEN>
 .   .   .   .   .   .   .   <FLOAT> 15.
 .   .   .   .   .   .   <ELSE>
@@ -5561,6 +5561,7 @@ top level has type :
 .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   .   .   <LE> 
+.   .   .   .   .   .   .   .   .   <FLOAT> 0.0001
 .   .   .   .   .   .   .   .   .   <IF>
 .   .   .   .   .   .   .   .   .   .   <LE> 
 .   .   .   .   .   .   .   .   .   .   .   <VAR> w4
@@ -5570,7 +5571,6 @@ top level has type :
 .   .   .   .   .   .   .   .   .   .   .   <VAR> w4
 .   .   .   .   .   .   .   .   .   <ELSE>
 .   .   .   .   .   .   .   .   .   .   <VAR> w4
-.   .   .   .   .   .   .   .   .   <FLOAT> 0.0001
 .   .   .   .   .   .   <THEN>
 .   .   .   .   .   .   .   <FLOAT> 15.
 .   .   .   .   .   .   <ELSE>
@@ -5928,11 +5928,11 @@ top level has type :
 .   .   .   .   <IF>
 .   .   .   .   .   <NOT> 
 .   .   .   .   .   .   <LE> 
+.   .   .   .   .   .   .   <FLOAT> 0.5
 .   .   .   .   .   .   .   <APP> 
 .   .   .   .   .   .   .   .   <VAR> o_diffuse
 .   .   .   .   .   .   .   .   <ARGS> 
 .   .   .   .   .   .   .   .   .   <VAR> obj
-.   .   .   .   .   .   .   <FLOAT> 0.5
 .   .   .   .   <THEN>
 .   .   .   .   .   <PUT> 
 .   .   .   .   .   .   <VAR> calc_diffuse
@@ -6072,8 +6072,8 @@ top level has type :
 .   .   .   <IF>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
-.   .   .   .   .   .   <FLOAT> 0.1
 .   .   .   .   .   .   <VAR> energy
+.   .   .   .   .   .   <FLOAT> 0.1
 .   .   .   <THEN>
 .   .   .   .   <LET> Tu142 ------ Type :  Unit 
 .   .   .   .   .   <IF>
@@ -8256,11 +8256,11 @@ top level has type :
 .   .   .   <IF>
 .   .   .   .   <NOT> 
 .   .   .   .   .   <LE> 
+.   .   .   .   .   .   <FLOAT> 1.
 .   .   .   .   .   .   <APP> 
 .   .   .   .   .   .   .   <VAR> o_diffuse
 .   .   .   .   .   .   .   <ARGS> 
 .   .   .   .   .   .   .   .   <VAR> obj
-.   .   .   .   .   .   <FLOAT> 1.
 .   .   .   <THEN>
 .   .   .   .   <LET> m_shape ------ Type :  Int 
 .   .   .   .   .   <APP> 
