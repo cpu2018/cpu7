@@ -65,7 +65,7 @@ fact \
 read read2 read3 read4 ftoi \
 samename \
 array array2 array3 array4 array5 array6 array1 arr2d \
-adhoc adhoc2 adhoc3 adhoc4 \
+adhoc adhoc2 #adhoc3 adhoc4 \
 
 
 #do_test: $(TESTS:%=test/%.cmp)

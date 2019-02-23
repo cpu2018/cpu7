@@ -272,31 +272,121 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 					print_string "actual   : "; Type.print_type t2; print_newline ();
 					raise (Error (deref_typ t1, deref_typ t2, errpos e1))));
 			g env e2
-	| App(e, es) -> (* 関数適用の型推論 (caml2html: typing_app) *)
-			(match e, es with
-			| (Var ("create_array", _), [argc; argv]) when (not (M.mem "create_array" env)) -> 
-				(* もし外部関数適用ならば *)
-				(try
-					unify (g env argc) Type.Int;
-				with 
-				| Unify (t1, t2) 
-					-> (Syntax.print_pos (errpos e);
-						print_string "expected : "; Type.print_type t1; print_newline ();
-						print_string "actual   : "; Type.print_type t2; print_newline ();
-						raise (Error (deref_typ t1, deref_typ t2, errpos e))));
-				Type.Array (g env argv)
-			| (_, _) -> (* 外部関数適用でないならば *)
-				let t = Type.gentyp () in
-				(try
-					unify (g env e) (Type.Fun(List.map (g env) es, t))
-				with
-				| Unify (t1, t2) 
-					-> (Syntax.print_pos (errpos e);
-						print_string "expected : "; Type.print_type t1; print_newline ();
-						print_string "actual   : "; Type.print_type t2; print_newline ();
-						raise (Error (deref_typ t1, deref_typ t2, errpos e))));
-				t
-			)
+	| App(Var ("create_array", _) as e, argc::argv::[]) when not (M.mem "create_array" env) -> (* もし外部関数適用ならば *)
+			(try
+				unify (g env argc) Type.Int
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Array (g env argv)
+	| App(Var ("floor" as name, _) as e, arg::[]) 
+	| App(Var ("sqrt" as name, _) as e, arg::[]) 
+	| App(Var ("fabs" as name, _) as e, arg::[]) 
+	| App(Var ("fneg" as name, _) as e, arg::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg) Type.Float
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Float
+	| App(Var ("int_of_float" as name, _) as e, arg::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg) Type.Float
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Int
+	| App(Var ("float_of_int" as name, _) as e, arg::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg) Type.Int
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Float
+	| App(Var ("read_int" as name, _) as e, arg::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg) Type.Unit
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Int
+	| App(Var ("read_float" as name, _) as e, arg::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg) Type.Unit
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Float
+	| App(Var ("fiszero" as name, _) as e, arg::[])
+	| App(Var ("fispos" as name, _) as e, arg::[]) 
+	| App(Var ("fisneg" as name, _) as e, arg::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg) Type.Float
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Bool
+	| App(Var ("fless" as name, _) as e, arg1::arg2::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg1) Type.Float;
+				unify (g env arg2) Type.Float
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Bool
+	| App(Var ("print_char" as name, _) as e, arg::[]) when not (M.mem name env) 
+		-> (* もし外部関数適用ならば *)
+			(try
+				unify (g env arg) Type.Int
+			with 
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			Type.Unit
+	| App(e, es) -> (* 関数適用の型推論 (caml2html: typing_app) *) (* 外部関数適用でないならば *)
+			let t = Type.gentyp () in
+			(try
+				unify (g env e) (Type.Fun(List.map (g env) es, t))
+			with
+			| Unify (t1, t2) 
+				-> (Syntax.print_pos (errpos e);
+					print_string "expected : "; Type.print_type t1; print_newline ();
+					print_string "actual   : "; Type.print_type t2; print_newline ();
+					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+			t
 	| Tuple(es) -> Type.Tuple(List.map (g env) es)
 	| LetTuple(xts, e1, e2) ->
 			(try
@@ -399,9 +489,11 @@ let f sy_flag ty_flag e =
 	(match deref_typ (g M.empty e) with
 	| Type.Unit -> ()
 	| _ -> Format.eprintf "warning: final result does not have type unit@.");
-*)
 	(try unify Type.Unit (g M.empty e)
 	with Unify _ -> failwith "top level does not have type unit");
+*)
+	let top_ty = g M.empty e in
+	print_string "top level has type : \n"; Type.print_code top_ty;
 	extenv := M.map deref_typ !extenv;
 	let e' = deref_term e in
 	(if ty_flag = 1 

@@ -1,3 +1,5 @@
+top level has type : 
+ Unit 
 <dump after extfun>
 =================================================================================================
 <LETREC> xor ------ Type :  Fun ( args = ( Bool  Bool ) -> exp = ( Bool ) ) 
