@@ -10,5 +10,5 @@ let i = fiszero a in
 let j = fispos a in
 let k = fless a a in
 let l = create_array 3 4 in
-let m = create_float_array 3 a in
+let m = create_array 3 a in
 ()

@@ -9,7 +9,9 @@ let extenv = ref M.empty
 
 (* Type.t -> Type.t *)
 (* for pretty printing (and type normalization) *)
-let rec deref_typ = function (* 型変数を中身でおきかえる関数 (caml2html: typing_deref) *)
+let rec deref_typ oonn = (* 型変数を中身でおきかえる関数 (caml2html: typing_deref) *)
+	Type.print_type oonn; print_newline ();
+	match oonn with
 	| Type.Fun(t1s, t2) -> Type.Fun(List.map deref_typ t1s, deref_typ t2)
 	| Type.Tuple(ts) -> Type.Tuple(List.map deref_typ ts)
 	| Type.Array(t) -> Type.Array(deref_typ t)
@@ -23,7 +25,7 @@ let rec deref_typ = function (* 型変数を中身でおきかえる関数 (caml2html: typing_
 			t'
 	| t -> t
 
-let rec deref_id_typ (x, t) = (x, deref_typ t) (* (Id.t * Type.t) の処理 *)
+let rec deref_id_typ (x, t) = Id.print_t x; print_newline (); (x, deref_typ t) (* (Id.t * Type.t) の処理 *)
 
 (* Syntax.t -> Syntax.t *)
 (* Syntax.t の中のType.t を中身に置き換えている *)
@@ -64,7 +66,7 @@ let rec deref_term = function
 	| Read_I(e) -> Read_I(deref_term e)
 	| Read_F(e) -> Read_F(deref_term e)
 	| Out(e) -> Out(deref_term e)
-	| e -> e (* Unit, Bool, Int, Float はそのまま(最終形態) *)
+	| e -> print_string "\nin deref term e \n"; print_code 0 e; e (* Unit, Bool, Int, Float はそのまま(最終形態) *)
 
 let rec occur r1 = function (* occur check (caml2html: typing_occur) *)
 	| Type.Fun(t2s, t2) -> List.exists (occur r1) t2s || occur r1 t2
@@ -103,10 +105,10 @@ let rec unify t1 t2 = (* 型が合うように、型変数への代入をする (caml2html: typing
 (* 深さ優先で再帰的に検査している *)
 let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 	match e with
-	| Unit pos  -> Type.Unit
-	| Bool(_, pos) -> Type.Bool
-	| Int(_, pos) -> Type.Int
-	| Float(_, pos) -> Type.Float
+	| Unit _ -> Type.Unit
+	| Bool(_, _) -> Type.Bool
+	| Int(_, _) -> Type.Int
+	| Float(_, _) -> Type.Float
 	| Not(e) ->
 			(try
 				unify Type.Bool (g env e) 
@@ -255,8 +257,11 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 	| Var(x, _) -> (* 外部変数の型推論 (caml2html: typing_extvar) *)
 			Format.eprintf "free variable %s assumed as external@." x;
 			let t = Type.gentyp () in
-			extenv := M.add x t !extenv;
-			t
+			(*
+			if x = "create_array" then t
+			else (extenv := M.add x t !extenv; t)
+			*)
+			(extenv := M.add x t !extenv; t)
 	| LetRec({ name = ((x, t), pos); args = yts; body = e1 }, e2) -> (* let recの型推論 (caml2html: typing_letrec) *)
 			let env = M.add x t env in
 			(try
@@ -269,16 +274,31 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 					raise (Error (deref_typ t1, deref_typ t2, errpos e1))));
 			g env e2
 	| App(e, es) -> (* 関数適用の型推論 (caml2html: typing_app) *)
-			let t = Type.gentyp () in
-			(try
-				unify (g env e) (Type.Fun(List.map (g env) es, t))
-			with
-			| Unify (t1, t2) 
-				-> (Syntax.print_pos (errpos e);
-					print_string "expected : "; Type.print_type t1; print_newline ();
-					print_string "actual   : "; Type.print_type t2; print_newline ();
-					raise (Error (deref_typ t1, deref_typ t2, errpos e))));
-			t
+			(match e, es with
+			| (Var ("create_array", _), [argc; argv]) when (not (M.mem "create_array" env)) -> 
+				(* もし外部関数適用ならば *)
+				let [argc; argi] = es in
+				(try
+					unify (g env argc) Type.Int;
+				with 
+				| Unify (t1, t2) 
+					-> (Syntax.print_pos (errpos e);
+						print_string "expected : "; Type.print_type t1; print_newline ();
+						print_string "actual   : "; Type.print_type t2; print_newline ();
+						raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+				Type.Array (g env argi)
+			| (_, _) -> (* 外部関数適用でないならば *)
+				let t = Type.gentyp () in
+				(try
+					unify (g env e) (Type.Fun(List.map (g env) es, t))
+				with
+				| Unify (t1, t2) 
+					-> (Syntax.print_pos (errpos e);
+						print_string "expected : "; Type.print_type t1; print_newline ();
+						print_string "actual   : "; Type.print_type t2; print_newline ();
+						raise (Error (deref_typ t1, deref_typ t2, errpos e))));
+				t
+			)
 	| Tuple(es) -> Type.Tuple(List.map (g env) es)
 	| LetTuple(xts, e1, e2) ->
 			(try
@@ -370,7 +390,12 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 			Type.Unit
 
 (* int -> Syntax.t -> unit *)
-let f print_flag e =
+let f sy_flag ty_flag e =
+	(if sy_flag = 1 
+	 then (print_string "<dump Syntax.t before typing>\n=================================================================================================\n"; 
+	 	   (Syntax.print_code 0 e); 
+		   print_string "=================================================================================================\n\n") 
+	 else ());
 	extenv := M.empty;
 (*
 	(match deref_typ (g M.empty e) with
@@ -379,10 +404,12 @@ let f print_flag e =
 *)
 	(try unify Type.Unit (g M.empty e)
 	with Unify _ -> failwith "top level does not have type unit");
-	(if print_flag = 1 
-	 then (print_string "<dump Syntax.t>\n=================================================================================================\n"; 
-	 	   (Syntax.print_code 0 e); 
+	extenv := M.map deref_typ !extenv;
+	print_code 0 e; 
+	let e' = deref_term e in
+	(if ty_flag = 1 
+	 then (print_string "<dump Syntax.t after typing>\n=================================================================================================\n"; 
+	 	   print_code 0 e; 
 		   print_string "=================================================================================================\n\n") 
 	 else ());
-	extenv := M.map deref_typ !extenv;
-	deref_term e
+	e'

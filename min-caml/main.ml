@@ -1,5 +1,6 @@
 let limit = ref 1000
 let syntax_flag = ref 0
+let typing_flag = ref 0
 let parsing_flag = ref 0
 let fun_flag = ref 0
 let kNormal_flag = ref 0
@@ -50,7 +51,7 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 							(iter !limit
 								(Alpha.f !alpha_flag
 									(KNormal.f !kNormal_flag
-										(Typing.f !syntax_flag
+										(Typing.f !syntax_flag !typing_flag
 												(Parser.exp Lexer.token l)))))))))
 		(*
 		)
@@ -88,7 +89,8 @@ let () = (* ここからコンパイラの実行が開始される (caml2html: main_entry) *)
 		 ("-parser", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
 		 ("-parsing", Arg.Unit(fun () -> parsing_flag := 1), "dump code after parsing");
 		 ("-fun", Arg.Unit(fun () -> fun_flag := 1), "dump code after fun2letrec");
-		 ("-syntax", Arg.Unit(fun () -> syntax_flag := 1), "dump code after type checking");
+		 ("-syntax", Arg.Unit(fun () -> syntax_flag := 1), "dump code before type checking");
+		 ("-typing", Arg.Unit(fun () -> syntax_flag := 1), "dump code after type checking");
 		 ("-knormal", Arg.Unit(fun () -> kNormal_flag := 1), "dump code after kNormal");
 		 ("-kNormal", Arg.Unit(fun () -> kNormal_flag := 1), "dump code after kNormal");
 		 ("-alpha", Arg.Unit(fun () -> alpha_flag := 1), "dump code after alpha");

@@ -45,9 +45,9 @@ let rec errpos e =
 	| Unit pos | Bool (_, pos) | Int (_, pos) | Float (_, pos) | Var (_, pos) 
 		-> pos
 	| Not t | Neg t | AdHoc (t, _) | Add (t, _) | Sub (t, _) | Mul (t, _) | Div (t, _)
-    | FNeg t | FAdd (t, _) | FSub (t, _) | FMul (t, _) | FDiv (t, _) | Eq (t, _)
+    | FNeg t | FAdd (t, _) | FSub (t, _) | FMul (t, _) | FDiv (t, _) 
     | Floor t | Sqrt t | FtoI t | ItoF t
-	| LE (t, _) | If (t, _, _) | App (t, _) | Tuple (t::_) 
+	| Eq (t, _) | LE (t, _) | If (t, _, _) | App (t, _) | Tuple (t::_) 
 	| Array (t, _) | Get (t, _) | Put (t, _, _)
     	-> errpos t
 	| Let (_, t, _) | LetTuple (_, t, _)
@@ -58,7 +58,7 @@ let rec errpos e =
 		-> pos
 	| ShiftIL (t, _) | ShiftIR (t, _)
 		-> errpos t
-	| Read_I t | Read_F t
+	| Read_I t | Read_F t | Out t
 		-> errpos t
 
 let print_pos {ls = ls; le = le; chs = chs; che = che} =
