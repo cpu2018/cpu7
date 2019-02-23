@@ -59,10 +59,14 @@ shuffle spill spill2 spill3 join-stack join-stack2 join-stack3 \
 join-reg join-reg2 non-tail-if non-tail-if2 \
 inprod inprod-rec inprod-loop matmul matmul-flat \
 manyargs \
-float float2 float3 \
-add xxx \
+float float2 float3 float4 \
+add xxx booleq \
 fact \
-read
+read read2 read3 read4 ftoi \
+samename \
+array array2 array3 array4 array5 array6 array1 arr2d \
+adhoc adhoc2 adhoc3 adhoc4 \
+
 
 #do_test: $(TESTS:%=test/%.cmp)
 do_test: $(TESTS:%=test/%.s)

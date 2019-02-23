@@ -51,6 +51,7 @@ rule token = parse
     { AST_DOT }
 | "/."
     { SLASH_DOT }
+(*
 | "floor"
 	{ FLOOR }
 | "sqrt"
@@ -59,6 +60,7 @@ rule token = parse
 	{ FTOI }
 | "float_of_int"
 	{ ITOF }
+*)
 | '='
     { EQUAL }
 | "<>"
@@ -105,6 +107,7 @@ rule token = parse
 	{ SFTL }
 | ">>"
 	{ SFTR }
+(*
 | "read_int"
 	{ READINT }
 | "read_float"
@@ -127,6 +130,7 @@ rule token = parse
 	{ FLESS }
 | "print_char"
 	{ PRINT_CHAR }
+*)
 | lower (digit|lower|upper|'_')* (* 他の「予約語」より後でないといけない *)
     { IDENT(Lexing.lexeme lexbuf) }
 | _
