@@ -199,5 +199,6 @@ let rec print_syntax depth expr =
 					print_code (depth + 1) x
 	| Out x 		-> print_string "<Out> "		; print_newline ();
 					print_code (depth + 1) x
+	| e -> print_string "what!?\n"
 
-and print_code depth expr = print_syntax depth expr; is_already_newline newline_flag
+and print_code depth expr = try (print_syntax depth expr; is_already_newline newline_flag) with Not_found -> print_string "here\n"

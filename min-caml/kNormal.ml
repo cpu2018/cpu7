@@ -249,6 +249,7 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 	| Syntax.Out(e) ->
 			insert_let (g env e)
 				(fun x -> Out(x), Type.Unit)
+	| _ -> print_string "not match in kNormal g\n"; raise Not_found
 
 
 (* ここからデバッグ用print関数 *)

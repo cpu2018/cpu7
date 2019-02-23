@@ -105,8 +105,8 @@ latan91:
 	1045220557
 latan90:
 	1051372202
-l8:
-	1084437299
+l15:
+	1073741824
 	.globl _min_caml_start
 _min_caml_start:
 	li	r3, 30000
@@ -134,6 +134,23 @@ _min_caml_start:
 	stw	r5, 4(r2)
 	li	r2, 3
 	li	r5, 4
+	lis	r31, lo16(l15)
+	srwi	r31, r31, 31
+	addi	r31, r31, ha16(l15)
+	slwi	r31, r31, 16
+	addi	r31, r31, lo16(l15)
+	lfd	f0, 0(r31)
+	stw	r2, 0(r3)
+	mflr	r31
+	mr	r2, r5
+	stw	r31, 4(r3)
+	addi	r3, r3, 8
+	bl	min_caml_create_float_array
+	subi	r3, r3, 8
+	lwz	r31, 4(r3)
+	mr	r5, r2
+	mtlr	r31
+	lwz	r2, 0(r3)
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
@@ -141,17 +158,13 @@ _min_caml_start:
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31
-	li	r2, 3
-	lis	r31, lo16(l8)
-	srwi	r31, r31, 31
-	addi	r31, r31, ha16(l8)
-	slwi	r31, r31, 16
-	addi	r31, r31, lo16(l8)
-	lfd	f0, 0(r31)
+	lwz	r2, 4(r2)
+	lfd	f0, 8(r2)
+	ftoi	r2, f0
 	mflr	r31
 	stw	r31, 4(r3)
 	addi	r3, r3, 8
-	bl	min_caml_create_float_array
+	bl	min_caml_print_int
 	subi	r3, r3, 8
 	lwz	r31, 4(r3)
 	mtlr	r31

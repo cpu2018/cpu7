@@ -31,8 +31,8 @@ id.ml \
 m.ml s.ml \
 syntax.ml \
 parser.mly lexer.mll \
-fun2letrec.ml \
 typing.mli typing.ml \
+extfun.ml \
 kNormal.mli kNormal.ml \
 alpha.mli alpha.ml \
 comSubExp.mli comSubExp.ml \
