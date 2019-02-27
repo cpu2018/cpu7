@@ -1632,7 +1632,7 @@ int main(int argc,char **argv){
   printf("%d\n",size);
   rewind(file);
   //int *memory_sub = (int *) malloc(size);
-  int memory_sub[50000];
+  int memory_sub[500000];
   fread(memory_sub,sizeof(int),size,file);
   printf("aaaaaaa\n");
   printf("%ld\n",sizeof(memory_sub));
