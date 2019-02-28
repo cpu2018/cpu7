@@ -7,7 +7,7 @@ module fetch (
 
   input wire [18:0] nextpc,
 
-  output wire [18:0]  pc
+  output reg [18:0]  pc_reg
   //input wire  [31:0] instr,
 
   //output wire  [31:0] instr_reg
@@ -19,12 +19,12 @@ module fetch (
     end else begin
       if (fetch_en) begin
         decode_en <= 1;
+        pc_reg <= nextpc;
       end else begin
         decode_en <= 0;
       end
     end
   end
 
-  assign pc = nextpc;
 
 endmodule // fetch

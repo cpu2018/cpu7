@@ -61,7 +61,9 @@ module decode (
   output reg  [2:0] alu_op_reg,
   output reg  [4:0] shift_reg,
 
-  output reg  [3:0] float_op_reg
+  output reg  [3:0] float_op_reg,
+
+  output reg use_fpu_reg
   );
 
   wire [5:0] opcode;
@@ -140,6 +142,22 @@ module decode (
                     (opcode == 6'd63 && xopcode == `XOP_FNEG) ? `FLOAT_FNEG :
                     (opcode == 6'd63 && xopcode == `XOP_FMR) ? `FLOAT_FMR : 0;
 
+  wire use_fpu;
+  assign use_fpu = (opcode == `OP_FSLWI) ||
+                   (opcode == 6'd31 && xopcode == `XOP_ITOF) ||
+                   (opcode == 6'd63 &&
+                     (xopcode == `XOP_FABS ||
+                      xopcode == `XOP_FADD ||
+                      xopcode == `XOP_FSUB ||
+                      xopcode == `XOP_FMUL ||
+                      xopcode == `XOP_FDIV ||
+                      xopcode == `XOP_FLOOR ||
+                      xopcode == `XOP_FSQRT ||
+                      xopcode == `XOP_FNEG ||
+                      xopcode == `XOP_FMR ||
+                      xopcode == `XOP_FCMPU));
+
+
   wire [4:0] shift;
   assign shift = (instr[5:1] == 5'b11111) ? instr[10:6] : instr[15:11];
 
@@ -175,6 +193,7 @@ module decode (
       mflr <= 0;
       lr_we_reg <= 0;
       w_byte <= 0;
+      use_fpu_reg <= 0;
     end else begin
       if (decode_en) begin
         data1_reg <= rdata1;
@@ -193,6 +212,7 @@ module decode (
         float_op_reg <= float_op;
         mem_access_reg <= mem_access;
         mem_we_reg <= mem_we;
+        use_fpu_reg <= use_fpu;
         if (opcode == `OP_IN) begin
           input_reg <= 1;
           w_byte <= 1;
@@ -305,6 +325,7 @@ module decode (
         mflr <= 0;
         lr_we_reg <= 0;
         w_byte <= 0;
+        use_fpu_reg <= 0;
       end
     end
   end

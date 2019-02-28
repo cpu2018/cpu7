@@ -147,21 +147,6 @@ module cpu (
     end
   end
 
-  //reg_file
-  wire [4:0] rreg1;
-  wire [4:0] rreg2;
-  wire [31:0] rdata1;
-  wire [31:0] rdata2;
-  reg  [31:0] wdata_reg;
-
-  wire [4:0] decode_wreg;
-  wire decode_reg_we;
-  reg ex_reg_we;
-  reg [4:0] ex_wreg;
-
-  wire [31:0] reg_wdata;
-  gpr gpr(.clk(clk), .rreg1(rreg1), .rreg2(rreg2), .wreg(ex_wreg), .wdata(reg_wdata), .w_en(ex_reg_we && writeback_en), .w_byte(ex_w_byte), .rdata1(rdata1), .rdata2(rdata2));
-
   reg fetch_en;
   wire decode_en;
   wire execute_en;
@@ -169,9 +154,15 @@ module cpu (
 
   //fetch
   //wire [31:0] instr;
-  reg [18:0] nextpc;
-  wire [18:0] pc;
-  fetch fecth(.clk(clk), .rstn(rstn), .fetch_en(fetch_en), .nextpc(nextpc), .decode_en(decode_en), .pc(pc));
+  wire signed [18:0] nextpc;
+  reg signed [18:0] nextpc_reg;
+  wire [18:0] fetch_pc;
+  fetch fecth(.clk(clk), .rstn(rstn), .fetch_en(fetch_en), .nextpc(nextpc_reg), .decode_en(decode_en), .pc_reg(fetch_pc));
+
+  reg [31:0] mem_rdata_reg;
+  always @(posedge clk) begin
+    mem_rdata_reg <= mem_rdata;
+  end
 
   //decode
   wire [31:0] decode_data1;
@@ -190,6 +181,8 @@ module cpu (
   wire decode_mem_access;
   wire [31:0] decode_mem_addr;
   wire decode_mem_we;
+  wire [4:0] decode_wreg;
+  wire decode_reg_we;
   wire [2:0] alu_op;
   wire [4:0] shift;
   //wire f_we;
@@ -200,12 +193,21 @@ module cpu (
   wire [31:0] decode_f_data2;
   wire [3:0]  float_op;
   wire decode_w_byte;
-  decode decode(.clk(clk), .rstn(rstn), .decode_en(decode_en), .execute_en(execute_en), .instr(mem_rdata), .pc(pc), .rdata1(rdata1), .rdata2(rdata2), .rreg1(rreg1), .rreg2(rreg2), .wreg_reg(decode_wreg), .reg_we_reg(decode_reg_we), .f_rdata1(f_rdata1), .f_rdata2(f_rdata2), .f_data1_reg(decode_f_data1), .f_data2_reg(decode_f_data2), .f_we_reg(decode_f_we), .w_byte(decode_w_byte), .lr_wdata(decode_lr_wdata), .lr_we_reg(decode_lr_we), .mflr(decode_mflr), .cr_field(decode_cr_field), .cr_we_reg(decode_cr_we), .cmp_src(cmp_src), .input_reg(in_en), .output_reg(out_en), .mem_access_reg(decode_mem_access), .mem_addr(decode_mem_addr), .mem_we_reg(decode_mem_we), .mem_wdata(mem_wdata), .data1_reg(decode_data1), .data2_reg(decode_data2), .branch(decode_branch), .b_addr(decode_b_addr), .b_cond(decode_b_cond), .bclr(decode_bclr), .alu_op_reg(alu_op), .shift_reg(shift), .float_op_reg(float_op));
+
+  wire [4:0] rreg1;
+  wire [4:0] rreg2;
+  wire [31:0] rdata1;
+  wire [31:0] rdata2;
+  reg  [31:0] wdata_reg;
+  wire [31:0] reg_wdata;
+  wire decode_use_fpu;
+
+  decode decode(.clk(clk), .rstn(rstn), .decode_en(decode_en), .execute_en(execute_en), .instr(mem_rdata_reg), .pc(fetch_pc), .rdata1(rdata1), .rdata2(rdata2), .rreg1(rreg1), .rreg2(rreg2), .wreg_reg(decode_wreg), .reg_we_reg(decode_reg_we), .f_rdata1(f_rdata1), .f_rdata2(f_rdata2), .f_data1_reg(decode_f_data1), .f_data2_reg(decode_f_data2), .f_we_reg(decode_f_we), .w_byte(decode_w_byte), .lr_wdata(decode_lr_wdata), .lr_we_reg(decode_lr_we), .mflr(decode_mflr), .cr_field(decode_cr_field), .cr_we_reg(decode_cr_we), .cmp_src(cmp_src), .input_reg(in_en), .output_reg(out_en), .mem_access_reg(decode_mem_access), .mem_addr(decode_mem_addr), .mem_we_reg(decode_mem_we), .mem_wdata(mem_wdata), .data1_reg(decode_data1), .data2_reg(decode_data2), .branch(decode_branch), .b_addr(decode_b_addr), .b_cond(decode_b_cond), .bclr(decode_bclr), .alu_op_reg(alu_op), .shift_reg(shift), .float_op_reg(float_op), .use_fpu_reg(decode_use_fpu));
 
   //execute mem_access I/O
 
   wire writeback_en1; //算術演算等
-  reg writeback_en2; //メモリアクセス
+  //reg writeback_en2; //メモリアクセス
   reg writeback_en3; //I/O
 
 // executeをそのまま通す信号
@@ -218,9 +220,11 @@ module cpu (
   reg ex_mflr;
   reg [2:0] ex_cr_field;
   reg ex_cr_we;
-  reg ex_mem_access;
+  //reg ex_mem_access;
   reg ex_f_we;
   reg ex_w_byte;
+  reg ex_reg_we;
+  reg [4:0] ex_wreg;
   always @(posedge clk) begin
     if (~rstn) begin
       ex_reg_we <= 0;
@@ -234,7 +238,7 @@ module cpu (
       ex_mflr <= 0;
       ex_cr_field <= 0;
       ex_cr_we <= 0;
-      ex_mem_access <= 0;
+      //ex_mem_access <= 0;
       ex_f_we <= 0;
       ex_w_byte <= 0;
     end else begin
@@ -250,7 +254,7 @@ module cpu (
         ex_mflr <= decode_mflr;
         ex_cr_field <= decode_cr_field;
         ex_cr_we <= decode_cr_we;
-        ex_mem_access <= decode_mem_access;
+        //ex_mem_access <= decode_mem_access;
         ex_f_we <= decode_f_we;
         ex_w_byte <= decode_w_byte;
       end
@@ -260,23 +264,23 @@ module cpu (
   wire [31:0] dout;
   wire [31:0] f_dout;
   wire [3:0] cr_wdata;
-  execute execute(.clk(clk), .rstn(rstn), .execute_en(execute_en), .writeback_en(writeback_en1), .data1(decode_data1), .data2(decode_data2), .f_data1(decode_f_data1), .f_data2(decode_f_data2), .dout(dout), .f_dout(f_dout), .alu_op(alu_op), .shift(shift), .float_op(float_op), .cmp_src(cmp_src), .cr_wdata(cr_wdata), .mem_access(decode_mem_access), .in_en(in_en), .out_en(out_en));
+  execute execute(.clk(clk), .rstn(rstn), .execute_en(execute_en), .writeback_en(writeback_en1), .data1(decode_data1), .data2(decode_data2), .f_data1(decode_f_data1), .f_data2(decode_f_data2), .dout(dout), .f_dout(f_dout), .alu_op(alu_op), .shift(shift), .float_op(float_op), .cmp_src(cmp_src), .cr_wdata(cr_wdata), .mem_access(decode_mem_access), .in_en(in_en), .out_en(out_en), .mem_rdata(mem_rdata_reg), .use_fpu(decode_use_fpu));
 
 //mem_access
-  assign mem_addr = (decode_mem_access) ? decode_mem_addr[20:2] : pc;
+  assign mem_addr = (decode_mem_access) ? decode_mem_addr[20:2] : nextpc;
   assign mem_we = decode_mem_we;
   //assign mem_wdata = decode_data2;
-  always @(posedge clk) begin
-    if (~rstn) begin
-      writeback_en2 <= 0;
-    end else begin
-      if (decode_mem_access) begin
-        writeback_en2 <= 1;
-      end else begin
-        writeback_en2 <= 0;
-      end
-    end
-  end
+//  always @(posedge clk) begin
+//    if (~rstn) begin
+//      writeback_en2 <= 0;
+//    end else begin
+//      if (decode_mem_access) begin
+//        writeback_en2 <= 1;
+//      end else begin
+//        writeback_en2 <= 0;
+//      end
+//    end
+//  end
 
 //in・out命令
   reg in_wait;
@@ -334,17 +338,15 @@ module cpu (
     end
   end
 
-  assign writeback_en = writeback_en1 || writeback_en2 || writeback_en3;
+  assign writeback_en = writeback_en1 || writeback_en3;
 
   //writeback
   wire [31:0] lr_rdata;
-  assign reg_wdata = (ex_mem_access) ? mem_rdata :
-                     (input_reg) ? {24'd0, inputdata_reg} :
+  assign reg_wdata = (input_reg) ? {24'd0, inputdata_reg} :
                      (ex_mflr) ? lr_rdata : dout;
 
   wire [31:0] f_wdata;
-  assign f_wdata = (ex_mem_access) ? mem_rdata :
-                   (input_reg) ? {24'd0, inputdata_reg} : f_dout;
+  assign f_wdata = (input_reg) ? {24'd0, inputdata_reg} : f_dout;
   always @(posedge clk) begin
     if (~rstn) begin
       fetch_en <= 0;
@@ -360,23 +362,22 @@ module cpu (
   lr lr(.clk(clk), .lr_wdata(ex_lr_wdata), .lr_w_en((ex_lr_we) && writeback_en), .lr_rdata(lr_rdata));
   wire [3:0]  cr_rdata;
   cr cr(.clk(clk), .cr_field(ex_cr_field), .cr_wdata(cr_wdata), .cr_w_en((ex_cr_we) && writeback_en), .cr_rdata(cr_rdata));
+  gpr gpr(.clk(clk), .rreg1(rreg1), .rreg2(rreg2), .wreg(ex_wreg), .wdata(reg_wdata), .w_en(ex_reg_we && writeback_en), .w_byte(ex_w_byte), .rdata1(rdata1), .rdata2(rdata2));
   fpr fpr(.clk(clk), .rreg1(rreg1), .rreg2(rreg2), .wreg(ex_wreg), .wdata(f_wdata), .w_en(ex_f_we && writeback_en), .w_byte(ex_w_byte), .rdata1(f_rdata1), .rdata2(f_rdata2));
 
   wire  [18:0] offset;
   wire cond_ok;
   assign cond_ok = ex_b_cond[4] || (cr_rdata[3:1] == {ex_b_cond[0], ex_b_cond[1], ex_b_cond[3]}) || (ex_b_cond[2] && (~cr_rdata[1]));
   assign offset = (ex_branch && cond_ok) ? ex_b_addr : 1;
-
+  assign nextpc = (ex_bclr && cond_ok) ? lr_rdata[20:2] : nextpc_reg + offset;
   always @(posedge clk) begin
     if (~rstn) begin
-      nextpc <= 0;
+      nextpc_reg <= -1;
     end else begin
-      if (writeback_en) begin
-        if (ex_bclr && cond_ok) begin
-          nextpc <= lr_rdata[20:2];
-        end else begin
-          nextpc <= nextpc + offset; //TODO : パイプラインするときはpcをレジスタに通す
-        end
+      if (start) begin
+        nextpc_reg <= 0;
+      end else if (writeback_en) begin
+        nextpc_reg <= nextpc; //TODO : パイプラインするときはpcをレジスタに通す
       end
     end
   end

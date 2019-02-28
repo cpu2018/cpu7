@@ -17,8 +17,6 @@ module gpr (
 
   initial begin
     r[0] <= 32'd0;
-    r[3] <= 31'd100000;
-    r[4] <= 31'd100000;
   end
 
   always @ (posedge clk) begin
